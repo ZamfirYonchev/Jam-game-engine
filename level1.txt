@@ -1,0 +1,431 @@
+AddTextureFromFile ninja_girl_png/Idle__000.png #0
+AddTextureFromFile ninja_girl_png/Idle__001.png #1
+AddTextureFromFile ninja_girl_png/Idle__002.png #2
+AddTextureFromFile ninja_girl_png/Idle__003.png #3
+AddTextureFromFile ninja_girl_png/Idle__004.png #4
+AddTextureFromFile ninja_girl_png/Idle__005.png #5
+AddTextureFromFile ninja_girl_png/Idle__006.png #6
+AddTextureFromFile ninja_girl_png/Idle__007.png #7
+AddTextureFromFile ninja_girl_png/Idle__008.png #8
+AddTextureFromFile ninja_girl_png/Idle__009.png #9
+
+AddTextureFromFile ninja_girl_png/Run__000.png #10
+AddTextureFromFile ninja_girl_png/Run__001.png #11
+AddTextureFromFile ninja_girl_png/Run__002.png #12
+AddTextureFromFile ninja_girl_png/Run__003.png #13
+AddTextureFromFile ninja_girl_png/Run__004.png #14
+AddTextureFromFile ninja_girl_png/Run__005.png #15
+AddTextureFromFile ninja_girl_png/Run__006.png #16
+AddTextureFromFile ninja_girl_png/Run__007.png #17
+AddTextureFromFile ninja_girl_png/Run__008.png #18
+AddTextureFromFile ninja_girl_png/Run__009.png #19
+
+AddTextureFromFile ninja_girl_png/Jump__000.png #20
+AddTextureFromFile ninja_girl_png/Jump__001.png #21
+AddTextureFromFile ninja_girl_png/Jump__002.png #22
+AddTextureFromFile ninja_girl_png/Jump__003.png #23
+AddTextureFromFile ninja_girl_png/Jump__004.png #24
+AddTextureFromFile ninja_girl_png/Jump__005.png #25
+AddTextureFromFile ninja_girl_png/Jump__006.png #26
+AddTextureFromFile ninja_girl_png/Jump__007.png #27
+AddTextureFromFile ninja_girl_png/Jump__008.png #28
+AddTextureFromFile ninja_girl_png/Jump__009.png #29
+
+AddTextureFromFile ninja_girl_png/Throw__000.png #30
+AddTextureFromFile ninja_girl_png/Throw__001.png #31
+AddTextureFromFile ninja_girl_png/Throw__002.png #32
+AddTextureFromFile ninja_girl_png/Throw__003.png #33
+AddTextureFromFile ninja_girl_png/Throw__004.png #34
+AddTextureFromFile ninja_girl_png/Throw__005.png #35
+AddTextureFromFile ninja_girl_png/Throw__006.png #36
+AddTextureFromFile ninja_girl_png/Throw__007.png #37
+AddTextureFromFile ninja_girl_png/Throw__008.png #38
+AddTextureFromFile ninja_girl_png/Throw__009.png #39
+
+AddTextureFromFile ninja_girl_png/Dead__000.png #40
+AddTextureFromFile ninja_girl_png/Dead__001.png #41
+AddTextureFromFile ninja_girl_png/Dead__002.png #42
+AddTextureFromFile ninja_girl_png/Dead__003.png #43
+AddTextureFromFile ninja_girl_png/Dead__004.png #44
+AddTextureFromFile ninja_girl_png/Dead__005.png #45
+AddTextureFromFile ninja_girl_png/Dead__006.png #46
+AddTextureFromFile ninja_girl_png/Dead__007.png #47
+AddTextureFromFile ninja_girl_png/Dead__008.png #48
+AddTextureFromFile ninja_girl_png/Dead__009.png #49
+
+AddTextureFromFile ninja_girl_png/Hit__000.png #50
+
+AddTextureFromFile tiles/12.png #51
+AddTextureFromFile tiles/9.png #52
+AddTextureFromFile tiles/16.png #53
+AddTextureFromFile tiles/4.png #54
+AddTextureFromFile tiles/5.png #55
+AddTextureFromFile tiles/6.png #56
+AddTextureFromFile tiles/1.png #57
+AddTextureFromFile tiles/2.png #58
+AddTextureFromFile tiles/3.png #59
+
+AddSpritesheet 0 10 10 10 20 10 29 1 34 6 50 3 40 10 0.2 #0
+AddSprite 0 0 0 0 290 500
+AddSprite 0 1 0 0 290 500
+AddSprite 0 2 0 0 290 500
+AddSprite 0 3 0 0 290 500
+AddSprite 0 4 0 0 290 500
+AddSprite 0 5 0 0 290 500
+AddSprite 0 6 0 0 290 500
+AddSprite 0 7 0 0 290 500
+AddSprite 0 8 0 0 290 500
+AddSprite 0 9 0 0 290 500
+
+AddSprite 0 10 0 0 376 520
+AddSprite 0 11 0 0 376 520
+AddSprite 0 12 0 0 376 520
+AddSprite 0 13 0 0 376 520
+AddSprite 0 14 0 0 376 520
+AddSprite 0 15 0 0 376 520
+AddSprite 0 16 0 0 376 520
+AddSprite 0 17 0 0 376 520
+AddSprite 0 18 0 0 376 520
+AddSprite 0 19 0 0 376 520
+
+AddSprite 0 20 0 0 399 543
+AddSprite 0 21 0 0 399 543
+AddSprite 0 22 0 0 399 543
+AddSprite 0 23 0 0 399 543
+AddSprite 0 24 0 0 399 543
+AddSprite 0 25 0 0 399 543
+AddSprite 0 26 0 0 399 543
+AddSprite 0 27 0 0 399 543
+AddSprite 0 28 0 0 399 543
+AddSprite 0 29 0 0 399 543
+
+AddSprite 0 30 0 0 383 514
+AddSprite 0 31 0 0 383 514
+AddSprite 0 32 0 0 383 514
+AddSprite 0 33 0 0 383 514
+AddSprite 0 34 0 0 383 514
+AddSprite 0 35 0 0 383 514
+AddSprite 0 36 0 0 383 514
+AddSprite 0 37 0 0 383 514
+AddSprite 0 38 0 0 383 514
+AddSprite 0 39 0 0 383 514
+
+AddSprite 0 40 0 0 578 599
+AddSprite 0 41 0 0 578 599
+AddSprite 0 42 0 0 578 599
+AddSprite 0 43 0 0 578 599
+AddSprite 0 44 0 0 578 599
+AddSprite 0 45 0 0 578 599
+AddSprite 0 46 0 0 578 599
+AddSprite 0 47 0 0 578 599
+AddSprite 0 48 0 0 578 599
+AddSprite 0 49 0 0 578 599
+
+AddSprite 0 50 0 0 290 500
+AddSprite 0 50 0 0 290 500
+AddSprite 0 50 0 0 290 500
+
+AddSpritesheet 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 #1
+AddSprite 1 51 0 0 128 128
+AddSprite 1 52 0 0 128 128
+AddSprite 1 53 0 0 128 128
+AddSprite 1 54 0 0 128 128
+AddSprite 1 55 0 0 128 128
+AddSprite 1 56 0 0 128 128
+AddSprite 1 57 0 0 128 128
+AddSprite 1 58 0 0 128 128
+AddSprite 1 59 0 0 128 128
+
+AddTextureFromFile tiles/BG.png #60
+AddSpritesheet 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 #2
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+AddSprite 2 60 0 0 1000 750
+
+AddTextureFromFile ninja_girl_png/Kunai.png #61
+AddSpritesheet 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 #3
+AddSprite 3 61 0 0 160 32
+
+AddTextureFromFile zombie_png/male/Idle_1.png #62
+AddTextureFromFile zombie_png/male/Idle_2.png #63
+AddTextureFromFile zombie_png/male/Idle_3.png #64
+AddTextureFromFile zombie_png/male/Idle_4.png #65
+AddTextureFromFile zombie_png/male/Idle_5.png #66
+AddTextureFromFile zombie_png/male/Idle_6.png #67
+AddTextureFromFile zombie_png/male/Idle_7.png #68
+AddTextureFromFile zombie_png/male/Idle_8.png #69
+AddTextureFromFile zombie_png/male/Idle_9.png #70
+AddTextureFromFile zombie_png/male/Idle_10.png #71
+AddTextureFromFile zombie_png/male/Idle_11.png #72
+AddTextureFromFile zombie_png/male/Idle_12.png #73
+AddTextureFromFile zombie_png/male/Idle_13.png #74
+AddTextureFromFile zombie_png/male/Idle_14.png #75
+AddTextureFromFile zombie_png/male/Idle_15.png #76
+
+AddTextureFromFile zombie_png/male/Walk_1.png #77
+AddTextureFromFile zombie_png/male/Walk_2.png #78
+AddTextureFromFile zombie_png/male/Walk_3.png #79
+AddTextureFromFile zombie_png/male/Walk_4.png #80
+AddTextureFromFile zombie_png/male/Walk_5.png #81
+AddTextureFromFile zombie_png/male/Walk_6.png #82
+AddTextureFromFile zombie_png/male/Walk_7.png #83
+AddTextureFromFile zombie_png/male/Walk_8.png #84
+AddTextureFromFile zombie_png/male/Walk_9.png #85
+AddTextureFromFile zombie_png/male/Walk_10.png #86
+
+AddTextureFromFile zombie_png/male/Attack_1.png #87
+AddTextureFromFile zombie_png/male/Attack_2.png #88
+AddTextureFromFile zombie_png/male/Attack_3.png #89
+AddTextureFromFile zombie_png/male/Attack_4.png #90
+AddTextureFromFile zombie_png/male/Attack_5.png #91
+AddTextureFromFile zombie_png/male/Attack_6.png #92
+AddTextureFromFile zombie_png/male/Attack_7.png #93
+AddTextureFromFile zombie_png/male/Attack_8.png #94
+
+AddTextureFromFile zombie_png/male/Dead_1.png #95
+AddTextureFromFile zombie_png/male/Dead_2.png #96
+AddTextureFromFile zombie_png/male/Dead_3.png #97
+AddTextureFromFile zombie_png/male/Dead_4.png #98
+AddTextureFromFile zombie_png/male/Dead_5.png #99
+AddTextureFromFile zombie_png/male/Dead_6.png #100
+AddTextureFromFile zombie_png/male/Dead_7.png #101
+AddTextureFromFile zombie_png/male/Dead_8.png #102
+AddTextureFromFile zombie_png/male/Dead_9.png #103
+AddTextureFromFile zombie_png/male/Dead_10.png #104
+AddTextureFromFile zombie_png/male/Dead_11.png #105
+AddTextureFromFile zombie_png/male/Dead_12.png #106
+
+AddTextureFromFile zombie_png/male/Hit_1.png #107
+
+AddSpritesheet 0 15 15 10 0 1 0 1 25 8 45 3 33 12 0.2 #4
+AddSprite 4 62 0 0 430 519
+AddSprite 4 63 0 0 430 519
+AddSprite 4 64 0 0 430 519
+AddSprite 4 65 0 0 430 519
+AddSprite 4 66 0 0 430 519
+AddSprite 4 67 0 0 430 519
+AddSprite 4 68 0 0 430 519
+AddSprite 4 69 0 0 430 519
+AddSprite 4 70 0 0 430 519
+AddSprite 4 71 0 0 430 519
+AddSprite 4 72 0 0 430 519
+AddSprite 4 73 0 0 430 519
+AddSprite 4 74 0 0 430 519
+AddSprite 4 75 0 0 430 519
+AddSprite 4 76 0 0 430 519
+
+AddSprite 4 77 0 0 430 519
+AddSprite 4 78 0 0 430 519
+AddSprite 4 79 0 0 430 519
+AddSprite 4 80 0 0 430 519
+AddSprite 4 81 0 0 430 519
+AddSprite 4 82 0 0 430 519
+AddSprite 4 83 0 0 430 519
+AddSprite 4 84 0 0 430 519
+AddSprite 4 85 0 0 430 519
+AddSprite 4 86 0 0 430 519
+
+AddSprite 4 87 0 0 430 519
+AddSprite 4 88 0 0 430 519
+AddSprite 4 89 0 0 430 519
+AddSprite 4 90 0 0 430 519
+AddSprite 4 91 0 0 430 519
+AddSprite 4 92 0 0 430 519
+AddSprite 4 93 0 0 430 519
+AddSprite 4 94 0 0 430 519
+
+AddSprite 4 95 0 -40 629 511
+AddSprite 4 96 0 -40 629 511
+AddSprite 4 97 0 -40 629 511
+AddSprite 4 98 0 -40 629 511
+AddSprite 4 99 0 -40 629 511
+AddSprite 4 100 0 -40 629 511
+AddSprite 4 101 0 -40 629 511
+AddSprite 4 102 0 -40 629 511
+AddSprite 4 103 0 -40 629 511
+AddSprite 4 104 0 -40 629 511
+AddSprite 4 105 0 -40 629 511
+AddSprite 4 106 0 -40 629 511
+
+AddSprite 4 107 0 0 430 519
+AddSprite 4 107 0 0 430 519
+AddSprite 4 107 0 0 430 519
+
+AddFont 40 fonts/riesling.ttf #0
+#108
+AddTextureFromString 0 0 0 0 Sample text
+AddSpritesheet 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 #5
+AddSprite 5 108 0 0 0 0
+
+AddTextureFromFile objects_png/hearts-red_low.png #109
+AddTextureFromFile objects_png/hearts-black_low.png #110
+
+AddSpritesheet 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 #6
+AddSprite 6 110 0 0 100 100
+AddSprite 6 109 0 0 100 100
+
+AddEntity #0 the screen zone
+	UseAbsolutePosition 0 0 800 600
+#	UseFullMovement 0.5 0 0 0 0
+#	UseConstantControl 0 0 0
+#	UseChaseAIControl 3 -1 1000 0
+	
+AddEntity #1 left movement zone
+	UseAttachedPosition 0 0 0 -600 0
+	UseBasicCollision 0
+	UseTriggerInteraction 0 -1 7
+
+AddEntity #2 right movement zone
+	UseAttachedPosition 0 600 0 -600 0
+	UseBasicCollision 0
+	UseTriggerInteraction 0 -1 8
+
+AddCharacter 250 400 58 100 10 0 #3
+	UseInputControl 3 1000
+	UseNormalInteraction 1
+
+AddPlatform 10 -30 2880 64 1 90 2 #4
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 3
+UseFullMovement 0.2 0.04 0.0012 0.5 0
+UseConstantControl 0 0 0
+
+AddPlatform 400 160 160 64 1 5 2 #5
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 3
+
+AddVisualObject -640 -10 640 480 2 0 #6
+UseTiledVisuals 2 10 1
+ModifyVisuals 0 0 0 0 -0
+
+AddVisualObject 0 0 0 0 5 0 #7
+UseAttachedPosition 0 100 100 -640 -480
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 4
+
+DebugMessage 0 Everything loaded!
+AddProcedure #0
+ExtendProcedure 0 1
+	Null
+AddProcedure #1
+AddProcedure #2
+	
+CallProcedure 0
+
+AddProcedure #3
+ExtendProcedure 3 5
+	AddProjectile -40 50 40 8 3
+	UseFullMovement 1 0 0.05 0 0
+	UseBasicCollision 0
+	UseTriggerInteraction 1 4 5
+	UseTimedHealth 1000 6
+
+AddProcedure #4
+ExtendProcedure 4 2
+	UseNullInteraction
+	UseTimedHealth 30 6
+	
+AddProcedure #5
+ExtendProcedure 5 1
+	ModifyHealth 0 0 -1
+
+AddProcedure #6
+ExtendProcedure 6 1
+	RemoveEntity
+
+AddProcedure #7
+ExtendProcedure 7 4
+	SelectEntity 0
+#	ModifyMovement 0 0 -0.006 0 0
+	ModifyPosition -5 0 0 0
+#	ModifyControl 0 0 -1 0
+	SelectEntity 6
+	ModifyPosition -4.5 0 0 0
+	
+AddProcedure #8
+ExtendProcedure 8 4
+	SelectEntity 0
+#	ModifyMovement 0 0 0.006 0 0
+	ModifyPosition 5 0 0 0
+#	ModifyControl 0 0 1 0
+	SelectEntity 6
+	ModifyPosition 4.5 0 0 0
+	
+AddProcedure #9
+ExtendProcedure 9 4
+	SelectEntity 0
+	ModifyPosition 0 -2 0 0
+	SelectEntity 6
+	ModifyPosition 0 -2 0 0
+	
+AddProcedure #10
+ExtendProcedure 10 4
+	SelectEntity 0
+	ModifyPosition 0 2 0 0
+	SelectEntity 6
+	ModifyPosition 0 2 0 0
+	
+AddProcedure #11
+ExtendProcedure 11 3
+	AddZone -40 20 60 40 0 -1 5
+	UseBasicCollision 0
+	UseTimedHealth 1 6
+
+AddProcedure #12
+ExtendProcedure 12 5
+	AddProjectile -40 50 40 8 3
+	UseFullMovement 1 0 0.05 0 0
+	UseBasicCollision 0
+	UseTriggerInteraction 0 4 5
+	UseTimedHealth 1000 6
+
+#AddCharacter 600 40 58 100 10 0 #13
+#	UseChaseAIControl 3 12 1000 260
+#	UseFullMovement 0.2 0.2 0.006 0 1
+#	UseNormalInteraction 2
+
+AddCharacter 800 40 58 100 5 4 #14
+	UseChaseAIControl 3 11 1000 60
+	UseFullMovement 0.2 0.2 0.006 0 1
+	UseNormalInteraction 2
+
+AddEntity #15 player health
+	UseAttachedPosition 0 20 440 -440 -460
+	UseAttachedHealth 3 0 0
+ 	UseHealthVisuals 6 10
+
+AddEntity #16 bottom movement zone
+	UseAttachedPosition 0 0 0 0 -550
+	UseBasicCollision 0
+	UseTriggerInteraction 0 -1 9
+	
+AddEntity #17 top movement zone
+	UseAttachedPosition 0 0 550 0 -550
+	UseBasicCollision 0
+	UseTriggerInteraction 0 -1 10
+
+AddPlatform 800 320 160 64 1 5 2 #18
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 3
+
+AddZone 2000 0 100 100 0 6 13 #19
+
+AddProcedure #13
+ExtendProcedure 13 4
+	CallProcedure 14
+	ModifyPosition 1600 0 0 0
+	CallProcedure 14
+	ModifyPosition 2400 0 0 0
+
+AddProcedure #14
+ExtendProcedure 14 4
+	AddCharacter 0 0 58 100 5 4
+	UseChaseAIControl 3 11 1000 60
+	UseFullMovement 0.2 0.2 0.006 0 1
+	UseNormalInteraction 2

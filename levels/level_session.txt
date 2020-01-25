@@ -1,0 +1,37 @@
+AddEntity #0: screen
+UseAbsolutePosition 0 0 800 600
+
+AddTextureFromFile menus_png/Button.png #0
+AddSpritesheet 0 1 0 1 1 1 1 1 2 4 0 1 0 1 0.5 #0
+AddSprite 0 0 177 201 363 178
+AddSprite 0 0 562 201 363 178
+AddSprite 0 0 945 201 363 178
+AddSprite 0 0 945 201 363 178
+AddSprite 0 0 945 201 363 178
+AddSprite 0 0 945 201 363 178
+
+AddEntity #1: button new game
+UseAbsolutePosition 310 356 181 89
+UseInputSelectControl 0 2 0
+UseMenuItemVisuals 0
+
+AddEntity #2: button quit
+UseAbsolutePosition 310 156 181 89
+UseInputSelectControl 1 2 1
+UseMenuItemVisuals 0
+
+AddProcedure #0: new game
+ExtendProcedure 0 1
+ExecuteFileClean levels/level1.txt
+
+AddProcedure #1: quit
+ExtendProcedure 1 1
+Quit
+
+AddTextureFromFile tiles/BG.png #1: background
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #1: background
+AddSprite 1 1 0 0 1000 750 #0
+
+AddEntity #3: blackground
+UseStaticVisuals 1 0
+UseAbsolutePosition 0 0 1000 750

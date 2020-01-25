@@ -1,0 +1,4 @@
+ResolutionX 800
+ResolutionY 600
+Fullscreen 0
+Level levels/menu.txt

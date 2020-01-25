@@ -1,0 +1,86 @@
+SetLevel levels/menu.txt
+
+### Fonts ###
+
+AddFont 16 fonts/pcsenior.ttf #0: text font
+
+### Textures ###
+
+AddTextureFromFile resources/bg_top.png #0: background top
+AddTextureFromFile resources/bg_middle.png #1: background middle
+AddTextureFromFile resources/bg_bottom.png #2: background bottom
+
+AddTextureFromFile menus_png/Button.png #3
+
+#4
+AddTextureFromString 0 0 0 0 New game
+
+#5
+AddTextureFromString 0 0 0 0 Quit
+
+### Spritesheets ###
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.234375 #0: background
+AddSprite 0 2 0 0 512 512
+AddSprite 0 2 0 0 512 512
+AddSprite 0 2 0 0 512 512
+AddSprite 0 1 0 0 512 512
+AddSprite 0 1 0 0 512 512
+AddSprite 0 1 0 0 512 512
+AddSprite 0 0 0 0 512 512
+AddSprite 0 0 0 0 512 512
+AddSprite 0 0 0 0 512 512
+
+AddSpritesheet 0 1 0 1 1 1 1 1 2 4 0 1 0 1 0.5 #1
+AddSprite 1 3 177 201 363 178
+AddSprite 1 3 562 201 363 178
+AddSprite 1 3 945 201 363 178
+AddSprite 1 3 945 201 363 178
+AddSprite 1 3 945 201 363 178
+AddSprite 1 3 945 201 363 178
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #2
+AddSprite 2 4 0 0 0 0
+AddSprite 2 5 0 0 0 0
+
+### Entities ###
+
+AddEntity #0: screen
+UseAbsolutePosition 0 0 800 600
+
+AddEntity #1: background
+UseTiledVisuals 0 20 5
+UseAbsolutePosition 0 0 120 600
+ModifyVisuals 0 0 0 0 -0
+
+AddEntity #2: button new game
+UseAbsolutePosition 310 356 181 89
+UseInputSelectControl 0 2 0
+UseMenuItemVisuals 1
+
+AddEntity #3: button quit
+UseAbsolutePosition 310 156 181 89
+UseInputSelectControl 1 2 1
+UseMenuItemVisuals 1
+
+AddEntity #4: new game text
+UseAbsolutePosition 395 401 0 0
+UseStaticVisuals 2 0
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 4
+
+AddEntity #5: quit text
+UseAbsolutePosition 395 201 0 0
+UseStaticVisuals 2 1
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 4
+
+### Procedures ###
+
+AddProcedure 1 #0: new game
+#ExtendProcedure 0 1
+ExecuteFileClean levels/level1.txt
+
+AddProcedure 1 #1: quit
+#ExtendProcedure 1 1
+Quit
