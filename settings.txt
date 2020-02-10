@@ -1,4 +1,4 @@
-ResolutionX 800
-ResolutionY 600
-Fullscreen 0
-Level levels/menu.txt
+ResolutionX 1366
+ResolutionY 768
+Fullscreen 1
+Level levels/beeyond_demo_menu.lvl
