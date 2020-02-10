@@ -33,14 +33,9 @@
 #include "commands/add_entity_command.h"
 #include "components/guide_control.h"
 #include "components/instant_movement.h"
-#include "optional_ref.h"
 
 int main(int argc, char** argv)
 {
-	int a {5};
-	optional_ref<int> b {a};
-	b >> [](int& x) { std::cout << x << std::endl; return x; };
-
 	do
 	{
 		FileParser file;
@@ -102,7 +97,7 @@ int main(int argc, char** argv)
         globals.resource_system.clear();
         globals.command_queue.flush_commands();
 
-        globals.command_queue.push(new ExecuteFileCleanCommand(globals.level_name, sdl.renderer()));
+        globals.command_queue.push(std::make_unique<ExecuteFileCleanCommand>(globals.level_name, sdl.renderer()));
 
 /*
 ## new code
