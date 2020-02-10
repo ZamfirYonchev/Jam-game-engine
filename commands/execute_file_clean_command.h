@@ -21,7 +21,7 @@ public:
     {}
 
     void execute() const;
-    Command* clone() { return new ExecuteFileCleanCommand(m_filename, m_renderer); }
+    std::unique_ptr<Command> clone() { return std::make_unique<ExecuteFileCleanCommand>(m_filename, m_renderer); }
 
 private:
     std::string m_filename;

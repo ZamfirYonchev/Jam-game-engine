@@ -21,7 +21,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseTiledVisualsCommand(m_spr_id, m_repeat_x, m_repeat_y); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseTiledVisualsCommand>(m_spr_id, m_repeat_x, m_repeat_y); }
 private:
     SpritesheetID m_spr_id;
     uint16_t m_repeat_x, m_repeat_y;

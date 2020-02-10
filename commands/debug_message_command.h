@@ -21,7 +21,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new DebugMessageCommand(m_text, m_severity); }
+    std::unique_ptr<Command> clone() { return std::make_unique<DebugMessageCommand>(m_text, m_severity); }
 
 private:
     std::string m_text;

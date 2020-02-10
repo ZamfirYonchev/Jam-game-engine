@@ -16,7 +16,7 @@ public:
     RemoveEntityCommand() {}
 
     void execute() const;
-    Command* clone() { return new RemoveEntityCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<RemoveEntityCommand>(); }
 };
 
 

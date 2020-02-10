@@ -20,7 +20,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseStaticVisualsCommand(m_spr_id, m_sprite); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseStaticVisualsCommand>(m_spr_id, m_sprite); }
 private:
     SpritesheetID m_spr_id;
     int m_sprite;

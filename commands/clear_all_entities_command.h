@@ -15,7 +15,7 @@ class ClearAllEntitiesCommand : public Command
 public:
 	ClearAllEntitiesCommand() {}
     void execute() const;
-    Command* clone() { return new ClearAllEntitiesCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<ClearAllEntitiesCommand>(); }
 };
 
 

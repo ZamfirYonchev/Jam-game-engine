@@ -15,7 +15,7 @@ class UseNullVisualsCommand : public Command
 public:
 	UseNullVisualsCommand() {}
     void execute() const;
-    Command* clone() { return new UseNullVisualsCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseNullVisualsCommand>(); }
 };
 
 #endif /* COMMANDS_USE_NULL_VISUALS_COMMAND_H_ */

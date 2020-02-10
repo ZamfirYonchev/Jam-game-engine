@@ -20,7 +20,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseMenuItemVisualsCommand(m_spr_id); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseMenuItemVisualsCommand>(m_spr_id); }
 private:
     SpritesheetID m_spr_id;
 };

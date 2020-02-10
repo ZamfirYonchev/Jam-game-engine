@@ -43,7 +43,7 @@ void InputHandler::process_input()
                 else if(m_event.key.keysym.sym == m_keyselect)
                     m_select_pressed = true;
                 else if(m_event.key.keysym.sym == m_keyquit)
-                    globals.command_queue.push(new QuitCommand());
+                    globals.command_queue.push(std::make_unique<QuitCommand>());
                 else if(m_event.key.keysym.sym == SDLK_r)
                     globals.app_needs_reload = true;
                 else if(m_event.key.keysym.sym == m_keypause)

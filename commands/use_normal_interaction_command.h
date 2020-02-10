@@ -19,7 +19,7 @@ public:
 	{}
 
 	void execute() const;
-    Command* clone() { return new UseNormalInteractionCommand(m_group_vec); }
+	std::unique_ptr<Command> clone() { return std::make_unique<UseNormalInteractionCommand>(m_group_vec); }
 
 private:
     int32_t m_group_vec;

@@ -15,7 +15,7 @@ class UseNullMovementCommand : public Command
 public:
 	UseNullMovementCommand() {}
     void execute() const;
-    Command* clone() { return new UseNullMovementCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseNullMovementCommand>(); }
 };
 
 

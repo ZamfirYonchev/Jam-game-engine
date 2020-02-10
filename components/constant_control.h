@@ -13,10 +13,10 @@
 class ConstantControl : public Control
 {
 public:
-	ConstantControl(int8_t move_decision, bool jump_decision, LookDir look_dir)
+	ConstantControl(int8_t move_decision, bool jump_decision, bool duck_decision, LookDir look_dir)
 	: m_move_decision(move_decision)
 	, m_jump_decision(jump_decision)
-	, m_duck_decision(false)
+	, m_duck_decision(duck_decision)
 	, m_look_dir(look_dir)
 	{}
 
@@ -39,6 +39,7 @@ public:
     {
     	m_move_decision = 0;
     	m_jump_decision = false;
+    	m_duck_decision = false;
     }
 
 private:

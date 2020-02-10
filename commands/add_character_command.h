@@ -24,7 +24,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new AddCharacterCommand(m_x, m_y, m_w, m_h, m_hp, m_spr_id); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddCharacterCommand>(m_x, m_y, m_w, m_h, m_hp, m_spr_id); }
 
 private:
     double m_x, m_y, m_w, m_h, m_hp;

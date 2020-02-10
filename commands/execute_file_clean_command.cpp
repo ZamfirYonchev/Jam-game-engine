@@ -19,5 +19,5 @@ void ExecuteFileCleanCommand::execute() const
 	globals.damage_system.clear();
 	globals.rendering_system.clear();
 	globals.entity_system.clear();
-	globals.command_queue.push(new ExecuteFileCommand(m_filename, m_renderer));
+	globals.command_queue.push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
 }

@@ -19,7 +19,7 @@ void AddProjectileCommand::execute() const
     globals.entity_system.add_new_entity();
 	Entity* entity = globals.entity_system.entity(globals.entity_system.last_id());
     entity->set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
-    entity->set_control(new ConstantControl(1, false, Control::RIGHT));
+    entity->set_control(new ConstantControl(1, false, false, Control::RIGHT));
     entity->set_movement(new FullMovement(false));
     entity->set_collision(new DamageCollision(Collision::TRANSPARENT, 0.01));
     entity->set_visuals(new StaticVisuals(m_spr_id, 0));

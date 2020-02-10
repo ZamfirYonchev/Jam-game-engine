@@ -16,7 +16,7 @@ public:
 	UseNullInteractionCommand() {}
 
 	void execute() const;
-    Command* clone() { return new UseNullInteractionCommand(); }
+	std::unique_ptr<Command> clone() { return std::make_unique<UseNullInteractionCommand>(); }
 };
 
 

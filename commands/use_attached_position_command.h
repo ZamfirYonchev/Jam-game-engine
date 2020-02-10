@@ -23,7 +23,7 @@ public:
 	{}
 
 	void execute() const;
-    Command* clone() { return new UseAttachedPositionCommand(m_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
+	std::unique_ptr<Command> clone() { return std::make_unique<UseAttachedPositionCommand>(m_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
 private:
     EntityID m_id;
     double m_offset_x, m_offset_y, m_offset_w, m_offset_h;

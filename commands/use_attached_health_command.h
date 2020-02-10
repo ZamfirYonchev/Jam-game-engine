@@ -21,7 +21,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseAttachedHealthCommand(m_attached_id, m_offset_hp, m_offset_max_hp); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseAttachedHealthCommand>(m_attached_id, m_offset_hp, m_offset_max_hp); }
 private:
     EntityID m_attached_id;
     double m_offset_hp, m_offset_max_hp;

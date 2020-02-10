@@ -23,7 +23,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new AddProjectileCommand(m_x, m_y, m_w, m_h, m_spr_id); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddProjectileCommand>(m_x, m_y, m_w, m_h, m_spr_id); }
 
 private:
     double m_x, m_y, m_w, m_h;

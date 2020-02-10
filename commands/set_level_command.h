@@ -19,7 +19,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new SetLevelCommand(m_level); }
+    std::unique_ptr<Command> clone() { return std::make_unique<SetLevelCommand>(m_level); }
 
 private:
     std::string m_level;

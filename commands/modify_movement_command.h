@@ -22,7 +22,7 @@ public:
 	{}
 
 	void execute() const;
-	Command* clone() { return new ModifyMovementCommand(m_vx, m_vy, m_ax, m_ay, m_gravity_affected); }
+	std::unique_ptr<Command> clone() { return std::make_unique<ModifyMovementCommand>(m_vx, m_vy, m_ax, m_ay, m_gravity_affected); }
 private:
     double m_vx, m_vy, m_ax, m_ay, m_gravity_affected;
 };

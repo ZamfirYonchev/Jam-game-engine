@@ -24,7 +24,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new AddVisualObjectCommand(m_x, m_y, m_w, m_h, m_spr_id, m_sprite); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddVisualObjectCommand>(m_x, m_y, m_w, m_h, m_spr_id, m_sprite); }
 
 private:
     double m_x, m_y, m_w, m_h;

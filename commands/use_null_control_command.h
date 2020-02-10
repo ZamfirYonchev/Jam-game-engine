@@ -15,7 +15,7 @@ class UseNullControlCommand : public Command
 public:
 	UseNullControlCommand() {}
     void execute() const;
-    Command* clone() { return new UseNullControlCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseNullControlCommand>(); }
 };
 
 #endif /* COMMANDS_USE_NULL_CONTROL_COMMAND_H_ */

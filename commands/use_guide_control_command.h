@@ -22,7 +22,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseGuideControlCommand(m_target_id, m_attack_proc_id, m_attack_cooldown, m_range); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseGuideControlCommand>(m_target_id, m_attack_proc_id, m_attack_cooldown, m_range); }
 private:
     EntityID m_target_id;
     ProcedureID m_attack_proc_id;

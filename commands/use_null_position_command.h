@@ -15,7 +15,7 @@ class UseNullPositionCommand : public Command
 public:
 	UseNullPositionCommand() {}
     void execute() const;
-    Command* clone() { return new UseNullPositionCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseNullPositionCommand>(); }
 };
 
 #endif /* COMMANDS_USE_NULL_POSITION_COMMAND_H_ */

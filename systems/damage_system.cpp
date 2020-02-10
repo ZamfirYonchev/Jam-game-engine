@@ -20,8 +20,8 @@ void DamageSystem::update(Time time_diff)
         health->update_health(time_diff);
         if(was_alive && health->alive() == false && health->on_death_exec() >= 0)
         {
-        	globals.command_queue.push(new SelectEntityCommand(globals.entity_system.entity(*it)->id()));
-        	globals.command_queue.push(new CallProcedureCommand(health->on_death_exec()));
+        	globals.command_queue.push(std::make_unique<SelectEntityCommand>(globals.entity_system.entity(*it)->id()));
+        	globals.command_queue.push(std::make_unique<CallProcedureCommand>(health->on_death_exec()));
         }
     }
 }

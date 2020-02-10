@@ -20,7 +20,7 @@ public:
     {}
 
     void execute() const;
-    Command* clone() { return new ExtendProcedureCommand(m_id, m_num_of_cmds); }
+    std::unique_ptr<Command> clone() { return std::make_unique<ExtendProcedureCommand>(m_id, m_num_of_cmds); }
 
 private:
     ProcedureID m_id;

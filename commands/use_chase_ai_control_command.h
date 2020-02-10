@@ -22,7 +22,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseChaseAIControlCommand(m_target_id, m_attack_id, m_attack_cooldown, m_attack_range); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseChaseAIControlCommand>(m_target_id, m_attack_id, m_attack_cooldown, m_attack_range); }
 
 private:
     EntityID m_target_id;

@@ -21,7 +21,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseInputSelectControlCommand(m_select, m_max, m_proc_id); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseInputSelectControlCommand>(m_select, m_max, m_proc_id); }
 private:
     int m_select;
     int m_max;

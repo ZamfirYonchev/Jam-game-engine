@@ -23,7 +23,7 @@ public:
     , m_h(h)
     {}
     void execute() const;
-    Command* clone() { return new AddSpriteCommand(m_spr_id, m_tex_id, m_x, m_y, m_w, m_h); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddSpriteCommand>(m_spr_id, m_tex_id, m_x, m_y, m_w, m_h); }
 
 private:
     SpritesheetID m_spr_id;

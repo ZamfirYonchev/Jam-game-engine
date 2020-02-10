@@ -14,7 +14,6 @@ void CommandQueue::process(Time time_diff)
     {
 		m_curr_cmd_it = it;
 		(*it)->execute();
-		delete *it;
 		it = m_commands.erase(it);
     }
 }

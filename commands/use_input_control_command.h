@@ -20,7 +20,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseInputControlCommand(m_shoot_id, m_shoot_cooldown); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseInputControlCommand>(m_shoot_id, m_shoot_cooldown); }
 private:
     ProcedureID m_shoot_id;
     double m_shoot_cooldown;

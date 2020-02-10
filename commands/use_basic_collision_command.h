@@ -19,7 +19,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseBasicCollisionCommand(m_state); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseBasicCollisionCommand>(m_state); }
 private:
     Collision::CollisionState m_state;
 };

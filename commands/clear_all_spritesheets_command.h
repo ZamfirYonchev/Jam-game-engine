@@ -15,7 +15,7 @@ class ClearAllSpritesheetsCommand : public Command
 public:
 	ClearAllSpritesheetsCommand() {}
     void execute() const;
-    Command* clone() { return new ClearAllSpritesheetsCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<ClearAllSpritesheetsCommand>(); }
 };
 
 #endif /* COMMANDS_CLEAR_ALL_SPRITESHEETS_COMMAND_H_ */

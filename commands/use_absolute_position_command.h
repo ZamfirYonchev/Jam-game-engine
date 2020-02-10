@@ -18,7 +18,7 @@ public:
 	: m_position(position) {}
 
     void execute() const;
-    Command* clone() { return new UseAbsolutePositionCommand(m_position); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseAbsolutePositionCommand>(m_position); }
 private:
     AbsolutePosition m_position;
 };

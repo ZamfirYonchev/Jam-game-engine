@@ -19,7 +19,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseCharacterHealthCommand(m_hp, m_max_hp); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseCharacterHealthCommand>(m_hp, m_max_hp); }
 private:
     double m_hp, m_max_hp;
 };

@@ -42,8 +42,8 @@ void RenderingSystem::set_entity_layer(EntityID entity, Visuals::VisualLayer lay
 
 void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer* renderer) const
 {
-    SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-    //SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    //SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 
     Position* screen_zone_position;

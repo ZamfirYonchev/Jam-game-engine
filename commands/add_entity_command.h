@@ -15,7 +15,7 @@ class AddEntityCommand : public Command
 public:
     AddEntityCommand() {}
     void execute() const;
-    Command* clone() { return new AddEntityCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddEntityCommand>(); }
 };
 
 

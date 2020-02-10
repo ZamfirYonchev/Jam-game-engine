@@ -15,7 +15,7 @@ class ClearAllTexturesCommand : public Command
 public:
 	ClearAllTexturesCommand() {}
     void execute() const;
-    Command* clone() { return new ClearAllTexturesCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<ClearAllTexturesCommand>(); }
 };
 
 

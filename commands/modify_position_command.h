@@ -21,7 +21,7 @@ public:
 	{}
 
 	void execute() const;
-	Command* clone() { return new ModifyPositionCommand(m_x, m_y, m_w, m_h); }
+	std::unique_ptr<Command> clone() { return std::make_unique<ModifyPositionCommand>(m_x, m_y, m_w, m_h); }
 private:
     double m_x, m_y, m_w, m_h;
 };

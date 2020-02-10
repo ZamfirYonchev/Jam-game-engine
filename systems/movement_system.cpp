@@ -47,8 +47,8 @@ void MovementSystem::update(Time time_delta)
 
         movement->mod_velocity_x(movement->ax()*time_delta);
         movement->mod_velocity_y(movement->ay()*time_delta);
-        movement->mod_velocity_x(-0.01*movement->vx()); //air friction
-        movement->mod_velocity_y(-0.01*movement->vy()); //air friction
+        movement->mod_velocity_x(-0.1*movement->vx()); //air friction
+        movement->mod_velocity_y(-0.1*movement->vy()); //air friction
 
         movement->set_accel_x(0);
         movement->set_accel_y(0);

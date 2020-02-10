@@ -14,35 +14,27 @@
 class ProcedureCommand : public Command
 {
 public:
-    ~ProcedureCommand()
+    void add_command(std::unique_ptr<Command> cmd)
     {
-        for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-            delete *it;
-    }
-
-    void add_command(Command* cmd)
-    {
-        m_commands.push_back(cmd);
+        m_commands.push_back(std::move(cmd));
     }
 
     void clear()
     {
-        for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-            delete *it;
         m_commands.clear();
     }
 
     void execute() const;
-    Command* clone()
+    std::unique_ptr<Command> clone()
     {
-        ProcedureCommand* cmd = new ProcedureCommand();
+        ProcedureCommand cmd = ProcedureCommand();
         for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-            cmd->add_command((*it)->clone());
-        return cmd;
+            cmd.add_command((*it)->clone());
+        return std::make_unique<ProcedureCommand>(std::move(cmd));
     }
 
 private:
-    std::list<Command*> m_commands;
+    std::list<std::unique_ptr<Command>> m_commands;
 };
 
 

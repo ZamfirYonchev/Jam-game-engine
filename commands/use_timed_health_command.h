@@ -20,7 +20,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseTimedHealthCommand(m_ttl, m_proc_id); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseTimedHealthCommand>(m_ttl, m_proc_id); }
 private:
     double m_ttl;
     ProcedureID m_proc_id;

@@ -23,7 +23,7 @@ public:
 	{}
 
 	void execute() const;
-    Command* clone() { return new UseTriggerInteractionCommand(m_trigger_group, m_on_enter_proc_id_self, m_on_exit_proc_id_self, m_on_enter_proc_id_other); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseTriggerInteractionCommand>(m_trigger_group, m_on_enter_proc_id_self, m_on_exit_proc_id_self, m_on_enter_proc_id_other); }
 
 private:
     int8_t m_trigger_group;

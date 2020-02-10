@@ -15,7 +15,7 @@ class PauseCommand : public Command
 public:
     PauseCommand(bool paused) : m_paused(paused) {}
     void execute() const;
-    Command* clone() { return new PauseCommand(m_paused); }
+    std::unique_ptr<Command> clone() { return std::make_unique<PauseCommand>(m_paused); }
 private:
     bool m_paused;
 };

@@ -19,8 +19,6 @@ public:
     CommandQueue() : m_curr_cmd_it(m_commands.end()) {}
     ~CommandQueue()
     {
-        for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-            delete *it;
     }
     CommandQueue(const CommandQueue& ) = delete;
     CommandQueue& operator=(const CommandQueue& ) = delete;
@@ -43,31 +41,26 @@ public:
 
     void process(Time time_diff);
 
-    void push(Command* cmd)
+    void push(std::unique_ptr<Command> cmd)
     {
-        if(cmd != nullptr)
-            m_commands.push_back(cmd);
+		m_commands.push_back(std::move(cmd));
     }
 
-    void insert_next(Command* cmd)
+    void insert_next(std::unique_ptr<Command> cmd)
     {
-        if(cmd != nullptr)
-            m_commands.insert(std::next(m_curr_cmd_it), cmd);
+		m_commands.insert(std::next(m_curr_cmd_it), std::move(cmd));
     }
 
-    Command* pop_next()
+    std::unique_ptr<Command> pop_next()
     {
         auto it = std::next(m_curr_cmd_it);
-        Command* cmd = *it;
+        std::unique_ptr<Command> cmd = std::move(*it);
         m_commands.erase(it);
         return cmd;
     }
 
     void clear()
     {
-        for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-            delete *it;
-
         m_commands.clear();
     }
 
@@ -76,14 +69,13 @@ public:
         for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
         	if(it != m_curr_cmd_it)
 			{
-				delete *it;
-				*it = new NullCommand();
+				*it = std::make_unique<NullCommand>();
 			}
     }
 
 private:
-    std::list<Command*> m_commands;
-    std::list<Command*>::iterator m_curr_cmd_it;
+    std::list<std::unique_ptr<Command>> m_commands;
+    std::list<std::unique_ptr<Command>>::iterator m_curr_cmd_it;
 };
 
 #endif /* COMMAND_QUEUE_H_ */

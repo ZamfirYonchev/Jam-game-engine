@@ -8,12 +8,14 @@
 #ifndef COMMANDS_COMMAND_H_
 #define COMMANDS_COMMAND_H_
 
+#include <memory>
+
 class Command
 {
 public:
     virtual ~Command() {}
     virtual void execute() const = 0;
-    virtual Command* clone() = 0;
+    virtual std::unique_ptr<Command> clone() = 0;
 };
 
 #endif /* COMMANDS_COMMAND_H_ */

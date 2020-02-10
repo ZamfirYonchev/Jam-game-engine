@@ -18,7 +18,7 @@ public:
 	{}
 
 	void execute() const;
-    Command* clone() { return new UseInstantMovementCommand(m_move_accel); }
+	std::unique_ptr<Command> clone() { return std::make_unique<UseInstantMovementCommand>(m_move_accel); }
 
 private:
     double m_move_accel;

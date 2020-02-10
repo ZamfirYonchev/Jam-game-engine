@@ -19,7 +19,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new SelectEntityCommand(m_id); }
+    std::unique_ptr<Command> clone() { return std::make_unique<SelectEntityCommand>(m_id); }
 
 private:
     EntityID m_id;

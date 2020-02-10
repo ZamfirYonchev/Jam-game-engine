@@ -24,7 +24,7 @@ public:
 	, m_b(b)
 	, m_renderer(renderer) {}
     void execute() const;
-    Command* clone() { return new AddTextureFromStringCommand(m_text, m_font_id, m_r, m_g, m_b, m_renderer); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddTextureFromStringCommand>(m_text, m_font_id, m_r, m_g, m_b, m_renderer); }
 
 private:
     std::string m_text;

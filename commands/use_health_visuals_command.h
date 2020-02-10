@@ -20,7 +20,7 @@ public:
 	{}
 
     void execute() const;
-    Command* clone() { return new UseHealthVisualsCommand(m_spr_id, m_repeat_x); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseHealthVisualsCommand>(m_spr_id, m_repeat_x); }
 private:
     SpritesheetID m_spr_id;
     uint16_t m_repeat_x;

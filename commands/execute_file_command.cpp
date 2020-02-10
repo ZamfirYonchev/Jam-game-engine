@@ -76,7 +76,7 @@ void ExecuteFileCommand::execute() const
     FileParser file(m_filename);
     std::string token;
     std::string line;
-    Command *command = nullptr;
+    std::unique_ptr<Command> command;
     double vars[15];
 
     while(file.read().good())
@@ -93,85 +93,85 @@ void ExecuteFileCommand::execute() const
         }
         else if(token == "Null")
         {
-            command = new NullCommand();
+            command = std::move(std::make_unique<NullCommand>());
         }
         else if(token == "DebugMessage")
         {
             file.read() >> vars[0];
             std::getline(file.read(), line);
-        	command = new DebugMessageCommand(line, DebugMessageCommand::Severity(vars[0]));
+        	command = std::move(std::make_unique<DebugMessageCommand>(line, DebugMessageCommand::Severity(vars[0])));
         }
         else if(token == "SetLevel")
         {
             file.read() >> line;
-            command = new SetLevelCommand(line);
+            command = std::move(std::make_unique<SetLevelCommand>(line));
         }
         else if(token == "SelectEntity")
         {
             file.read() >> vars[0];
-            command = new SelectEntityCommand(EntityID(vars[0]));
+            command = std::move(std::make_unique<SelectEntityCommand>(EntityID(vars[0])));
         }
         else if(token == "ExtendProcedure")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new ExtendProcedureCommand(ProcedureID(vars[0]), int(vars[1]));
+            command = std::move(std::make_unique<ExtendProcedureCommand>(ProcedureID(vars[0]), int(vars[1])));
         }
         else if(token == "ClearProcedure")
         {
             file.read() >> vars[0];
-            command = new ClearProcedureCommand(ProcedureID(vars[0]));
+            command = std::move(std::make_unique<ClearProcedureCommand>(ProcedureID(vars[0])));
         }
         else if(token == "Pause")
         {
             file.read() >> vars[0];
-            command = new PauseCommand(bool(vars[0]));
+            command = std::move(std::make_unique<PauseCommand>(bool(vars[0])));
         }
         else if(token == "Quit")
         {
-            command = new QuitCommand();
+            command = std::move(std::make_unique<QuitCommand>());
         }
         else if(token == "ClearAllEntities")
         {
-            command = new ClearAllEntitiesCommand();
+            command = std::move(std::make_unique<ClearAllEntitiesCommand>());
         }
         else if(token == "ClearAllTextures")
         {
-            command = new ClearAllTexturesCommand();
+            command = std::move(std::make_unique<ClearAllTexturesCommand>());
         }
         else if(token == "ClearAllSpritesheets")
         {
-            command = new ClearAllSpritesheetsCommand();
+            command = std::move(std::make_unique<ClearAllSpritesheetsCommand>());
         }
         else if(token == "ClearAllProcedures")
         {
-            command = new ClearAllProceduresCommand();
+            command = std::move(std::make_unique<ClearAllProceduresCommand>());
         }
         else if(token == "ExecuteFile")
         {
             file.read() >> line;
-        	command = new ExecuteFileCommand(line, m_renderer);
+        	command = std::move(std::make_unique<ExecuteFileCommand>(line, m_renderer));
         }
         else if(token == "ExecuteFileClean")
         {
             file.read() >> line;
-        	command = new ExecuteFileCleanCommand(line, m_renderer);
+        	command = std::move(std::make_unique<ExecuteFileCleanCommand>(line, m_renderer));
         }
         else if(token == "CallProcedure")
         {
             file.read() >> vars[0];
-            command = new CallProcedureCommand(ProcedureID(vars[0]));
+            command = std::move(std::make_unique<CallProcedureCommand>(ProcedureID(vars[0])));
         }
         else if(token == "AddFont")
         {
         	file.read() >> vars[0];
             file.read() >> line;
-            command = new AddFontCommand(line, int(vars[0]));
+            command = std::move(std::make_unique<AddFontCommand>(line, int(vars[0])));
         }
         else if(token == "AddTextureFromFile")
         {
             file.read() >> line;
-            command = new AddTextureFromFileCommand(line, m_renderer);
+            command = std::move(std::make_unique<AddTextureFromFileCommand>(line, m_renderer));
         }
         else if(token == "AddTextureFromString")
         {
@@ -180,7 +180,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             std::getline(file.read(), line);
-            command = new AddTextureFromStringCommand(line, FontID(vars[0]), uint8_t(vars[1]), uint8_t(vars[2]), uint8_t(vars[3]), m_renderer);
+            command = std::move(std::make_unique<AddTextureFromStringCommand>(line, FontID(vars[0]), uint8_t(vars[1]), uint8_t(vars[2]), uint8_t(vars[3]), m_renderer));
         }
         else if(token == "AddSpritesheet")
         {
@@ -199,7 +199,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[12];
             file.read() >> vars[13];
             file.read() >> vars[14];
-            command = new AddSpritesheetCommand(int(vars[0]), int(vars[1])
+            command = std::move(std::make_unique<AddSpritesheetCommand>(int(vars[0]), int(vars[1])
             								  , int(vars[2]), int(vars[3])
             								  , int(vars[4]), int(vars[5])
             								  , int(vars[6]), int(vars[7])
@@ -207,7 +207,7 @@ void ExecuteFileCommand::execute() const
             								  , int(vars[10]), int(vars[11])
             								  , int(vars[12]), int(vars[13])
             								  , double(vars[14])
-            									);
+            									));
         }
         else if(token == "AddSprite")
         {
@@ -217,12 +217,12 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[3];
             file.read() >> vars[4];
             file.read() >> vars[5];
-            command = new AddSpriteCommand(SpritesheetID(vars[0]), TextureID(vars[1]), vars[2], vars[3], vars[4], vars[5]);
+            command = std::move(std::make_unique<AddSpriteCommand>(SpritesheetID(vars[0]), TextureID(vars[1]), vars[2], vars[3], vars[4], vars[5]));
         }
         else if(token == "AddProcedure")
         {
             file.read() >> vars[0];
-            command = new AddProcedureCommand(int(vars[0]));
+            command = std::move(std::make_unique<AddProcedureCommand>(int(vars[0])));
         }
         else if(token == "AddCharacter")
         {
@@ -232,7 +232,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[3];
             file.read() >> vars[4];
             file.read() >> vars[5];
-            command = new AddCharacterCommand(vars[0], vars[1], vars[2], vars[3], vars[4], SpritesheetID(vars[5]));
+            command = std::move(std::make_unique<AddCharacterCommand>(vars[0], vars[1], vars[2], vars[3], vars[4], SpritesheetID(vars[5])));
         }
         else if(token == "AddPlatform")
         {
@@ -243,7 +243,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[4];
             file.read() >> vars[5];
             file.read() >> vars[6];
-            command = new AddPlatformCommand(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]), vars[5], vars[6]);
+            command = std::move(std::make_unique<AddPlatformCommand>(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]), vars[5], vars[6]));
         }
         else if(token == "AddProjectile")
         {
@@ -252,7 +252,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new AddProjectileCommand(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]));
+            command = std::move(std::make_unique<AddProjectileCommand>(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4])));
         }
         else if(token == "AddZone")
         {
@@ -264,7 +264,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[5];
             file.read() >> vars[6];
             file.read() >> vars[7];
-            command = new AddZoneCommand(vars[0], vars[1], vars[2], vars[3], int8_t(vars[4]), ProcedureID(vars[5]), ProcedureID(vars[6]), ProcedureID(vars[7]));
+            command = std::move(std::make_unique<AddZoneCommand>(vars[0], vars[1], vars[2], vars[3], int8_t(vars[4]), ProcedureID(vars[5]), ProcedureID(vars[6]), ProcedureID(vars[7])));
         }
         else if(token == "AddVisualObject")
         {
@@ -274,15 +274,15 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[3];
             file.read() >> vars[4];
             file.read() >> vars[5];
-            command = new AddVisualObjectCommand(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]), int(vars[5]));
+            command = std::move(std::make_unique<AddVisualObjectCommand>(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]), int(vars[5])));
         }
         else if(token == "AddEntity")
         {
-            command = new AddEntityCommand();
+            command = std::move(std::make_unique<AddEntityCommand>());
         }
         else if(token == "RemoveEntity")
         {
-            command = new RemoveEntityCommand();
+            command = std::move(std::make_unique<RemoveEntityCommand>());
         }
         else if(token == "ModifyPosition")
         {
@@ -290,7 +290,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[1];
             file.read() >> vars[2];
             file.read() >> vars[3];
-            command = new ModifyPositionCommand(vars[0], vars[1], vars[2], vars[3]);
+            command = std::move(std::make_unique<ModifyPositionCommand>(vars[0], vars[1], vars[2], vars[3]));
         }
         else if(token == "ModifyControl")
         {
@@ -299,7 +299,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new ModifyControlCommand(vars[0], vars[1], vars[2], vars[3], vars[4]);
+            command = std::move(std::make_unique<ModifyControlCommand>(vars[0], vars[1], vars[2], vars[3], vars[4]));
         }
         else if(token == "ModifyMovement")
         {
@@ -308,14 +308,14 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new ModifyMovementCommand(vars[0], vars[1], vars[2], vars[3], vars[4]);
+            command = std::move(std::make_unique<ModifyMovementCommand>(vars[0], vars[1], vars[2], vars[3], vars[4]));
         }
         else if(token == "ModifyCollision")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
             file.read() >> vars[2];
-            command = new ModifyCollisionCommand(vars[0], vars[1], vars[2]);
+            command = std::move(std::make_unique<ModifyCollisionCommand>(vars[0], vars[1], vars[2]));
         }
         else if(token == "ModifyInteraction")
         {
@@ -325,14 +325,14 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[3];
             file.read() >> vars[4];
             file.read() >> vars[5];
-            command = new ModifyInteractionCommand(vars[0], vars[1], vars[2], vars[3], vars[4], vars[5]);
+            command = std::move(std::make_unique<ModifyInteractionCommand>(vars[0], vars[1], vars[2], vars[3], vars[4], vars[5]));
         }
         else if(token == "ModifyHealth")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
             file.read() >> vars[2];
-            command = new ModifyHealthCommand(vars[0], vars[1], vars[2]);
+            command = std::move(std::make_unique<ModifyHealthCommand>(vars[0], vars[1], vars[2]));
         }
         else if(token == "ModifyVisuals")
         {
@@ -341,11 +341,11 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new ModifyVisualsCommand(vars[0], vars[1], vars[2], vars[3], vars[4]);
+            command = std::move(std::make_unique<ModifyVisualsCommand>(vars[0], vars[1], vars[2], vars[3], vars[4]));
         }
         else if(token == "UseNullPosition")
         {
-            command = new UseNullPositionCommand();
+            command = std::move(std::make_unique<UseNullPositionCommand>());
         }
         else if(token == "UseAbsolutePosition")
         {
@@ -353,7 +353,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[1];
             file.read() >> vars[2];
             file.read() >> vars[3];
-            command = new UseAbsolutePositionCommand(AbsolutePosition(vars[0], vars[1], vars[2], vars[3]));
+            command = std::move(std::make_unique<UseAbsolutePositionCommand>(AbsolutePosition(vars[0], vars[1], vars[2], vars[3])));
         }
         else if(token == "UseAttachedPosition")
         {
@@ -362,31 +362,32 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new UseAttachedPositionCommand(EntityID(vars[0]), vars[1], vars[2], vars[3], vars[4]);
+            command = std::move(std::make_unique<UseAttachedPositionCommand>(EntityID(vars[0]), vars[1], vars[2], vars[3], vars[4]));
         }
         else if(token == "UseNullControl")
         {
-            command = new UseNullControlCommand();
+            command = std::move(std::make_unique<UseNullControlCommand>());
         }
         else if(token == "UseConstantControl")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
             file.read() >> vars[2];
-            command = new UseConstantControlCommand(int8_t(vars[0]), bool(vars[1]), Control::LookDir(vars[2]));
+            file.read() >> vars[3];
+            command = std::move(std::make_unique<UseConstantControlCommand>(int8_t(vars[0]), bool(vars[1]), bool(vars[2]), Control::LookDir(vars[3])));
         }
         else if(token == "UseInputControl")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new UseInputControlCommand(ProcedureID(vars[0]), vars[1]);
+            command = std::move(std::make_unique<UseInputControlCommand>(ProcedureID(vars[0]), vars[1]));
         }
         else if(token == "UseInputSelectControl")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
             file.read() >> vars[2];
-            command = new UseInputSelectControlCommand(int(vars[0]), int(vars[1]), ProcedureID(vars[2]));
+            command = std::move(std::make_unique<UseInputSelectControlCommand>(int(vars[0]), int(vars[1]), ProcedureID(vars[2])));
         }
         else if(token == "UseChaseAIControl")
         {
@@ -394,7 +395,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[1];
             file.read() >> vars[2];
             file.read() >> vars[3];
-            command = new UseChaseAIControlCommand(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]);
+            command = std::move(std::make_unique<UseChaseAIControlCommand>(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]));
         }
         else if(token == "UseGuideControl")
         {
@@ -402,11 +403,11 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[1];
             file.read() >> vars[2];
             file.read() >> vars[3];
-            command = new UseGuideControlCommand(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]);
+            command = std::move(std::make_unique<UseGuideControlCommand>(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]));
         }
         else if(token == "UseNullMovement")
         {
-            command = new UseNullMovementCommand();
+            command = std::move(std::make_unique<UseNullMovementCommand>());
         }
         else if(token == "UseFullMovement")
         {
@@ -415,36 +416,36 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new UseFullMovementCommand(vars[0], vars[1], vars[2], vars[3], bool(vars[4]));
+            command = std::move(std::make_unique<UseFullMovementCommand>(vars[0], vars[1], vars[2], vars[3], bool(vars[4])));
         }
         else if(token == "UseInstantMovement")
         {
             file.read() >> vars[0];
-            command = new UseInstantMovementCommand(vars[0]);
+            command = std::move(std::make_unique<UseInstantMovementCommand>(vars[0]));
         }
         else if(token == "UseNullCollision")
         {
-            command = new UseNullCollisionCommand();
+            command = std::move(std::make_unique<UseNullCollisionCommand>());
         }
         else if(token == "UseBasicCollision")
         {
             file.read() >> vars[0];
-            command = new UseBasicCollisionCommand(Collision::CollisionState(vars[0]));
+            command = std::move(std::make_unique<UseBasicCollisionCommand>(Collision::CollisionState(vars[0])));
         }
         else if(token == "UseDamageCollision")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new UseDamageCollisionCommand(Collision::CollisionState(vars[0]), vars[1]);
+            command = std::move(std::make_unique<UseDamageCollisionCommand>(Collision::CollisionState(vars[0]), vars[1]));
         }
         else if(token == "UseNullInteraction")
         {
-            command = new UseNullInteractionCommand();
+            command = std::move(std::make_unique<UseNullInteractionCommand>());
         }
         else if(token == "UseNormalInteraction")
         {
             file.read() >> vars[0];
-            command = new UseNormalInteractionCommand(int32_t(vars[0]));
+            command = std::move(std::make_unique<UseNormalInteractionCommand>(int32_t(vars[0])));
         }
         else if(token == "UseTriggerInteraction")
         {
@@ -452,7 +453,7 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[1];
             file.read() >> vars[2];
             file.read() >> vars[3];
-            command = new UseTriggerInteractionCommand(int8_t(vars[0]), ProcedureID(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]));
+            command = std::move(std::make_unique<UseTriggerInteractionCommand>(int8_t(vars[0]), ProcedureID(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3])));
         }
         else if(token == "UseFullInteraction")
         {
@@ -461,79 +462,76 @@ void ExecuteFileCommand::execute() const
             file.read() >> vars[2];
             file.read() >> vars[3];
             file.read() >> vars[4];
-            command = new UseFullInteractionCommand(int32_t(vars[0]), int8_t(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]), ProcedureID(vars[4]));
+            command = std::move(std::make_unique<UseFullInteractionCommand>(int32_t(vars[0]), int8_t(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]), ProcedureID(vars[4])));
         }
         else if(token == "UseNullHealth")
         {
-            command = new UseNullHealthCommand();
+            command = std::move(std::make_unique<UseNullHealthCommand>());
         }
         else if(token == "UseAttachedHealth")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
             file.read() >> vars[2];
-            command = new UseAttachedHealthCommand(EntityID(vars[0]), vars[1], vars[2]);
+            command = std::move(std::make_unique<UseAttachedHealthCommand>(EntityID(vars[0]), vars[1], vars[2]));
         }
         else if(token == "UseCharacterHealth")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new UseCharacterHealthCommand(vars[0], vars[1]);
+            command = std::move(std::make_unique<UseCharacterHealthCommand>(vars[0], vars[1]));
         }
         else if(token == "UseTimedHealth")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new UseTimedHealthCommand(vars[0], ProcedureID(vars[1]));
+            command = std::move(std::make_unique<UseTimedHealthCommand>(vars[0], ProcedureID(vars[1])));
         }
         else if(token == "UseNullVisuals")
         {
-            command = new UseNullVisualsCommand();
+            command = std::move(std::make_unique<UseNullVisualsCommand>());
         }
         else if(token == "UseCharacterVisuals")
         {
             file.read() >> vars[0];
-            command = new UseCharacterVisualsCommand(SpritesheetID(vars[0]));
+            command = std::move(std::make_unique<UseCharacterVisualsCommand>(SpritesheetID(vars[0])));
         }
         else if(token == "UseTiledVisuals")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
             file.read() >> vars[2];
-            command = new UseTiledVisualsCommand(SpritesheetID(vars[0]), uint16_t(vars[1]), uint16_t(vars[2]));
+            command = std::move(std::make_unique<UseTiledVisualsCommand>(SpritesheetID(vars[0]), uint16_t(vars[1]), uint16_t(vars[2])));
         }
         else if(token == "UseStaticVisuals")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new UseStaticVisualsCommand(SpritesheetID(vars[0]), int(vars[1]));
+            command = std::move(std::make_unique<UseStaticVisualsCommand>(SpritesheetID(vars[0]), int(vars[1])));
         }
         else if(token == "UseHealthVisuals")
         {
             file.read() >> vars[0];
             file.read() >> vars[1];
-            command = new UseHealthVisualsCommand(SpritesheetID(vars[0]), uint16_t(vars[1]));
+            command = std::move(std::make_unique<UseHealthVisualsCommand>(SpritesheetID(vars[0]), uint16_t(vars[1])));
         }
         else if(token == "UseMenuItemVisuals")
         {
             file.read() >> vars[0];
-            command = new UseMenuItemVisualsCommand(SpritesheetID(vars[0]));
+            command = std::move(std::make_unique<UseMenuItemVisualsCommand>(SpritesheetID(vars[0])));
         }
         else
         {
             std::cout << "Error while parsing file " << m_filename << ": Unknown token " << token << std::endl;
-            return;
         }
 
         if(file.read().fail())
         {
             std::cerr << "Error while parsing file " << m_filename << ": Parameters of token " << token << std::endl;
-            delete command;
         }
         else
         {
-        	globals.command_queue.push(command);
-        	command = nullptr;
+        	if(command) globals.command_queue.push(std::move(command));
         }
     }
 }

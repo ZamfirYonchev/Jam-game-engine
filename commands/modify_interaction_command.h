@@ -23,7 +23,7 @@ public:
 	{}
 
 	void execute() const;
-	Command* clone() { return new ModifyInteractionCommand(m_group, m_value, m_trigger_group, m_proc_id_self, m_on_exit_proc_id_self, m_proc_id_other); }
+	std::unique_ptr<Command> clone() { return std::make_unique<ModifyInteractionCommand>(m_group, m_value, m_trigger_group, m_proc_id_self, m_on_exit_proc_id_self, m_proc_id_other); }
 private:
 	double m_group, m_value, m_trigger_group, m_proc_id_self, m_on_exit_proc_id_self, m_proc_id_other;
 };

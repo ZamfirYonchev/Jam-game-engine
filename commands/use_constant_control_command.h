@@ -14,17 +14,19 @@
 class UseConstantControlCommand : public Command
 {
 public:
-	UseConstantControlCommand(int8_t move_dec, bool jump_dec, Control::LookDir look_dir)
+	UseConstantControlCommand(int8_t move_dec, bool jump_dec, bool duck_dec, Control::LookDir look_dir)
 	: m_move_decision(move_dec)
 	, m_jump_decision(jump_dec)
+	, m_duck_decision(duck_dec)
 	, m_look_dir(look_dir)
 	{}
 
     void execute() const;
-    Command* clone() { return new UseConstantControlCommand(m_move_decision, m_jump_decision, m_look_dir); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseConstantControlCommand>(m_move_decision, m_jump_decision, m_duck_decision, m_look_dir); }
 private:
 	int8_t m_move_decision;
 	bool m_jump_decision;
+	bool m_duck_decision;
 	Control::LookDir m_look_dir;
 };
 

@@ -15,7 +15,7 @@ class UseNullCollisionCommand : public Command
 public:
 	UseNullCollisionCommand() {}
     void execute() const;
-    Command* clone() { return new UseNullCollisionCommand(); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseNullCollisionCommand>(); }
 };
 
 #endif /* COMMANDS_USE_NULL_COLLISION_COMMAND_H_ */

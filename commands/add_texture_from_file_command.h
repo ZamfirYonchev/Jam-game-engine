@@ -17,7 +17,7 @@ class AddTextureFromFileCommand : public Command
 public:
     AddTextureFromFileCommand(const std::string& file, SDL_Renderer* renderer) : m_file(file), m_renderer(renderer) {}
     void execute() const;
-    Command* clone() { return new AddTextureFromFileCommand(m_file, m_renderer); }
+    std::unique_ptr<Command> clone() { return std::make_unique<AddTextureFromFileCommand>(m_file, m_renderer); }
 
 private:
     std::string m_file;
