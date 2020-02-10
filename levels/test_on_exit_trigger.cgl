@@ -1,4 +1,141 @@
-SetLevel levels/level1.txt
+SetLevel levels/test_on_exit_trigger.cgl
+
+### Procedures
+AddProcedure 0 #0: move screen left
+ExtendProcedure 0 4
+SelectEntity 0
+ModifyPosition -5 0 0 0
+SelectEntity 1
+ModifyPosition -4.8 0 0 0
+
+AddProcedure 0 #1: move screen right
+ExtendProcedure 1 4
+SelectEntity 0
+ModifyPosition 5 0 0 0
+SelectEntity 1
+ModifyPosition 4.8 0 0 0
+
+AddProcedure 0 #2: translate up
+ExtendProcedure 2 1
+ModifyPosition 0 10 0 0
+
+AddProcedure 0 #3: translate down
+ExtendProcedure 3 1
+ModifyPosition 0 -10 0 0
+
+AddProcedure 0 #4: translate right
+ExtendProcedure 4 1
+ModifyPosition 10 0 0 0
+
+AddProcedure 0 #5: translate left
+ExtendProcedure 5 1
+ModifyPosition -10 0 0 0
+
+AddProcedure 0 #6: exit to next level
+ExtendProcedure 6 4
+AddEntity
+UseTimedHealth 200 7
+SelectEntity 5
+UseNullVisuals
+
+AddProcedure 0 #7: close door to next level
+ExtendProcedure 7 3
+UseTimedHealth 200 8
+SelectEntity 11
+UseStaticVisuals 11 0
+
+AddProcedure 0 #8: load next level
+ExtendProcedure 8 1
+ExecuteFileClean levels/level3.txt
+
+AddProcedure 0 #9: spawn zombie
+ExtendProcedure 9 11
+	AddEntity
+	UseCharacterVisuals 13
+	UseFullMovement 0.5 2 0.004 1.6 1
+	UseBasicCollision 1
+	UseChaseAIControl 5 12 1000 50
+	UseCharacterHealth 5 5
+	UseNormalInteraction 0
+	ModifyInteraction 3 1 0 0 0 0
+	ModifyVisuals 0 0 0 0 -0
+	ModifyVisuals 0 0 0 0 2
+	UseAbsolutePosition 0 0 49 100
+
+AddProcedure 0 #10: remove entity
+ExtendProcedure 10 1
+	RemoveEntity
+	
+AddProcedure 0 #11: spawn zombie0
+ExtendProcedure 11 2
+	CallProcedure 9 #spawn zombie
+	ModifyPosition 1150 74 0 0
+
+AddProcedure 0 #12: zombie attack
+ExtendProcedure 12 3
+	AddZone -20 20 100 40 0 -1 13 -1
+	UseBasicCollision 0
+	UseTimedHealth 1 10
+
+AddProcedure 0 #13: zombie attack damage
+ExtendProcedure 13 1
+	ModifyHealth 0 0 -1
+
+AddProcedure 0 #14: stop movement
+ExtendProcedure 14 1
+	ModifyMovement -0 -0 0 0 0
+
+AddProcedure 0 #15: move down
+ExtendProcedure 15 1
+ModifyMovement 0 0 0 -0.003 0
+
+AddProcedure 0 #16: move up
+ExtendProcedure 16 1
+ModifyMovement 0 0 0 0.009 0
+
+AddProcedure 0 #17: switch on
+ExtendProcedure 17 4
+	UseStaticVisuals 14 1
+	ModifyInteraction 0 0 0 1 0 0
+	SelectEntity 25
+	CallProcedure 15 #move acid down
+#	SelectEntity 25
+#	CallProcedure 16 #move door up
+
+AddProcedure 0 #18: switch off
+ExtendProcedure 18 2
+	UseStaticVisuals 14 0
+	ModifyInteraction 0 0 0 -1 0 0
+#	SelectEntity 24
+#	CallProcedure 16 #move door up
+#	SelectEntity 25
+#	CallProcedure 15 #move door down
+
+AddProcedure 0 #19: wisp attack
+ExtendProcedure 19 6
+	AddEntity
+	UseAbsolutePosition 5 5 10 10
+	UseBasicCollision 0
+	UseFullInteraction 0 3 10 13 -1
+	ModifyInteraction 2 1 0 0 0 0
+	UseTimedHealth 1 10
+
+AddProcedure 0 #20: move left
+ExtendProcedure 20 1
+ModifyControl 0 0 0 -1 0
+
+AddProcedure 0 #21: move right
+ExtendProcedure 21 1
+ModifyControl 0 0 0 1 0
+
+AddProcedure 2 #22: change tiling
+	ModifyVisuals 0 0 0 -0 0
+	ModifyVisuals 0 0 0 5 0
+
+AddProcedure 2 #23: restore tiling
+	ModifyVisuals 0 0 0 -0 0
+	ModifyVisuals 0 0 0 2 0
+
 
 ### Textures
 AddTextureFromFile resources/bg_top.png #0: background top
@@ -34,7 +171,7 @@ AddTextureFromFile resources/13.png #26: player wisp Idle
 AddTextureFromFile resources/14.png #27: player wisp Idle
 AddTextureFromFile resources/15.png #28: player wisp Idle
 AddTextureFromFile resources/16.png #29: player wisp Idle
-AddTextureFromFile resources/light-red-1.png #30: player wisp attack
+AddTextureFromFile resources/flash-100.png #30: player wisp attack
 
 AddTextureFromFile resources/robot/png/Idle_1.png #31: player character Idle
 AddTextureFromFile resources/robot/png/Idle_2.png #32: player character Idle
@@ -90,6 +227,73 @@ AddTextureFromFile resources/robot/png/Dead_10.png #81: player character Dead
 
 AddTextureFromFile freescifiplatform/png/Objects/DoorLocked.png #82: Exit closed
 AddTextureFromFile freescifiplatform/png/Objects/DoorOpen.png #83: Exit opened
+
+AddTextureFromFile freescifiplatform/png/Tiles/Acid_surface.png #84: acid top
+AddTextureFromFile freescifiplatform/png/Tiles/Acid.png #85: acid middle and bottom
+
+AddTextureFromFile zombie_png/male/Idle_1.png #86
+AddTextureFromFile zombie_png/male/Idle_2.png #87
+AddTextureFromFile zombie_png/male/Idle_3.png #88
+AddTextureFromFile zombie_png/male/Idle_4.png #89
+AddTextureFromFile zombie_png/male/Idle_5.png #90
+AddTextureFromFile zombie_png/male/Idle_6.png #91
+AddTextureFromFile zombie_png/male/Idle_7.png #92
+AddTextureFromFile zombie_png/male/Idle_8.png #93
+AddTextureFromFile zombie_png/male/Idle_9.png #94
+AddTextureFromFile zombie_png/male/Idle_10.png #95
+AddTextureFromFile zombie_png/male/Idle_11.png #96
+AddTextureFromFile zombie_png/male/Idle_12.png #97
+AddTextureFromFile zombie_png/male/Idle_13.png #98
+AddTextureFromFile zombie_png/male/Idle_14.png #99
+AddTextureFromFile zombie_png/male/Idle_15.png #100
+
+AddTextureFromFile zombie_png/male/Walk_1.png #101
+AddTextureFromFile zombie_png/male/Walk_2.png #102
+AddTextureFromFile zombie_png/male/Walk_3.png #103
+AddTextureFromFile zombie_png/male/Walk_4.png #104
+AddTextureFromFile zombie_png/male/Walk_5.png #105
+AddTextureFromFile zombie_png/male/Walk_6.png #106
+AddTextureFromFile zombie_png/male/Walk_7.png #107
+AddTextureFromFile zombie_png/male/Walk_8.png #108
+AddTextureFromFile zombie_png/male/Walk_9.png #109
+AddTextureFromFile zombie_png/male/Walk_10.png #110
+
+AddTextureFromFile zombie_png/male/Attack_1.png #111
+AddTextureFromFile zombie_png/male/Attack_2.png #112
+AddTextureFromFile zombie_png/male/Attack_3.png #113
+AddTextureFromFile zombie_png/male/Attack_4.png #114
+AddTextureFromFile zombie_png/male/Attack_5.png #115
+AddTextureFromFile zombie_png/male/Attack_6.png #116
+AddTextureFromFile zombie_png/male/Attack_7.png #117
+AddTextureFromFile zombie_png/male/Attack_8.png #118
+
+AddTextureFromFile zombie_png/male/Dead_1.png #119
+AddTextureFromFile zombie_png/male/Dead_2.png #120
+AddTextureFromFile zombie_png/male/Dead_3.png #121
+AddTextureFromFile zombie_png/male/Dead_4.png #122
+AddTextureFromFile zombie_png/male/Dead_5.png #123
+AddTextureFromFile zombie_png/male/Dead_6.png #124
+AddTextureFromFile zombie_png/male/Dead_7.png #125
+AddTextureFromFile zombie_png/male/Dead_8.png #126
+AddTextureFromFile zombie_png/male/Dead_9.png #127
+AddTextureFromFile zombie_png/male/Dead_10.png #128
+AddTextureFromFile zombie_png/male/Dead_11.png #129
+AddTextureFromFile zombie_png/male/Dead_12.png #130
+
+AddTextureFromFile zombie_png/male/Hit_1.png #131
+
+AddTextureFromFile freescifiplatform/png/Objects/switch_off.png #132: switch off
+AddTextureFromFile freescifiplatform/png/Objects/switch_on.png #133: switch on
+
+AddTextureFromFile freescifiplatform/png/Tiles/Tile_door_top.png #134: Door top
+AddTextureFromFile freescifiplatform/png/Tiles/Tile_door_bottom.png #135: Door bottom
+
+AddTextureFromFile objects_png/hearts-black_low.png #136
+AddTextureFromFile objects_png/hearts-red_low.png #137
+
+AddTextureFromFile resources/flash-80.png #138: player wisp attack
+AddTextureFromFile resources/flash-60.png #139: player wisp attack
+AddTextureFromFile resources/flash-40.png #140: player wisp attack
 
 ### Spritesheets
 AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.234375 #0: background
@@ -278,13 +482,86 @@ AddSprite 10 17 0 0 64 64 #94 alpha
 AddSprite 10 16 0 0 64 64 #96 alpha
 AddSprite 10 15 0 0 64 64 #98 alpha
 AddSprite 10 30 0 0 64 64
+AddSprite 10 140 0 0 64 64
 AddSprite 10 30 0 0 64 64
-AddSprite 10 30 0 0 64 64
-AddSprite 10 30 0 0 64 64
+AddSprite 10 140 0 0 64 64
 
 AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.25 #11: exit
 AddSprite 11 82 0 0 280 464
 AddSprite 11 83 0 0 280 464
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.125 #12: acid
+AddSprite 12 85 0 0 256 256
+AddSprite 12 85 0 0 256 256
+AddSprite 12 85 0 0 256 256
+AddSprite 12 85 0 0 256 256
+AddSprite 12 85 0 0 256 256
+AddSprite 12 85 0 0 256 256
+AddSprite 12 84 0 0 256 256
+AddSprite 12 84 0 0 256 256
+AddSprite 12 84 0 0 256 256
+
+AddSpritesheet 0 15 15 10 0 1 0 1 25 8 45 3 33 12 0.2 #13: zombie
+AddSprite 13 86 0 0 430 519
+AddSprite 13 87 0 0 430 519
+AddSprite 13 88 0 0 430 519
+AddSprite 13 89 0 0 430 519
+AddSprite 13 90 0 0 430 519
+AddSprite 13 91 0 0 430 519
+AddSprite 13 92 0 0 430 519
+AddSprite 13 93 0 0 430 519
+AddSprite 13 94 0 0 430 519
+AddSprite 13 95 0 0 430 519
+AddSprite 13 96 0 0 430 519
+AddSprite 13 97 0 0 430 519
+AddSprite 13 98 0 0 430 519
+AddSprite 13 99 0 0 430 519
+AddSprite 13 100 0 0 430 519
+AddSprite 13 101 0 0 430 519
+AddSprite 13 102 0 0 430 519
+AddSprite 13 103 0 0 430 519
+AddSprite 13 104 0 0 430 519
+AddSprite 13 105 0 0 430 519
+AddSprite 13 106 0 0 430 519
+AddSprite 13 107 0 0 430 519
+AddSprite 13 108 0 0 430 519
+AddSprite 13 109 0 0 430 519
+AddSprite 13 110 0 0 430 519
+AddSprite 13 111 0 0 430 519
+AddSprite 13 112 0 0 430 519
+AddSprite 13 113 0 0 430 519
+AddSprite 13 114 0 0 430 519
+AddSprite 13 115 0 0 430 519
+AddSprite 13 116 0 0 430 519
+AddSprite 13 117 0 0 430 519
+AddSprite 13 118 0 0 430 519
+AddSprite 13 119 0 -40 629 511
+AddSprite 13 120 0 -40 629 511
+AddSprite 13 121 0 -40 629 511
+AddSprite 13 122 0 -40 629 511
+AddSprite 13 123 0 -40 629 511
+AddSprite 13 124 0 -40 629 511
+AddSprite 13 125 0 -40 629 511
+AddSprite 13 126 0 -40 629 511
+AddSprite 13 127 0 -40 629 511
+AddSprite 13 128 0 -40 629 511
+AddSprite 13 129 0 -40 629 511
+AddSprite 13 130 0 -40 629 511
+AddSprite 13 131 0 0 430 519
+AddSprite 13 131 0 0 430 519
+AddSprite 13 131 0 0 430 519
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.25 #14: switch
+AddSprite 14 132 0 0 72 257
+AddSprite 14 133 0 0 72 257
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.25 #15: door
+AddSprite 15 134 0 0 68 256
+AddSprite 15 135 0 0 68 256
+
+AddSpritesheet 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 #16 health visuals
+AddSprite 16 136 0 0 100 100
+AddSprite 16 137 0 0 100 100
 
 ### Entities
 AddEntity #0: screen
@@ -308,10 +585,10 @@ UseTriggerInteraction 0 -1 1 -1
 AddEntity #4: ground platform
 UseAbsolutePosition 10 -22 2880 96
 UseBasicCollision 2
-UseTiledVisuals 1 90 3
+UseTiledVisuals 2 90 3
 
 AddEntity #5: player character
-UseAbsolutePosition 100 100 58 100
+UseAbsolutePosition 100 100 58 94
 UseCharacterVisuals 9
 UseFullMovement 0.5 2 0.006 1.6 1
 UseBasicCollision 1
@@ -323,138 +600,66 @@ UseGuideControl 6 -1 0 100
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 3
 
-AddEntity #6: guide
+AddEntity #6: wisp
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 10
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-#UseFullMovement 0.5 0.05 0.006 1.6 0
 UseInstantMovement 0.5
-UseBasicCollision 1
-UseInputControl -1 100
-UseNormalInteraction 16
+UseBasicCollision 0
+UseInputControl 19 300
+UseNormalInteraction 0
+ModifyInteraction 1 1 0 0 0 0
 
 AddEntity #7: bottom limit zone
 UseBasicCollision 0
-UseTriggerInteraction 4 -1 2 -1
+UseTriggerInteraction 1 -1 2 -1
 UseAttachedPosition 0 -10 -10 20 -590
 
 AddEntity #8: top limit zone
 UseBasicCollision 0
-UseTriggerInteraction 4 -1 3 -1
+UseTriggerInteraction 1 -1 3 -1
 UseAttachedPosition 0 -10 600 20 -590
 
 AddEntity #9: left limit zone
 UseBasicCollision 0
-UseTriggerInteraction 4 -1 4 -1
+UseTriggerInteraction 1 -1 4 -1
 UseAttachedPosition 0 -10 -10 -790 20
 
 AddEntity #10: right limit zone
 UseBasicCollision 0
-UseTriggerInteraction 4 -1 5 -1
+UseTriggerInteraction 1 -1 5 -1
 UseAttachedPosition 0 800 -10 -790 20
 
-AddEntity #11: platform
-UseAbsolutePosition 650 74 192 192
-UseBasicCollision 2
-UseTiledVisuals 4 6 6
-
-AddEntity #12: platform bottom
-UseAbsolutePosition 650 -22 192 96
-UseBasicCollision 2
-UseTiledVisuals 8 6 3
-
-AddEntity #13: platform
-UseAbsolutePosition 1290 74 192 192
-UseBasicCollision 2
-UseTiledVisuals 4 6 6
-
-AddEntity #14: platform bottom
-UseAbsolutePosition 1290 -22 192 96
-UseBasicCollision 2
-UseTiledVisuals 8 6 3
-
-AddEntity #15: platform
-UseAbsolutePosition 1642 74 192 256
-UseBasicCollision 2
-UseTiledVisuals 4 6 8
-
-AddEntity #16: platform bottom
-UseAbsolutePosition 1642 -22 192 96
-UseBasicCollision 2
-UseTiledVisuals 8 6 3
-
-AddEntity #17: exit
+AddEntity #11: exit
 UseBasicCollision 0
 UseTriggerInteraction 0 6 -1 -1
 UseStaticVisuals 11 1
-UseAbsolutePosition 2500 132 0 0
+UseAbsolutePosition 2100 132 0 0
 
-AddEntity #18: platform
+AddEntity #12: platform
 UseAbsolutePosition -150 74 192 256
 UseBasicCollision 2
 UseTiledVisuals 4 6 8
 
-AddEntity #19: platform bottom
+AddEntity #13: platform bottom
 UseAbsolutePosition -150 -22 192 96
 UseBasicCollision 2
 UseTiledVisuals 6 6 3
 
-AddEntity #18: platform
-UseAbsolutePosition 2794 74 192 256
+AddEntity #14: platform
+UseAbsolutePosition 2394 74 192 256
 UseBasicCollision 2
 UseTiledVisuals 4 6 8
 
-AddEntity #19: platform bottom
-UseAbsolutePosition 2794 -22 192 96
+AddEntity #15: platform bottom
+UseAbsolutePosition 2394 -22 192 96
 UseBasicCollision 2
 UseTiledVisuals 7 6 3
 
+AddEntity #16: object
+UseAbsolutePosition 200 -23 96 98
+UseBasicCollision 0
+UseTiledVisuals 2 3 3
+UseTriggerInteraction 0 22 -1 -1
 
-### Procedures
-AddProcedure 0 #0: move screen left
-ExtendProcedure 0 4
-SelectEntity 0
-ModifyPosition -5 0 0 0
-SelectEntity 1
-ModifyPosition -4.8 0 0 0
-
-AddProcedure 0 #1: move screen right
-ExtendProcedure 1 4
-SelectEntity 0
-ModifyPosition 5 0 0 0
-SelectEntity 1
-ModifyPosition 4.8 0 0 0
-
-AddProcedure 0 #2: translate up
-ExtendProcedure 2 1
-ModifyPosition 0 10 0 0
-
-AddProcedure 0 #3: translate down
-ExtendProcedure 3 1
-ModifyPosition 0 -10 0 0
-
-AddProcedure 0 #4: translate right
-ExtendProcedure 4 1
-ModifyPosition 10 0 0 0
-
-AddProcedure 0 #5: translate left
-ExtendProcedure 5 1
-ModifyPosition -10 0 0 0
-
-AddProcedure 0 #6: exit to next level
-ExtendProcedure 6 4
-AddEntity
-UseTimedHealth 200 7
-SelectEntity 5
-UseNullVisuals
-
-AddProcedure 0 #7: close door to next level
-ExtendProcedure 7 3
-UseTimedHealth 200 8
-SelectEntity 17
-UseStaticVisuals 11 0
-
-AddProcedure 0 #8: load next level
-ExtendProcedure 8 1
-ExecuteFileClean levels/level2.txt

@@ -1,0 +1,8 @@
+AddTextureFromFile beeyond_assets/end.png #0: background top
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #0
+AddSprite 0 0 0 0 1366 768
+
+AddEntity #0: screen
+UseAbsolutePosition 0 0 1366 768
+UseStaticVisuals 0 0
