@@ -9,7 +9,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-void RenderingSystem::add(EntityID entity)
+void RenderingSystem::add_id(EntityID entity)
 {
 	int layer = globals.entity_system.entity(entity)->visuals()->layer();
     for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
@@ -19,7 +19,7 @@ void RenderingSystem::add(EntityID entity)
     entities[layer].push_back(entity);
 }
 
-void RenderingSystem::remove(EntityID entity)
+void RenderingSystem::remove_id(EntityID entity)
 {
 	int layer = globals.entity_system.entity(entity)->visuals()->layer();
     for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
@@ -34,9 +34,9 @@ void RenderingSystem::set_entity_layer(EntityID entity, Visuals::VisualLayer lay
 {
 	if(layer != globals.entity_system.entity(entity)->visuals()->layer())
 	{
-		remove(entity);
+		remove_id(entity);
 		globals.entity_system.entity(entity)->visuals()->set_layer(layer);
-		add(entity);
+		add_id(entity);
 	}
 }
 

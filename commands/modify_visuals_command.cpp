@@ -35,18 +35,18 @@ void ModifyVisualsCommand::execute() const
 	{
 		if(globals.entity_system.entity(globals.access_entity_id)->visuals()->layer() != 0)
 		{
-			globals.rendering_system.remove(globals.access_entity_id);
+			globals.rendering_system.remove_id(globals.access_entity_id);
 			globals.entity_system.entity(globals.access_entity_id)->visuals()->set_layer(Visuals::VisualLayer(0));
-			globals.rendering_system.add(globals.access_entity_id);
+			globals.rendering_system.add_id(globals.access_entity_id);
 		}
 	}
 	else
 	{
 		if(m_layer != 0)
 		{
-			globals.rendering_system.remove(globals.access_entity_id);
+			globals.rendering_system.remove_id(globals.access_entity_id);
 			globals.entity_system.entity(globals.access_entity_id)->visuals()->set_layer(Visuals::VisualLayer(globals.entity_system.entity(globals.access_entity_id)->visuals()->layer()+int(m_layer)));
-			globals.rendering_system.add(globals.access_entity_id);
+			globals.rendering_system.add_id(globals.access_entity_id);
 		}
 	}
 }

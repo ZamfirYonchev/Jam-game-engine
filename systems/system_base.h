@@ -14,7 +14,7 @@
 class SystemBase
 {
 public:
-    void add(EntityID entity)
+    void add_id(EntityID entity)
     {
         for(auto it = entities.begin(); it != entities.end(); ++it)
             if((*it) == entity)
@@ -23,7 +23,7 @@ public:
         entities.push_back(entity);
     }
 
-    void remove(EntityID entity)
+    void remove_id(EntityID entity)
     {
         for(auto it = entities.begin(); it != entities.end(); ++it)
             if((*it) == entity)

@@ -26,11 +26,10 @@ void EntitySystem::clean_removed_entites()
 {
 	for(auto it = m_entities_to_remove.begin(); it != m_entities_to_remove.end(); ++it)
 	{
-		globals.control_system.remove(*it);
-		globals.movement_system.remove(*it);
-		globals.collision_system.remove(*it);
-		globals.damage_system.remove(*it);
-		globals.rendering_system.remove(*it);
+		globals.movement_system.remove_id(*it);
+		globals.collision_system.remove_id(*it);
+		globals.damage_system.remove_id(*it);
+		globals.rendering_system.remove_id(*it);
 
 		m_entities[*it].clear();
 		m_free_entities.push_back(*it);

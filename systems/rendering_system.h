@@ -16,8 +16,8 @@
 class RenderingSystem
 {
 public:
-    void add(EntityID entity);
-    void remove(EntityID entity);
+    void add_id(EntityID entity);
+    void remove_id(EntityID entity);
     void clear()
     {
     	for(int layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
