@@ -19,7 +19,7 @@
 #include <utility>
 
 template <class T>
-void free(T*& t)
+void release(T*& t)
 {
 	if(t != T::null)
 	{
@@ -111,13 +111,13 @@ public:
 
     void clear()
     {
-        free(m_position);
-        free(m_control);
-        free(m_movement);
-        free(m_collision);
-        free(m_interaction);
-        free(m_health);
-        free(m_visuals);
+    	release(m_position);
+    	release(m_control);
+    	release(m_movement);
+    	release(m_collision);
+    	release(m_interaction);
+    	release(m_health);
+    	release(m_visuals);
     }
 
 private:
