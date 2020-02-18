@@ -14,7 +14,13 @@ void AddSpriteCommand::execute() const
 	int width, height;
 	if(m_w == 0 || m_h == 0)
 	{
-		SDL_QueryTexture(globals.resource_system.texture(m_tex_id)->texture(), nullptr, nullptr, &width, &height);
+		if(globals.resource_system.texture(m_tex_id))
+			SDL_QueryTexture(globals.resource_system.texture(m_tex_id)->texture(), nullptr, nullptr, &width, &height);
+		else
+		{
+			//todo add error message
+			return;
+		}
 	}
 
 	width = (m_w == 0) ? width  : m_w;

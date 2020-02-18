@@ -152,8 +152,9 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
 				{
 					sprite = spritesheet->sprite(visuals->animation_sprite(rx, ry));
 					assert(sprite); //to check that animation count is correct
-					texture = globals.resource_system.texture(sprite->texture_id)->texture();
-					assert(texture); //to check that sprite is correct
+					if(globals.resource_system.texture(sprite->texture_id))
+						texture = globals.resource_system.texture(sprite->texture_id)->texture();
+					//assert(texture); //to check that sprite is correct
 
 					dest.w = sprite->clip.w*scale_factor;
 					dest.h = sprite->clip.h*scale_factor;

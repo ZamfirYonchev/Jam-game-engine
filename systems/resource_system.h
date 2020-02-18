@@ -14,6 +14,7 @@
 #include "../font.h"
 #include "../spritesheet.h"
 #include "../commands/procedure_command.h"
+#include "../optional_ref.h"
 
 class ResourceSystem
 {
@@ -66,17 +67,17 @@ public:
 
     void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
     {
-    	Texture* texture = new Texture();
-    	texture->load_from_file(file, renderer);
-        m_textures.push_back(texture);
+    	Texture texture;
+    	texture.load_from_file(file, renderer);
+        m_textures.push_back(std::move(texture));
     }
 
     void addNewTextureFromString(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
     {
     	assert(font_id < m_fonts.size());
-    	Texture* texture = new Texture();
-    	texture->load_from_string(text, m_fonts[font_id], r, g, b, renderer);
-        m_textures.push_back(texture);
+    	Texture texture;
+    	texture.load_from_string(text, m_fonts[font_id], r, g, b, renderer);
+        m_textures.push_back(std::move(texture));
     }
 
     void addNewSpritesheet(int idle_start, int idle_size
@@ -117,15 +118,17 @@ public:
     	m_fonts.push_back(new Font(font_file, size));
     }
 
-    const std::vector<Texture*>& textures() const
+    const std::vector<Texture>& textures() const
     {
         return m_textures;
     }
 
-    Texture* texture(TextureID tex_id)
+    optional_ref<Texture> texture(TextureID tex_id)
     {
-        assert(tex_id < m_textures.size());
-        return m_textures[tex_id];
+        if(tex_id < m_textures.size())
+            return optional_ref<Texture>(m_textures[tex_id]);
+        else
+        	return optional_ref<Texture>();
     }
 
     const std::vector<Spritesheet*>& spritesheets() const
@@ -158,9 +161,6 @@ public:
 
     void clear_textures()
     {
-        for(auto it = m_textures.begin(); it != m_textures.end(); ++it)
-            delete *it;
-
         m_textures.clear();
     }
 
@@ -197,7 +197,7 @@ public:
     }
 
 private:
-    std::vector<Texture*> m_textures;
+    std::vector<Texture> m_textures;
     std::vector<Spritesheet*> m_spritesheets;
     std::vector<ProcedureCommand*> m_procedures;
     std::vector<Font*> m_fonts;
