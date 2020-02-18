@@ -40,6 +40,9 @@ class optional_ref
     T& operator*() { return m_value; }
     const T& operator*() const { return m_value; }
 
+    T* operator->() { return &m_value; }
+    const T* operator->() const { return &m_value; }
+
     template<typename Func>
     auto operator>>(Func f) -> optional_ref<decltype(f(**this))>
     {
