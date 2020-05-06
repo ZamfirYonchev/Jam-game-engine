@@ -18,6 +18,9 @@ struct Sprite
     , clip(rect)
     {}
 
+    Sprite() : Sprite(0, {0, 0, 0, 0}) {}
+
+
     TextureID texture_id;
     SDL_Rect clip;
 };
