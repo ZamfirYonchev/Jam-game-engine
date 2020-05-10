@@ -38,37 +38,37 @@ int main(int argc, char** argv)
 {
 	do
 	{
-		FileParser file;
+		std::ifstream file;
 		std::string token;
 		file.open("settings.txt");
 
-		while(file.read().peek() != EOF)
+		while(file.peek() != EOF)
 		{
-			file.read() >> token;
+			file >> token;
 
 			if(token == "ResolutionX")
 			{
-				file.read() >> globals.resolution_x;
+				file >> globals.resolution_x;
 				std::cout << "Set ResolutionX to " << globals.resolution_x << std::endl;
 			}
 			else if(token == "ResolutionY")
 			{
-				file.read() >> globals.resolution_y;
+				file >> globals.resolution_y;
 				std::cout << "Set ResolutionY to " << globals.resolution_y << std::endl;
 			}
 			else if(token == "ResolutionBPP")
 			{
-				file.read() >> globals.resolution_bpp;
+				file >> globals.resolution_bpp;
 				std::cout << "Set ResolutionBPP to " << globals.resolution_bpp << std::endl;
 			}
 			else if(token == "Fullscreen")
 			{
-				file.read() >> globals.fullscreen;
+				file >> globals.fullscreen;
 				std::cout << "Set Fullscreen to " << globals.fullscreen << std::endl;
 			}
 			else if(token == "Level")
 			{
-				file.read() >> globals.level_name;
+				file >> globals.level_name;
 				std::cout << "Set level to " << globals.level_name << std::endl;
 			}
 			else
