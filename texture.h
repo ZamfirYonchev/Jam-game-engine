@@ -40,7 +40,7 @@ public:
     	return *this;
     }
 
-    void load_from_file(const std::string& file, SDL_Renderer* renderer)
+    Texture& load_from_file(const std::string& file, SDL_Renderer* renderer)
     {
         unload();
         SDL_Surface* surface = IMG_Load(file.c_str());
@@ -59,12 +59,13 @@ public:
             }
             SDL_FreeSurface(surface);
         }
+        return *this;
     }
 
-    void load_from_string(const std::string& text, Font* font, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
+    Texture& load_from_string(const std::string& text, Font& font, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
     {
         unload();
-        SDL_Surface* surface = TTF_RenderText_Solid(font->font(), text.c_str(), {r, g, b});
+        SDL_Surface* surface = TTF_RenderText_Solid(font.font(), text.c_str(), {r, g, b});
 
         if(surface == nullptr)
         {
@@ -79,6 +80,7 @@ public:
             }
             SDL_FreeSurface(surface);
         }
+        return *this;
     }
 
     void unload() noexcept
