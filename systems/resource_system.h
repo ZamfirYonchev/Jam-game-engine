@@ -27,11 +27,7 @@ public:
     }
 
     ResourceSystem(const ResourceSystem&) = delete;
-    ResourceSystem(ResourceSystem&& rhs) : m_fonts(std::move(rhs.m_fonts))
-    									 , m_procedures(std::move(rhs.m_procedures))
-    									 , m_spritesheets(std::move(rhs.m_spritesheets))
-    									 , m_textures(std::move(rhs.m_textures))
-    {}
+    ResourceSystem(ResourceSystem&& rhs) = default;
 
     ResourceSystem& operator=(const ResourceSystem&) = delete;
     ResourceSystem& operator=(ResourceSystem&& rhs)
@@ -67,17 +63,21 @@ public:
 
     void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
     {
-    	Texture texture;
-    	texture.load_from_file(file, renderer);
-        m_textures.push_back(std::move(texture));
+        m_textures.emplace_back();
+        m_textures.back().load_from_file(file, renderer);
     }
 
     void addNewTextureFromString(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
     {
-    	assert(font_id < m_fonts.size());
-    	Texture texture;
-    	texture.load_from_string(text, m_fonts[font_id], r, g, b, renderer);
-        m_textures.push_back(std::move(texture));
+    	if(font_id < m_fonts.size())
+    	{
+    		m_textures.emplace_back();
+    		m_textures.back().load_from_string(text, m_fonts[font_id], r, g, b, renderer);
+    	}
+    	else
+    	{
+    		//error font_id
+    	}
     }
 
     void addNewSpritesheet(int idle_start, int idle_size
@@ -90,7 +90,7 @@ public:
                          , double scale_factor
                           )
     {
-        m_spritesheets.push_back(new Spritesheet(idle_start, idle_size
+        m_spritesheets.push_back(Spritesheet(idle_start, idle_size
 											   , walk_start, walk_size
 											   , jump_start, jump_size
 											   , fall_start, fall_size
@@ -104,18 +104,24 @@ public:
 
     void addNewSprite(SpritesheetID spritesheet_id, const Sprite& sprite)
     {
-        assert(spritesheet_id < m_spritesheets.size());
-        m_spritesheets[spritesheet_id]->add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
+        if(spritesheet_id < m_spritesheets.size())
+        {
+        	m_spritesheets[spritesheet_id].add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
+        }
+        else
+        {
+        	// error spritesheet_id
+        }
     }
 
     void addNewProcedure()
     {
-        m_procedures.push_back(new ProcedureCommand());
+        m_procedures.emplace_back();
     }
 
     void addNewFont(const std::string& font_file, int size)
     {
-    	m_fonts.push_back(new Font(font_file, size));
+    	m_fonts.push_back(Font(font_file, size));
     }
 
     const std::vector<Texture>& textures() const
@@ -131,32 +137,38 @@ public:
         	return optional_ref<Texture>();
     }
 
-    const std::vector<Spritesheet*>& spritesheets() const
+    const std::vector<Spritesheet>& spritesheets() const
     {
         return m_spritesheets;
     }
 
-    Spritesheet* spritesheet(SpritesheetID spr_id)
+    optional_ref<Spritesheet> spritesheet(SpritesheetID spr_id)
     {
-        assert(spr_id < m_spritesheets.size());
-        return m_spritesheets[spr_id];
+        if(spr_id < m_spritesheets.size())
+        	return optional_ref<Spritesheet>(m_spritesheets[spr_id]);
+        else
+        	return optional_ref<Spritesheet>();
     }
 
-    const std::vector<ProcedureCommand*>& procedures() const
+    const std::vector<ProcedureCommand>& procedures() const
     {
         return m_procedures;
     }
 
-    ProcedureCommand* procedure(ProcedureID id)
+    optional_ref<ProcedureCommand> procedure(ProcedureID id)
     {
-        assert(id < m_procedures.size());
-        return m_procedures[id];
+        if(id < m_procedures.size())
+        	return optional_ref<ProcedureCommand>(m_procedures[id]);
+		else
+			return optional_ref<ProcedureCommand>();
     }
 
-    Font* font(FontID id)
+    optional_ref<Font> font(FontID id)
     {
-    	assert(id < m_fonts.size());
-    	return m_fonts[id];
+    	if(id < m_fonts.size())
+    		return optional_ref<Font>(m_fonts[id]);
+    	else
+    		return optional_ref<Font>();
     }
 
     void clear_textures()
@@ -166,25 +178,16 @@ public:
 
     void clear_spritesheets()
     {
-        for(auto it = m_spritesheets.begin(); it != m_spritesheets.end(); ++it)
-            delete *it;
-
         m_spritesheets.clear();
     }
 
     void clear_procedures()
     {
-        for(auto it = m_procedures.begin(); it != m_procedures.end(); ++it)
-            delete *it;
-
         m_procedures.clear();
     }
 
     void clear_fonts()
     {
-        for(auto it = m_fonts.begin(); it != m_fonts.end(); ++it)
-            delete *it;
-
         m_fonts.clear();
     }
 
@@ -198,9 +201,9 @@ public:
 
 private:
     std::vector<Texture> m_textures;
-    std::vector<Spritesheet*> m_spritesheets;
-    std::vector<ProcedureCommand*> m_procedures;
-    std::vector<Font*> m_fonts;
+    std::vector<Spritesheet> m_spritesheets;
+    std::vector<ProcedureCommand> m_procedures;
+    std::vector<Font> m_fonts;
 };
 
 

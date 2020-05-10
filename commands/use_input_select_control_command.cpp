@@ -11,7 +11,12 @@
 
 void UseInputSelectControlCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_control(new InputSelectControl(&globals.input_handler, m_select, m_max, m_proc_id));
+	if(globals.entity_system.entity(globals.access_entity_id))
+		globals.entity_system.entity(globals.access_entity_id)->set_control(new InputSelectControl(&globals.input_handler, m_select, m_max, m_proc_id));
+	else
+	{
+		//error globals.access_entity_id
+	}
 }
 
 

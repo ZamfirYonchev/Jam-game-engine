@@ -9,8 +9,8 @@
 #define SPRITESHEET_H_
 
 #include "sprite.h"
-#include <cassert>
 #include <vector>
+#include "optional_ref.h"
 
 class Spritesheet
 {
@@ -55,10 +55,12 @@ public:
 
     void add_sprite(TextureID tex_index, int x, int y, int w, int h);
 
-    Sprite* sprite(unsigned int index)
+    optional_ref<Sprite> sprite(unsigned int index)
     {
-        assert(index < m_sprites.size());
-        return &m_sprites[index];
+    	if(index < m_sprites.size())
+            return optional_ref<Sprite>(m_sprites[index]);
+    	else
+    		return optional_ref<Sprite>();
     }
 
     void set_scale_factor(double scale)

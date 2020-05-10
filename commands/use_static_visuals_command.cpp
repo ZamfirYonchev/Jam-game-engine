@@ -11,5 +11,10 @@
 
 void UseStaticVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new StaticVisuals(m_spr_id, m_sprite));
+	if(globals.entity_system.entity(globals.access_entity_id))
+		globals.entity_system.entity(globals.access_entity_id)->set_visuals(new StaticVisuals(m_spr_id, m_sprite));
+	else
+	{
+		//error globals.access_entity_id
+	}
 }

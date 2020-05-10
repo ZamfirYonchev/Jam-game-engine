@@ -12,5 +12,10 @@
 
 void UseInstantMovementCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_movement(new InstantMovement(m_move_accel));
+	if(globals.entity_system.entity(globals.access_entity_id))
+		globals.entity_system.entity(globals.access_entity_id)->set_movement(new InstantMovement(m_move_accel));
+	else
+	{
+		//error globals.access_entity_id
+	}
 }

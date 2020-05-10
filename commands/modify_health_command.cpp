@@ -11,20 +11,28 @@
 
 void ModifyHealthCommand::execute() const
 {
-	if(m_max_hp == 0 && std::signbit(m_max_hp))
-		globals.entity_system.entity(globals.access_entity_id)->health()->set_max_hp(0);
-	else
-		globals.entity_system.entity(globals.access_entity_id)->health()->set_max_hp(globals.entity_system.entity(globals.access_entity_id)->health()->max_hp() + m_max_hp);
+	if(globals.entity_system.entity(globals.access_entity_id))
+	{
+		Health* health = globals.entity_system.entity(globals.access_entity_id)->health();
 
-	if(m_hp == 0 && std::signbit(m_hp))
-		globals.entity_system.entity(globals.access_entity_id)->health()->set_hp(0);
-	else
-		globals.entity_system.entity(globals.access_entity_id)->health()->set_hp(globals.entity_system.entity(globals.access_entity_id)->health()->hp() + m_hp);
+		if(m_max_hp == 0 && std::signbit(m_max_hp))
+			health->set_max_hp(0);
+		else
+			health->set_max_hp(health->max_hp() + m_max_hp);
 
-	if(m_hp_change == 0 && std::signbit(m_hp_change))
-		globals.entity_system.entity(globals.access_entity_id)->health()->set_hp_change(0);
-	else
-		globals.entity_system.entity(globals.access_entity_id)->health()->mod_hp_change(m_hp_change);
+		if(m_hp == 0 && std::signbit(m_hp))
+			health->set_hp(0);
+		else
+			health->set_hp(health->hp() + m_hp);
 
+		if(m_hp_change == 0 && std::signbit(m_hp_change))
+			health->set_hp_change(0);
+		else
+			health->mod_hp_change(m_hp_change);
+	}
+	else
+	{
+		//error globals.access_entity_id
+	}
 }
 

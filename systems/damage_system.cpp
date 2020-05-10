@@ -15,14 +15,22 @@ void DamageSystem::update(Time time_diff)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {
-    	Health* health = globals.entity_system.entity(*it)->health();
-    	bool was_alive = health->alive();
-        health->update_health(time_diff);
-        if(was_alive && health->alive() == false && health->on_death_exec() >= 0)
-        {
-        	globals.command_queue.push(std::make_unique<SelectEntityCommand>(globals.entity_system.entity(*it)->id()));
-        	globals.command_queue.push(std::make_unique<CallProcedureCommand>(health->on_death_exec()));
-        }
+    	if(globals.entity_system.entity(*it))
+    	{
+    		Entity& entity = *(globals.entity_system.entity(*it));
+			Health* health = entity.health();
+			bool was_alive = health->alive();
+			health->update_health(time_diff);
+			if(was_alive && health->alive() == false && health->on_death_exec() >= 0)
+			{
+				globals.command_queue.push(std::make_unique<SelectEntityCommand>(entity.id()));
+				globals.command_queue.push(std::make_unique<CallProcedureCommand>(health->on_death_exec()));
+			}
+    	}
+    	else
+    	{
+    		//error *it
+    	}
     }
 }
 

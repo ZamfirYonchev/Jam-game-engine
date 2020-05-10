@@ -12,7 +12,6 @@
 #include <list>
 #include "../entity.h"
 #include "../types.h"
-#include <cassert>
 #include <optional>
 #include "../optional_ref.h"
 
@@ -50,16 +49,14 @@ public:
     	m_entities_to_remove.push_back(id);
     }
 
-    Entity* entity(EntityID id)
-    {
-    	assert(id < m_entities.size());
-        return &m_entities[id];
-    }
 
-    optional_ref<Entity> entity_ref(EntityID id)
+    optional_ref<Entity> entity(EntityID id)
     {
     	//EntityID actual_id = (id < 0) ? m_entities.size()-id : id;
-    	return (id >= 0 && id < int(m_entities.size())) ? optional_ref<Entity>(m_entities[id]) : optional_ref<Entity>();
+    	if(id >= 0 && id < int(m_entities.size()))
+    		return optional_ref<Entity>(m_entities[id]);
+    	else
+    		return optional_ref<Entity>();
     }
 
     void clear()

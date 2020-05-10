@@ -11,5 +11,10 @@
 
 void UseNullInteractionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_interaction(new NullInteraction());
+	if(globals.entity_system.entity(globals.access_entity_id))
+		globals.entity_system.entity(globals.access_entity_id)->set_interaction(new NullInteraction());
+	else
+	{
+		//error globals.access_entity_id
+	}
 }

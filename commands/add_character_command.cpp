@@ -18,12 +18,12 @@
 void AddCharacterCommand::execute() const
 {
     globals.entity_system.add_new_entity();
-	Entity* entity = globals.entity_system.entity(globals.entity_system.last_id());
-    entity->set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
-    entity->set_movement(new FullMovement(0.5, 2, 0.012, 1.5, true));
-    entity->set_collision(new BasicCollision(Collision::MOVEABLE));
-    entity->set_interaction(new NormalInteraction());
-    entity->set_health(new CharacterHealth(m_hp));
-    entity->set_visuals(new CharacterVisuals(m_spr_id));
+	Entity& entity = *(globals.entity_system.entity(globals.entity_system.last_id()));
+    entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
+    entity.set_movement(new FullMovement(0.5, 2, 0.012, 1.5, true));
+    entity.set_collision(new BasicCollision(Collision::MOVEABLE));
+    entity.set_interaction(new NormalInteraction());
+    entity.set_health(new CharacterHealth(m_hp));
+    entity.set_visuals(new CharacterVisuals(m_spr_id));
     globals.access_entity_id = globals.entity_system.last_id();
 }

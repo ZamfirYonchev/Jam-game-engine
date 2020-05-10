@@ -11,5 +11,10 @@
 
 void UseTiledVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new TiledVisuals(m_spr_id, m_repeat_x, m_repeat_y));
+	if(globals.entity_system.entity(globals.access_entity_id))
+		globals.entity_system.entity(globals.access_entity_id)->set_visuals(new TiledVisuals(m_spr_id, m_repeat_x, m_repeat_y));
+	else
+	{
+		//error globals.access_entity_id
+	}
 }

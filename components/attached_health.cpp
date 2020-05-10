@@ -10,10 +10,26 @@
 
 double AttachedHealth::hp() const
 {
-	return globals.entity_system.entity(m_attached_id)->health()->hp() + m_offset_hp;
+	if(globals.entity_system.entity(m_attached_id))
+	{
+		return globals.entity_system.entity(m_attached_id)->health()->hp() + m_offset_hp;
+	}
+	else
+	{
+		//error m_attached_id
+		return 0;
+	}
 }
 
 double AttachedHealth::max_hp() const
 {
-	return globals.entity_system.entity(m_attached_id)->health()->max_hp() + m_offset_max_hp;
+	if(globals.entity_system.entity(m_attached_id))
+	{
+		return globals.entity_system.entity(m_attached_id)->health()->max_hp() + m_offset_max_hp;
+	}
+	else
+	{
+		//error m_attached_id
+		return 0;
+	}
 }

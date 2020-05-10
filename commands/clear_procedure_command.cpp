@@ -10,5 +10,12 @@
 
 void ClearProcedureCommand::execute() const
 {
-    globals.resource_system.procedure(m_id)->clear();
+	if(globals.resource_system.procedure(m_id))
+	{
+		globals.resource_system.procedure(m_id)->clear();
+	}
+	else
+	{
+		//error m_id
+	}
 }

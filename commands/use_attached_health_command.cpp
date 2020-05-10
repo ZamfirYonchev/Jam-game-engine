@@ -11,5 +11,10 @@
 
 void UseAttachedHealthCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_health(new AttachedHealth(m_attached_id, m_offset_hp, m_offset_max_hp));
+	if(globals.entity_system.entity(globals.access_entity_id))
+		globals.entity_system.entity(globals.access_entity_id)->set_health(new AttachedHealth(m_attached_id, m_offset_hp, m_offset_max_hp));
+	else
+	{
+		//error globals.access_entity_id
+	}
 }

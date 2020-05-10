@@ -10,21 +10,53 @@
 
 double AttachedPosition::x() const
 {
-    return globals.entity_system.entity(m_attached_id)->position()->x() + m_offset_x;
+	if(globals.entity_system.entity(m_attached_id))
+	{
+	    return globals.entity_system.entity(m_attached_id)->position()->x() + m_offset_x;
+	}
+	else
+	{
+		//error m_attached_id
+		return 0;
+	}
 }
 
 double AttachedPosition::y() const
 {
-    return globals.entity_system.entity(m_attached_id)->position()->y() + m_offset_y;
+	if(globals.entity_system.entity(m_attached_id))
+	{
+		return globals.entity_system.entity(m_attached_id)->position()->y() + m_offset_y;
+	}
+	else
+	{
+		//error m_attached_id
+		return 0;
+	}
 }
 
 double AttachedPosition::w() const
 {
-    return globals.entity_system.entity(m_attached_id)->position()->w() + m_offset_w;
+	if(globals.entity_system.entity(m_attached_id))
+	{
+		return globals.entity_system.entity(m_attached_id)->position()->w() + m_offset_w;
+	}
+	else
+	{
+		//error m_attached_id
+		return 0;
+	}
 }
 
 double AttachedPosition::h() const
 {
-    return globals.entity_system.entity(m_attached_id)->position()->h() + m_offset_h;
+	if(globals.entity_system.entity(m_attached_id))
+	{
+		return globals.entity_system.entity(m_attached_id)->position()->h() + m_offset_h;
+	}
+	else
+	{
+		//error m_attached_id
+		return 0;
+	}
 }
 
