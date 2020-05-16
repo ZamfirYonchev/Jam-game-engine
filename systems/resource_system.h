@@ -66,17 +66,21 @@ public:
 
     void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
     {
-    	Texture* texture = new Texture();
-    	texture->load_from_file(file, renderer);
-        m_textures.push_back(texture);
+    	Texture texture;
+    	texture.load_from_file(file, renderer);
+        m_textures.push_back(std::move(texture));
     }
 
     void addNewTextureFromString(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
     {
-    	assert(font_id < m_fonts.size());
-    	Texture* texture = new Texture();
-    	texture->load_from_string(text, m_fonts[font_id], r, g, b, renderer);
-        m_textures.push_back(texture);
+    	if(font_id < m_fonts.size())
+    	{
+			Texture texture;
+			texture.load_from_string(text, &m_fonts[font_id], r, g, b, renderer);
+			m_textures.push_back(std::move(texture));
+    	}
+    	else
+    		throw std::out_of_range("font_id out of range");
     }
 
     void addNewSpritesheet(int idle_start, int idle_size
@@ -89,102 +93,100 @@ public:
                          , double scale_factor
                           )
     {
-        m_spritesheets.push_back(new Spritesheet(idle_start, idle_size
-											   , walk_start, walk_size
-											   , jump_start, jump_size
-											   , fall_start, fall_size
-											   , attack_start, attack_size
-											   , hit_start, hit_size
-											   , dead_start, dead_size
-											   , scale_factor
-												)
+        m_spritesheets.push_back(Spritesheet(idle_start, idle_size
+										   , walk_start, walk_size
+										   , jump_start, jump_size
+										   , fall_start, fall_size
+										   , attack_start, attack_size
+										   , hit_start, hit_size
+										   , dead_start, dead_size
+										   , scale_factor
+											)
                                 );
     }
 
     void addNewSprite(SpritesheetID spritesheet_id, const Sprite& sprite)
     {
-        assert(spritesheet_id < m_spritesheets.size());
-        m_spritesheets[spritesheet_id]->add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
+        if(spritesheet_id < m_spritesheets.size())
+        	m_spritesheets[spritesheet_id].add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
+        else
+        	throw std::out_of_range("spritesheet_id out of range");
     }
 
     void addNewProcedure()
     {
-        m_procedures.push_back(new ProcedureCommand());
+        m_procedures.push_back(ProcedureCommand());
     }
 
     void addNewFont(const std::string& font_file, int size)
     {
-    	m_fonts.push_back(new Font(font_file, size));
+    	m_fonts.push_back(Font(font_file, size));
     }
 
-    const std::vector<Texture*>& textures() const
+    const std::vector<Texture>& textures() const
     {
         return m_textures;
     }
 
-    Texture* texture(TextureID tex_id)
+    Texture& texture(TextureID tex_id)
     {
-        assert(tex_id < m_textures.size());
-        return m_textures[tex_id];
+        if(tex_id < m_textures.size())
+        	return m_textures[tex_id];
+        else
+        	throw std::out_of_range("tex_id out of range");
     }
 
-    const std::vector<Spritesheet*>& spritesheets() const
+    const std::vector<Spritesheet>& spritesheets() const
     {
         return m_spritesheets;
     }
 
-    Spritesheet* spritesheet(SpritesheetID spr_id)
+    Spritesheet& spritesheet(SpritesheetID spr_id)
     {
-        assert(spr_id < m_spritesheets.size());
-        return m_spritesheets[spr_id];
+        if(spr_id < m_spritesheets.size())
+        	return m_spritesheets[spr_id];
+        else
+        	throw std::out_of_range("spritesheet_id out of range");
     }
 
-    const std::vector<ProcedureCommand*>& procedures() const
+    const std::vector<ProcedureCommand>& procedures() const
     {
         return m_procedures;
     }
 
-    ProcedureCommand* procedure(ProcedureID id)
+    ProcedureCommand& procedure(ProcedureID id)
     {
-        assert(id < m_procedures.size());
-        return m_procedures[id];
+        if(id < m_procedures.size())
+        	return m_procedures[id];
+        else
+        	throw std::out_of_range("procedure_id out of range");
     }
 
-    Font* font(FontID id)
+    Font& font(FontID id)
     {
-    	assert(id < m_fonts.size());
-    	return m_fonts[id];
+    	if(id < m_fonts.size())
+    		return m_fonts[id];
+        else
+        	throw std::out_of_range("font_id out of range");
     }
 
     void clear_textures()
     {
-        for(auto it = m_textures.begin(); it != m_textures.end(); ++it)
-            delete *it;
-
         m_textures.clear();
     }
 
     void clear_spritesheets()
     {
-        for(auto it = m_spritesheets.begin(); it != m_spritesheets.end(); ++it)
-            delete *it;
-
         m_spritesheets.clear();
     }
 
     void clear_procedures()
     {
-        for(auto it = m_procedures.begin(); it != m_procedures.end(); ++it)
-            delete *it;
-
         m_procedures.clear();
     }
 
     void clear_fonts()
     {
-        for(auto it = m_fonts.begin(); it != m_fonts.end(); ++it)
-            delete *it;
-
         m_fonts.clear();
     }
 
@@ -197,10 +199,10 @@ public:
     }
 
 private:
-    std::vector<Texture*> m_textures;
-    std::vector<Spritesheet*> m_spritesheets;
-    std::vector<ProcedureCommand*> m_procedures;
-    std::vector<Font*> m_fonts;
+    std::vector<Texture> m_textures;
+    std::vector<Spritesheet> m_spritesheets;
+    std::vector<ProcedureCommand> m_procedures;
+    std::vector<Font> m_fonts;
 };
 
 
