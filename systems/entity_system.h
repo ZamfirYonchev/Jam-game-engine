@@ -12,8 +12,6 @@
 #include <list>
 #include "../entity.h"
 #include "../types.h"
-#include <optional>
-#include "../optional_ref.h"
 #include <stdexcept>
 
 class EntitySystem
@@ -56,12 +54,6 @@ public:
             return m_entities[id];
     	else
     		throw std::out_of_range("out of range id");
-    }
-
-    optional_ref<Entity> entity_ref(EntityID id)
-    {
-    	//EntityID actual_id = (id < 0) ? m_entities.size()-id : id;
-    	return (id >= 0 && id < int(m_entities.size())) ? optional_ref<Entity>(m_entities[id]) : optional_ref<Entity>();
     }
 
     void clear()
