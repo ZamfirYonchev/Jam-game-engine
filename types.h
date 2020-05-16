@@ -9,12 +9,12 @@
 #define TYPES_H_
 
 #include <cinttypes>
-typedef int32_t EntityID;
-typedef int32_t SpritesheetID;
-typedef int32_t TextureID;
-typedef int32_t ProcedureID;
-typedef int32_t SoundID;
-typedef int32_t FontID;
-typedef int32_t Time;
+using EntityID = int32_t;
+using SpritesheetID = int32_t;
+using TextureID = int32_t;
+using ProcedureID = int32_t;
+using SoundID = int32_t;
+using FontID = int32_t;
+using Time = int32_t;
 
 #endif /* TYPES_H_ */
