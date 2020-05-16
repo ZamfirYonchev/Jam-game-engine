@@ -84,6 +84,7 @@ int main(int argc, char** argv)
 					 , globals.fullscreen
 					 , true);
 
+		int32_t start_frame_time;
 		int32_t last_frame_time;
 		int32_t frame_diff;
 		int32_t number_of_frames = 0;
@@ -157,6 +158,7 @@ ModifyInteraction 1 1 0 0 0
 		globals.resource_system.procedure(8)->add_command(new SelectEntityCommand(0));
 		globals.resource_system.procedure(8)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
 */
+		start_frame_time = SDL_GetTicks();
 		last_frame_time = SDL_GetTicks();
 
 		do
@@ -183,6 +185,7 @@ ModifyInteraction 1 1 0 0 0
 		} while(globals.app_running && globals.app_needs_reload == false);
 
 		globals.app_needs_reload = false;
+		std::cout << "FPS = " << 1000.0*number_of_frames / (SDL_GetTicks()-start_frame_time) << std::endl;
 
 	} while(globals.app_running);
 
