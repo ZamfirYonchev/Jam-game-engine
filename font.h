@@ -29,7 +29,7 @@ public:
 	}
 
 	Font(const Font&) = delete;
-	Font(Font&& rhs) : m_font(std::move(rhs.m_font)) {}
+	Font(Font&& rhs) : m_font(std::move(rhs.m_font)) { rhs.m_font = nullptr; }
 
 	Font& operator=(const Font&) = delete;
 	Font& operator=(Font&& rhs)
