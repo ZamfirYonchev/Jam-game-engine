@@ -11,5 +11,5 @@
 
 void UseNormalInteractionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_interaction(new NormalInteraction(m_group_vec));
+	entity_system().entity(globals().access_entity_id)->set_interaction(new NormalInteraction(m_group_vec));
 }

@@ -48,28 +48,28 @@ int main(int argc, char** argv)
 
 			if(token == "ResolutionX")
 			{
-				file.read() >> globals.resolution_x;
-				std::cout << "Set ResolutionX to " << globals.resolution_x << std::endl;
+				file.read() >> globals().resolution_x;
+				std::cout << "Set ResolutionX to " << globals().resolution_x << std::endl;
 			}
 			else if(token == "ResolutionY")
 			{
-				file.read() >> globals.resolution_y;
-				std::cout << "Set ResolutionY to " << globals.resolution_y << std::endl;
+				file.read() >> globals().resolution_y;
+				std::cout << "Set ResolutionY to " << globals().resolution_y << std::endl;
 			}
 			else if(token == "ResolutionBPP")
 			{
-				file.read() >> globals.resolution_bpp;
-				std::cout << "Set ResolutionBPP to " << globals.resolution_bpp << std::endl;
+				file.read() >> globals().resolution_bpp;
+				std::cout << "Set ResolutionBPP to " << globals().resolution_bpp << std::endl;
 			}
 			else if(token == "Fullscreen")
 			{
-				file.read() >> globals.fullscreen;
-				std::cout << "Set Fullscreen to " << globals.fullscreen << std::endl;
+				file.read() >> globals().fullscreen;
+				std::cout << "Set Fullscreen to " << globals().fullscreen << std::endl;
 			}
 			else if(token == "Level")
 			{
-				file.read() >> globals.level_name;
-				std::cout << "Set level to " << globals.level_name << std::endl;
+				file.read() >> globals().level_name;
+				std::cout << "Set level to " << globals().level_name << std::endl;
 			}
 			else
 				std::cout << "Unknown setting " << token << std::endl;
@@ -78,26 +78,26 @@ int main(int argc, char** argv)
 		file.close();
 
 		SdlWindow sdl;
-		sdl.init_video(globals.resolution_x
-					 , globals.resolution_y
-					 , globals.resolution_bpp
-					 , globals.fullscreen
+		sdl.init_video(globals().resolution_x
+					 , globals().resolution_y
+					 , globals().resolution_bpp
+					 , globals().fullscreen
 					 , true);
 
 		int32_t last_frame_time;
 		int32_t frame_diff;
 		int32_t number_of_frames = 0;
 
-		globals.entity_system.clear();
-        globals.control_system.clear();
-        globals.movement_system.clear();
-        globals.collision_system.clear();
-        globals.damage_system.clear();
-        globals.rendering_system.clear();
-        globals.resource_system.clear();
-        globals.command_queue.flush_commands();
+		entity_system().clear();
+		control_system().clear();
+		movement_system().clear();
+		collision_system().clear();
+		damage_system().clear();
+		rendering_system().clear();
+		resource_system().clear();
+		command_queue().flush_commands();
 
-        globals.command_queue.push(std::make_unique<ExecuteFileCleanCommand>(globals.level_name, sdl.renderer()));
+		command_queue().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
 /*
 ## new code
@@ -109,53 +109,53 @@ UseFullMovement 0 0.05 0 0 1
 UseNormalInteraction 0
 ModifyInteraction 1 1 0 0 0
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(2)->add_command(new SelectEntityCommand(6));
-		globals.resource_system.procedure(2)->add_command(new ModifyMovementCommand(0, 0, 0, 0.05, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(2)->add_command(new SelectEntityCommand(6));
+		globals().resource_system.procedure(2)->add_command(new ModifyMovementCommand(0, 0, 0, 0.05, 0));
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(3)->add_command(new SelectEntityCommand(6));
-		globals.resource_system.procedure(3)->add_command(new ModifyMovementCommand(0, 0, 0, 0.005, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(3)->add_command(new SelectEntityCommand(6));
+		globals().resource_system.procedure(3)->add_command(new ModifyMovementCommand(0, 0, 0, 0.005, 0));
 
-		globals.entity_system.add_new_entity();
-		globals.entity_system.entity(globals.entity_system.last_id())->set_position(new AbsolutePosition(400, 0, 100, 100));
-		globals.entity_system.entity(globals.entity_system.last_id())->set_collision(new BasicCollision(Collision::TRANSPARENT));
-		globals.entity_system.entity(globals.entity_system.last_id())->set_interaction(new TriggerInteraction(0, -1, 2));
+		globals().entity_system.add_new_entity();
+		globals().entity_system.entity(globals().entity_system.last_id())->set_position(new AbsolutePosition(400, 0, 100, 100));
+		globals().entity_system.entity(globals().entity_system.last_id())->set_collision(new BasicCollision(Collision::TRANSPARENT));
+		globals().entity_system.entity(globals().entity_system.last_id())->set_interaction(new TriggerInteraction(0, -1, 2));
 
-		globals.entity_system.add_new_entity();
-		globals.entity_system.entity(globals.entity_system.last_id())->set_position(new AbsolutePosition(250, 0, 1, 1));
-		globals.entity_system.entity(globals.entity_system.last_id())->set_collision(new BasicCollision(Collision::TRANSPARENT));
-		globals.entity_system.entity(globals.entity_system.last_id())->set_interaction(new TriggerInteraction(1, -1, 3));
+		globals().entity_system.add_new_entity();
+		globals().entity_system.entity(globals().entity_system.last_id())->set_position(new AbsolutePosition(250, 0, 1, 1));
+		globals().entity_system.entity(globals().entity_system.last_id())->set_collision(new BasicCollision(Collision::TRANSPARENT));
+		globals().entity_system.entity(globals().entity_system.last_id())->set_interaction(new TriggerInteraction(1, -1, 3));
 
-		globals.entity_system.add_new_entity();
-		globals.entity_system.entity(globals.entity_system.last_id())->set_position(new AbsolutePosition(600, 300, 200, 100));
-		globals.entity_system.entity(globals.entity_system.last_id())->set_collision(new BasicCollision(Collision::SOLID));
-		globals.entity_system.entity(globals.entity_system.last_id())->set_visuals(new TiledVisuals(2, 6, 3));
+		globals().entity_system.add_new_entity();
+		globals().entity_system.entity(globals().entity_system.last_id())->set_position(new AbsolutePosition(600, 300, 200, 100));
+		globals().entity_system.entity(globals().entity_system.last_id())->set_collision(new BasicCollision(Collision::SOLID));
+		globals().entity_system.entity(globals().entity_system.last_id())->set_visuals(new TiledVisuals(2, 6, 3));
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(4)->add_command(new AddEntityCommand());
-		globals.resource_system.procedure(4)->add_command(new UseTimedHealthCommand(10, 5));
-		globals.resource_system.procedure(4)->add_command(new SelectEntityCommand(0));
-		globals.resource_system.procedure(4)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(4)->add_command(new AddEntityCommand());
+		globals().resource_system.procedure(4)->add_command(new UseTimedHealthCommand(10, 5));
+		globals().resource_system.procedure(4)->add_command(new SelectEntityCommand(0));
+		globals().resource_system.procedure(4)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(5)->add_command(new UseTimedHealthCommand(10, 6));
-		globals.resource_system.procedure(5)->add_command(new SelectEntityCommand(0));
-		globals.resource_system.procedure(5)->add_command(new ModifyPositionCommand(5, 5, 0, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(5)->add_command(new UseTimedHealthCommand(10, 6));
+		globals().resource_system.procedure(5)->add_command(new SelectEntityCommand(0));
+		globals().resource_system.procedure(5)->add_command(new ModifyPositionCommand(5, 5, 0, 0));
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(6)->add_command(new UseTimedHealthCommand(10, 7));
-		globals.resource_system.procedure(6)->add_command(new SelectEntityCommand(0));
-		globals.resource_system.procedure(6)->add_command(new ModifyPositionCommand(0, -10, 0, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(6)->add_command(new UseTimedHealthCommand(10, 7));
+		globals().resource_system.procedure(6)->add_command(new SelectEntityCommand(0));
+		globals().resource_system.procedure(6)->add_command(new ModifyPositionCommand(0, -10, 0, 0));
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(7)->add_command(new UseTimedHealthCommand(10, 8));
-		globals.resource_system.procedure(7)->add_command(new SelectEntityCommand(0));
-		globals.resource_system.procedure(7)->add_command(new ModifyPositionCommand(5, 5, 0, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(7)->add_command(new UseTimedHealthCommand(10, 8));
+		globals().resource_system.procedure(7)->add_command(new SelectEntityCommand(0));
+		globals().resource_system.procedure(7)->add_command(new ModifyPositionCommand(5, 5, 0, 0));
 
-		globals.resource_system.addNewProcedure();
-		globals.resource_system.procedure(8)->add_command(new SelectEntityCommand(0));
-		globals.resource_system.procedure(8)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
+		globals().resource_system.addNewProcedure();
+		globals().resource_system.procedure(8)->add_command(new SelectEntityCommand(0));
+		globals().resource_system.procedure(8)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
 */
 		last_frame_time = SDL_GetTicks();
 
@@ -164,27 +164,27 @@ ModifyInteraction 1 1 0 0 0
 			frame_diff = clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100);
 			last_frame_time = SDL_GetTicks();
 
-			globals.input_handler.process_input();
-			globals.command_queue.process(frame_diff);
-            globals.entity_system.clean_removed_entites();
+			input_handler().process_input();
+			command_queue().process(frame_diff);
+			entity_system().clean_removed_entites();
 
-			if(globals.app_paused == false)
+			if(globals().app_paused == false)
 			{
-				globals.control_system.update(frame_diff);
-				globals.movement_system.update(frame_diff);
-				globals.collision_system.update(frame_diff);
-				globals.damage_system.update(frame_diff);
+				control_system().update(frame_diff);
+				movement_system().update(frame_diff);
+				collision_system().update(frame_diff);
+				damage_system().update(frame_diff);
 			}
 
-			globals.rendering_system.render_entities(frame_diff, globals.app_paused, sdl.renderer());
+			rendering_system().render_entities(frame_diff, globals().app_paused, sdl.renderer());
 
 			++number_of_frames;
 			SDL_Delay(10);
-		} while(globals.app_running && globals.app_needs_reload == false);
+		} while(globals().app_running && globals().app_needs_reload == false);
 
-		globals.app_needs_reload = false;
+		globals().app_needs_reload = false;
 
-	} while(globals.app_running);
+	} while(globals().app_running);
 
 	return 0;
 }

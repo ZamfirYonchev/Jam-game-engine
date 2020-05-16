@@ -21,17 +21,17 @@ void CollisionSystem::update(Time time_diff)
 
 	for(auto it = entities.begin(); it != entities.end(); ++it)
 	{
-    	globals.entity_system.entity(*it)->collision()->set_standing_on(Collision::AIR);
-    	entity_last_triggered[trig_i] = globals.entity_system.entity(*it)->interaction()->triggered();
-    	globals.entity_system.entity(*it)->interaction()->set_triggered(false);
+		entity_system().entity(*it)->collision()->set_standing_on(Collision::AIR);
+    	entity_last_triggered[trig_i] = entity_system().entity(*it)->interaction()->triggered();
+    	entity_system().entity(*it)->interaction()->set_triggered(false);
 		++trig_i;
 	}
 
 	for(auto it0 = entities.begin(); it0 != entities.end(); ++it0)
         for(auto it1 = std::next(it0); it1 != entities.end(); ++it1)
         {
-            Entity* entity0 = globals.entity_system.entity(*it0);
-            Entity* entity1 = globals.entity_system.entity(*it1);
+            Entity* entity0 = entity_system().entity(*it0);
+            Entity* entity1 = entity_system().entity(*it1);
             Collision* collision0 = entity0->collision();
             Collision* collision1 = entity1->collision();
 
@@ -56,8 +56,8 @@ void CollisionSystem::update(Time time_diff)
             		interaction0->set_triggered(true);
             		if(interaction0->proc_id_other() >= 0)
             		{
-    					globals.command_queue.push(std::make_unique<SelectEntityCommand>(entity1->id()));
-						globals.command_queue.push(std::make_unique<CallProcedureCommand>(interaction0->proc_id_other()));
+            			command_queue().push(std::make_unique<SelectEntityCommand>(entity1->id()));
+    					command_queue().push(std::make_unique<CallProcedureCommand>(interaction0->proc_id_other()));
             		}
             	}
 
@@ -66,8 +66,8 @@ void CollisionSystem::update(Time time_diff)
             		interaction1->set_triggered(true);
             		if(interaction1->proc_id_other() >= 0)
             		{
-    					globals.command_queue.push(std::make_unique<SelectEntityCommand>(entity0->id()));
-						globals.command_queue.push(std::make_unique<CallProcedureCommand>(interaction1->proc_id_other()));
+            			command_queue().push(std::make_unique<SelectEntityCommand>(entity0->id()));
+            			command_queue().push(std::make_unique<CallProcedureCommand>(interaction1->proc_id_other()));
             		}
             	}
 
@@ -143,21 +143,21 @@ void CollisionSystem::update(Time time_diff)
 	trig_i = 0;
 	for(auto it = entities.begin(); it != entities.end(); ++it)
 	{
-		if(entity_last_triggered[trig_i] > globals.entity_system.entity(*it)->interaction()->triggered())
+		if(entity_last_triggered[trig_i] > entity_system().entity(*it)->interaction()->triggered())
 		{	//was triggered, now it is not, so execute on_exit_proc_self
-			if(globals.entity_system.entity(*it)->interaction()->on_exit_proc_id_self() >= 0)
+			if(entity_system().entity(*it)->interaction()->on_exit_proc_id_self() >= 0)
 			{
-				globals.command_queue.push(std::make_unique<SelectEntityCommand>(*it));
-				globals.command_queue.push(std::make_unique<CallProcedureCommand>(globals.entity_system.entity(*it)->interaction()->on_exit_proc_id_self()));
+				command_queue().push(std::make_unique<SelectEntityCommand>(*it));
+				command_queue().push(std::make_unique<CallProcedureCommand>(entity_system().entity(*it)->interaction()->on_exit_proc_id_self()));
 			}
 		}
 		else
-		if(entity_last_triggered[trig_i] < globals.entity_system.entity(*it)->interaction()->triggered())
+		if(entity_last_triggered[trig_i] < entity_system().entity(*it)->interaction()->triggered())
 		{	//was not triggered, now it is, so execute proc_self
-			if(globals.entity_system.entity(*it)->interaction()->proc_id_self() >= 0)
+			if(entity_system().entity(*it)->interaction()->proc_id_self() >= 0)
 			{
-				globals.command_queue.push(std::make_unique<SelectEntityCommand>(*it));
-				globals.command_queue.push(std::make_unique<CallProcedureCommand>(globals.entity_system.entity(*it)->interaction()->proc_id_self()));
+				command_queue().push(std::make_unique<SelectEntityCommand>(*it));
+				command_queue().push(std::make_unique<CallProcedureCommand>(entity_system().entity(*it)->interaction()->proc_id_self()));
 			}
 		}
 

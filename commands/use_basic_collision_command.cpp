@@ -11,5 +11,5 @@
 
 void UseBasicCollisionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_collision(new BasicCollision(m_state));
+	entity_system().entity(globals().access_entity_id)->set_collision(new BasicCollision(m_state));
 }

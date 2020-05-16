@@ -10,6 +10,6 @@
 
 void RemoveEntityCommand::execute() const
 {
-    globals.entity_system.remove_entity(globals.access_entity_id);
+	entity_system().remove_entity(globals().access_entity_id);
 }
 

@@ -12,22 +12,22 @@
 void ModifyPositionCommand::execute() const
 {
 	if(m_x == 0 && std::signbit(m_x))
-		globals.entity_system.entity(globals.access_entity_id)->position()->set_x(m_x);
+		entity_system().entity(globals().access_entity_id)->position()->set_x(m_x);
 	else
-		globals.entity_system.entity(globals.access_entity_id)->position()->mod_x(m_x);
+		entity_system().entity(globals().access_entity_id)->position()->mod_x(m_x);
 
 	if(m_y == 0 && std::signbit(m_y))
-		globals.entity_system.entity(globals.access_entity_id)->position()->set_y(m_y);
+		entity_system().entity(globals().access_entity_id)->position()->set_y(m_y);
 	else
-		globals.entity_system.entity(globals.access_entity_id)->position()->mod_y(m_y);
+		entity_system().entity(globals().access_entity_id)->position()->mod_y(m_y);
 
 	if(m_w == 0 && std::signbit(m_w))
-		globals.entity_system.entity(globals.access_entity_id)->position()->set_w(m_w);
+		entity_system().entity(globals().access_entity_id)->position()->set_w(m_w);
 	else
-		globals.entity_system.entity(globals.access_entity_id)->position()->mod_w(m_w);
+		entity_system().entity(globals().access_entity_id)->position()->mod_w(m_w);
 
 	if(m_h == 0 && std::signbit(m_h))
-		globals.entity_system.entity(globals.access_entity_id)->position()->set_h(m_h);
+		entity_system().entity(globals().access_entity_id)->position()->set_h(m_h);
 	else
-		globals.entity_system.entity(globals.access_entity_id)->position()->mod_h(m_h);
+		entity_system().entity(globals().access_entity_id)->position()->mod_h(m_h);
 }

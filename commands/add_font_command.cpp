@@ -10,5 +10,5 @@
 
 void AddFontCommand::execute() const
 {
-    globals.resource_system.addNewFont(m_file, m_size);
+	resource_system().addNewFont(m_file, m_size);
 }

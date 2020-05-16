@@ -11,13 +11,13 @@
 
 void ExecuteFileCleanCommand::execute() const
 {
-	globals.command_queue.flush_commands();
-	globals.resource_system.clear();
-	globals.control_system.clear();
-	globals.movement_system.clear();
-	globals.collision_system.clear();
-	globals.damage_system.clear();
-	globals.rendering_system.clear();
-	globals.entity_system.clear();
-	globals.command_queue.push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
+	command_queue().flush_commands();
+	resource_system().clear();
+	control_system().clear();
+	movement_system().clear();
+	collision_system().clear();
+	damage_system().clear();
+	rendering_system().clear();
+	entity_system().clear();
+	command_queue().push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
 }

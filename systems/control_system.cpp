@@ -17,8 +17,8 @@ void ControlSystem::update(Time time_diff)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {
-    	Control* control = globals.entity_system.entity(*it)->control();
-    	Health* health = globals.entity_system.entity(*it)->health();
+    	Control* control = entity_system().entity(*it)->control();
+    	Health* health = entity_system().entity(*it)->health();
 
 
         if(health->alive() && health->stunned() == false)
@@ -28,21 +28,21 @@ void ControlSystem::update(Time time_diff)
 
         if(control->decision_attack() && control->attack_proc_id() >= 0)
         {
-        	Position* position = globals.entity_system.entity(*it)->position();
-            globals.command_queue.push(std::make_unique<CallProcedureCommand>(control->attack_proc_id()));
+        	Position* position = entity_system().entity(*it)->position();
+            command_queue().push(std::make_unique<CallProcedureCommand>(control->attack_proc_id()));
             if(control->look_dir() == Control::LEFT)
             {
-                globals.command_queue.push(std::make_unique<ModifyPositionCommand>(position->x(), position->y(), 0, 0));
-                globals.command_queue.push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
-                globals.command_queue.push(std::make_unique<ModifyControlCommand>(0, 0, 0, -1, control->look_dir()));
+            	command_queue().push(std::make_unique<ModifyPositionCommand>(position->x(), position->y(), 0, 0));
+            	command_queue().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
+            	command_queue().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -1, control->look_dir()));
             }
             else // Look dir is right
             {
-                //globals.command_queue.push(new ModifyPositionCommand(-0.0, 0, 0, 0));
-                //globals.command_queue.push(new ModifyPositionCommand(position->x()+position->w(), position->y(), 0, 0));
-                globals.command_queue.push(std::make_unique<ModifyPositionCommand>(position->x(), position->y(), 0, 0));
-                globals.command_queue.push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
-                globals.command_queue.push(std::make_unique<ModifyControlCommand>(0, 0, 0, 1, control->look_dir()));
+                //globals().command_queue.push(new ModifyPositionCommand(-0.0, 0, 0, 0));
+                //globals().command_queue.push(new ModifyPositionCommand(position->x()+position->w(), position->y(), 0, 0));
+            	command_queue().push(std::make_unique<ModifyPositionCommand>(position->x(), position->y(), 0, 0));
+            	command_queue().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
+            	command_queue().push(std::make_unique<ModifyControlCommand>(0, 0, 0, 1, control->look_dir()));
             }
         }
 

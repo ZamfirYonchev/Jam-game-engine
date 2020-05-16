@@ -10,5 +10,5 @@
 
 void PauseCommand::execute() const
 {
-    globals.app_paused = m_paused;
+    globals().app_paused = m_paused;
 }

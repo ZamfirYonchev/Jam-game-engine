@@ -11,5 +11,5 @@
 
 void UseStaticVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new StaticVisuals(m_spr_id, m_sprite));
+	entity_system().entity(globals().access_entity_id)->set_visuals(new StaticVisuals(m_spr_id, m_sprite));
 }

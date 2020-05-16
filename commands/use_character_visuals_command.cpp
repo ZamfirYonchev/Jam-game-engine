@@ -11,5 +11,5 @@
 
 void UseCharacterVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new CharacterVisuals(m_spr_id));
+	entity_system().entity(globals().access_entity_id)->set_visuals(new CharacterVisuals(m_spr_id));
 }

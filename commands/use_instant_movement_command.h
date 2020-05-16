@@ -17,7 +17,7 @@ public:
 	: m_move_accel(move_accel)
 	{}
 
-	void execute() const;
+    void execute() const;
 	std::unique_ptr<Command> clone() { return std::make_unique<UseInstantMovementCommand>(m_move_accel); }
 
 private:

@@ -30,7 +30,7 @@ void Entity::set_control(Control* _control)
 {
 	if(m_control != Control::null && _control == Control::null)
 	{
-		globals.control_system.remove_id(id());
+		control_system().remove_id(id());
 		m_control = _control;
 	}
 
@@ -39,7 +39,7 @@ void Entity::set_control(Control* _control)
 	if(m_control == Control::null && _control != Control::null)
 	{
 		m_control = _control;
-		globals.control_system.add_id(id());
+		control_system().add_id(id());
 	}
 	else
 		m_control = _control;
@@ -49,7 +49,7 @@ void Entity::set_movement(Movement* _movement)
 {
 	if(m_movement != Movement::null && _movement == Movement::null)
 	{
-		globals.movement_system.remove_id(id());
+		movement_system().remove_id(id());
 		m_movement = _movement;
 	}
 
@@ -58,7 +58,7 @@ void Entity::set_movement(Movement* _movement)
 	if(m_movement == Movement::null && _movement != Movement::null)
 	{
 		m_movement = _movement;
-		globals.movement_system.add_id(id());
+		movement_system().add_id(id());
 	}
 	else
 		m_movement = _movement;
@@ -68,7 +68,7 @@ void Entity::set_collision(Collision* _collision)
 {
 	if(m_collision != Collision::null && _collision == Collision::null)
 	{
-		globals.collision_system.remove_id(id());
+		collision_system().remove_id(id());
 		m_collision = _collision;
 	}
 
@@ -77,7 +77,7 @@ void Entity::set_collision(Collision* _collision)
 	if(m_collision == Collision::null && _collision != Collision::null)
 	{
 		m_collision = _collision;
-		globals.collision_system.add_id(id());
+		collision_system().add_id(id());
 	}
 	else
 		m_collision = _collision;
@@ -93,7 +93,7 @@ void Entity::set_health(Health* _health)
 {
 	if(m_health != Health::null && _health == Health::null)
 	{
-		globals.damage_system.remove_id(id());
+		damage_system().remove_id(id());
 		m_health = _health;
 	}
 
@@ -102,7 +102,7 @@ void Entity::set_health(Health* _health)
 	if(m_health == Health::null && _health != Health::null)
 	{
 		m_health = _health;
-		globals.damage_system.add_id(id());
+		damage_system().add_id(id());
 	}
 	else
 		m_health = _health;
@@ -111,14 +111,14 @@ void Entity::set_health(Health* _health)
 void Entity::set_visuals(Visuals* _visuals)
 {
 	if(m_visuals != Visuals::null && _visuals == Visuals::null)
-		globals.rendering_system.remove_id(id());
+		rendering_system().remove_id(id());
 
 	release(m_visuals);
 
 	if(m_visuals == Visuals::null && _visuals != Visuals::null)
 	{
 		m_visuals = _visuals;
-		globals.rendering_system.add_id(id());
+		rendering_system().add_id(id());
 	}
 	else
 		m_visuals = _visuals;

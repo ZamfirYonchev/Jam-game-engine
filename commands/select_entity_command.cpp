@@ -10,5 +10,5 @@
 
 void SelectEntityCommand::execute() const
 {
-    globals.access_entity_id = m_id;
+    globals().access_entity_id = m_id;
 }

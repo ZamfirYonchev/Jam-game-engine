@@ -10,5 +10,5 @@
 
 void ClearAllProceduresCommand::execute() const
 {
-    globals.resource_system.clear_procedures();
+	resource_system().clear_procedures();
 }

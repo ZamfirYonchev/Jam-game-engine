@@ -10,5 +10,5 @@
 
 void QuitCommand::execute() const
 {
-    globals.app_running = false;
+    globals().app_running = false;
 }

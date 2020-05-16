@@ -10,5 +10,5 @@
 
 void ClearAllSpritesheetsCommand::execute() const
 {
-    globals.resource_system.clear_spritesheets();
+	resource_system().clear_spritesheets();
 }

@@ -10,5 +10,5 @@
 
 void UseAbsolutePositionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_position(new AbsolutePosition(m_position));
+	entity_system().entity(globals().access_entity_id)->set_position(new AbsolutePosition(m_position));
 }

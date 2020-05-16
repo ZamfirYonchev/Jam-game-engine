@@ -11,5 +11,5 @@
 
 void UseNullHealthCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_health(new NullHealth());
+	entity_system().entity(globals().access_entity_id)->set_health(new NullHealth());
 }

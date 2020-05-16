@@ -11,5 +11,5 @@
 
 void UseNullVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new NullVisuals());
+	entity_system().entity(globals().access_entity_id)->set_visuals(new NullVisuals());
 }

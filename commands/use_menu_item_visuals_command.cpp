@@ -11,5 +11,5 @@
 
 void UseMenuItemVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new MenuItemVisuals(m_spr_id, globals.access_entity_id));
+	entity_system().entity(globals().access_entity_id)->set_visuals(new MenuItemVisuals(m_spr_id, globals().access_entity_id));
 }

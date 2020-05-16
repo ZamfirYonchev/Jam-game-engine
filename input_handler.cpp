@@ -20,7 +20,7 @@ void InputHandler::process_input()
         switch(m_event.type)
         {
             case SDL_QUIT:
-                globals.app_running = false;
+                globals().app_running = false;
             break;
 
             case SDL_KEYDOWN:
@@ -43,13 +43,13 @@ void InputHandler::process_input()
                 else if(m_event.key.keysym.sym == m_keyselect)
                     m_select_pressed = true;
                 else if(m_event.key.keysym.sym == m_keyquit)
-                    globals.command_queue.push(std::make_unique<QuitCommand>());
+                    command_queue().push(std::make_unique<QuitCommand>());
                 else if(m_event.key.keysym.sym == SDLK_r)
-                    globals.app_needs_reload = true;
+                    globals().app_needs_reload = true;
                 else if(m_event.key.keysym.sym == m_keypause)
-                    globals.app_paused = !globals.app_paused;
+                    globals().app_paused = !globals().app_paused;
                 else if(m_event.key.keysym.sym == SDLK_h)
-                    globals.show_hitboxes = !globals.show_hitboxes;
+                    globals().show_hitboxes = !globals().show_hitboxes;
             break;
 
             case SDL_KEYUP:

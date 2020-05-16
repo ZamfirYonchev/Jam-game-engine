@@ -11,5 +11,5 @@
 
 void UseNullControlCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_control(new NullControl());
+	entity_system().entity(globals().access_entity_id)->set_control(new NullControl());
 }

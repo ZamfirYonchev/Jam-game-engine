@@ -10,5 +10,5 @@
 
 void CallProcedureCommand::execute() const
 {
-    globals.resource_system.procedure(m_id)->execute();
+	resource_system().procedure(m_id)->execute();
 }

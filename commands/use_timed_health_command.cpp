@@ -11,5 +11,5 @@
 
 void UseTimedHealthCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_health(new TimedHealth(m_ttl, m_proc_id));
+	entity_system().entity(globals().access_entity_id)->set_health(new TimedHealth(m_ttl, m_proc_id));
 }

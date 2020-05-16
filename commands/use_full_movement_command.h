@@ -20,7 +20,8 @@ public:
 	, m_jump_accel(jump_accel)
 	, m_gravity_affected(gravity_affected)
 	{}
-    void execute() const;
+
+	void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<UseFullMovementCommand>(m_max_vx, m_max_vy, m_move_accel, m_jump_accel, m_gravity_affected); }
 
 private:

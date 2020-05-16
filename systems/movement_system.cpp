@@ -16,9 +16,9 @@ void MovementSystem::update(Time time_delta)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {
-        Control* control = globals.entity_system.entity(*it)->control();
-        Movement* movement = globals.entity_system.entity(*it)->movement();
-        Collision* collision = globals.entity_system.entity(*it)->collision();
+        Control* control = entity_system().entity(*it)->control();
+        Movement* movement = entity_system().entity(*it)->movement();
+        Collision* collision = entity_system().entity(*it)->collision();
 
         if(movement->gravity_affected())
         {
@@ -41,9 +41,8 @@ void MovementSystem::update(Time time_delta)
         double sx = clip((movement->vx() + movement->ax()*time_delta/2.0)*time_delta, -movement->max_vx()*time_delta, movement->max_vx()*time_delta);
         double sy = clip((movement->vy() + movement->ay()*time_delta/2.0)*time_delta, -movement->max_vy()*time_delta, movement->max_vy()*time_delta);
 
-        //std::cout << "vx = " << movement->vx() << " ax = "<< movement->ax() << " time = " << time_delta << " sx " << sx << std::endl;
-        globals.entity_system.entity(*it)->position()->mod_x(sx);
-        globals.entity_system.entity(*it)->position()->mod_y(sy);
+        entity_system().entity(*it)->position()->mod_x(sx);
+        entity_system().entity(*it)->position()->mod_y(sy);
 
         movement->mod_velocity_x(movement->ax()*time_delta);
         movement->mod_velocity_y(movement->ay()*time_delta);

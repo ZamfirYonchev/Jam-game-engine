@@ -11,5 +11,5 @@
 
 void UseCharacterHealthCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_health(new CharacterHealth(m_hp, m_max_hp));
+	entity_system().entity(globals().access_entity_id)->set_health(new CharacterHealth(m_hp, m_max_hp));
 }

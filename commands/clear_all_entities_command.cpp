@@ -10,6 +10,6 @@
 
 void ClearAllEntitiesCommand::execute() const
 {
-    globals.entity_system.clear();
+	entity_system().clear();
 }
 

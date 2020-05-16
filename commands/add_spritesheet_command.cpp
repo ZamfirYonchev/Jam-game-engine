@@ -10,7 +10,7 @@
 
 void AddSpritesheetCommand::execute() const
 {
-    globals.resource_system.addNewSpritesheet(m_idle_start, m_idle_size
+	resource_system().addNewSpritesheet(m_idle_start, m_idle_size
                                             , m_walk_start, m_walk_size
                                             , m_jump_start, m_jump_size
                                             , m_fall_start, m_fall_size
@@ -19,5 +19,5 @@ void AddSpritesheetCommand::execute() const
                                             , m_dead_start, m_dead_size
                                             , m_scale_factor
                                              );
-    globals.access_spritesheet_id = globals.resource_system.last_spritesheet_id();
+    globals().access_spritesheet_id = resource_system().last_spritesheet_id();
 }

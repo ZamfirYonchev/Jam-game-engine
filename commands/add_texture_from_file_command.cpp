@@ -10,5 +10,5 @@
 
 void AddTextureFromFileCommand::execute() const
 {
-    globals.resource_system.addNewTextureFromFile(m_file, m_renderer);
+	resource_system().addNewTextureFromFile(m_file, m_renderer);
 }
