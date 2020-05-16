@@ -11,5 +11,12 @@
 
 void UseNullPositionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_position(new NullPosition());
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_position(new NullPosition());
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

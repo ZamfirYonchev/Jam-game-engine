@@ -11,5 +11,12 @@
 
 void UseDamageCollisionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_collision(new DamageCollision(m_state, m_damage));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_collision(new DamageCollision(m_state, m_damage));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

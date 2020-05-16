@@ -11,5 +11,12 @@
 
 void UseAttachedPositionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_position(new AttachedPosition(m_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_position(new AttachedPosition(m_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

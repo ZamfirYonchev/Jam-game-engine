@@ -11,5 +11,12 @@
 
 void UseConstantControlCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_control(new ConstantControl(m_move_decision, m_jump_decision, m_duck_decision, m_look_dir));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_control(new ConstantControl(m_move_decision, m_jump_decision, m_duck_decision, m_look_dir));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

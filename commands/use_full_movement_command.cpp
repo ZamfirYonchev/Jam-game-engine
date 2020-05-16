@@ -11,5 +11,12 @@
 
 void UseFullMovementCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_movement(new FullMovement(m_max_vx, m_max_vy, m_move_accel, m_jump_accel, m_gravity_affected));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_movement(new FullMovement(m_max_vx, m_max_vy, m_move_accel, m_jump_accel, m_gravity_affected));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

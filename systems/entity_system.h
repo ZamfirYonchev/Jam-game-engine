@@ -12,9 +12,9 @@
 #include <list>
 #include "../entity.h"
 #include "../types.h"
-#include <cassert>
 #include <optional>
 #include "../optional_ref.h"
+#include <stdexcept>
 
 class EntitySystem
 {
@@ -50,10 +50,12 @@ public:
     	m_entities_to_remove.push_back(id);
     }
 
-    Entity* entity(EntityID id)
+    Entity& entity(EntityID id)
     {
-    	assert(id < m_entities.size());
-        return &m_entities[id];
+    	if(id < m_entities.size())
+            return m_entities[id];
+    	else
+    		throw std::out_of_range("out of range id");
     }
 
     optional_ref<Entity> entity_ref(EntityID id)

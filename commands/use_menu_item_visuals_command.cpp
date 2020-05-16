@@ -11,5 +11,12 @@
 
 void UseMenuItemVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new MenuItemVisuals(m_spr_id, globals.access_entity_id));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_visuals(new MenuItemVisuals(m_spr_id, globals.access_entity_id));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

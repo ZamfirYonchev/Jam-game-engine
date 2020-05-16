@@ -10,5 +10,12 @@
 
 void ClearProcedureCommand::execute() const
 {
-    globals.resource_system.procedure(m_id)->clear();
+	try
+	{
+		globals.resource_system.procedure(m_id).clear();
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

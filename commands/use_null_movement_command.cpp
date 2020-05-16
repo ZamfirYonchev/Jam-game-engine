@@ -11,5 +11,12 @@
 
 void UseNullMovementCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_movement(new NullMovement());
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_movement(new NullMovement());
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

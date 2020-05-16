@@ -11,5 +11,12 @@
 
 void UseInputControlCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_control(new InputControl(&globals.input_handler, m_shoot_id, m_shoot_cooldown));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_control(new InputControl(&globals.input_handler, m_shoot_id, m_shoot_cooldown));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

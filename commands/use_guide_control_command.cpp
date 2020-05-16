@@ -11,6 +11,13 @@
 
 void UseGuideControlCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_control(new GuideControl(globals.access_entity_id, m_target_id, m_attack_proc_id, m_attack_cooldown, m_range));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_control(new GuideControl(globals.access_entity_id, m_target_id, m_attack_proc_id, m_attack_cooldown, m_range));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }
 

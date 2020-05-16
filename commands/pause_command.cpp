@@ -10,5 +10,12 @@
 
 void PauseCommand::execute() const
 {
-    globals.app_paused = m_paused;
+	try
+	{
+	    globals.app_paused = m_paused;
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

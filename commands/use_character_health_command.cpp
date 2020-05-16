@@ -11,5 +11,12 @@
 
 void UseCharacterHealthCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_health(new CharacterHealth(m_hp, m_max_hp));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_health(new CharacterHealth(m_hp, m_max_hp));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

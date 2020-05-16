@@ -11,5 +11,12 @@
 
 void UseNullVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new NullVisuals());
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_visuals(new NullVisuals());
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

@@ -11,5 +11,12 @@
 
 void UseNullInteractionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_interaction(new NullInteraction());
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_interaction(new NullInteraction());
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

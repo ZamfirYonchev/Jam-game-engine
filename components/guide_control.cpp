@@ -11,13 +11,20 @@
 
 void GuideControl::update_decisions(Time time_diff)
 {
-	double distance_x = globals.entity_system.entity(m_target_id)->position()->x() + globals.entity_system.entity(m_target_id)->position()->w()/2.0 - globals.entity_system.entity(m_self_id)->position()->x() - globals.entity_system.entity(m_self_id)->position()->w()/2.0;
-	double distance_y = globals.entity_system.entity(m_target_id)->position()->y() + globals.entity_system.entity(m_target_id)->position()->h()/2.0 - globals.entity_system.entity(m_self_id)->position()->y() - globals.entity_system.entity(m_self_id)->position()->h()/2.0;
+	try
+	{
+		double distance_x = globals.entity_system.entity(m_target_id).position()->x() + globals.entity_system.entity(m_target_id).position()->w()/2.0 - globals.entity_system.entity(m_self_id).position()->x() - globals.entity_system.entity(m_self_id).position()->w()/2.0;
+		double distance_y = globals.entity_system.entity(m_target_id).position()->y() + globals.entity_system.entity(m_target_id).position()->h()/2.0 - globals.entity_system.entity(m_self_id).position()->y() - globals.entity_system.entity(m_self_id).position()->h()/2.0;
 
-	m_walk_dir = sign(distance_x) * (abs(distance_x) > m_attack_range);
-	m_look_dir = distance_x > 0 ? RIGHT : distance_x < 0 ? LEFT : m_look_dir;
+		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_attack_range);
+		m_look_dir = distance_x > 0 ? RIGHT : distance_x < 0 ? LEFT : m_look_dir;
 
-	m_jump = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
+		m_jump = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }
 
 

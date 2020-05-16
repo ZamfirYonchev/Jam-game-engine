@@ -10,6 +10,14 @@
 
 uint8_t MenuItemVisuals::animation_sprite(uint16_t rx, uint16_t ry) const
 {
-	Control* control = globals.entity_system.entity(m_self_id)->control();
-	return control->decision_attack() ? 2 : control->decision_jump() ? 1 : 0;
+	try
+	{
+		Control* control = globals.entity_system.entity(m_self_id).control();
+		return control->decision_attack() ? 2 : control->decision_jump() ? 1 : 0;
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
+	return 0;
 }

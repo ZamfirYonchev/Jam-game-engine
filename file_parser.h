@@ -11,7 +11,6 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <cassert>
 
 class FileParser
 {
@@ -64,8 +63,10 @@ public:
 
     std::ifstream& read()
     {
-    	assert(m_file.is_open());
-        return m_file;
+    	if(m_file.is_open())
+    		return m_file;
+    	else
+    		throw std::ifstream::failure("File not opened");
     }
 
 private:

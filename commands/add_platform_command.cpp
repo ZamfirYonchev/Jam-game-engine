@@ -15,9 +15,16 @@
 void AddPlatformCommand::execute() const
 {
     globals.entity_system.add_new_entity();
-	Entity* entity = globals.entity_system.entity(globals.entity_system.last_id());
-    entity->set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
-    entity->set_collision(new BasicCollision(Collision::SOLID));
-    entity->set_visuals(new TiledVisuals(m_spr_id, m_rx, m_ry));
-    globals.access_entity_id = globals.entity_system.last_id();
+    try
+    {
+		Entity& entity = globals.entity_system.entity(globals.entity_system.last_id());
+		entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
+		entity.set_collision(new BasicCollision(Collision::SOLID));
+		entity.set_visuals(new TiledVisuals(m_spr_id, m_rx, m_ry));
+		globals.access_entity_id = globals.entity_system.last_id();
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

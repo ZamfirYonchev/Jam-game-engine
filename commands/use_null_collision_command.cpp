@@ -11,5 +11,12 @@
 
 void UseNullCollisionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_collision(new NullCollision());
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_collision(new NullCollision());
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

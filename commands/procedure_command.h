@@ -14,6 +14,11 @@
 class ProcedureCommand : public Command
 {
 public:
+	ProcedureCommand() {}
+	ProcedureCommand(const ProcedureCommand& rhs) = default;
+	ProcedureCommand(ProcedureCommand&& rhs) = default;
+	~ProcedureCommand() = default;
+
     void add_command(std::unique_ptr<Command> cmd)
     {
         m_commands.push_back(std::move(cmd));

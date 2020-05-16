@@ -14,11 +14,27 @@ void AddSpriteCommand::execute() const
 	int width, height;
 	if(m_w == 0 || m_h == 0)
 	{
-		SDL_QueryTexture(globals.resource_system.texture(m_tex_id)->texture(), nullptr, nullptr, &width, &height);
+		try
+		{
+			SDL_QueryTexture(globals.resource_system.texture(m_tex_id).texture(), nullptr, nullptr, &width, &height);
+		}
+		catch(std::out_of_range& except)
+		{
+			//error message
+			return;
+		}
 	}
 
 	width = (m_w == 0) ? width  : m_w;
 	height = (m_h == 0) ? height : m_h;
 
-    globals.resource_system.spritesheet(m_spr_id)->add_sprite(m_tex_id, m_x, m_y, width, height);
+	try
+	{
+		globals.resource_system.spritesheet(m_spr_id).add_sprite(m_tex_id, m_x, m_y, width, height);
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
+
 }

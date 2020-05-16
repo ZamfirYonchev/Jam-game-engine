@@ -12,5 +12,12 @@
 
 void UseInstantMovementCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_movement(new InstantMovement(m_move_accel));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_movement(new InstantMovement(m_move_accel));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

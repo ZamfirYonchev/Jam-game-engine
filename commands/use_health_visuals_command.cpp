@@ -11,5 +11,12 @@
 
 void UseHealthVisualsCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_visuals(new CharacterHealthVisuals(globals.access_entity_id, m_spr_id, m_repeat_x));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_visuals(new CharacterHealthVisuals(globals.access_entity_id, m_spr_id, m_repeat_x));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

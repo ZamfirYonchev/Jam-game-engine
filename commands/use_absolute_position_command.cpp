@@ -10,5 +10,12 @@
 
 void UseAbsolutePositionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_position(new AbsolutePosition(m_position));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_position(new AbsolutePosition(m_position));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

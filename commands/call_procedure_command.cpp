@@ -10,5 +10,12 @@
 
 void CallProcedureCommand::execute() const
 {
-    globals.resource_system.procedure(m_id)->execute();
+	try
+	{
+		globals.resource_system.procedure(m_id).execute();
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

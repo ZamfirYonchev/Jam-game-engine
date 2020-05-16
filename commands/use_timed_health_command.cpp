@@ -11,5 +11,12 @@
 
 void UseTimedHealthCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_health(new TimedHealth(m_ttl, m_proc_id));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_health(new TimedHealth(m_ttl, m_proc_id));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }

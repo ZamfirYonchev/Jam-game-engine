@@ -9,7 +9,7 @@
 #define SPRITESHEET_H_
 
 #include "sprite.h"
-#include <cassert>
+#include <stdexcept>
 #include <vector>
 
 class Spritesheet
@@ -55,10 +55,12 @@ public:
 
     void add_sprite(TextureID tex_index, int x, int y, int w, int h);
 
-    Sprite* sprite(unsigned int index)
+    Sprite& sprite(unsigned int index)
     {
-        assert(index < m_sprites.size());
-        return &m_sprites[index];
+        if(index < m_sprites.size())
+        	return m_sprites[index];
+        else
+        	throw std::out_of_range("sprite_index out of range");
     }
 
     void set_scale_factor(double scale)

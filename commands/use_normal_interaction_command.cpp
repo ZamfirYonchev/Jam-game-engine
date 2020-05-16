@@ -11,5 +11,12 @@
 
 void UseNormalInteractionCommand::execute() const
 {
-	globals.entity_system.entity(globals.access_entity_id)->set_interaction(new NormalInteraction(m_group_vec));
+	try
+	{
+		globals.entity_system.entity(globals.access_entity_id).set_interaction(new NormalInteraction(m_group_vec));
+	}
+	catch(std::out_of_range& except)
+	{
+		//error message
+	}
 }
