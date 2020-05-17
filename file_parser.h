@@ -11,7 +11,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <cassert>
+#include "optional_ref.h"
 
 class FileParser
 {
@@ -62,10 +62,12 @@ public:
     	m_file.close();
     }
 
-    std::ifstream& read()
+    optional_ref<std::ifstream> read()
     {
-    	assert(m_file.is_open());
-        return m_file;
+    	if(m_file.is_open())
+    		return optional_ref<std::ifstream>(m_file);
+    	else
+    		return optional_ref<std::ifstream>();
     }
 
 private:
