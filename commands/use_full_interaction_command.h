@@ -23,7 +23,7 @@ public:
 	, m_on_enter_proc_id_other(on_enter_proc_id_other)
 	{}
 
-	void execute() const;
+    void execute() const;
 	std::unique_ptr<Command> clone() { return std::make_unique<UseFullInteractionCommand>(m_group_vec, m_trigger_group, m_on_enter_proc_id_self, m_on_exit_proc_id_self, m_on_enter_proc_id_other); }
 
 private:

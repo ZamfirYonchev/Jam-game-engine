@@ -7,7 +7,6 @@
 
 #include "input_control.h"
 #include "../math_ext.h"
-#include <iostream>
 
 void InputControl::update_decisions(int32_t time_diff)
 {

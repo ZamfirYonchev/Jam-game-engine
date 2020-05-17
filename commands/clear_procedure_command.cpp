@@ -10,9 +10,9 @@
 
 void ClearProcedureCommand::execute() const
 {
-	if(globals.resource_system.procedure(m_id))
+	if(resource_system().procedure(m_id))
 	{
-		globals.resource_system.procedure(m_id)->clear();
+		resource_system().procedure(m_id)->clear();
 	}
 	else
 	{

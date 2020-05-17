@@ -11,10 +11,10 @@
 
 void UseTimedHealthCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_health(new TimedHealth(m_ttl, m_proc_id));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_health(new TimedHealth(m_ttl, m_proc_id));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

@@ -11,9 +11,9 @@
 
 void ModifyPositionCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
+	if(entity_system().entity(globals().access_entity_id))
 	{
-		Position* position = globals.entity_system.entity(globals.access_entity_id)->position();
+		Position* position = entity_system().entity(globals().access_entity_id)->position();
 
 		if(m_x == 0 && std::signbit(m_x))
 			position->set_x(m_x);
@@ -37,6 +37,6 @@ void ModifyPositionCommand::execute() const
 	}
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

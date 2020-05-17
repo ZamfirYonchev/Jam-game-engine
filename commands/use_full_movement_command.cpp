@@ -11,10 +11,10 @@
 
 void UseFullMovementCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_movement(new FullMovement(m_max_vx, m_max_vy, m_move_accel, m_jump_accel, m_gravity_affected));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_movement(new FullMovement(m_max_vx, m_max_vy, m_move_accel, m_jump_accel, m_gravity_affected));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

@@ -15,6 +15,7 @@ class ClearProcedureCommand : public Command
 {
 public:
     ClearProcedureCommand(ProcedureID id) : m_id(id) {}
+
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<ClearProcedureCommand>(m_id); }
 

@@ -11,11 +11,11 @@
 
 void UseChaseAIControlCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_control(new ChaseAIControl(globals.access_entity_id, m_target_id, m_attack_id, m_attack_cooldown, m_attack_range));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_control(new ChaseAIControl(globals().access_entity_id, m_target_id, m_attack_id, m_attack_cooldown, m_attack_range));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }
 

@@ -18,7 +18,7 @@ public:
 	: m_group_vec(group_vec)
 	{}
 
-	void execute() const;
+    void execute() const;
 	std::unique_ptr<Command> clone() { return std::make_unique<UseNormalInteractionCommand>(m_group_vec); }
 
 private:

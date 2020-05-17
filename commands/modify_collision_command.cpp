@@ -11,9 +11,9 @@
 
 void ModifyCollisionCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
+	if(entity_system().entity(globals().access_entity_id))
 	{
-		Collision* collision = globals.entity_system.entity(globals.access_entity_id)->collision();
+		Collision* collision = entity_system().entity(globals().access_entity_id)->collision();
 
 		if(m_state == 0 && std::signbit(m_state))
 			collision->set_state(Collision::CollisionState(0));

@@ -11,10 +11,10 @@
 
 void UseNormalInteractionCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_interaction(new NormalInteraction(m_group_vec));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_interaction(new NormalInteraction(m_group_vec));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

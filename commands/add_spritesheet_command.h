@@ -30,6 +30,7 @@ public:
                           , m_dead_start(dead_start), m_dead_size(dead_size)
                           , m_scale_factor(scale_factor)
                         {}
+
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<AddSpritesheetCommand>(m_idle_start, m_idle_size
                                                           , m_walk_start, m_walk_size

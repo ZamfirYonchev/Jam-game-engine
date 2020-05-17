@@ -11,10 +11,10 @@
 
 void UseCharacterHealthCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_health(new CharacterHealth(m_hp, m_max_hp));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_health(new CharacterHealth(m_hp, m_max_hp));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

@@ -11,9 +11,9 @@
 
 void ModifyHealthCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
+	if(entity_system().entity(globals().access_entity_id))
 	{
-		Health* health = globals.entity_system.entity(globals.access_entity_id)->health();
+		Health* health = entity_system().entity(globals().access_entity_id)->health();
 
 		if(m_max_hp == 0 && std::signbit(m_max_hp))
 			health->set_max_hp(0);
@@ -32,7 +32,7 @@ void ModifyHealthCommand::execute() const
 	}
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }
 

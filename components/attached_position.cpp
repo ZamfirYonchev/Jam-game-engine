@@ -10,9 +10,9 @@
 
 double AttachedPosition::x() const
 {
-	if(globals.entity_system.entity(m_attached_id))
+	if(entity_system().entity(m_attached_id))
 	{
-	    return globals.entity_system.entity(m_attached_id)->position()->x() + m_offset_x;
+	    return entity_system().entity(m_attached_id)->position()->x() + m_offset_x;
 	}
 	else
 	{
@@ -23,9 +23,9 @@ double AttachedPosition::x() const
 
 double AttachedPosition::y() const
 {
-	if(globals.entity_system.entity(m_attached_id))
+	if(entity_system().entity(m_attached_id))
 	{
-		return globals.entity_system.entity(m_attached_id)->position()->y() + m_offset_y;
+		return entity_system().entity(m_attached_id)->position()->y() + m_offset_y;
 	}
 	else
 	{
@@ -36,9 +36,9 @@ double AttachedPosition::y() const
 
 double AttachedPosition::w() const
 {
-	if(globals.entity_system.entity(m_attached_id))
+	if(entity_system().entity(m_attached_id))
 	{
-		return globals.entity_system.entity(m_attached_id)->position()->w() + m_offset_w;
+		return entity_system().entity(m_attached_id)->position()->w() + m_offset_w;
 	}
 	else
 	{
@@ -49,9 +49,9 @@ double AttachedPosition::w() const
 
 double AttachedPosition::h() const
 {
-	if(globals.entity_system.entity(m_attached_id))
+	if(entity_system().entity(m_attached_id))
 	{
-		return globals.entity_system.entity(m_attached_id)->position()->h() + m_offset_h;
+		return entity_system().entity(m_attached_id)->position()->h() + m_offset_h;
 	}
 	else
 	{

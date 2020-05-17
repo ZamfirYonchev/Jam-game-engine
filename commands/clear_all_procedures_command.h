@@ -14,6 +14,7 @@ class ClearAllProceduresCommand : public Command
 {
 public:
     ClearAllProceduresCommand() {}
+
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<ClearAllProceduresCommand>(); }
 };

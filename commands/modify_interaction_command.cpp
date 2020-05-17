@@ -11,9 +11,9 @@
 
 void ModifyInteractionCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
+	if(entity_system().entity(globals().access_entity_id))
 	{
-		Interaction* interaction = globals.entity_system.entity(globals.access_entity_id)->interaction();
+		Interaction* interaction = entity_system().entity(globals().access_entity_id)->interaction();
 
 		if(m_group == 0 && std::signbit(m_group))
 			interaction->clear_groups();
@@ -45,6 +45,6 @@ void ModifyInteractionCommand::execute() const
 	}
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

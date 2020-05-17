@@ -10,8 +10,8 @@
 
 void CallProcedureCommand::execute() const
 {
-	if(globals.resource_system.procedure(m_id))
-		globals.resource_system.procedure(m_id)->execute();
+	if(resource_system().procedure(m_id))
+		resource_system().procedure(m_id)->execute();
 	else
 	{
 		//error m_id

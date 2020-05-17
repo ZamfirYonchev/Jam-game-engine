@@ -7,6 +7,7 @@
 
 #include "execute_file_command.h"
 #include "../file_parser.h"
+#include "../globals.h"
 #include "null_command.h"
 #include "debug_message_command.h"
 #include "set_level_command.h"
@@ -531,7 +532,7 @@ void ExecuteFileCommand::execute() const
         }
         else
         {
-        	if(command) globals.command_queue.push(std::move(command));
+        	if(command) command_queue().push(std::move(command));
         }
     }
 }

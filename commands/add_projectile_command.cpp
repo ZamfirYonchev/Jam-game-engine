@@ -16,15 +16,15 @@
 
 void AddProjectileCommand::execute() const
 {
-    globals.entity_system.add_new_entity();
-	Entity& entity = *(globals.entity_system.entity(globals.entity_system.last_id()));
+    entity_system().add_new_entity();
+    Entity& entity = *(entity_system().entity(entity_system().last_id()));
     entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
     entity.set_control(new ConstantControl(1, false, false, Control::RIGHT));
     entity.set_movement(new FullMovement(false));
     entity.set_collision(new DamageCollision(Collision::TRANSPARENT, 0.01));
     entity.set_visuals(new StaticVisuals(m_spr_id, 0));
-    globals.rendering_system.set_entity_layer(entity.id(), Visuals::FOREGROUND);
-    globals.access_entity_id = globals.entity_system.last_id();
+    rendering_system().set_entity_layer(entity.id(), Visuals::FOREGROUND);
+    globals().access_entity_id = entity_system().last_id();
 }
 
 

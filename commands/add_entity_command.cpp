@@ -10,6 +10,6 @@
 
 void AddEntityCommand::execute() const
 {
-    globals.entity_system.add_new_entity();
-    globals.access_entity_id = globals.entity_system.last_id();
+	entity_system().add_new_entity();
+    globals().access_entity_id = entity_system().last_id();
 }

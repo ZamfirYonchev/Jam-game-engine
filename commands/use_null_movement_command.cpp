@@ -11,10 +11,10 @@
 
 void UseNullMovementCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_movement(new NullMovement());
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_movement(new NullMovement());
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

@@ -9,7 +9,7 @@
 #define COMMANDS_USE_ATTACHED_POSITION_COMMAND_H_
 
 #include "command.h"
-#include "../globals.h"
+#include "../types.h"
 
 class UseAttachedPositionCommand : public Command
 {
@@ -22,7 +22,7 @@ public:
 	, m_offset_h(offset_h)
 	{}
 
-	void execute() const;
+    void execute() const;
 	std::unique_ptr<Command> clone() { return std::make_unique<UseAttachedPositionCommand>(m_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
 private:
     EntityID m_id;

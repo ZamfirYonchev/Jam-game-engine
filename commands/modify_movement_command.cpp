@@ -11,9 +11,9 @@
 
 void ModifyMovementCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
+	if(entity_system().entity(globals().access_entity_id))
 	{
-		Movement* movement = globals.entity_system.entity(globals.access_entity_id)->movement();
+		Movement* movement = entity_system().entity(globals().access_entity_id)->movement();
 
 		if(m_ax == 0 && std::signbit(m_ax))
 			movement->set_accel_x(m_ax);
@@ -42,6 +42,6 @@ void ModifyMovementCommand::execute() const
 	}
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

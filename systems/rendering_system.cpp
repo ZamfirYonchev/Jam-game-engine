@@ -11,9 +11,9 @@
 
 void RenderingSystem::add_id(EntityID entity)
 {
-	if(globals.entity_system.entity(entity))
+	if(entity_system().entity(entity))
 	{
-		int layer = globals.entity_system.entity(entity)->visuals()->layer();
+		int layer = entity_system().entity(entity)->visuals()->layer();
 	    for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
 	        if((*it) == entity)
 	        	return;
@@ -28,9 +28,9 @@ void RenderingSystem::add_id(EntityID entity)
 
 void RenderingSystem::remove_id(EntityID entity)
 {
-	if(globals.entity_system.entity(entity))
+	if(entity_system().entity(entity))
 	{
-		int layer = globals.entity_system.entity(entity)->visuals()->layer();
+		int layer = entity_system().entity(entity)->visuals()->layer();
 		for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
 			if((*it) == entity)
 			{
@@ -46,9 +46,9 @@ void RenderingSystem::remove_id(EntityID entity)
 
 void RenderingSystem::set_entity_layer(EntityID entity_id, Visuals::VisualLayer layer)
 {
-	if(globals.entity_system.entity(entity_id))
+	if(entity_system().entity(entity_id))
 	{
-		Visuals* visuals = globals.entity_system.entity(entity_id)->visuals();
+		Visuals* visuals = entity_system().entity(entity_id)->visuals();
 		if(layer != visuals->layer())
 		{
 			remove_id(entity_id);
@@ -69,8 +69,8 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
     SDL_RenderClear(renderer);
 
     Position* screen_zone_position;
-    if(globals.entity_system.entity(0))
-    	screen_zone_position = globals.entity_system.entity(0)->position();
+    if(entity_system().entity(0))
+    	screen_zone_position = entity_system().entity(0)->position();
     else
     	screen_zone_position = Position::null;
 
@@ -78,9 +78,9 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
     {
 		for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
 		{
-			if(globals.entity_system.entity(*it))
+			if(entity_system().entity(*it))
 			{
-				Entity& entity = *(globals.entity_system.entity(*it));
+				Entity& entity = *(entity_system().entity(*it));
 				Visuals* visuals = entity.visuals();
 				Movement* movement = entity.movement();
 				Position* position = entity.position();
@@ -164,7 +164,7 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
 					}
 				}
 
-				optional_ref<Spritesheet> spritesheet = globals.resource_system.spritesheet(visuals->spritesheet_id());
+				optional_ref<Spritesheet> spritesheet = resource_system().spritesheet(visuals->spritesheet_id());
 				if(spritesheet)
 				{
 					double scale_factor = spritesheet->scale_factor();
@@ -178,15 +178,15 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
 							optional_ref<Sprite> sprite = spritesheet->sprite(visuals->animation_sprite(rx, ry));
 							if(sprite)
 							{
-								if(globals.resource_system.texture(sprite->texture_id))
+								if(resource_system().texture(sprite->texture_id))
 								{
-									texture = globals.resource_system.texture(sprite->texture_id)->texture();
+									texture = resource_system().texture(sprite->texture_id)->texture();
 									dest.w = sprite->clip.w*scale_factor;
 									dest.h = sprite->clip.h*scale_factor;
 									dest.x = position->x() + position->w()/visuals->repeat_x()/2.0 - dest.w/2.0 + rx*dest.w - screen_zone_position->x();
-									dest.y = globals.resolution_y - dest.h - (position->y() + position->h()/visuals->repeat_y()/2.0 - dest.h/2.0 + ry*dest.h  - screen_zone_position->y());
+									dest.y = globals().resolution_y - dest.h - (position->y() + position->h()/visuals->repeat_y()/2.0 - dest.h/2.0 + ry*dest.h  - screen_zone_position->y());
 
-									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, globals.resolution_x, globals.resolution_y))
+									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, globals().resolution_x, globals().resolution_y))
 									{
 										int err = SDL_RenderCopyEx(renderer, texture, &sprite->clip, &dest, 0, nullptr, flip);
 										if(err)
@@ -206,11 +206,11 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
 								//error visuals->animation_sprite(rx, ry)
 							}
 						}
-					if(globals.show_hitboxes)
+					if(globals().show_hitboxes)
 					{
 						SDL_Rect hitbox
 							{ int(entity.position()->x() - screen_zone_position->x())
-							, int(globals.resolution_y-entity.position()->h() - entity.position()->y() + screen_zone_position->y())
+							, int(globals().resolution_y-entity.position()->h() - entity.position()->y() + screen_zone_position->y())
 							, int(entity.position()->w())
 							, int(entity.position()->h())
 							};

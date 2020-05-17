@@ -10,5 +10,5 @@
 
 void ClearAllTexturesCommand::execute() const
 {
-    globals.resource_system.clear_textures();
+	resource_system().clear_textures();
 }

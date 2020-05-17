@@ -10,5 +10,5 @@
 
 void SetLevelCommand::execute() const
 {
-	globals.level_name = m_level;
+	globals().level_name = m_level;
 }

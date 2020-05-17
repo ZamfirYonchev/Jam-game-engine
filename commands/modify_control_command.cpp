@@ -12,9 +12,9 @@
 
 void ModifyControlCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
+	if(entity_system().entity(globals().access_entity_id))
 	{
-		Control* control = globals.entity_system.entity(globals.access_entity_id)->control();
+		Control* control = entity_system().entity(globals().access_entity_id)->control();
 
 		if(m_decision_jump == 0 && std::signbit(m_decision_jump))
 			control->set_decision_jump(false);
@@ -43,6 +43,6 @@ void ModifyControlCommand::execute() const
 	}
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

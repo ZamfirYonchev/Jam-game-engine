@@ -14,6 +14,7 @@ class QuitCommand : public Command
 {
 public:
     QuitCommand() {}
+
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<QuitCommand>(); }
 };

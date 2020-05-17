@@ -11,10 +11,10 @@
 
 void UseConstantControlCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_control(new ConstantControl(m_move_decision, m_jump_decision, m_duck_decision, m_look_dir));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_control(new ConstantControl(m_move_decision, m_jump_decision, m_duck_decision, m_look_dir));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

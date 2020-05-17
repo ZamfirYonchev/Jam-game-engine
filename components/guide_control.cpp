@@ -11,9 +11,9 @@
 
 void GuideControl::update_decisions(Time time_diff)
 {
-	if(globals.entity_system.entity(m_target_id))
+	if(entity_system().entity(m_target_id))
 	{
-		Position* position = globals.entity_system.entity(m_target_id)->position();
+		Position* position = entity_system().entity(m_target_id)->position();
 		double distance_x = position->x() + position->w()/2.0 - position->x() - position->w()/2.0;
 		double distance_y = position->y() + position->h()/2.0 - position->y() - position->h()/2.0;
 

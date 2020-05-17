@@ -10,5 +10,5 @@
 
 void AddTextureFromStringCommand::execute() const
 {
-    globals.resource_system.addNewTextureFromString(m_text, m_font_id, m_r, m_g, m_b, m_renderer);
+	resource_system().addNewTextureFromString(m_text, m_font_id, m_r, m_g, m_b, m_renderer);
 }

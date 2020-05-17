@@ -14,6 +14,7 @@ class UseNullHealthCommand : public Command
 {
 public:
 	UseNullHealthCommand() {}
+
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<UseNullHealthCommand>(); }
 };

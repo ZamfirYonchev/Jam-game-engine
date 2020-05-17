@@ -11,10 +11,10 @@
 
 void UseMenuItemVisualsCommand::execute() const
 {
-	if(globals.entity_system.entity(globals.access_entity_id))
-		globals.entity_system.entity(globals.access_entity_id)->set_visuals(new MenuItemVisuals(m_spr_id, globals.access_entity_id));
+	if(entity_system().entity(globals().access_entity_id))
+		entity_system().entity(globals().access_entity_id)->set_visuals(new MenuItemVisuals(m_spr_id, globals().access_entity_id));
 	else
 	{
-		//error globals.access_entity_id
+		//error globals().access_entity_id
 	}
 }

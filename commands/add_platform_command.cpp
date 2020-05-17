@@ -14,10 +14,10 @@
 
 void AddPlatformCommand::execute() const
 {
-    globals.entity_system.add_new_entity();
-	Entity& entity = *(globals.entity_system.entity(globals.entity_system.last_id()));
+    entity_system().add_new_entity();
+	Entity& entity = *(entity_system().entity(entity_system().last_id()));
     entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
     entity.set_collision(new BasicCollision(Collision::SOLID));
     entity.set_visuals(new TiledVisuals(m_spr_id, m_rx, m_ry));
-    globals.access_entity_id = globals.entity_system.last_id();
+    globals().access_entity_id = entity_system().last_id();
 }

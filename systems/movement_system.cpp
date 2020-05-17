@@ -16,12 +16,12 @@ void MovementSystem::update(Time time_delta)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {
-    	if(globals.entity_system.entity(*it))
+    	if(entity_system().entity(*it))
     	{
-			Control* control = globals.entity_system.entity(*it)->control();
-			Movement* movement = globals.entity_system.entity(*it)->movement();
-			Collision* collision = globals.entity_system.entity(*it)->collision();
-			Position* position  = globals.entity_system.entity(*it)->position();
+			Control* control = entity_system().entity(*it)->control();
+			Movement* movement = entity_system().entity(*it)->movement();
+			Collision* collision = entity_system().entity(*it)->collision();
+			Position* position  = entity_system().entity(*it)->position();
 
 			if(movement->gravity_affected())
 			{
