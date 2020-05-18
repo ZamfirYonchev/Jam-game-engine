@@ -7,7 +7,7 @@
 
 #include "modify_position_command.h"
 #include "../globals.h"
-#include <cmath>
+#include "../math_ext.h"
 
 void ModifyPositionCommand::execute() const
 {
@@ -15,22 +15,22 @@ void ModifyPositionCommand::execute() const
 	{
 		Position* position = entity_system().entity(globals().access_entity_id)->position();
 
-		if(m_x == 0 && std::signbit(m_x))
+		if(is_negative_zero(m_x))
 			position->set_x(m_x);
 		else
 			position->mod_x(m_x);
 
-		if(m_y == 0 && std::signbit(m_y))
+		if(is_negative_zero(m_y))
 			position->set_y(m_y);
 		else
 			position->mod_y(m_y);
 
-		if(m_w == 0 && std::signbit(m_w))
+		if(is_negative_zero(m_w))
 			position->set_w(m_w);
 		else
 			position->mod_w(m_w);
 
-		if(m_h == 0 && std::signbit(m_h))
+		if(is_negative_zero(m_h))
 			position->set_h(m_h);
 		else
 			position->mod_h(m_h);
