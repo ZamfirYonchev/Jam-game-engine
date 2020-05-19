@@ -100,64 +100,6 @@ int main(int argc, char** argv)
 
 		command_queue().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
-/*
-## new code
-AddEntity #6: moving platform
-UseAbsolutePosition 200 0 200 100
-UseBasicCollision 2
-UseTiledVisuals 2 6 3
-UseFullMovement 0 0.05 0 0 1
-UseNormalInteraction 0
-ModifyInteraction 1 1 0 0 0
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(2)->add_command(new SelectEntityCommand(6));
-		globals().resource_system.procedure(2)->add_command(new ModifyMovementCommand(0, 0, 0, 0.05, 0));
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(3)->add_command(new SelectEntityCommand(6));
-		globals().resource_system.procedure(3)->add_command(new ModifyMovementCommand(0, 0, 0, 0.005, 0));
-
-		globals().entity_system.add_new_entity();
-		globals().entity_system.entity(globals().entity_system.last_id())->set_position(new AbsolutePosition(400, 0, 100, 100));
-		globals().entity_system.entity(globals().entity_system.last_id())->set_collision(new BasicCollision(Collision::TRANSPARENT));
-		globals().entity_system.entity(globals().entity_system.last_id())->set_interaction(new TriggerInteraction(0, -1, 2));
-
-		globals().entity_system.add_new_entity();
-		globals().entity_system.entity(globals().entity_system.last_id())->set_position(new AbsolutePosition(250, 0, 1, 1));
-		globals().entity_system.entity(globals().entity_system.last_id())->set_collision(new BasicCollision(Collision::TRANSPARENT));
-		globals().entity_system.entity(globals().entity_system.last_id())->set_interaction(new TriggerInteraction(1, -1, 3));
-
-		globals().entity_system.add_new_entity();
-		globals().entity_system.entity(globals().entity_system.last_id())->set_position(new AbsolutePosition(600, 300, 200, 100));
-		globals().entity_system.entity(globals().entity_system.last_id())->set_collision(new BasicCollision(Collision::SOLID));
-		globals().entity_system.entity(globals().entity_system.last_id())->set_visuals(new TiledVisuals(2, 6, 3));
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(4)->add_command(new AddEntityCommand());
-		globals().resource_system.procedure(4)->add_command(new UseTimedHealthCommand(10, 5));
-		globals().resource_system.procedure(4)->add_command(new SelectEntityCommand(0));
-		globals().resource_system.procedure(4)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(5)->add_command(new UseTimedHealthCommand(10, 6));
-		globals().resource_system.procedure(5)->add_command(new SelectEntityCommand(0));
-		globals().resource_system.procedure(5)->add_command(new ModifyPositionCommand(5, 5, 0, 0));
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(6)->add_command(new UseTimedHealthCommand(10, 7));
-		globals().resource_system.procedure(6)->add_command(new SelectEntityCommand(0));
-		globals().resource_system.procedure(6)->add_command(new ModifyPositionCommand(0, -10, 0, 0));
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(7)->add_command(new UseTimedHealthCommand(10, 8));
-		globals().resource_system.procedure(7)->add_command(new SelectEntityCommand(0));
-		globals().resource_system.procedure(7)->add_command(new ModifyPositionCommand(5, 5, 0, 0));
-
-		globals().resource_system.addNewProcedure();
-		globals().resource_system.procedure(8)->add_command(new SelectEntityCommand(0));
-		globals().resource_system.procedure(8)->add_command(new ModifyPositionCommand(-5, 0, 0, 0));
-*/
 		start_frame_time = SDL_GetTicks();
 		last_frame_time = SDL_GetTicks();
 
