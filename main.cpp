@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 
 		int32_t start_frame_time;
 		int32_t last_frame_time;
-		int32_t frame_diff;
+		int32_t frame_diff = 10; //TODO: first frame difference
 		int32_t number_of_frames = 0;
 
 		entity_system().clear();
@@ -105,9 +105,6 @@ int main(int argc, char** argv)
 
 		do
 		{
-			frame_diff = clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100);
-			last_frame_time = SDL_GetTicks();
-
 			input_handler().process_input();
 			command_queue().process(frame_diff);
 			entity_system().clean_removed_entites();
@@ -122,8 +119,10 @@ int main(int argc, char** argv)
 
 			rendering_system().render_entities(frame_diff, globals().app_paused, sdl.renderer());
 
+			SDL_Delay(max(10-frame_diff, 0));
+			frame_diff = clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100);
+			last_frame_time = SDL_GetTicks();
 			++number_of_frames;
-			SDL_Delay(10);
 		} while(globals().app_running && globals().app_needs_reload == false);
 
 		globals().app_needs_reload = false;
