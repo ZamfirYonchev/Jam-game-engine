@@ -35,7 +35,7 @@ AddSprite 2 3 0 0 0 0
 ### Entities ###
 
 AddEntity #0: screen
-UseAbsolutePosition 0 0 800 600
+UseAbsolutePosition 0 0 1366 768
 
 AddEntity #1: background
 UseStaticVisuals 0 0
