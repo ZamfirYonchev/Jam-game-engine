@@ -8,6 +8,7 @@
 #include "rendering_system.h"
 #include "../globals.h"
 #include "../math_ext.h"
+#include "../components/absolute_position.h"
 
 void RenderingSystem::add_id(EntityID entity)
 {
@@ -73,6 +74,8 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
     	screen_zone_position = entity_system().entity(0)->position();
     else
     	screen_zone_position = Position::null;
+
+    m_screen_to_view_scale = screen_zone_position->h() ? 1.0*globals().resolution_y/screen_zone_position->h() : 1.0;
 
     for(auto layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
     {
@@ -170,6 +173,7 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
 					double scale_factor = spritesheet->scale_factor();
 					SDL_RendererFlip flip = (control->look_dir()==Control::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
 					SDL_Texture* texture = nullptr;
+					AbsolutePosition screen_pos;
 					SDL_Rect dest;
 
 					for(int16_t rx = 0; rx < visuals->repeat_x(); ++rx)
@@ -181,10 +185,14 @@ void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer*
 								if(resource_system().texture(sprite->texture_id))
 								{
 									texture = resource_system().texture(sprite->texture_id)->texture();
-									dest.w = sprite->clip.w*scale_factor;
-									dest.h = sprite->clip.h*scale_factor;
-									dest.x = position->x() + position->w()/visuals->repeat_x()/2.0 - dest.w/2.0 + rx*dest.w - screen_zone_position->x();
-									dest.y = globals().resolution_y - dest.h - (position->y() + position->h()/visuals->repeat_y()/2.0 - dest.h/2.0 + ry*dest.h  - screen_zone_position->y());
+									screen_pos.set_w(sprite->clip.w*scale_factor);
+									screen_pos.set_h(sprite->clip.h*scale_factor);
+									screen_pos.set_x(position->x() + position->w()/visuals->repeat_x()/2.0 - screen_pos.w()/2.0 + rx*screen_pos.w() - screen_zone_position->x());
+									screen_pos.set_y(position->y() + position->h()/visuals->repeat_y()/2.0 - screen_pos.h()/2.0 + ry*screen_pos.h() - screen_zone_position->y());
+									dest.w = screen_pos.w()*m_screen_to_view_scale;
+									dest.h = screen_pos.h()*m_screen_to_view_scale;
+									dest.x = screen_pos.x()*m_screen_to_view_scale;
+									dest.y = globals().resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale;
 
 									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, globals().resolution_x, globals().resolution_y))
 									{

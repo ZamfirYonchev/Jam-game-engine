@@ -16,6 +16,7 @@
 class RenderingSystem
 {
 public:
+	RenderingSystem() : m_screen_to_view_scale(1) {}
     void add_id(EntityID entity);
     void remove_id(EntityID entity);
     void clear()
@@ -29,6 +30,7 @@ public:
 
 protected:
     std::list<EntityID> entities[Visuals::NUM_OF_LAYERS];
+    mutable double m_screen_to_view_scale;
 };
 
 #endif /* SYSTEMS_RENDERING_SYSTEM_H_ */
