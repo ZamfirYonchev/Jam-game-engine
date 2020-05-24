@@ -56,11 +56,6 @@ int main(int argc, char** argv)
 				file >> globals().resolution_y;
 				std::cout << "Set ResolutionY to " << globals().resolution_y << std::endl;
 			}
-			else if(token == "ResolutionBPP")
-			{
-				file >> globals().resolution_bpp;
-				std::cout << "Set ResolutionBPP to " << globals().resolution_bpp << std::endl;
-			}
 			else if(token == "Fullscreen")
 			{
 				file >> globals().fullscreen;
@@ -80,7 +75,6 @@ int main(int argc, char** argv)
 		SdlWindow sdl;
 		sdl.init_video(globals().resolution_x
 					 , globals().resolution_y
-					 , globals().resolution_bpp
 					 , globals().fullscreen
 					 , true);
 

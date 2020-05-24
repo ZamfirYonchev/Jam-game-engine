@@ -18,7 +18,6 @@ public:
 
 	void init_video(const uint16_t res_width
 				  , const uint16_t res_height
-				  , const uint16_t bits_per_pixel
 				  , const bool fullscreen
 				  , const bool double_buffer
 			);
