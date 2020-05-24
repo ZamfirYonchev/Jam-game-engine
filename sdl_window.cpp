@@ -11,7 +11,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include "math_ext.h"
-
+#include "globals.h"
 
 SdlWindow::~SdlWindow()
 {
@@ -23,7 +23,6 @@ SdlWindow::~SdlWindow()
 
 void SdlWindow::init_video(const uint16_t res_width
 						  , const uint16_t res_height
-						  , const uint16_t bits_per_pixel
 						  , const bool fullscreen
 						  , const bool double_buffer
 					)
@@ -94,6 +93,9 @@ void SdlWindow::init_video(const uint16_t res_width
 		std::cerr << "Unable to initialize video " << SDL_GetError() << std::endl;
 		return;
 	}
+
+	globals().resolution_x = final_res_w;
+	globals().resolution_y = final_res_h;
 
 	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
 	SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
