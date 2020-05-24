@@ -77,4 +77,9 @@ constexpr bool is_negative_zero(double val)
 	return val == 0 && std::signbit(val);
 }
 
+constexpr bool is_normalized(double val)
+{
+	return (val >= -1.0) && (val <= 1.0);
+}
+
 #endif /* MATH_EXT_H_ */
