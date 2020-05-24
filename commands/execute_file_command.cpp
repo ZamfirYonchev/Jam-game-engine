@@ -11,6 +11,7 @@
 #include "null_command.h"
 #include "debug_message_command.h"
 #include "set_level_command.h"
+#include "fix_view_width_command.h"
 #include "select_entity_command.h"
 #include "extend_procedure_command.h"
 #include "clear_procedure_command.h"
@@ -106,6 +107,10 @@ void ExecuteFileCommand::execute() const
         {
         	file_read >> line;
             command = std::make_unique<SetLevelCommand>(line);
+        }
+        else if(token == "FixViewWidth")
+        {
+            command = std::make_unique<FixViewWidthCommand>();
         }
         else if(token == "SelectEntity")
         {
