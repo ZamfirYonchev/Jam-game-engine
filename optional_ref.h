@@ -44,12 +44,18 @@ class optional_ref
     const T* operator->() const { return &m_value; }
 
     template<typename Func>
-    auto operator>>(Func f) -> optional_ref<decltype(f(**this))>
+    auto operator&&(Func f) -> optional_ref<decltype(f(**this))>
     {
         if(m_valid)
           return optional_ref(f(m_value));
         else
           return optional_ref<decltype(f(**this))>();
+    }
+
+    template<typename Func>
+    void operator||(Func f)
+    {
+        if(!m_valid) f();
     }
 
     operator bool() const
