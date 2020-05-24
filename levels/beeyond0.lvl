@@ -19,7 +19,7 @@ UseConstantControl 1 0 0 0
 #SelectEntity 1
 #ModifyPosition 4.8 0 0 0
 
-AddProcedure 0 #2: stop moving
+AddProcedure 0 #2: stop moving screen
 ExtendProcedure 2 2
 SelectEntity 0
 UseConstantControl 0 0 0 0
@@ -320,6 +320,7 @@ AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
 UseInstantMovement 0.5
 UseConstantControl 0 0 0 0
+FixViewWidth
 
 AddEntity #1: background
 UseTiledVisuals 0 20 1
@@ -494,12 +495,12 @@ UseAbsolutePosition 600 80 540 680
 UseStaticVisuals 9 2
 
 AddEntity #32: trigger zone move screen left 
-UseAttachedPosition 0 0 0 -1230 0
+UseAttachedPosition 0 0 0 -0.9 0
 UseBasicCollision 0
 UseTriggerInteraction 1 0 -1 2
 
 AddEntity #33: trigger zone move screen right 
-UseAttachedPosition 0 1230 0 -1230 0
+UseAttachedPosition 0 0.9 0 -0.9 0
 UseBasicCollision 0
 UseTriggerInteraction 1 1 -1 2
 
