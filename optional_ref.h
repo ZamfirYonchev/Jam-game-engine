@@ -9,6 +9,26 @@
 #define OPTIONAL_REF_H_
 
 #include <utility>
+#include <optional>
+
+#if __cplusplus >= 201703L
+template<typename T, typename Func>
+auto operator+(std::optional<T> opt, Func f) -> std::optional<decltype(f(*opt))>
+{
+    if(opt)
+        return std::optional(f(*opt));
+    else
+        return std::nullopt;
+}
+
+template<typename T, typename Func>
+std::optional<T> operator-(std::optional<T> opt, Func f)
+{
+    if(!opt) f();
+
+    return opt;
+}
+#endif
 
 template<typename T>
 class optional_ref
@@ -43,30 +63,37 @@ class optional_ref
     T* operator->() { return &m_value; }
     const T* operator->() const { return &m_value; }
 
+#if __cplusplus >= 201703L
     template<typename Func>
-    auto operator&&(Func f) -> optional_ref<decltype(f(**this))>
+    auto operator+(Func f) -> std::optional<decltype(f(**this))>
     {
         if(m_valid)
-          return optional_ref(f(m_value));
+        	return std::optional(f(m_value));
         else
-          return optional_ref<decltype(f(**this))>();
+          return std::nullopt;
     }
+#else
+    template<typename Func>
+    optional_ref& operator+(Func f)
+    {
+        if(m_valid) f(m_value);
+
+        return *this;
+    }
+#endif
 
     template<typename Func>
-    void operator||(Func f)
+    optional_ref& operator-(Func f)
     {
         if(!m_valid) f();
+
+        return *this;
     }
 
     operator bool() const
     {
         return m_valid;
     }
-
-    //void operator&&(void (*f)(const T&))
-    //{
-    //    if(m_valid) f(m_value);
-    //}
 
     private:
     bool m_valid;
