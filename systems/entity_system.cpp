@@ -8,18 +8,21 @@
 #include "entity_system.h"
 #include "../globals.h"
 
-void EntitySystem::add_new_entity()
+Entity& EntitySystem::add_new_entity()
 {
+	EntityID id;
     if(m_free_entities.size() == 0)
     {
-    	m_last_id = m_entities.size();
-    	m_entities.push_back(Entity(m_last_id));
+    	id = m_entities.size();
+    	m_entities.push_back(Entity(id));
     }
     else
     {
-    	m_last_id = m_free_entities.front();
+    	id = m_free_entities.front();
     	m_free_entities.pop_front();
     }
+
+    return m_entities[id];
 }
 
 void EntitySystem::clean_removed_entites()
