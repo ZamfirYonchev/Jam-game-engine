@@ -9,9 +9,9 @@
 #define OPTIONAL_REF_H_
 
 #include <utility>
-#include <optional>
 
 #if __cplusplus >= 201703L
+#include <optional>
 template<typename T, typename Func>
 auto operator+(std::optional<T> opt, Func f) -> std::optional<decltype(f(*opt))>
 {
