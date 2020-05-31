@@ -80,6 +80,11 @@ public:
     	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
     }
 
+    EntityID previous_entity() const
+    {
+    	return m_last_accessed_entities[m_head_of_last_accessed_entities];
+    }
+
     EntityID previous_entity(unsigned int n) const
     {//TODO make sure n < size
 		return m_last_accessed_entities[(m_head_of_last_accessed_entities+m_last_accessed_entities.size()-n)%m_last_accessed_entities.size()];
