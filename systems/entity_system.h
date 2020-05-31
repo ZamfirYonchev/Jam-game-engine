@@ -10,6 +10,7 @@
 
 #include <vector>
 #include <list>
+#include <array>
 #include "../entity.h"
 #include "../types.h"
 #include <optional>
@@ -18,7 +19,12 @@
 class EntitySystem
 {
 public:
-	EntitySystem() = default;
+	EntitySystem() : m_entities()
+				   , m_entities_to_remove()
+				   , m_free_entities()
+				   , m_last_accessed_entities()
+				   , m_head_of_last_accessed_entities(0)
+				   {}
     ~EntitySystem()
     {
     	clear();
@@ -28,6 +34,8 @@ public:
     EntitySystem(EntitySystem&& rhs) : m_entities(std::move(rhs.m_entities))
     								 , m_entities_to_remove(std::move(rhs.m_entities_to_remove))
     								 , m_free_entities(std::move(rhs.m_free_entities))
+    								 , m_last_accessed_entities(std::move(rhs.m_last_accessed_entities))
+    								 , m_head_of_last_accessed_entities(std::move(rhs.m_head_of_last_accessed_entities))
     {}
 
     EntitySystem& operator=(const EntitySystem&) = delete;
@@ -66,10 +74,23 @@ public:
 
     void clean_removed_entites();
 
+    void add_accessed_entity(EntityID id)
+    {
+    	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities+1)%m_last_accessed_entities.size();
+    	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
+    }
+
+    EntityID previous_entity(unsigned int n) const
+    {//TODO make sure n < size
+		return m_last_accessed_entities[(m_head_of_last_accessed_entities+m_last_accessed_entities.size()-n)%m_last_accessed_entities.size()];
+    }
+
 private:
     std::vector<Entity> m_entities;
     std::list<EntityID> m_entities_to_remove;
     std::list<EntityID> m_free_entities;
+    std::array<EntityID, 10> m_last_accessed_entities;
+    unsigned int m_head_of_last_accessed_entities;
 };
 
 #endif /* SYSTEMS_ENTITY_SYSTEM_H_ */
