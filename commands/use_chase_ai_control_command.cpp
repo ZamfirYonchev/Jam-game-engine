@@ -7,12 +7,13 @@
 
 #include "use_chase_ai_control_command.h"
 #include "../globals.h"
+#include "../utilities.h"
 #include "../components/chase_ai_control.h"
 
 void UseChaseAIControlCommand::execute() const
 {
 	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_control(new ChaseAIControl(globals().access_entity_id, m_target_id, m_attack_id, m_attack_cooldown, m_attack_range));
+		entity_system().entity(globals().access_entity_id)->set_control(new ChaseAIControl(globals().access_entity_id, resolved_entity(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range));
 	else
 	{
 		//error globals().access_entity_id

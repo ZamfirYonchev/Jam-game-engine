@@ -7,12 +7,13 @@
 
 #include "use_attached_position_command.h"
 #include "../globals.h"
+#include "../utilities.h"
 #include "../components/attached_position.h"
 
 void UseAttachedPositionCommand::execute() const
 {
 	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_position(new AttachedPosition(m_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h));
+		entity_system().entity(globals().access_entity_id)->set_position(new AttachedPosition(resolved_entity(m_id), m_offset_x, m_offset_y, m_offset_w, m_offset_h));
 	else
 	{
 		//error globals().access_entity_id
