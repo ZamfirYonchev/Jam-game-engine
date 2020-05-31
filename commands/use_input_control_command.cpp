@@ -11,8 +11,8 @@
 
 void UseInputControlCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_control(new InputControl(&input_handler(), m_shoot_id, m_shoot_cooldown));
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_control(new InputControl(&input_handler(), m_shoot_id, m_shoot_cooldown));
 	else
 	{
 		//error globals().access_entity_id

@@ -11,9 +11,9 @@
 
 void ModifyPositionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Position* position = entity_system().entity(globals().access_entity_id)->position();
+		Position* position = entity_system().previous_entity()->position();
 
 		if(is_negative_zero(m_x))
 			position->set_x(m_x);

@@ -11,9 +11,9 @@
 
 void ModifyCollisionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Collision* collision = entity_system().entity(globals().access_entity_id)->collision();
+		Collision* collision = entity_system().previous_entity()->collision();
 
 		if(is_negative_zero(m_state))
 			collision->set_state(Collision::CollisionState(0));

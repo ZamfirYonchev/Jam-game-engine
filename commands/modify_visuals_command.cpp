@@ -11,9 +11,9 @@
 
 void ModifyVisualsCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Visuals* visuals = entity_system().entity(globals().access_entity_id)->visuals();
+		Visuals* visuals = entity_system().previous_entity()->visuals();
 
 		if(is_negative_zero(m_render_state))
 			visuals->set_new_state(Visuals::IDLE);
@@ -39,23 +39,23 @@ void ModifyVisualsCommand::execute() const
 		{
 			if(visuals->layer() != 0)
 			{
-				rendering_system().remove_id(globals().access_entity_id);
+				rendering_system().remove_id(entity_system().previous_entity()->id());
 				visuals->set_layer(Visuals::VisualLayer(0));
-				rendering_system().add_id(globals().access_entity_id);
+				rendering_system().add_id(entity_system().previous_entity()->id());
 			}
 		}
 		else
 		{
 			if(m_layer != 0)
 			{
-				rendering_system().remove_id(globals().access_entity_id);
+				rendering_system().remove_id(entity_system().previous_entity()->id());
 				visuals->set_layer(Visuals::VisualLayer(visuals->layer()+int(m_layer)));
-				rendering_system().add_id(globals().access_entity_id);
+				rendering_system().add_id(entity_system().previous_entity()->id());
 			}
 		}
 	}
 	else
 	{
-		//error globals().access_entity_id
+		//error entity_system().previous_entity()
 	}
 }

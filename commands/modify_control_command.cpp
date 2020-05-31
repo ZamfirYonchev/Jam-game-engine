@@ -11,9 +11,9 @@
 
 void ModifyControlCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Control* control = entity_system().entity(globals().access_entity_id)->control();
+		Control* control = entity_system().previous_entity()->control();
 
 		if(is_negative_zero(m_decision_jump))
 			control->set_decision_jump(false);

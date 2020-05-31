@@ -12,8 +12,8 @@
 
 void UseChaseAIControlCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_control(new ChaseAIControl(globals().access_entity_id, resolved_entity(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range));
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_control(new ChaseAIControl(entity_system().previous_entity()->id(), resolved_entity(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range));
 	else
 	{
 		//error globals().access_entity_id

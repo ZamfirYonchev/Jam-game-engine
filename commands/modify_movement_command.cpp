@@ -11,9 +11,9 @@
 
 void ModifyMovementCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Movement* movement = entity_system().entity(globals().access_entity_id)->movement();
+		Movement* movement = entity_system().previous_entity()->movement();
 
 		if(is_negative_zero(m_ax))
 			movement->set_accel_x(m_ax);

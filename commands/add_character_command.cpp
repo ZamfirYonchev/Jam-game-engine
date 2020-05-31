@@ -24,6 +24,5 @@ void AddCharacterCommand::execute() const
     entity.set_interaction(new NormalInteraction());
     entity.set_health(new CharacterHealth(m_hp));
     entity.set_visuals(new CharacterVisuals(m_spr_id));
-    globals().access_entity_id = entity.id();
     entity_system().add_accessed_entity(entity.id());
 }

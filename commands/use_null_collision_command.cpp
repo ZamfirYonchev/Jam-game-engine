@@ -11,8 +11,8 @@
 
 void UseNullCollisionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_collision(new NullCollision());
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_collision(new NullCollision());
 	else
 	{
 		//error globals().access_entity_id

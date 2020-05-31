@@ -10,6 +10,11 @@
 
 void RemoveEntityCommand::execute() const
 {
-	entity_system().remove_entity(globals().access_entity_id);
+	if(entity_system().previous_entity())
+		entity_system().remove_entity(entity_system().previous_entity()->id());
+	else
+	{
+		//error entity_system().previous_entity()
+	}
 }
 

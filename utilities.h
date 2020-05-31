@@ -18,7 +18,7 @@ constexpr double absolute_or_scaled(double val, double scale)
 
 inline EntityID resolved_entity(EntityID in_entity_id)
 {
-	return (in_entity_id >= 0)*in_entity_id + (in_entity_id < 0)*entity_system().previous_entity(1-in_entity_id);
+	return (in_entity_id >= 0)*in_entity_id + (in_entity_id < 0)*entity_system().previous_entity_id(1-in_entity_id);
 }
 
 #endif /* UTILITIES_H_ */

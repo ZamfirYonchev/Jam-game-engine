@@ -11,8 +11,8 @@
 
 void UseNullPositionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_position(new NullPosition());
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_position(new NullPosition());
 	else
 	{
 		//error globals().access_entity_id

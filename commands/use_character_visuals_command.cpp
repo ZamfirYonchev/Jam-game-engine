@@ -11,8 +11,8 @@
 
 void UseCharacterVisualsCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_visuals(new CharacterVisuals(m_spr_id));
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_visuals(new CharacterVisuals(m_spr_id));
 	else
 	{
 		//error globals().access_entity_id

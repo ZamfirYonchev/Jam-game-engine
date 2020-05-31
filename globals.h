@@ -40,7 +40,6 @@ struct Globals
 			  , show_hitboxes(false)
     		  , resolution_x(640)
     		  , resolution_y(480)
-    		  , access_entity_id(-1)
     		  , access_spritesheet_id(-1)
     		  , access_procedure_id(-1)
 			  , level_name("levels/menu.txt")
@@ -48,7 +47,6 @@ struct Globals
 
     bool app_running, app_needs_reload, app_paused, fullscreen, show_hitboxes;
     uint16_t resolution_x, resolution_y;
-    EntityID access_entity_id;
     SpritesheetID access_spritesheet_id;
     ProcedureID access_procedure_id;
     std::string level_name;

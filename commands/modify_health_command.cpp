@@ -11,9 +11,9 @@
 
 void ModifyHealthCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Health* health = entity_system().entity(globals().access_entity_id)->health();
+		Health* health = entity_system().previous_entity()->health();
 
 		if(is_negative_zero(m_max_hp))
 			health->set_max_hp(0);

@@ -11,9 +11,9 @@
 
 void ModifyInteractionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
+	if(entity_system().previous_entity())
 	{
-		Interaction* interaction = entity_system().entity(globals().access_entity_id)->interaction();
+		Interaction* interaction = entity_system().previous_entity()->interaction();
 
 		if(is_negative_zero(m_group))
 			interaction->clear_groups();

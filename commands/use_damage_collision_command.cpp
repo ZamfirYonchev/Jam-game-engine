@@ -11,8 +11,8 @@
 
 void UseDamageCollisionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_collision(new DamageCollision(m_state, m_damage));
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_collision(new DamageCollision(m_state, m_damage));
 	else
 	{
 		//error globals().access_entity_id

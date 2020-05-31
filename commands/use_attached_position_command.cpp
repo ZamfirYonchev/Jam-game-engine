@@ -12,8 +12,8 @@
 
 void UseAttachedPositionCommand::execute() const
 {
-	if(entity_system().entity(globals().access_entity_id))
-		entity_system().entity(globals().access_entity_id)->set_position(new AttachedPosition(resolved_entity(m_id), m_offset_x, m_offset_y, m_offset_w, m_offset_h));
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_position(new AttachedPosition(resolved_entity(m_id), m_offset_x, m_offset_y, m_offset_w, m_offset_h));
 	else
 	{
 		//error globals().access_entity_id
