@@ -80,12 +80,20 @@ public:
     	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
     }
 
-    EntityID previous_entity() const
+    optional_ref<Entity> previous_entity()
+	{
+    	if(previous_entity_id() < m_entities.size())
+    		return optional_ref<Entity>(m_entities[previous_entity_id()]);
+    	else
+    		return optional_ref<Entity>();
+	}
+
+    EntityID previous_entity_id() const
     {
     	return m_last_accessed_entities[m_head_of_last_accessed_entities];
     }
 
-    EntityID previous_entity(unsigned int n) const
+    EntityID previous_entity_id(unsigned int n) const
     {//TODO make sure n < size
 		return m_last_accessed_entities[(m_head_of_last_accessed_entities+m_last_accessed_entities.size()-n)%m_last_accessed_entities.size()];
     }
