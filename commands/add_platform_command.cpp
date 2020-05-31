@@ -19,4 +19,5 @@ void AddPlatformCommand::execute() const
     entity.set_collision(new BasicCollision(Collision::SOLID));
     entity.set_visuals(new TiledVisuals(m_spr_id, m_rx, m_ry));
     globals().access_entity_id = entity.id();
+    entity_system().add_accessed_entity(entity.id());
 }

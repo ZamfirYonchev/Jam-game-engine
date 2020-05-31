@@ -24,6 +24,7 @@ void AddProjectileCommand::execute() const
     entity.set_visuals(new StaticVisuals(m_spr_id, 0));
     rendering_system().set_entity_layer(entity.id(), Visuals::FOREGROUND);
     globals().access_entity_id = entity.id();
+    entity_system().add_accessed_entity(entity.id());
 }
 
 

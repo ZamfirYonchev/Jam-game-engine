@@ -11,4 +11,5 @@
 void SelectEntityCommand::execute() const
 {
     globals().access_entity_id = m_id;
+    entity_system().add_accessed_entity(m_id);
 }

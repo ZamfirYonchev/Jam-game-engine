@@ -17,4 +17,5 @@ void AddVisualObjectCommand::execute() const
 	entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
 	entity.set_visuals(new StaticVisuals(m_spr_id, m_sprite));
     globals().access_entity_id = entity.id();
+    entity_system().add_accessed_entity(entity.id());
 }
