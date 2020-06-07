@@ -83,15 +83,6 @@ int main(int argc, char** argv)
 		int32_t frame_diff = 10; //TODO: first frame difference
 		int32_t number_of_frames = 0;
 
-		entity_system().clear();
-		control_system().clear();
-		movement_system().clear();
-		collision_system().clear();
-		damage_system().clear();
-		rendering_system().clear();
-		resource_system().clear();
-		command_queue().flush_commands();
-
 		command_queue().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
 		start_frame_time = SDL_GetTicks();
@@ -117,10 +108,24 @@ int main(int argc, char** argv)
 			frame_diff = clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100);
 			last_frame_time = SDL_GetTicks();
 			++number_of_frames;
-		} while(globals().app_running && globals().app_needs_reload == false);
 
-		globals().app_needs_reload = false;
+			if(globals().app_running == false || globals().app_needs_reload)
+			{
+				resource_system().clear(); //cleanup textures otherwise when SdlWindow is destroyed we get a memory leak
+				control_system().clear();
+				movement_system().clear();
+				collision_system().clear();
+				damage_system().clear();
+				rendering_system().clear();
+				command_queue().flush_commands();
+				entity_system().clear();
+
+				break;
+			}
+		} while(1);
+
 		std::cout << "FPS = " << 1000.0*number_of_frames / (SDL_GetTicks()-start_frame_time) << std::endl;
+		globals().app_needs_reload = false;
 
 	} while(globals().app_running);
 
