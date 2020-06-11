@@ -13,7 +13,7 @@
 class MovementSystem : public SystemBase
 {
 public:
-    const double GRAVITY_ACCEL = -0.005; //always
+    const double GRAVITY_ACCEL = -0.005; //always (IRL, 9.80665m/s^2)
 
     void update(Time time_delta);
 };
