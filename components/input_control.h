@@ -14,7 +14,7 @@
 class InputControl : public Control
 {
 public:
-    InputControl(InputHandler* input, ProcedureID shoot_proc_id, double shoot_cooldown)
+    InputControl(InputHandler* input, ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id)
     : m_input(input)
     , m_walk_dir(0)
     , m_jump(false)
@@ -24,10 +24,11 @@ public:
     , m_shoot_cooldown(shoot_cooldown)
 	, m_current_shoot_cooldown(0)
 	, m_look_dir(RIGHT)
+	, m_self_id(self_id)
     {}
 
-    InputControl(InputHandler* input) : InputControl(input, -1, 0) {}
-    InputControl() : InputControl(nullptr) {}
+    InputControl(InputHandler* input, EntityID self_id) : InputControl(input, -1, 0, self_id) {}
+    InputControl() : InputControl(nullptr, 0) {}
 
     bool decision_jump() const { return m_jump; }
     bool decision_duck() const { return m_duck; }
@@ -62,6 +63,7 @@ private:
     int m_shoot_cooldown;
     int m_current_shoot_cooldown;
     LookDir m_look_dir;
+    EntityID m_self_id;
 };
 
 
