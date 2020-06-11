@@ -314,7 +314,9 @@ void ExecuteFileCommand::execute() const
             file_read >> vars[2];
             file_read >> vars[3];
             file_read >> vars[4];
-            command = std::make_unique<ModifyMovementCommand>(vars[0], vars[1], vars[2], vars[3], vars[4]);
+            file_read >> vars[5];
+            file_read >> vars[6];
+            command = std::make_unique<ModifyMovementCommand>(vars[0], vars[1], vars[2], vars[3], vars[4], vars[5], vars[6]);
         }
         else if(token == "ModifyCollision")
         {
@@ -427,7 +429,9 @@ void ExecuteFileCommand::execute() const
         else if(token == "UseInstantMovement")
         {
             file_read >> vars[0];
-            command = std::make_unique<UseInstantMovementCommand>(vars[0]);
+            file_read >> vars[1];
+            file_read >> vars[2];
+            command = std::make_unique<UseInstantMovementCommand>(vars[0], vars[1], vars[2]);
         }
         else if(token == "UseNullCollision")
         {
