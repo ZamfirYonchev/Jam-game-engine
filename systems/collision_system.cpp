@@ -104,7 +104,7 @@ void CollisionSystem::update(Time time_diff)
 							if(entity1.id() == moving_entity.id())
 							{
 								moving_entity.collision()->set_standing_on(Collision::GROUND);
-								moving_entity.movement()->mod_accel_x(0.02*dx/time_diff);
+								moving_entity.movement()->mod_force_x(0.02*dx/time_diff);
 							}
 						}
 						else
@@ -127,7 +127,7 @@ void CollisionSystem::update(Time time_diff)
 									if(entity0.id() == moving_entity.id())
 									{
 										moving_entity.collision()->set_standing_on(Collision::GROUND);
-										moving_entity.movement()->mod_accel_x(-0.02*dx/time_diff);
+										moving_entity.movement()->mod_force_x(-0.02*dx/time_diff);
 									}
 								}
 								else
