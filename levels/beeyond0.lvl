@@ -58,15 +58,15 @@ AddProcedure 0 #13: unused
 
 AddProcedure 0 #14: stop movement
 ExtendProcedure 14 1
-	ModifyMovement -0 -0 0 0 0
+	ModifyMovement 0 0 -0 -0 0 0 0
 
 AddProcedure 0 #15: move down
 ExtendProcedure 15 1
-ModifyMovement 0 0 0 -0.009 0
+	ModifyMovement 0 0 0 0 0 -0.009 0
 
 AddProcedure 0 #16: move up
 ExtendProcedure 16 1
-ModifyMovement 0 0 0 0.009 0
+ModifyMovement 0 0 0 0 0 0.009 0
 
 AddProcedure 0 #17: unused
 
@@ -77,21 +77,21 @@ AddProcedure 0 #19: unused
 AddProcedure 3 #20: fly up
 	UseTimedHealth 300 21
 	SelectEntity 2
-	ModifyMovement 0 0 0 0.02 0
+	ModifyMovement 0 0 0 0 0 0.02 0
 
 AddProcedure 3 #21: fly down
 	UseTimedHealth 300 20
 	SelectEntity 2
-	ModifyMovement 0 0 0 -0.02 0
+	ModifyMovement 0 0 0 0 0 -0.02 0
 
 AddProcedure 4 #22: bee touched ground
-	ModifyMovement 0 0 0 0 -0
-	ModifyMovement 0 0 0 0 1
+	ModifyMovement 0 0 0 0 0 0 -0
+	ModifyMovement 0 0 0 0 0 0 1
 	SelectEntity 3
 	UseNullHealth
 
 AddProcedure 3 #23: bee lifted off
-	ModifyMovement 0 0 0 0 -0
+	ModifyMovement 0 0 0 0 0 0 -0
 	SelectEntity 3
 	UseTimedHealth 300 20
 
@@ -120,7 +120,7 @@ AddProcedure 10 #29: spawn bee at hive
 	UseCharacterVisuals 1
 	ModifyVisuals 0 0 0 0 -0
 	ModifyVisuals 0 0 0 0 3
-	UseFullMovement 0.3 0.3 0.006 1.6 0
+	UseFullMovement 2 0.01 0.003 0.6 0
 	UseBasicCollision 1
 	UseInputControl -1 300
 	UseFullInteraction 0 2 22 -1 23
@@ -152,7 +152,7 @@ AddProcedure 2 #35: frog0 stop attack
 	UseNullControl
 	
 AddProcedure 3 #36: bee dead
-	ModifyMovement 0 0 0 0 1
+	ModifyMovement 0 0 0 0 0 0 1
 	ModifyInteraction -0 0 0 0 0 0
 	ModifyInteraction 10 1 0 0 0 0
 
@@ -318,7 +318,7 @@ AddSprite 11 25 0 0 30 30
 ### Entities
 AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
-UseInstantMovement 0.5
+UseInstantMovement 1 0.01 0.05
 UseConstantControl 0 0 0 0
 FixViewWidth
 
@@ -450,7 +450,7 @@ UseDamageCollision 0 10
 UseStaticVisuals 7 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 2
-UseInstantMovement 0.2
+UseInstantMovement 1 0.01 0.02
 UseConstantControl 1 1 0 0
 UseNormalInteraction 0
 ModifyInteraction 3 1 0 0 0 0
@@ -466,7 +466,7 @@ UseBasicCollision 1
 UseCharacterVisuals 8
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 3
-UseFullMovement 0.2 2.5 1 2.5 1
+UseFullMovement 1 0.01 0.003 3 1
 #UseConstantControl -1 1 0 0
 UseNormalInteraction 0
 ModifyInteraction 4 1 0 0 0 0
@@ -628,7 +628,7 @@ UseDamageCollision 0 10
 UseStaticVisuals 7 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 2
-UseInstantMovement 0.2
+UseInstantMovement 1 0.01 0.02
 UseConstantControl 1 1 0 0
 UseNormalInteraction 0
 ModifyInteraction 3 1 0 0 0 0
@@ -666,7 +666,7 @@ UseDamageCollision 0 10
 UseStaticVisuals 7 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 2
-UseInstantMovement 0.2
+UseInstantMovement 1 0.01 0.014
 UseConstantControl 1 1 0 0
 UseNormalInteraction 0
 ModifyInteraction 3 1 0 0 0 0
