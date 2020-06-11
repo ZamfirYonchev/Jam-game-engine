@@ -13,15 +13,17 @@
 class UseInstantMovementCommand : public Command
 {
 public:
-	UseInstantMovementCommand(double move_accel)
-	: m_move_accel(move_accel)
+	UseInstantMovementCommand(double mass, double friction, double move_force)
+	: m_mass(mass)
+	, m_friction(friction)
+	, m_move_force(move_force)
 	{}
 
     void execute() const;
-	std::unique_ptr<Command> clone() { return std::make_unique<UseInstantMovementCommand>(m_move_accel); }
+	std::unique_ptr<Command> clone() { return std::make_unique<UseInstantMovementCommand>(m_mass, m_friction, m_move_force); }
 
 private:
-    double m_move_accel;
+    double m_mass, m_friction, m_move_force;
 };
 
 #endif /* COMMANDS_USE_INSTANT_MOVEMENT_COMMAND_H_ */

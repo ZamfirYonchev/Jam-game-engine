@@ -13,18 +13,20 @@
 class ModifyMovementCommand : public Command
 {
 public:
-	ModifyMovementCommand(double vx, double vy, double ax, double ay, double gravity_affected)
-	: m_vx(vx)
+	ModifyMovementCommand(double mass, double friction, double vx, double vy, double fx, double fy, double gravity_affected)
+	: m_mass(mass)
+	, m_friction(friction)
+	, m_vx(vx)
 	, m_vy(vy)
-	, m_ax(ax)
-	, m_ay(ay)
+	, m_fx(fx)
+	, m_fy(fy)
 	, m_gravity_affected(gravity_affected)
 	{}
 
 	void execute() const;
-	std::unique_ptr<Command> clone() { return std::make_unique<ModifyMovementCommand>(m_vx, m_vy, m_ax, m_ay, m_gravity_affected); }
+	std::unique_ptr<Command> clone() { return std::make_unique<ModifyMovementCommand>(m_mass, m_friction, m_vx, m_vy, m_fx, m_fy, m_gravity_affected); }
 private:
-    double m_vx, m_vy, m_ax, m_ay, m_gravity_affected;
+    double m_mass, m_friction, m_vx, m_vy, m_fx, m_fy, m_gravity_affected;
 };
 
 

@@ -15,15 +15,25 @@ void ModifyMovementCommand::execute() const
 	{
 		Movement* movement = entity_system().previous_entity()->movement();
 
-		if(is_negative_zero(m_ax))
-			movement->set_accel_x(m_ax);
+		if(is_negative_zero(m_mass))
+			movement->set_mass(m_mass);
 		else
-			movement->mod_accel_x(m_ax);
+			movement->set_mass(movement->mass() + m_mass);
 
-		if(is_negative_zero(m_ay))
-			movement->set_accel_y(m_ay);
+		if(is_negative_zero(m_friction))
+			movement->set_friction(m_friction);
 		else
-			movement->mod_accel_y(m_ay);
+			movement->set_friction(movement->friction() + m_friction);
+
+		if(is_negative_zero(m_fx))
+			movement->set_force_x(m_fx);
+		else
+			movement->mod_force_x(m_fx);
+
+		if(is_negative_zero(m_fy))
+			movement->set_force_y(m_fy);
+		else
+			movement->mod_force_y(m_fy);
 
 		if(is_negative_zero(m_vx))
 			movement->set_velocity_x(m_vx);

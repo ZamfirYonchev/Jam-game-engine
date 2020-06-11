@@ -12,7 +12,7 @@
 void UseInstantMovementCommand::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_movement(new InstantMovement(m_move_accel));
+		entity_system().previous_entity()->set_movement(new InstantMovement(m_mass, m_friction, m_move_force));
 	else
 	{
 		//error globals().access_entity_id

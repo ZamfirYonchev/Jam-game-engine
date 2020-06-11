@@ -13,19 +13,19 @@
 class UseFullMovementCommand : public Command
 {
 public:
-	UseFullMovementCommand(double max_vx, double max_vy, double move_accel, double jump_accel, bool gravity_affected)
-	: m_max_vx(max_vx)
-	, m_max_vy(max_vy)
-	, m_move_accel(move_accel)
-	, m_jump_accel(jump_accel)
+	UseFullMovementCommand(double mass, double friction, double move_force, double jump_force, bool gravity_affected)
+	: m_mass(mass)
+	, m_friction(friction)
+	, m_move_force(move_force)
+	, m_jump_force(jump_force)
 	, m_gravity_affected(gravity_affected)
 	{}
 
 	void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseFullMovementCommand>(m_max_vx, m_max_vy, m_move_accel, m_jump_accel, m_gravity_affected); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseFullMovementCommand>(m_mass, m_friction, m_move_force, m_jump_force, m_gravity_affected); }
 
 private:
-    double m_max_vx, m_max_vy, m_move_accel, m_jump_accel;
+    double m_mass, m_friction, m_move_force, m_jump_force;
 	bool m_gravity_affected;
 };
 
