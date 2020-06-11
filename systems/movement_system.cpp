@@ -25,35 +25,39 @@ void MovementSystem::update(Time time_delta)
 
 			if(movement->gravity_affected())
 			{
-				movement->mod_accel_y(GRAVITY_ACCEL);
+				movement->mod_force_y(GRAVITY_ACCEL*movement->mass());
 
 				if(control->decision_jump() && collision->standing_on() == Collision::GROUND)
-					movement->mod_velocity_y(movement->jump_accel());
+					movement->mod_velocity_y(movement->jump_force()/movement->mass());
 			}
 			else
 			{
 				if(control->decision_jump())
-					movement->mod_accel_y(movement->move_accel());
+					movement->mod_force_y(movement->move_force());
 				if(control->decision_duck())
-					movement->mod_accel_y(-movement->move_accel());
+					movement->mod_force_y(-movement->move_force());
 			}
 
 
-			movement->mod_accel_x(movement->move_accel()*control->decision_walk());
+			movement->mod_force_x(movement->move_force()*control->decision_walk());
 
-			double sx = clip((movement->vx() + movement->ax()*time_delta/2.0)*time_delta, -movement->max_vx()*time_delta, movement->max_vx()*time_delta);
-			double sy = clip((movement->vy() + movement->ay()*time_delta/2.0)*time_delta, -movement->max_vy()*time_delta, movement->max_vy()*time_delta);
+			double vx_avg = movement->vx() + time_delta*movement->fx()/movement->mass()/2.0;
+			double vy_avg = movement->vy() + time_delta*movement->fy()/movement->mass()/2.0;
+
+			movement->mod_force_x(-vx_avg*movement->friction()); //account for air friction
+			movement->mod_force_y(-vy_avg*movement->friction()); //account for air friction
+
+			double sx = (movement->vx() + time_delta*movement->fx()/movement->mass()/2.0)*time_delta;
+			double sy = (movement->vy() + time_delta*movement->fy()/movement->mass()/2.0)*time_delta;
 
 			position->mod_x(sx);
 			position->mod_y(sy);
 
-			movement->mod_velocity_x(movement->ax()*time_delta);
-			movement->mod_velocity_y(movement->ay()*time_delta);
-			movement->mod_velocity_x(-0.1*movement->vx()); //air friction
-			movement->mod_velocity_y(-0.1*movement->vy()); //air friction
+			movement->mod_velocity_x(time_delta*movement->fx()/movement->mass());
+			movement->mod_velocity_y(time_delta*movement->fy()/movement->mass());
 
-			movement->set_accel_x(0);
-			movement->set_accel_y(0);
+			movement->set_force_x(0);
+			movement->set_force_y(0);
     	}
     	else
     	{
