@@ -119,7 +119,7 @@ AddEntity #1: player character
 AddEntity #1: player character
 UseAbsolutePosition 100 100 58 100
 UseCharacterVisuals 0
-UseFullMovement 100 0.5 0.2 180 1
+UseFullMovement 100 0.5 0.2 250 1
 UseBasicCollision 1
 UseInputControl -1 1000
 UseCharacterHealth 10 10
