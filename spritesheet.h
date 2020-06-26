@@ -55,6 +55,14 @@ public:
 
     void add_sprite(TextureID tex_index, int x, int y, int w, int h);
 
+    const optional_ref<const Sprite> sprite(unsigned int index) const
+    {
+    	if(index < m_sprites.size())
+            return optional_ref<const Sprite>(m_sprites[index]);
+    	else
+    		return optional_ref<const Sprite>();
+    }
+
     optional_ref<Sprite> sprite(unsigned int index)
     {
     	if(index < m_sprites.size())
