@@ -83,15 +83,15 @@ ExtendProcedure 13 1
 
 AddProcedure 0 #14: stop movement
 ExtendProcedure 14 1
-	ModifyMovement -0 -0 0 0 0
+	ModifyMovement 1 1 -0 -0 0 0 0
 
 AddProcedure 0 #15: move down
 ExtendProcedure 15 1
-ModifyMovement 0 0 0 -0.003 0
+ModifyMovement 1 1 0 0 0 -0.003 0
 
 AddProcedure 0 #16: move up
 ExtendProcedure 16 1
-ModifyMovement 0 0 0 0.009 0
+ModifyMovement 1 1 0 0 0 0.009 0
 
 AddProcedure 0 #17: switch on
 ExtendProcedure 17 4
@@ -128,13 +128,15 @@ AddProcedure 0 #21: move right
 ExtendProcedure 21 1
 ModifyControl 0 0 0 1 0
 
-AddProcedure 2 #22: change tiling
+AddProcedure 3 #22: change tiling
 	ModifyVisuals 0 0 0 -0 0
 	ModifyVisuals 0 0 0 5 0
+	DebugMessage 0 change tiling
 
-AddProcedure 2 #23: restore tiling
+AddProcedure 3 #23: restore tiling
 	ModifyVisuals 0 0 0 -0 0
 	ModifyVisuals 0 0 0 2 0
+	DebugMessage 0 restore tiling
 
 
 ### Textures
@@ -590,7 +592,7 @@ UseTiledVisuals 2 90 3
 AddEntity #5: player character
 UseAbsolutePosition 100 100 58 94
 UseCharacterVisuals 9
-UseFullMovement 0.5 2 0.006 1.6 1
+UseFullMovement 10 0.1 0.006 1.6 1
 UseBasicCollision 1
 UseInputControl -1 1000
 UseCharacterHealth 10 10
@@ -605,7 +607,7 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 10
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-UseInstantMovement 0.5
+UseInstantMovement 1 0.1 0.5
 UseBasicCollision 0
 UseInputControl 19 300
 UseNormalInteraction 0
@@ -661,5 +663,5 @@ AddEntity #16: object
 UseAbsolutePosition 200 -23 96 98
 UseBasicCollision 0
 UseTiledVisuals 2 3 3
-UseTriggerInteraction 0 22 -1 -1
+UseTriggerInteraction 0 22 23 -1
 
