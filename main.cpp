@@ -39,12 +39,11 @@ int main(int argc, char** argv)
 	do
 	{
 		std::ifstream file;
-		std::string token;
 		file.open("settings.txt");
 
 		while(file.peek() != EOF)
 		{
-			file >> token;
+			const std::string token { [&](){ std::string result; file >> result; return result; }() };
 
 			if(token == "ResolutionX")
 			{

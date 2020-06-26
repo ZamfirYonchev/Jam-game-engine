@@ -76,14 +76,13 @@
 void ExecuteFileCommand::execute() const
 {
 	std::ifstream file_read(m_filename);
-    std::string token;
     std::string line;
     std::unique_ptr<Command> command;
     double vars[15];
 
     while(file_read.good())
     {
-    	file_read >> token;
+    	const std::string token { [&](){ std::string result; file_read >> result; return result; }() };
         if(file_read.eof())
             break;
 
