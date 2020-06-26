@@ -10,27 +10,23 @@
 
 #include "../types.h"
 #include <list>
+#include <algorithm>
 
 class SystemBase
 {
 public:
-    void add_id(EntityID entity)
+    void add_id(const EntityID entity)
     {
-        for(auto it = entities.begin(); it != entities.end(); ++it)
-            if((*it) == entity)
-            	return;
-
-        entities.push_back(entity);
+    	auto it = std::find_if(cbegin(entities), cend(entities), [entity](EntityID id){ return id == entity; });
+    	if(it == cend(entities))
+    		entities.push_back(entity);
     }
 
-    void remove_id(EntityID entity)
+    void remove_id(const EntityID entity)
     {
-        for(auto it = entities.begin(); it != entities.end(); ++it)
-            if((*it) == entity)
-            {
-                entities.erase(it);
-                break;
-            }
+    	auto it = std::find_if(cbegin(entities), cend(entities), [entity](EntityID id){ return id == entity; });
+    	if(it != cend(entities))
+			entities.erase(it);
     }
 
     void clear()
