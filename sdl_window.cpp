@@ -59,7 +59,7 @@ void SdlWindow::init_video(const uint16_t res_width
 
 	atexit(SDL_Quit);
 
-	uint32_t requested_size = res_width * res_height;
+	const uint32_t requested_size = res_width * res_height;
 	uint32_t closest_size_diff = -1;
 	uint16_t final_res_w = res_width, final_res_h = res_height;
 
@@ -72,7 +72,7 @@ void SdlWindow::init_video(const uint16_t res_width
             return;
         }
 
-        int32_t size_diff = requested_size + mode.w*mode.h - 2*min(int(res_width), mode.w) * min(int(res_height), mode.h);
+        const int32_t size_diff = requested_size + mode.w*mode.h - 2*min(int(res_width), mode.w) * min(int(res_height), mode.h);
 		if((closest_size_diff == -1) || (size_diff < closest_size_diff))
 		{
 			closest_size_diff = size_diff;
