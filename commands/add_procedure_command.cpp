@@ -16,8 +16,6 @@ void AddProcedureCommand::execute() const
 
     if(m_num_of_cmds > 0)
     {
-        auto ext_cmd = new ExtendProcedureCommand(globals().access_procedure_id, m_num_of_cmds);
-        ext_cmd->execute();
-        delete ext_cmd;
+        ExtendProcedureCommand(globals().access_procedure_id, m_num_of_cmds).execute();
     }
 }
