@@ -12,16 +12,18 @@
 #include "../commands/call_procedure_command.h"
 #include "../commands/modify_position_command.h"
 #include "../commands/modify_control_command.h"
+#include <algorithm>
 
 void ControlSystem::update(const Time time_diff)
 {
-    for(auto it = entities.begin(); it != entities.end(); ++it)
-    {
-    	if(entity_system().entity(*it))
+	std::for_each(cbegin(entities), cend(entities),
+	[time_diff](const EntityID id)
+	{
+    	if(entity_system().entity(id))
     	{
-			Entity& entity = *(entity_system().entity(*it));
+			Entity& entity = *(entity_system().entity(id));
 			Control* control = entity.control();
-			Health* health = entity.health();
+			const Health* health = entity.health();
 
 
 			if(health->alive() && health->stunned() == false)
@@ -31,7 +33,7 @@ void ControlSystem::update(const Time time_diff)
 
 			if(control->decision_attack() && control->attack_proc_id() >= 0)
 			{
-				Position* position = entity.position();
+				const Position* position = entity.position();
 				command_queue().push(std::make_unique<CallProcedureCommand>(control->attack_proc_id()));
 				if(control->look_dir() == Control::LEFT)
 				{
@@ -53,5 +55,5 @@ void ControlSystem::update(const Time time_diff)
     	{
     		//error *it
     	}
-    }
+	});
 }

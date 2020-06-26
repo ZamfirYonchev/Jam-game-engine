@@ -11,17 +11,19 @@
 #include "../components/collision.h"
 #include "../globals.h"
 #include "../math_ext.h"
+#include <algorithm>
 
 void MovementSystem::update(const Time time_delta)
 {
-    for(auto it = entities.begin(); it != entities.end(); ++it)
-    {
-    	if(entity_system().entity(*it))
+	std::for_each(cbegin(entities), cend(entities),
+	[time_delta](const EntityID id)
+	{
+    	if(entity_system().entity(id))
     	{
-			Control* control = entity_system().entity(*it)->control();
-			Movement* movement = entity_system().entity(*it)->movement();
-			Collision* collision = entity_system().entity(*it)->collision();
-			Position* position  = entity_system().entity(*it)->position();
+			const Control* control = entity_system().entity(id)->control();
+			Movement* movement = entity_system().entity(id)->movement();
+			const Collision* collision = entity_system().entity(id)->collision();
+			Position* position  = entity_system().entity(id)->position();
 
 			if(movement->gravity_affected())
 			{
@@ -41,14 +43,14 @@ void MovementSystem::update(const Time time_delta)
 
 			movement->mod_force_x(movement->move_force()*control->decision_walk());
 
-			double vx_avg = movement->vx() + time_delta*movement->fx()/movement->mass()/2.0;
-			double vy_avg = movement->vy() + time_delta*movement->fy()/movement->mass()/2.0;
+			const double vx_avg = movement->vx() + time_delta*movement->fx()/movement->mass()/2.0;
+			const double vy_avg = movement->vy() + time_delta*movement->fy()/movement->mass()/2.0;
 
 			movement->mod_force_x(-vx_avg*movement->friction()); //account for air friction
 			movement->mod_force_y(-vy_avg*movement->friction()); //account for air friction
 
-			double sx = (movement->vx() + time_delta*movement->fx()/movement->mass()/2.0)*time_delta;
-			double sy = (movement->vy() + time_delta*movement->fy()/movement->mass()/2.0)*time_delta;
+			const double sx = (movement->vx() + time_delta*movement->fx()/movement->mass()/2.0)*time_delta;
+			const double sy = (movement->vy() + time_delta*movement->fy()/movement->mass()/2.0)*time_delta;
 
 			position->mod_x(sx);
 			position->mod_y(sy);
@@ -63,7 +65,7 @@ void MovementSystem::update(const Time time_delta)
     	{
     		//error *it
     	}
-    }
+	});
 }
 
 

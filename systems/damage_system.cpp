@@ -10,16 +10,18 @@
 #include "../globals.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
+#include <algorithm>
 
 void DamageSystem::update(const Time time_diff)
 {
-    for(auto it = entities.begin(); it != entities.end(); ++it)
-    {
-    	if(entity_system().entity(*it))
+	std::for_each(cbegin(entities), cend(entities),
+	[time_diff](const EntityID id)
+	{
+    	if(entity_system().entity(id))
     	{
-    		Entity& entity = *(entity_system().entity(*it));
+    		Entity& entity = *(entity_system().entity(id));
 			Health* health = entity.health();
-			bool was_alive = health->alive();
+			const bool was_alive = health->alive();
 			health->update_health(time_diff);
 			if(was_alive && health->alive() == false && health->on_death_exec() >= 0)
 			{
@@ -31,6 +33,6 @@ void DamageSystem::update(const Time time_diff)
     	{
     		//error *it
     	}
-    }
+	});
 }
 

@@ -9,17 +9,17 @@
 #include "../globals.h"
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
+#include <algorithm>
 
-void RenderingSystem::add_id(EntityID entity)
+void RenderingSystem::add_id(const EntityID entity)
 {
 	if(entity_system().entity(entity))
 	{
-		int layer = entity_system().entity(entity)->visuals()->layer();
-	    for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
-	        if((*it) == entity)
-	        	return;
+		const int layer = entity_system().entity(entity)->visuals()->layer();
+		const auto it = std::find_if(cbegin(entities[layer]), cend(entities[layer]), [entity](const EntityID id) { return id == entity; });
 
-	    entities[layer].push_back(entity);
+		if(it == cend(entities[layer]))
+			entities[layer].push_back(entity);
 	}
 	else
 	{
@@ -27,17 +27,15 @@ void RenderingSystem::add_id(EntityID entity)
 	}
 }
 
-void RenderingSystem::remove_id(EntityID entity)
+void RenderingSystem::remove_id(const EntityID entity)
 {
 	if(entity_system().entity(entity))
 	{
-		int layer = entity_system().entity(entity)->visuals()->layer();
-		for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
-			if((*it) == entity)
-			{
-				entities[layer].erase(it);
-				break;
-			}
+		const int layer = entity_system().entity(entity)->visuals()->layer();
+		const auto it = std::find_if(cbegin(entities[layer]), cend(entities[layer]), [entity](const EntityID id) { return id == entity; });
+
+		if(it != cend(entities[layer]))
+			entities[layer].erase(it);
 	}
 	else
 	{
@@ -45,7 +43,7 @@ void RenderingSystem::remove_id(EntityID entity)
 	}
 }
 
-void RenderingSystem::set_entity_layer(EntityID entity_id, Visuals::VisualLayer layer)
+void RenderingSystem::set_entity_layer(const EntityID entity_id, const Visuals::VisualLayer layer)
 {
 	if(entity_system().entity(entity_id))
 	{
@@ -69,25 +67,22 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 
-    Position* screen_zone_position;
-    if(entity_system().entity(0))
-    	screen_zone_position = entity_system().entity(0)->position();
-    else
-    	screen_zone_position = Position::null;
+    const Position* screen_zone_position = entity_system().entity(0) ? entity_system().entity(0)->position() : Position::null;
 
-    m_screen_to_view_scale = screen_zone_position->h() ? 1.0*globals().resolution_y/screen_zone_position->h() : 1.0;
+    const double m_screen_to_view_scale = screen_zone_position->h() ? 1.0*globals().resolution_y/screen_zone_position->h() : 1.0;
 
     for(auto layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
     {
-		for(auto it = entities[layer].begin(); it != entities[layer].end(); ++it)
+    	std::for_each(cbegin(entities[layer]), cend(entities[layer]),
+    	[&](const EntityID id)
 		{
-			if(entity_system().entity(*it))
+			if(entity_system().entity(id))
 			{
-				Entity& entity = *(entity_system().entity(*it));
+				Entity& entity = *(entity_system().entity(id));
 				Visuals* visuals = entity.visuals();
-				Movement* movement = entity.movement();
-				Position* position = entity.position();
-				Control* control = entity.control();
+				const Movement* movement = entity.movement();
+				const Position* position = entity.position();
+				const Control* control = entity.control();
 
 				if(paused == false)
 				{
@@ -167,24 +162,24 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 					}
 				}
 
-				optional_ref<Spritesheet> spritesheet = resource_system().spritesheet(visuals->spritesheet_id());
+				const optional_ref<Spritesheet> spritesheet = resource_system().spritesheet(visuals->spritesheet_id());
 				if(spritesheet)
 				{
 					double scale_factor = spritesheet->scale_factor();
-					SDL_RendererFlip flip = (control->look_dir()==Control::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
-					SDL_Texture* texture = nullptr;
+					const SDL_RendererFlip flip = (control->look_dir()==Control::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
 					AbsolutePosition screen_pos;
 					SDL_Rect dest;
 
 					for(int16_t rx = 0; rx < visuals->repeat_x(); ++rx)
 						for(int16_t ry = 0; ry < visuals->repeat_y(); ++ry)
 						{
-							optional_ref<Sprite> sprite = spritesheet->sprite(visuals->animation_sprite(rx, ry));
+							const optional_ref<const Sprite> sprite = spritesheet->sprite(visuals->animation_sprite(rx, ry));
 							if(sprite)
 							{
 								if(resource_system().texture(sprite->texture_id))
 								{
-									texture = resource_system().texture(sprite->texture_id)->texture();
+									//TODO: to optimize and add constness
+									SDL_Texture* texture = resource_system().texture(sprite->texture_id)->texture();
 									screen_pos.set_w(sprite->clip.w*scale_factor);
 									screen_pos.set_h(sprite->clip.h*scale_factor);
 									screen_pos.set_x(position->x() + position->w()/visuals->repeat_x()/2.0 - screen_pos.w()/2.0 + rx*screen_pos.w() - screen_zone_position->x());
@@ -196,7 +191,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 
 									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, globals().resolution_x, globals().resolution_y))
 									{
-										int err = SDL_RenderCopyEx(renderer, texture, &sprite->clip, &dest, 0, nullptr, flip);
+										const int err = SDL_RenderCopyEx(renderer, texture, &sprite->clip, &dest, 0, nullptr, flip);
 										if(err)
 										{
 											std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;
@@ -216,7 +211,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 						}
 					if(globals().show_hitboxes)
 					{
-						SDL_Rect hitbox
+						const SDL_Rect hitbox
 							{ int(entity.position()->x() - screen_zone_position->x())
 							, int(globals().resolution_y-entity.position()->h() - entity.position()->y() + screen_zone_position->y())
 							, int(entity.position()->w())
@@ -235,7 +230,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 			{
 				//error *it
 			}
-		}
+    	});
     }
 
     SDL_RenderPresent(renderer);
