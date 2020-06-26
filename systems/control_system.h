@@ -13,7 +13,7 @@
 class ControlSystem : public SystemBase
 {
 public:
-    void update(Time time_diff);
+    void update(const Time time_diff);
 };
 
 

@@ -13,7 +13,7 @@
 class DamageSystem : public SystemBase
 {
 public:
-    void update(Time time_diff);
+    void update(const Time time_diff);
 };
 
 #endif /* SYSTEMS_DAMAGE_SYSTEM_H_ */

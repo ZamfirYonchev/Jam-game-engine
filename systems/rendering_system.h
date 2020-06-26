@@ -26,7 +26,7 @@ public:
     }
 
     void set_entity_layer(EntityID entity, Visuals::VisualLayer layer);
-    void render_entities(Time time_diff, bool paused, SDL_Renderer* renderer) const;
+    void render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer) const;
 
 protected:
     std::list<EntityID> entities[Visuals::NUM_OF_LAYERS];

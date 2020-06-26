@@ -11,7 +11,7 @@
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
 
-void DamageSystem::update(Time time_diff)
+void DamageSystem::update(const Time time_diff)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {

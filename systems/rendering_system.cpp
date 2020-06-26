@@ -63,7 +63,7 @@ void RenderingSystem::set_entity_layer(EntityID entity_id, Visuals::VisualLayer 
 	}
 }
 
-void RenderingSystem::render_entities(Time time_diff, bool paused, SDL_Renderer* renderer) const
+void RenderingSystem::render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer) const
 {
     //SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

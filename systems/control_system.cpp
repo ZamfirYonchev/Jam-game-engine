@@ -13,7 +13,7 @@
 #include "../commands/modify_position_command.h"
 #include "../commands/modify_control_command.h"
 
-void ControlSystem::update(Time time_diff)
+void ControlSystem::update(const Time time_diff)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {

@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-void MovementSystem::update(Time time_delta)
+void MovementSystem::update(const Time time_delta)
 {
     for(auto it = entities.begin(); it != entities.end(); ++it)
     {
