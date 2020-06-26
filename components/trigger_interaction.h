@@ -13,12 +13,12 @@
 class TriggerInteraction : public Interaction
 {
 public:
-	TriggerInteraction(int8_t trigger_group, ProcedureID proc_id_self, ProcedureID on_exit_proc_id_self, ProcedureID proc_id_other)
+	TriggerInteraction(int8_t trigger_group, ProcedureID proc_id_self, ProcedureID proc_id_other, ProcedureID on_exit_proc_id_self)
 	: m_trigger_group(trigger_group)
 	, m_triggered(false)
 	, m_proc_id_self(proc_id_self)
-	, m_on_exit_proc_id_self(on_exit_proc_id_self)
 	, m_proc_id_other(proc_id_other)
+	, m_on_exit_proc_id_self(on_exit_proc_id_self)
 	{}
 
 	TriggerInteraction() : TriggerInteraction(0, -1, -1, -1) {}
@@ -42,7 +42,7 @@ public:
 private:
 	int8_t m_trigger_group;
 	bool m_triggered;
-	ProcedureID m_proc_id_self, m_on_exit_proc_id_self, m_proc_id_other;
+	ProcedureID m_proc_id_self, m_proc_id_other, m_on_exit_proc_id_self;
 };
 
 #endif /* COMPONENTS_TRIGGER_INTERACTION_H_ */
