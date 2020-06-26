@@ -13,27 +13,11 @@
 #include "../math_ext.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
+#include <algorithm>
 
-void CollisionSystem::update(Time time_diff)
+void CollisionSystem::update(const Time time_diff)
 {
-	std::vector<bool> entity_last_triggered(entities.size());
-	int trig_i = 0;
-
-	for(auto it = entities.begin(); it != entities.end(); ++it)
-	{
-		if(entity_system().entity(*it))
-		{
-			Entity& entity = *(entity_system().entity(*it));
-			entity.collision()->set_standing_on(Collision::AIR);
-	    	entity_last_triggered[trig_i] = entity.interaction()->triggered();
-	    	entity.interaction()->set_triggered(false);
-			++trig_i;
-		}
-		else
-		{
-			//error *it
-		}
-	}
+	const std::unordered_map<EntityID, bool> entity_last_triggered {entities_last_triggered_reset()};
 
 	for(auto it0 = entities.begin(); it0 != entities.end(); ++it0)
         for(auto it1 = std::next(it0); it1 != entities.end(); ++it1)
@@ -155,36 +139,63 @@ void CollisionSystem::update(Time time_diff)
         	}
         }
 
-	trig_i = 0;
-	for(auto it = entities.begin(); it != entities.end(); ++it)
+	std::for_each(cbegin(entities), cend(entities),
+	[&](const EntityID id)
 	{
-		if(entity_system().entity(*it))
+		if(entity_system().entity(id))
 		{
-			if(entity_last_triggered[trig_i] > entity_system().entity(*it)->interaction()->triggered())
-			{	//was triggered, now it is not, so execute on_exit_proc_self
-				if(entity_system().entity(*it)->interaction()->on_exit_proc_id_self() >= 0)
-				{
-					command_queue().push(std::make_unique<SelectEntityCommand>(*it));
-					command_queue().push(std::make_unique<CallProcedureCommand>(entity_system().entity(*it)->interaction()->on_exit_proc_id_self()));
+			const auto it = entity_last_triggered.find(id);
+			if(it != cend(entity_last_triggered))
+			{
+				const Interaction* interaction = entity_system().entity(id)->interaction();
+				const bool entity_last_triggered = it->second;
+				if(entity_last_triggered > interaction->triggered())
+				{	//was triggered, now it is not, so execute on_exit_proc_self
+					if(interaction->on_exit_proc_id_self() >= 0)
+					{
+						command_queue().push(std::make_unique<SelectEntityCommand>(id));
+						command_queue().push(std::make_unique<CallProcedureCommand>(interaction->on_exit_proc_id_self()));
+					}
 				}
-			}
-			else
-			if(entity_last_triggered[trig_i] < entity_system().entity(*it)->interaction()->triggered())
-			{	//was not triggered, now it is, so execute proc_self
-				if(entity_system().entity(*it)->interaction()->proc_id_self() >= 0)
-				{
-					command_queue().push(std::make_unique<SelectEntityCommand>(*it));
-					command_queue().push(std::make_unique<CallProcedureCommand>(entity_system().entity(*it)->interaction()->proc_id_self()));
+				else
+				if(entity_last_triggered < interaction->triggered())
+				{	//was not triggered, now it is, so execute proc_self
+					if(interaction->proc_id_self() >= 0)
+					{
+						command_queue().push(std::make_unique<SelectEntityCommand>(id));
+						command_queue().push(std::make_unique<CallProcedureCommand>(interaction->proc_id_self()));
+					}
 				}
-			}
 
-			++trig_i;
+			}
 		}
 		else
 		{
-			//error *it
+			//error
 		}
-	}
+	});
 }
 
+std::unordered_map<EntityID, bool> CollisionSystem::entities_last_triggered_reset()
+{
+	std::unordered_map<EntityID, bool> entities_last_triggered;
+
+	std::for_each(cbegin(entities), cend(entities),
+	[&](const EntityID id)
+	{
+		if(entity_system().entity(id))
+		{
+			Entity& entity = *(entity_system().entity(id));
+			entity.collision()->set_standing_on(Collision::AIR);
+			entities_last_triggered.insert({id, entity.interaction()->triggered()});
+	    	entity.interaction()->set_triggered(false);
+		}
+		else
+		{
+			//error
+		}
+	});
+
+	return entities_last_triggered;
+}
 
