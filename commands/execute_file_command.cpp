@@ -78,10 +78,10 @@ void ExecuteFileCommand::execute() const
 {
 	std::ifstream file(m_filename);
 	std::cout << "Parsing file " << m_filename << std::endl;
-    process_stream(file, m_renderer);
+    process_stream(file, m_renderer, false);
 }
 
-void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* renderer)
+void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* renderer, bool insert_mode)
 {
     std::string line;
     std::unique_ptr<Command> command;
@@ -550,7 +550,13 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
         }
         else
         {
-        	if(command) command_queue().push(std::move(command));
+        	if(command)
+        	{
+        		if(insert_mode)
+        			command_queue().insert_next(std::move(command));
+        		else
+        			command_queue().push(std::move(command));
+        	}
         }
     }
 }

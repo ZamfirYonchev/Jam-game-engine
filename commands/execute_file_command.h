@@ -23,7 +23,7 @@ public:
 
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<ExecuteFileCommand>(m_filename, m_renderer); }
-    static void process_stream(std::istream& stream, SDL_Renderer* m_renderer);
+    static void process_stream(std::istream& stream, SDL_Renderer* m_renderer, bool insert_mode);
 
 private:
     std::string m_filename;

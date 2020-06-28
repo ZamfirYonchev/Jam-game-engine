@@ -16,7 +16,7 @@ void ReusePositionCommand::execute() const
 	{
 		std::stringstream ss;
 		ss << *(entity_system().entity(m_source_id)->position());
-		ExecuteFileCommand::process_stream(ss, m_renderer);
+		ExecuteFileCommand::process_stream(ss, m_renderer, true);
 	}
 	else
 	{
