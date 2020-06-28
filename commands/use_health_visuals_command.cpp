@@ -6,8 +6,9 @@
  */
 
 #include "use_health_visuals_command.h"
+
+#include "../components/health_visuals.h"
 #include "../globals.h"
-#include "../components/character_health_visuals.h"
 
 void UseHealthVisualsCommand::execute() const
 {

@@ -5,8 +5,8 @@
  *      Author: zamfi
  */
 
-#ifndef COMPONENTS_CHARACTER_HEALTH_VISUALS_H_
-#define COMPONENTS_CHARACTER_HEALTH_VISUALS_H_
+#ifndef COMPONENTS_HEALTH_VISUALS_H_
+#define COMPONENTS_HEALTH_VISUALS_H_
 
 #include "visuals.h"
 
@@ -48,4 +48,4 @@ private:
     uint16_t m_repeat_x;
 };
 
-#endif /* COMPONENTS_CHARACTER_HEALTH_VISUALS_H_ */
+#endif /* COMPONENTS_HEALTH_VISUALS_H_ */

@@ -5,9 +5,9 @@
  *      Author: zamfi
  */
 
-#include "character_health_visuals.h"
 #include "health.h"
 #include "../globals.h"
+#include "health_visuals.h"
 
 uint8_t HealthVisuals::animation_sprite(uint16_t rx, uint16_t ry) const
 {
