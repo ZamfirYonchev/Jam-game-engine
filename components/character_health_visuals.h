@@ -10,17 +10,25 @@
 
 #include "visuals.h"
 
-class CharacterHealthVisuals : public Visuals
+class HealthVisuals : public Visuals
 {
 public:
-	CharacterHealthVisuals(EntityID self_id, SpritesheetID spr_id, uint16_t repeat_x)
+	HealthVisuals(EntityID self_id, SpritesheetID spr_id, uint16_t repeat_x)
 	: m_self_id(self_id)
 	, m_spr_id(spr_id)
 	, m_repeat_x(repeat_x)
 	{}
 
-	CharacterHealthVisuals() : CharacterHealthVisuals(-1, -1, 0) {}
-    RenderStates state() const { return IDLE; }
+	HealthVisuals() : HealthVisuals(-1, -1, 0) {}
+
+    void print(std::ostream& to) const
+    {
+    	to << "UseHealthVisuals "
+    	   << m_spr_id << " "
+		   << m_repeat_x << " ";
+    }
+
+	RenderStates state() const { return IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const;

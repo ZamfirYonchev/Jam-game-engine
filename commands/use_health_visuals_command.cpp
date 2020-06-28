@@ -12,7 +12,7 @@
 void UseHealthVisualsCommand::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_visuals(new CharacterHealthVisuals(entity_system().previous_entity()->id(), m_spr_id, m_repeat_x));
+		entity_system().previous_entity()->set_visuals(new HealthVisuals(entity_system().previous_entity()->id(), m_spr_id, m_repeat_x));
 	else
 	{
 		//error globals().access_entity_id

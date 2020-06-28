@@ -9,7 +9,7 @@
 #include "health.h"
 #include "../globals.h"
 
-uint8_t CharacterHealthVisuals::animation_sprite(uint16_t rx, uint16_t ry) const
+uint8_t HealthVisuals::animation_sprite(uint16_t rx, uint16_t ry) const
 {
 	if(entity_system().entity(m_self_id))
 	{
