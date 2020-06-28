@@ -9,30 +9,10 @@
 
 #include "sdl_window.h"
 #include <SDL2/SDL.h>
-#include "file_parser.h"
+#include <fstream>
 #include "globals.h"
 #include "math_ext.h"
-#include "components/static_visuals.h"
-#include "components/absolute_position.h"
-#include "components/character_visuals.h"
-#include "components/basic_collision.h"
-#include "components/full_movement.h"
-#include "components/input_control.h"
 #include "commands/execute_file_clean_command.h"
-#include "components/damage_collision.h"
-#include "components/character_health.h"
-#include "components/tiled_visuals.h"
-#include "commands/select_entity_command.h"
-#include "commands/modify_position_command.h"
-#include "components/trigger_interaction.h"
-#include "commands/call_procedure_command.h"
-#include "components/normal_interaction.h"
-#include "components/attached_position.h"
-#include "commands/modify_movement_command.h"
-#include "commands/use_timed_health_command.h"
-#include "commands/add_entity_command.h"
-#include "components/guide_control.h"
-#include "components/instant_movement.h"
 
 int main(int argc, char** argv)
 {
