@@ -10,7 +10,7 @@
 
 #include <cinttypes>
 #include "../types.h"
-#include <ostream>
+#include <sstream>
 
 class Control
 {
@@ -38,7 +38,7 @@ public:
 
     static Control* null;
 
-    friend std::ostream& operator<< (std::ostream& out, const Control& component)
+    friend std::stringstream& operator<< (std::stringstream& out, const Control& component)
     {
     	component.print(out);
         out << std::endl;

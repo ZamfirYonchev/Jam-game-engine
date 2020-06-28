@@ -8,7 +8,7 @@
 #ifndef COMPONENTS_POSITION_H_
 #define COMPONENTS_POSITION_H_
 
-#include <ostream>
+#include <sstream>
 
 class Position
 {
@@ -33,7 +33,7 @@ public:
 
     static Position* null;
 
-    friend std::ostream& operator<< (std::ostream& out, const Position& component)
+    friend std::stringstream& operator<< (std::stringstream& out, const Position& component)
     {
     	component.print(out);
         out << std::endl;
