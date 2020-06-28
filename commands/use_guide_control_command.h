@@ -14,19 +14,15 @@
 class UseGuideControlCommand : public Command
 {
 public:
-	UseGuideControlCommand(EntityID target_id, ProcedureID attack_proc_id, double attack_cooldown, double attack_range)
+	UseGuideControlCommand(EntityID target_id, double range)
 	: m_target_id(target_id)
-	, m_attack_proc_id(attack_proc_id)
-	, m_attack_cooldown(attack_cooldown)
-	, m_range(attack_range)
+	, m_range(range)
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseGuideControlCommand>(m_target_id, m_attack_proc_id, m_attack_cooldown, m_range); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseGuideControlCommand>(m_target_id, m_range); }
 private:
     EntityID m_target_id;
-    ProcedureID m_attack_proc_id;
-    double m_attack_cooldown;
     double m_range;
 };
 

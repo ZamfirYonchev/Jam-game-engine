@@ -598,7 +598,7 @@ UseInputControl -1 1000
 UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
-UseGuideControl 6 -1 0 100
+UseGuideControl 6 100
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 3
 

@@ -18,7 +18,7 @@ void GuideControl::update_decisions(Time time_diff)
 		double distance_x = target_position->x() - self_position->x() + (target_position->w() - self_position->w())/2.0;
 		double distance_y = target_position->y() - self_position->y() + (target_position->h() - self_position->h())/2.0;
 
-		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_attack_range);
+		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_range);
 		m_look_dir = distance_x > 0 ? RIGHT : distance_x < 0 ? LEFT : m_look_dir;
 
 		m_jump = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;

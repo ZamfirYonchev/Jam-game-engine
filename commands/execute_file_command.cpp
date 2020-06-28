@@ -408,9 +408,7 @@ void ExecuteFileCommand::execute() const
         {
             file_read >> vars[0];
             file_read >> vars[1];
-            file_read >> vars[2];
-            file_read >> vars[3];
-            command = std::make_unique<UseGuideControlCommand>(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]);
+            command = std::make_unique<UseGuideControlCommand>(EntityID(vars[0]), vars[1]);
         }
         else if(token == "UseNullMovement")
         {

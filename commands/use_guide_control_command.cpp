@@ -13,7 +13,7 @@
 void UseGuideControlCommand::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new GuideControl(entity_system().previous_entity()->id(), resolved_entity(m_target_id), m_attack_proc_id, m_attack_cooldown, m_range));
+		entity_system().previous_entity()->set_control(new GuideControl(entity_system().previous_entity()->id(), resolved_entity(m_target_id), m_range));
 	else
 	{
 		//error globals().access_entity_id
