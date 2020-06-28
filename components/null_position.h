@@ -13,6 +13,11 @@
 class NullPosition : public Position
 {
 public:
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullPosition ";
+    }
+
     double x() const { return 0; }
     double y() const { return 0; }
     double w() const { return 0; }

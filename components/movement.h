@@ -9,11 +9,13 @@
 #define COMPONENTS_MOVEMENT_H_
 
 #include "../types.h"
+#include <ostream>
 
 class Movement
 {
 public:
     virtual ~Movement() {}
+    virtual void print(std::ostream& to) const = 0;
 
     virtual double fx() const = 0;
     virtual double fy() const = 0;
@@ -41,6 +43,13 @@ public:
     virtual void mod_velocity_y(double vy) = 0;
 
     static Movement* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Movement& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 #endif /* COMPONENTS_MOVEMENT_H_ */

@@ -9,6 +9,7 @@
 #define COMPONENTS_INTERACTION_H_
 
 #include "../types.h"
+#include <ostream>
 
 class Interaction
 {
@@ -16,6 +17,7 @@ public:
 	static const int NUM_OF_GROUPS = 32;
 
 	virtual ~Interaction() {}
+    virtual void print(std::ostream& to) const = 0;
 
 	virtual bool is_in_group(int group_id) const = 0;
 	virtual int8_t trigger_group() const = 0;
@@ -33,6 +35,13 @@ public:
 	virtual void set_on_exit_proc_id_self(ProcedureID proc_id) = 0;
 
 	static Interaction* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Interaction& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 #endif /* COMPONENTS_INTERACTION_H_ */

@@ -24,6 +24,13 @@ public:
     CharacterHealth(double hp) : CharacterHealth(hp, hp) {}
     CharacterHealth() : CharacterHealth(0) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseCharacterHealth "
+    	   << m_hit_points << " "
+		   << m_max_hit_points << " ";
+    }
+
     void set_max_hp(double hp)
     {
         m_max_hit_points = hp;

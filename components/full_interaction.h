@@ -28,6 +28,16 @@ public:
 
 	FullInteraction() : FullInteraction(0, -1, -1, -1) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseFullInteraction "
+    	   << m_group_vec << " "
+    	   << m_trigger_group << " "
+    	   << m_proc_id_self << " "
+    	   << m_proc_id_other << " "
+    	   << m_on_exit_proc_id_self << " ";
+    }
+
 	bool is_in_group(int group_id) const { return (m_group_vec >> group_id)%2; }
 	void set_group(int group_id, bool val)
 	{

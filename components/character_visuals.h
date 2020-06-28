@@ -26,6 +26,12 @@ public:
     CharacterVisuals() : CharacterVisuals(-1) {}
     ~CharacterVisuals() {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseCharacterVisuals "
+    	   << m_spritesheet_id<< " ";
+    }
+
     RenderStates state() const { return m_current_state; }
     void set_new_state(RenderStates new_state)
     {

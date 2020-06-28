@@ -18,7 +18,13 @@ public:
 	, m_self_id(self_id)
 	{}
 
-	RenderStates state() const { return IDLE; }
+    void print(std::ostream& to) const
+    {
+    	to << "UseMenuItemVisuals "
+    	   << m_spr_id << " ";
+    }
+
+    RenderStates state() const { return IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(int32_t time_diff) {}
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const;

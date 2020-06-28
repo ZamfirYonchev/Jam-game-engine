@@ -13,6 +13,11 @@
 class NullVisuals : public Visuals
 {
 public:
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullVisuals ";
+    }
+
     RenderStates state() const { return IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}

@@ -13,6 +13,11 @@
 class NullControl : public Control
 {
 public:
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullControl ";
+    }
+
     bool decision_jump() const { return false; }
     bool decision_duck() const { return false; }
     bool decision_attack() const { return false; }

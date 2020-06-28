@@ -20,6 +20,14 @@ public:
 	{}
 
 	StaticVisuals() : StaticVisuals(-1, 0) {}
+
+    void print(std::ostream& to) const
+    {
+    	to << "UseStaticVisuals "
+    	   << m_spr_id << " "
+    	   << m_sprite << " ";
+    }
+
     RenderStates state() const { return IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}

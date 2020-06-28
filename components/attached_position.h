@@ -25,6 +25,15 @@ public:
     AttachedPosition(EntityID attached_id)
     : AttachedPosition(attached_id, 0, 0, 0, 0) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseAttachedPosition "
+    	   << m_offset_x << " "
+		   << m_offset_y << " "
+		   << m_offset_w << " "
+		   << m_offset_h << " ";
+    }
+
     double x() const;
     double y() const;
     double w() const;

@@ -21,7 +21,14 @@ public:
     {}
 
     TiledVisuals() : TiledVisuals(-1, 0, 0) {}
-    ~TiledVisuals() {}
+
+    void print(std::ostream& to) const
+    {
+    	to << "UseTiledVisuals "
+    	   << m_spritesheet_id << " "
+    	   << m_repeat_x << " "
+    	   << m_repeat_y << " ";
+    }
 
     RenderStates state() const { return IDLE; }
     void set_new_state(RenderStates new_state) {}

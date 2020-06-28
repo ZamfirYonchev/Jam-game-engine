@@ -19,6 +19,12 @@ public:
 
 	NormalInteraction() : NormalInteraction(0) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseNormalInteraction "
+    	   << m_group_vec << " ";
+    }
+
 	bool is_in_group(int group_id) const { return (m_group_vec >> group_id)%2; }
 	void set_group(int group_id, bool val)
 	{

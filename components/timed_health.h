@@ -21,6 +21,13 @@ public:
 	, m_proc_id(proc_id)
 	{}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseTimedHealth "
+    	   << m_time_to_live << " "
+    	   << m_proc_id << " ";
+    }
+
     void set_max_hp(double hp) { m_max_ttl = hp; }
     void set_hp(double hp) { m_time_to_live = hp; }
     void set_hp_change(double hp_change) { m_ttl_change = hp_change; }

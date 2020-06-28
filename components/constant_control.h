@@ -20,6 +20,15 @@ public:
 	, m_look_dir(look_dir)
 	{}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseConstantControl "
+    	   << m_move_decision << " "
+    	   << m_jump_decision << " "
+    	   << m_duck_decision << " "
+    	   << m_look_dir << " ";
+    }
+
     bool decision_jump() const { return m_jump_decision; }
     bool decision_duck() const { return m_duck_decision; }
     bool decision_attack() const { return false; }

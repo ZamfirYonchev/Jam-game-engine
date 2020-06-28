@@ -13,6 +13,11 @@
 class NullHealth : public Health
 {
 public:
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullHealth ";
+    }
+
     void set_max_hp(double hp) {}
     void set_hp(double hp) {}
     void set_hp_change(double hp_change) {}

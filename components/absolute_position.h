@@ -17,6 +17,15 @@ public:
     : m_x(x), m_y(y), m_width(w), m_height(h) {}
     AbsolutePosition() : AbsolutePosition(0, 0, 0, 0) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseAbsolutePosition "
+    	   << m_x << " "
+		   << m_y << " "
+		   << m_width << " "
+		   << m_height << " ";
+    }
+
     double x() const { return m_x; }
     double y() const { return m_y; }
     double w() const { return m_width; }

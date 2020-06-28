@@ -24,6 +24,14 @@ public:
 
     InputSelectControl() : InputSelectControl(nullptr, 0, 0, -1) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseInputSelectControl "
+    	   << m_select << " "
+    	   << m_max << " "
+    	   << m_proc_id << " ";
+    }
+
     bool decision_jump() const { return m_select == m_curr_selection; }
     bool decision_duck() const { return false; }
     bool decision_attack() const

@@ -9,6 +9,7 @@
 #define COMPONENTS_COLLISION_H_
 
 #include "../types.h"
+#include <ostream>
 
 class Collision
 {
@@ -16,6 +17,7 @@ public:
     enum SurfaceType {AIR = 0, GROUND = 1};
     enum CollisionState {TRANSPARENT = 0, MOVEABLE = 1, SOLID = 2};
     virtual ~Collision() {}
+    virtual void print(std::ostream& to) const = 0;
 
     virtual CollisionState state() const = 0;
     virtual SurfaceType standing_on() const = 0;
@@ -26,6 +28,13 @@ public:
     virtual void set_collision_damage(double) = 0;
 
     static Collision* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Collision& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 #endif /* COMPONENTS_COLLISION_H_ */

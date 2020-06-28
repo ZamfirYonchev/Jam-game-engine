@@ -29,6 +29,16 @@ public:
     FullMovement(bool gravity_affected) : FullMovement(0, 0, 0, 0, gravity_affected) {}
     FullMovement() : FullMovement(false) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseFullMovement "
+    	   << m_mass << " "
+    	   << m_friction << " "
+    	   << m_move_force << " "
+    	   << m_jump_force << " "
+    	   << m_gravity_affected << " ";
+    }
+
     void set_force_x(double fx) { m_fx = fx; }
     void set_force_y(double fy) { m_fy = fy; }
     void mod_force_x(double fx) { m_fx += fx; }

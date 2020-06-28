@@ -10,12 +10,14 @@
 
 #include <cinttypes>
 #include "../types.h"
+#include <ostream>
 
 class Control
 {
 public:
     enum LookDir {RIGHT = 0, LEFT = 1};
     virtual ~Control() {}
+    virtual void print(std::ostream& to) const = 0;
 
     virtual bool decision_jump() const = 0;
     virtual bool decision_duck() const = 0;
@@ -35,6 +37,13 @@ public:
     virtual void clear_decisions() = 0;
 
     static Control* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Control& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 

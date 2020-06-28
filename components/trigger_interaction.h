@@ -23,6 +23,15 @@ public:
 
 	TriggerInteraction() : TriggerInteraction(0, -1, -1, -1) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseTriggerInteraction "
+    	   << m_trigger_group << " "
+    	   << m_proc_id_self << " "
+    	   << m_proc_id_other << " "
+    	   << m_on_exit_proc_id_self << " ";
+    }
+
 	bool is_in_group(int group_id) const { return false; }
 	void set_group(int group_id, bool val) {}
 	void clear_groups() {}

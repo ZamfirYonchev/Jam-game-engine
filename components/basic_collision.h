@@ -20,6 +20,12 @@ public:
 
     BasicCollision() : BasicCollision(TRANSPARENT) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseBasicCollision "
+    	   << m_state << " ";
+    }
+
     CollisionState state() const { return m_state; }
     void set_state(CollisionState val) { m_state = val; }
     SurfaceType standing_on() const { return m_standing_on; }

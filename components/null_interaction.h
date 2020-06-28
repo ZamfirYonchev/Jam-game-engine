@@ -12,7 +12,12 @@
 
 class NullInteraction : public Interaction
 {
-	bool is_in_group(int group_id) const { return false; }
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullInteraction ";
+    }
+
+    bool is_in_group(int group_id) const { return false; }
 	void set_group(int group_id, bool val) {}
 	void clear_groups() {}
 	int8_t trigger_group() const { return 0; }

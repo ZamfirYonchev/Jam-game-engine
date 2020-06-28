@@ -13,6 +13,11 @@
 class NullCollision : public Collision
 {
 public:
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullCollision ";
+    }
+
     CollisionState state() const { return TRANSPARENT; }
     void set_state(CollisionState val) {}
     SurfaceType standing_on() const { return GROUND; }

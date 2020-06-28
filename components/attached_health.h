@@ -19,6 +19,14 @@ public:
 	, m_offset_max_hp(offset_max_hp)
 	{}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseAttachedHealth "
+    	   << m_attached_id << " "
+		   << m_offset_hp << " "
+		   << m_offset_max_hp << " ";
+    }
+
     void set_max_hp(double hp) { m_offset_max_hp = hp; }
     void set_hp(double hp) { m_offset_hp = hp; }
     void set_hp_change(double hp_change) {}

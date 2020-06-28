@@ -19,6 +19,13 @@ public:
 	{}
     DamageCollision() : DamageCollision(TRANSPARENT, 0) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseDamageCollision "
+    	   << m_state << " "
+    	   << m_damage << " ";
+    }
+
     CollisionState state() const { return m_state; }
     void set_state(CollisionState val) { m_state = val; }
     SurfaceType standing_on() const { return AIR; }

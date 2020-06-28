@@ -9,11 +9,13 @@
 #define COMPONENTS_HEALTH_H_
 
 #include "../types.h"
+#include <ostream>
 
 class Health
 {
 public:
     virtual ~Health() {}
+    virtual void print(std::ostream& to) const = 0;
 
     virtual double hp() const = 0;
     virtual double max_hp() const = 0;
@@ -31,6 +33,13 @@ public:
     virtual void update_health(double time_diff) = 0;
 
     static Health* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Health& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 #endif /* COMPONENTS_HEALTH_H_ */

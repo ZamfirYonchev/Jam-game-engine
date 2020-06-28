@@ -25,6 +25,15 @@ public:
 	, m_attack_range(attack_range)
 	{}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseChaseAIControl "
+    	   << m_target_id << " "
+    	   << m_attack_proc_id << " "
+    	   << m_attack_cooldown << " "
+    	   << m_attack_range << " ";
+    }
+
     bool decision_jump() const { return false; }
     bool decision_duck() const { return false; }
     bool decision_attack() const { return m_attack; }

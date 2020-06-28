@@ -30,6 +30,13 @@ public:
     InputControl(InputHandler* input, EntityID self_id) : InputControl(input, -1, 0, self_id) {}
     InputControl() : InputControl(nullptr, 0) {}
 
+    void print(std::ostream& to) const
+    {
+    	to << "UseInputControl "
+    	   << m_shoot_proc_id << " "
+    	   << m_shoot_cooldown << " ";
+    }
+
     bool decision_jump() const { return m_jump; }
     bool decision_duck() const { return m_duck; }
     bool decision_attack() const { return m_shoot; }

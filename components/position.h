@@ -8,10 +8,14 @@
 #ifndef COMPONENTS_POSITION_H_
 #define COMPONENTS_POSITION_H_
 
+#include <ostream>
+
 class Position
 {
 public:
     virtual ~Position() {}
+    virtual void print(std::ostream& to) const = 0;
+
     virtual double x() const = 0;
     virtual double y() const = 0;
     virtual double w() const = 0;
@@ -28,6 +32,13 @@ public:
     virtual void mod_h(double val) = 0;
 
     static Position* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Position& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 #endif /* COMPONENTS_POSITION_H_ */

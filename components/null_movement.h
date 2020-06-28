@@ -13,6 +13,11 @@
 class NullMovement : public Movement
 {
 public:
+    void print(std::ostream& to) const
+    {
+    	to << "UseNullMovement ";
+    }
+
     void set_force_x(double val) {}
     void set_force_y(double val) {}
     void mod_force_x(double val) {}

@@ -9,6 +9,7 @@
 #define COMPONENTS_VISUALS_H_
 
 #include "../types.h"
+#include <ostream>
 
 class Visuals
 {
@@ -19,6 +20,7 @@ public:
     static constexpr int NUM_OF_LAYERS = 5;
 
     virtual ~Visuals() {}
+    virtual void print(std::ostream& to) const = 0;
 
     virtual RenderStates state() const = 0;
     virtual uint8_t animation_sprite(uint16_t rx, uint16_t ry) const = 0;
@@ -37,6 +39,13 @@ public:
     virtual void advance_animation(Time time_diff) = 0;
 
     static Visuals* null;
+
+    friend std::ostream& operator<< (std::ostream& out, const Visuals& component)
+    {
+    	component.print(out);
+        out << std::endl;
+        return out;
+    }
 };
 
 #endif /* COMPONENTS_VISUALS_H_ */
