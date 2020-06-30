@@ -73,6 +73,13 @@
 #include "use_health_visuals_command.h"
 #include "use_menu_item_visuals_command.h"
 #include "reuse_position_command.h"
+#include "reuse_control_command.h"
+#include "reuse_movement_command.h"
+#include "reuse_collision_command.h"
+#include "reuse_interaction_command.h"
+#include "reuse_health_command.h"
+#include "reuse_visuals_command.h"
+#include "export_entities_command.h"
 #include "../utilities.h"
 
 void ExecuteFileCommand::execute() const
@@ -82,7 +89,7 @@ void ExecuteFileCommand::execute() const
     process_stream(file, m_renderer, false);
 }
 
-void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* renderer, bool insert_mode)
+void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* renderer, const bool insert_next)
 {
     std::string line;
     std::unique_ptr<Command> command;
@@ -543,6 +550,41 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				command = std::make_unique<ReusePositionCommand>(EntityID(vars[0]), renderer);
 				break;
 
+			case hash("ReuseControl"):
+				input >> vars[0];
+				command = std::make_unique<ReuseControlCommand>(EntityID(vars[0]), renderer);
+				break;
+
+			case hash("ReuseMovement"):
+				input >> vars[0];
+				command = std::make_unique<ReuseMovementCommand>(EntityID(vars[0]), renderer);
+				break;
+
+			case hash("ReuseCollision"):
+				input >> vars[0];
+				command = std::make_unique<ReuseCollisionCommand>(EntityID(vars[0]), renderer);
+				break;
+
+			case hash("ReuseInteraction"):
+				input >> vars[0];
+				command = std::make_unique<ReuseInteractionCommand>(EntityID(vars[0]), renderer);
+				break;
+
+			case hash("ReuseHealth"):
+				input >> vars[0];
+				command = std::make_unique<ReuseHealthCommand>(EntityID(vars[0]), renderer);
+				break;
+
+			case hash("ReuseVisuals"):
+				input >> vars[0];
+				command = std::make_unique<ReuseVisualsCommand>(EntityID(vars[0]), renderer);
+				break;
+
+			case hash("ExportEntities"):
+				input >> line;
+				command = std::make_unique<ExportEntitiesCommand>(line);
+				break;
+
 			default:
 				std::cerr << "Parsing error: Unknown token " << token << std::endl;
 			    break;
@@ -554,7 +596,7 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
         }
         else if(command)
         {
-			if(insert_mode)
+			if(insert_next)
 				command_queue().insert_next(std::move(command));
 			else
 				command_queue().push(std::move(command));
