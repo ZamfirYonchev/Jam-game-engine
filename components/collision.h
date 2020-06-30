@@ -9,7 +9,7 @@
 #define COMPONENTS_COLLISION_H_
 
 #include "../types.h"
-#include <sstream>
+#include <ostream>
 
 class Collision
 {
@@ -29,7 +29,7 @@ public:
 
     static Collision* null;
 
-    friend std::stringstream& operator<< (std::stringstream& out, const Collision& component)
+    friend std::ostream& operator<< (std::ostream& out, const Collision& component)
     {
     	component.print(out);
         out << std::endl;

@@ -9,7 +9,7 @@
 #define COMPONENTS_INTERACTION_H_
 
 #include "../types.h"
-#include <sstream>
+#include <ostream>
 
 class Interaction
 {
@@ -36,7 +36,7 @@ public:
 
 	static Interaction* null;
 
-    friend std::stringstream& operator<< (std::stringstream& out, const Interaction& component)
+    friend std::ostream& operator<< (std::ostream& out, const Interaction& component)
     {
     	component.print(out);
         out << std::endl;

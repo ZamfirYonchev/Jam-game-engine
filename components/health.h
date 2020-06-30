@@ -9,7 +9,7 @@
 #define COMPONENTS_HEALTH_H_
 
 #include "../types.h"
-#include <sstream>
+#include <ostream>
 
 class Health
 {
@@ -34,7 +34,7 @@ public:
 
     static Health* null;
 
-    friend std::stringstream& operator<< (std::stringstream& out, const Health& component)
+    friend std::ostream& operator<< (std::ostream& out, const Health& component)
     {
     	component.print(out);
         out << std::endl;

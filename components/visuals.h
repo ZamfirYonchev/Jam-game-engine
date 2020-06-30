@@ -9,7 +9,7 @@
 #define COMPONENTS_VISUALS_H_
 
 #include "../types.h"
-#include <sstream>
+#include <ostream>
 
 class Visuals
 {
@@ -40,7 +40,7 @@ public:
 
     static Visuals* null;
 
-    friend std::stringstream& operator<< (std::stringstream& out, const Visuals& component)
+    friend std::ostream& operator<< (std::ostream& out, const Visuals& component)
     {
     	component.print(out);
         out << std::endl;

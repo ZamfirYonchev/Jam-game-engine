@@ -9,7 +9,7 @@
 #define COMPONENTS_MOVEMENT_H_
 
 #include "../types.h"
-#include <sstream>
+#include <ostream>
 
 class Movement
 {
@@ -44,7 +44,7 @@ public:
 
     static Movement* null;
 
-    friend std::stringstream& operator<< (std::stringstream& out, const Movement& component)
+    friend std::ostream& operator<< (std::ostream& out, const Movement& component)
     {
     	component.print(out);
         out << std::endl;
