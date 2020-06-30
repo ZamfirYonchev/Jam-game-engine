@@ -32,7 +32,7 @@ public:
     {
     	to << "UseFullInteraction "
     	   << m_group_vec << " "
-    	   << m_trigger_group << " "
+    	   << int(m_trigger_group) << " "
     	   << m_proc_id_self << " "
     	   << m_proc_id_other << " "
     	   << m_on_exit_proc_id_self << " ";
