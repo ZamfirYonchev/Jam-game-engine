@@ -52,7 +52,7 @@ AddProcedure 0 #9: spawn zombie
 ExtendProcedure 9 11
 	AddEntity
 	UseCharacterVisuals 13
-	UseFullMovement 0.5 2 0.004 1.6 1
+	UseFullMovement 10 0.1 0.04 45 1
 	UseBasicCollision 1
 	UseChaseAIControl 5 12 1000 50
 	UseCharacterHealth 5 5
@@ -83,15 +83,15 @@ ExtendProcedure 13 1
 
 AddProcedure 0 #14: stop movement
 ExtendProcedure 14 1
-	ModifyMovement -0 -0 0 0 0
+	ModifyMovement 0 0 -0 -0 0 0 0
 
 AddProcedure 0 #15: move down
 ExtendProcedure 15 1
-ModifyMovement 0 0 0 -0.009 0
+ModifyMovement 0 0 0 0 0 -2 0
 
 AddProcedure 0 #16: move up
 ExtendProcedure 16 1
-ModifyMovement 0 0 0 0.009 0
+ModifyMovement 0 0 0 0 0 2 0
 
 AddProcedure 0 #17: switch on
 ExtendProcedure 17 6
@@ -573,13 +573,13 @@ UseTiledVisuals 2 9 3
 AddEntity #5: player character
 UseAbsolutePosition 100 100 58 94
 UseCharacterVisuals 9
-UseFullMovement 0.5 2 0.006 1.6 1
+UseFullMovement 10 0.1 0.06 45 1
 UseBasicCollision 1
 UseInputControl -1 1000
 UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
-UseGuideControl 6 -1 0 100
+UseGuideControl 6 100
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 3
 
@@ -588,7 +588,7 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 10
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-UseInstantMovement 0.5
+UseInstantMovement 1 0.1 0.5
 UseBasicCollision 0
 UseInputControl 19 300
 UseNormalInteraction 0
@@ -681,7 +681,7 @@ UseStaticVisuals 15 1
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 1
 UseBasicCollision 2
-UseFullMovement 0 1 0 0 0
+UseFullMovement 1 0.1 0 0 0
 UseFullInteraction 16 4 14 -1 -1
 
 AddEntity #25: door top
@@ -690,7 +690,7 @@ UseStaticVisuals 15 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 1
 UseBasicCollision 2
-UseFullMovement 0 1 0 0 0
+UseFullMovement 1 0.1 0 0 0
 UseFullInteraction 16 4 14 -1 -1
 
 AddEntity #26: door bottom stopper
@@ -728,3 +728,29 @@ AddEntity #32 player health
 	UseAttachedPosition 0 20 440 -440 -460
 	UseAttachedHealth 5 0 0
  	UseHealthVisuals 16 10
+
+AddProcedure 6 #20
+	ReusePosition 6 1
+	ReuseControl 6
+	ReuseMovement 6
+	ReuseCollision 6
+	ReuseInteraction 6
+	ReuseVisuals 6
+
+AddEntity
+CallProcedure 20
+ModifyPosition 0 100 0 0 
+
+AddEntity
+CallProcedure 20
+ModifyPosition 0 200 0 0 
+
+AddEntity
+CallProcedure 20
+ModifyPosition 0 300 0 0 
+
+AddEntity
+CallProcedure 20
+ModifyPosition 0 400 0 0 
+
+ExportEntities test_file.lvl

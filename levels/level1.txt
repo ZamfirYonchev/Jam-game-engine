@@ -313,13 +313,13 @@ UseTiledVisuals 1 90 3
 AddEntity #5: player character
 UseAbsolutePosition 100 100 58 100
 UseCharacterVisuals 9
-UseFullMovement 0.5 2 0.006 1.6 1
+UseFullMovement 10 0.1 0.06 40 1
 UseBasicCollision 1
 UseInputControl -1 1000
 UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
-UseGuideControl 6 -1 0 100
+UseGuideControl 6 100
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 3
 
@@ -328,8 +328,7 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 10
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-#UseFullMovement 0.5 0.05 0.006 1.6 0
-UseInstantMovement 0.5
+UseInstantMovement 1 0.1 0.5
 UseBasicCollision 1
 UseInputControl -1 100
 UseNormalInteraction 16
