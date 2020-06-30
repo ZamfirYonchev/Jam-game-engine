@@ -49,6 +49,11 @@ public:
     	return *this;
     }
 
+    const std::vector<Entity>& entities() const
+	{
+    	return m_entities;
+	}
+
     Entity& add_new_entity();
     void remove_entity(EntityID id)
     {
