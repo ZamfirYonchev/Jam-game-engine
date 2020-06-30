@@ -17,6 +17,7 @@
 #include "components/visuals.h"
 #include "types.h"
 #include <utility>
+#include <ostream>
 
 template <class T>
 void release(T*& t)
@@ -96,6 +97,14 @@ public:
     Health* health() { return m_health; }
     Visuals* visuals() { return m_visuals; }
 
+    const Position* position() const { return m_position; }
+    const Control* control() const { return m_control; }
+    const Movement* movement() const { return m_movement; }
+    const Collision* collision() const { return m_collision; }
+    const Interaction* interaction() const { return m_interaction; }
+    const Health* health() const { return m_health; }
+    const Visuals* visuals() const { return m_visuals; }
+
     void set_position(Position* _position);
     void set_control(Control* _control);
     void set_movement(Movement* _movement);
@@ -118,6 +127,21 @@ public:
     	release(m_interaction);
     	release(m_health);
     	release(m_visuals);
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, const Entity& entity)
+    {
+    	stream << "AddEntity\n"
+    	   << *(entity.position())
+		   << *(entity.control())
+		   << *(entity.movement())
+		   << *(entity.collision())
+		   << *(entity.interaction())
+		   << *(entity.health())
+		   << *(entity.visuals())
+		   << std::endl;
+
+    	return stream;
     }
 
 private:
