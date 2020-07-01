@@ -72,13 +72,7 @@
 #include "use_static_visuals_command.h"
 #include "use_health_visuals_command.h"
 #include "use_menu_item_visuals_command.h"
-#include "reuse_position_command.h"
-#include "reuse_control_command.h"
-#include "reuse_movement_command.h"
-#include "reuse_collision_command.h"
-#include "reuse_interaction_command.h"
-#include "reuse_health_command.h"
-#include "reuse_visuals_command.h"
+#include "reuse_component_command.h"
 #include "export_entities_command.h"
 #include "../utilities.h"
 
@@ -547,37 +541,37 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 
 			case hash("ReusePosition"):
 				input >> vars[0];
-				command = std::make_unique<ReusePositionCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Position>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ReuseControl"):
 				input >> vars[0];
-				command = std::make_unique<ReuseControlCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Control>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ReuseMovement"):
 				input >> vars[0];
-				command = std::make_unique<ReuseMovementCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Movement>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ReuseCollision"):
 				input >> vars[0];
-				command = std::make_unique<ReuseCollisionCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Collision>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ReuseInteraction"):
 				input >> vars[0];
-				command = std::make_unique<ReuseInteractionCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Interaction>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ReuseHealth"):
 				input >> vars[0];
-				command = std::make_unique<ReuseHealthCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Health>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ReuseVisuals"):
 				input >> vars[0];
-				command = std::make_unique<ReuseVisualsCommand>(EntityID(vars[0]), renderer);
+				command = std::make_unique<ReuseComponentCommand<Visuals>>(EntityID(vars[0]), renderer);
 				break;
 
 			case hash("ExportEntities"):
