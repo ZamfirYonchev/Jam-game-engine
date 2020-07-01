@@ -68,15 +68,15 @@ void CollisionSystem::update(const Time time_diff)
 					entity0.health()->mod_hp_change(-collision1->on_collision_damage()*time_diff);
 					entity1.health()->mod_hp_change(-collision0->on_collision_damage()*time_diff);
 
-					bool objects_collide = (collision0->state() >= Collision::MOVEABLE)
+					const bool objects_collide = (collision0->state() >= Collision::MOVEABLE)
 										&& (collision1->state() >= Collision::MOVEABLE)
 										&& (collision0->state() != collision1->state());
 
 					if(objects_collide)
 					{
 						Entity& moving_entity = collision0->state() == Collision::MOVEABLE ? entity0 : entity1;
-						double dx = time_diff*(entity0.movement()->vx() - entity1.movement()->vx());
-						double dy = time_diff*(entity0.movement()->vy() - entity1.movement()->vy());
+						const double dx = time_diff*(entity0.movement()->vx() - entity1.movement()->vx());
+						const double dy = time_diff*(entity0.movement()->vy() - entity1.movement()->vy());
 						double t;
 
 						t = lines_cross(x3, y3, dx, dy, x0, sy, sx-x0, 0);
