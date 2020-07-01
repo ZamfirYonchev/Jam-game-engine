@@ -105,6 +105,12 @@ public:
     const Health* health() const { return m_health; }
     const Visuals* visuals() const { return m_visuals; }
 
+    template<typename T>
+    T& component();
+
+    template<typename T>
+    const T& component() const;
+
     void set_position(Position* _position);
     void set_control(Control* _control);
     void set_movement(Movement* _movement);
@@ -154,6 +160,5 @@ private:
     Health* m_health;
     Visuals* m_visuals;
 };
-
 
 #endif /* ENTITY_H_ */

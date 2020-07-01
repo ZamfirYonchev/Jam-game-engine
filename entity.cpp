@@ -124,3 +124,86 @@ void Entity::set_visuals(Visuals* _visuals)
 		m_visuals = _visuals;
 }
 
+template<>
+Position& Entity::component()
+{
+	return *position();
+}
+
+template<>
+Control& Entity::component()
+{
+	return *m_control;
+}
+
+template<>
+Movement& Entity::component()
+{
+	return *m_movement;
+}
+
+template<>
+Collision& Entity::component()
+{
+	return *m_collision;
+}
+
+template<>
+Interaction& Entity::component()
+{
+	return *m_interaction;
+}
+
+template<>
+Health& Entity::component()
+{
+	return *m_health;
+}
+
+template<>
+Visuals& Entity::component()
+{
+	return *m_visuals;
+}
+
+template<>
+const Position& Entity::component() const
+{
+	return *position();
+}
+
+template<>
+const Control& Entity::component() const
+{
+	return *m_control;
+}
+
+template<>
+const Movement& Entity::component() const
+{
+	return *m_movement;
+}
+
+template<>
+const Collision& Entity::component() const
+{
+	return *m_collision;
+}
+
+template<>
+const Interaction& Entity::component() const
+{
+	return *m_interaction;
+}
+
+template<>
+const Health& Entity::component() const
+{
+	return *m_health;
+}
+
+template<>
+const Visuals& Entity::component() const
+{
+	return *m_visuals;
+}
