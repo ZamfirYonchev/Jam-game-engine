@@ -6,7 +6,7 @@
  */
 
 #include "execute_file_command.h"
-#include "../file_parser.h"
+#include <fstream>
 #include "../globals.h"
 #include "null_command.h"
 #include "debug_message_command.h"
@@ -43,35 +43,40 @@
 #include "modify_interaction_command.h"
 #include "modify_health_command.h"
 #include "modify_visuals_command.h"
-#include "use_null_position_command.h"
-#include "use_absolute_position_command.h"
-#include "use_attached_position_command.h"
-#include "use_null_control_command.h"
-#include "use_constant_control_command.h"
-#include "use_input_control_command.h"
-#include "use_input_select_control_command.h"
-#include "use_chase_ai_control_command.h"
-#include "use_guide_control_command.h"
-#include "use_null_movement_command.h"
-#include "use_full_movement_command.h"
-#include "use_instant_movement_command.h"
-#include "use_null_collision_command.h"
-#include "use_basic_collision_command.h"
-#include "use_damage_collision_command.h"
-#include "use_null_interaction_command.h"
-#include "use_normal_interaction_command.h"
-#include "use_trigger_interaction_command.h"
-#include "use_full_interaction_command.h"
-#include "use_null_health_command.h"
-#include "use_character_health_command.h"
-#include "use_timed_health_command.h"
-#include "use_attached_health_command.h"
-#include "use_null_visuals_command.h"
-#include "use_character_visuals_command.h"
-#include "use_tiled_visuals_command.h"
-#include "use_static_visuals_command.h"
-#include "use_health_visuals_command.h"
-#include "use_menu_item_visuals_command.h"
+#include "../components/absolute_position.h"
+#include "../components/attached_position.h"
+#include "../components/null_position.h"
+#include "../components/constant_control.h"
+#include "../components/absolute_position.h"
+#include "../components/attached_position.h"
+#include "../components/null_position.h"
+#include "../components/chase_ai_control.h"
+#include "../components/constant_control.h"
+#include "../components/guide_control.h"
+#include "../components/input_control.h"
+#include "../components/input_select_control.h"
+#include "../components/null_control.h"
+#include "../components/full_movement.h"
+#include "../components/instant_movement.h"
+#include "../components/null_movement.h"
+#include "../components/basic_collision.h"
+#include "../components/damage_collision.h"
+#include "../components/null_collision.h"
+#include "../components/full_interaction.h"
+#include "../components/normal_interaction.h"
+#include "../components/trigger_interaction.h"
+#include "../components/null_interaction.h"
+#include "../components/attached_health.h"
+#include "../components/character_health.h"
+#include "../components/timed_health.h"
+#include "../components/null_health.h"
+#include "../components/character_visuals.h"
+#include "../components/health_visuals.h"
+#include "../components/menu_item_visuals.h"
+#include "../components/static_visuals.h"
+#include "../components/tiled_visuals.h"
+#include "../components/null_visuals.h"
+#include "use_component_command.h"
 #include "reuse_component_command.h"
 #include "export_entities_command.h"
 #include "../utilities.h"
@@ -363,7 +368,7 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				break;
 
 			case hash("UseNullPosition"):
-				command = std::make_unique<UseNullPositionCommand>();
+				command = std::make_unique<UseComponentCommand<NullPosition>>();
 				break;
 
 			case hash("UseAbsolutePosition"):
@@ -371,7 +376,7 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[1];
 				input >> vars[2];
 				input >> vars[3];
-				command = std::make_unique<UseAbsolutePositionCommand>(AbsolutePosition(vars[0], vars[1], vars[2], vars[3]));
+				command = std::make_unique<UseComponentCommand<AbsolutePosition>>(vars[0], vars[1], vars[2], vars[3]);
 				break;
 
 			case hash("UseAttachedPosition"):
@@ -380,11 +385,11 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[2];
 				input >> vars[3];
 				input >> vars[4];
-				command = std::make_unique<UseAttachedPositionCommand>(EntityID(vars[0]), vars[1], vars[2], vars[3], vars[4]);
+				command = std::make_unique<UseComponentCommand<AttachedPosition>>(EntityID(vars[0]), vars[1], vars[2], vars[3], vars[4]);
 				break;
 
 			case hash("UseNullControl"):
-				command = std::make_unique<UseNullControlCommand>();
+				command = std::make_unique<UseComponentCommand<NullControl>>();
 				break;
 
 			case hash("UseConstantControl"):
@@ -392,20 +397,20 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[1];
 				input >> vars[2];
 				input >> vars[3];
-				command = std::make_unique<UseConstantControlCommand>(int8_t(vars[0]), bool(vars[1]), bool(vars[2]), Control::LookDir(vars[3]));
+				command = std::make_unique<UseComponentCommand<ConstantControl>>(int8_t(vars[0]), bool(vars[1]), bool(vars[2]), Control::LookDir(vars[3]));
 				break;
 
 			case hash("UseInputControl"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseInputControlCommand>(ProcedureID(vars[0]), vars[1]);
+				command = std::make_unique<UseComponentCommand<InputControl>>(ProcedureID(vars[0]), vars[1]);
 				break;
 
 			case hash("UseInputSelectControl"):
 				input >> vars[0];
 				input >> vars[1];
 				input >> vars[2];
-				command = std::make_unique<UseInputSelectControlCommand>(int(vars[0]), int(vars[1]), ProcedureID(vars[2]));
+				command = std::make_unique<UseComponentCommand<InputSelectControl>>(int(vars[0]), int(vars[1]), ProcedureID(vars[2]));
 				break;
 
 			case hash("UseChaseAIControl"):
@@ -413,17 +418,17 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[1];
 				input >> vars[2];
 				input >> vars[3];
-				command = std::make_unique<UseChaseAIControlCommand>(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]);
+				command = std::make_unique<UseComponentCommand<ChaseAIControl>>(EntityID(vars[0]), ProcedureID(vars[1]), vars[2], vars[3]);
 				break;
 
 			case hash("UseGuideControl"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseGuideControlCommand>(EntityID(vars[0]), vars[1]);
+				command = std::make_unique<UseComponentCommand<GuideControl>>(EntityID(vars[0]), vars[1]);
 				break;
 
 			case hash("UseNullMovement"):
-				command = std::make_unique<UseNullMovementCommand>();
+				command = std::make_unique<UseComponentCommand<NullMovement>>();
 			break;
 
 			case hash("UseFullMovement"):
@@ -432,38 +437,38 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[2];
 				input >> vars[3];
 				input >> vars[4];
-				command = std::make_unique<UseFullMovementCommand>(vars[0], vars[1], vars[2], vars[3], bool(vars[4]));
+				command = std::make_unique<UseComponentCommand<FullMovement>>(vars[0], vars[1], vars[2], vars[3], bool(vars[4]));
 				break;
 
 			case hash("UseInstantMovement"):
 				input >> vars[0];
 				input >> vars[1];
 				input >> vars[2];
-				command = std::make_unique<UseInstantMovementCommand>(vars[0], vars[1], vars[2]);
+				command = std::make_unique<UseComponentCommand<InstantMovement>>(vars[0], vars[1], vars[2]);
 				break;
 
 			case hash("UseNullCollision"):
-				command = std::make_unique<UseNullCollisionCommand>();
+				command = std::make_unique<UseComponentCommand<NullCollision>>();
 			break;
 
 			case hash("UseBasicCollision"):
 				input >> vars[0];
-				command = std::make_unique<UseBasicCollisionCommand>(Collision::CollisionState(vars[0]));
+				command = std::make_unique<UseComponentCommand<BasicCollision>>(Collision::CollisionState(vars[0]));
 				break;
 
 			case hash("UseDamageCollision"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseDamageCollisionCommand>(Collision::CollisionState(vars[0]), vars[1]);
+				command = std::make_unique<UseComponentCommand<DamageCollision>>(Collision::CollisionState(vars[0]), vars[1]);
 				break;
 
 			case hash("UseNullInteraction"):
-				command = std::make_unique<UseNullInteractionCommand>();
+				command = std::make_unique<UseComponentCommand<NullInteraction>>();
 				break;
 
 			case hash("UseNormalInteraction"):
 				input >> vars[0];
-				command = std::make_unique<UseNormalInteractionCommand>(int32_t(vars[0]));
+				command = std::make_unique<UseComponentCommand<NormalInteraction>>(int32_t(vars[0]));
 				break;
 
 			case hash("UseTriggerInteraction"):
@@ -471,7 +476,7 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[1];
 				input >> vars[2];
 				input >> vars[3];
-				command = std::make_unique<UseTriggerInteractionCommand>(int8_t(vars[0]), ProcedureID(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]));
+				command = std::make_unique<UseComponentCommand<TriggerInteraction>>(int8_t(vars[0]), ProcedureID(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]));
 				break;
 
 			case hash("UseFullInteraction"):
@@ -480,63 +485,63 @@ void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* rende
 				input >> vars[2];
 				input >> vars[3];
 				input >> vars[4];
-				command = std::make_unique<UseFullInteractionCommand>(int32_t(vars[0]), int8_t(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]), ProcedureID(vars[4]));
+				command = std::make_unique<UseComponentCommand<FullInteraction>>(int32_t(vars[0]), int8_t(vars[1]), ProcedureID(vars[2]), ProcedureID(vars[3]), ProcedureID(vars[4]));
 				break;
 
 			case hash("UseNullHealth"):
-				command = std::move(std::make_unique<UseNullHealthCommand>());
+				command = std::move(std::make_unique<UseComponentCommand<NullHealth>>());
 				break;
 
 			case hash("UseAttachedHealth"):
 				input >> vars[0];
 				input >> vars[1];
 				input >> vars[2];
-				command = std::make_unique<UseAttachedHealthCommand>(EntityID(vars[0]), vars[1], vars[2]);
+				command = std::make_unique<UseComponentCommand<AttachedHealth>>(EntityID(vars[0]), vars[1], vars[2]);
 				break;
 
 			case hash("UseCharacterHealth"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseCharacterHealthCommand>(vars[0], vars[1]);
+				command = std::make_unique<UseComponentCommand<CharacterHealth>>(vars[0], vars[1]);
 				break;
 
 			case hash("UseTimedHealth"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseTimedHealthCommand>(vars[0], ProcedureID(vars[1]));
+				command = std::make_unique<UseComponentCommand<TimedHealth>>(vars[0], ProcedureID(vars[1]));
 				break;
 
 			case hash("UseNullVisuals"):
-				command = std::make_unique<UseNullVisualsCommand>();
+				command = std::make_unique<UseComponentCommand<NullVisuals>>();
 				break;
 
 			case hash("UseCharacterVisuals"):
 				input >> vars[0];
-				command = std::make_unique<UseCharacterVisualsCommand>(SpritesheetID(vars[0]));
+				command = std::make_unique<UseComponentCommand<CharacterVisuals>>(SpritesheetID(vars[0]));
 				break;
 
 			case hash("UseTiledVisuals"):
 				input >> vars[0];
 				input >> vars[1];
 				input >> vars[2];
-				command = std::make_unique<UseTiledVisualsCommand>(SpritesheetID(vars[0]), uint16_t(vars[1]), uint16_t(vars[2]));
+				command = std::make_unique<UseComponentCommand<TiledVisuals>>(SpritesheetID(vars[0]), uint16_t(vars[1]), uint16_t(vars[2]));
 				break;
 
 			case hash("UseStaticVisuals"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseStaticVisualsCommand>(SpritesheetID(vars[0]), int(vars[1]));
+				command = std::make_unique<UseComponentCommand<StaticVisuals>>(SpritesheetID(vars[0]), int(vars[1]));
 				break;
 
 			case hash("UseHealthVisuals"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseHealthVisualsCommand>(SpritesheetID(vars[0]), uint16_t(vars[1]));
+				command = std::make_unique<UseComponentCommand<HealthVisuals>>(SpritesheetID(vars[0]), uint16_t(vars[1]));
 				break;
 
 			case hash("UseMenuItemVisuals"):
 				input >> vars[0];
-				command = std::make_unique<UseMenuItemVisualsCommand>(SpritesheetID(vars[0]));
+				command = std::make_unique<UseComponentCommand<MenuItemVisuals>>(SpritesheetID(vars[0]));
 				break;
 
 			case hash("ReusePosition"):
