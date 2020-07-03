@@ -84,8 +84,13 @@
 void ExecuteFileCommand::execute() const
 {
 	std::ifstream file(m_filename);
-	std::cout << "Parsing file " << m_filename << std::endl;
-    process_stream(file, m_renderer, false);
+	if (file)
+	{
+		std::cout << "Parsing file " << m_filename << std::endl;
+		process_stream(file, m_renderer, false);
+	}
+	else
+		std::cerr << "File \"" << m_filename << "\" cannot be opened!" << std::endl;
 }
 
 void ExecuteFileCommand::process_stream(std::istream& input, SDL_Renderer* renderer, const bool insert_next)
