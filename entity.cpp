@@ -207,3 +207,46 @@ const Visuals& Entity::component() const
 {
 	return *m_visuals;
 }
+
+template<>
+void Entity::set_component(Position* component)
+{
+	set_position(component);
+}
+
+template<>
+void Entity::set_component(Control* component)
+{
+	set_control(component);
+}
+
+template<>
+void Entity::set_component(Movement* component)
+{
+	set_movement(component);
+}
+
+template<>
+void Entity::set_component(Collision* component)
+{
+	set_collision(component);
+}
+
+template<>
+void Entity::set_component(Interaction* component)
+{
+	set_interaction(component);
+}
+
+template<>
+void Entity::set_component(Health* component)
+{
+	set_health(component);
+}
+
+template<>
+void Entity::set_component(Visuals* component)
+{
+	set_visuals(component);
+}
+

@@ -119,6 +119,9 @@ public:
     void set_health(Health* _health);
     void set_visuals(Visuals* _visuals);
 
+    template<typename T>
+    void set_component(T* component);
+
     void set_id(EntityID id)
     { m_id = id; }
 
