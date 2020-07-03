@@ -16,24 +16,18 @@
 class CommandQueue
 {
 public:
-    CommandQueue() : m_curr_cmd_it(m_commands.end()) {}
-    ~CommandQueue()
-    {
-    }
+    CommandQueue() = default;
+    ~CommandQueue() = default;
+
     CommandQueue(const CommandQueue& ) = delete;
     CommandQueue& operator=(const CommandQueue& ) = delete;
 
-    CommandQueue(CommandQueue&& rhs)
-    {
-    	m_commands = std::move(rhs.m_commands);
-    	m_curr_cmd_it = std::move(rhs.m_curr_cmd_it);
-    }
+    CommandQueue(CommandQueue&& rhs) : m_commands(std::move(rhs.m_commands)) {}
 
     CommandQueue& operator=(CommandQueue&& rhs)
     {
     	clear();
     	m_commands = std::move(rhs.m_commands);
-    	m_curr_cmd_it = rhs.m_curr_cmd_it;
     	return *this;
     }
 
@@ -48,12 +42,14 @@ public:
 
     void insert_next(std::unique_ptr<Command> cmd)
     {
-		m_commands.insert(std::next(m_curr_cmd_it), std::move(cmd));
+        //TODO check std::next(begin(m_commands)) is valid
+		m_commands.insert(std::next(begin(m_commands)), std::move(cmd));
     }
 
     std::unique_ptr<Command> pop_next()
     {
-        auto it = std::next(m_curr_cmd_it);
+        //TODO check std::next(begin(m_commands)) is valid
+        auto it = std::next(begin(m_commands));
         std::unique_ptr<Command> cmd = std::move(*it);
         m_commands.erase(it);
         return cmd;
@@ -67,7 +63,7 @@ public:
     void flush_commands()
     {
         for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-        	if(it != m_curr_cmd_it)
+        	if(it != m_commands.begin())
 			{
 				*it = std::make_unique<NullCommand>();
 			}
@@ -75,7 +71,6 @@ public:
 
 private:
     std::list<std::unique_ptr<Command>> m_commands;
-    std::list<std::unique_ptr<Command>>::iterator m_curr_cmd_it;
 };
 
 #endif /* COMMAND_QUEUE_H_ */

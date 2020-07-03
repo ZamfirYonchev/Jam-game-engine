@@ -9,12 +9,11 @@
 
 void CommandQueue::process(Time time_diff)
 {
-    auto it = m_commands.begin();
-    while(it != m_commands.end())
+    while(m_commands.cbegin() != m_commands.cend())
     {
-		m_curr_cmd_it = it;
-		(*it)->execute();
-		it = m_commands.erase(it);
+        auto cmd = std::move(m_commands.front());
+        cmd->execute();
+        m_commands.pop_front();
     }
 }
 
