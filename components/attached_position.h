@@ -14,6 +14,7 @@
 class AttachedPosition : public Position
 {
 public:
+	using Base = Position;
     AttachedPosition(EntityID attached_id, double offset_x, double offset_y, double offset_w, double offset_h)
     : m_attached_id(attached_id)
     , m_offset_x(offset_x)

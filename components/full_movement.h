@@ -14,6 +14,7 @@
 class FullMovement : public Movement
 {
 public:
+	using Base = Movement;
     FullMovement(double mass, double friction, double move_force, double jump_force, bool gravity_affected)
     : m_mass(mass)
     , m_friction(friction)

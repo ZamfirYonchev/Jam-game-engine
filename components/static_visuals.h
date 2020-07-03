@@ -13,6 +13,7 @@
 class StaticVisuals : public Visuals
 {
 public:
+	using Base = Visuals;
 	StaticVisuals(SpritesheetID spr_id, int sprite)
 	: m_spr_id(spr_id)
 	, m_sprite(sprite)

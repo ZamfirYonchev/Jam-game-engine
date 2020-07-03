@@ -14,6 +14,7 @@
 class CharacterHealth : public Health
 {
 public:
+	using Base = Health;
 	const int STUN_TIME = 100;
     CharacterHealth(double hp, double max_hp)
 	: m_max_hit_points(max_hp)

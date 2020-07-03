@@ -13,6 +13,7 @@
 class ConstantControl : public Control
 {
 public:
+	using Base = Control;
 	ConstantControl(int8_t move_decision, bool jump_decision, bool duck_decision, LookDir look_dir)
 	: m_move_decision(move_decision)
 	, m_jump_decision(jump_decision)

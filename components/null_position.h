@@ -13,6 +13,7 @@
 class NullPosition : public Position
 {
 public:
+	using Base = Position;
     void print(std::ostream& to) const
     {
     	to << "UseNullPosition ";

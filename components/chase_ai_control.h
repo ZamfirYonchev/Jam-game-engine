@@ -13,6 +13,7 @@
 class ChaseAIControl : public Control
 {
 public:
+	using Base = Control;
 	ChaseAIControl(EntityID self_id, EntityID target_id, ProcedureID attack_proc_id, double attack_cooldown, double attack_range)
 	: m_walk_dir(0)
 	, m_attack(false)

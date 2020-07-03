@@ -13,6 +13,7 @@
 class NullMovement : public Movement
 {
 public:
+	using Base = Movement;
     void print(std::ostream& to) const
     {
     	to << "UseNullMovement ";

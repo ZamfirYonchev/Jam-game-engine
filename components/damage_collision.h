@@ -13,6 +13,7 @@
 class DamageCollision : public Collision
 {
 public:
+	using Base = Collision;
     DamageCollision(CollisionState state, double damage)
 	: m_state(state)
 	, m_damage(damage)

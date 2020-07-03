@@ -13,6 +13,7 @@
 class TiledVisuals : public Visuals
 {
 public:
+	using Base = Visuals;
     TiledVisuals(SpritesheetID spr_id, uint16_t repeat_x, uint16_t repeat_y)
     : m_spritesheet_id(spr_id)
     , m_repeat_x(repeat_x)

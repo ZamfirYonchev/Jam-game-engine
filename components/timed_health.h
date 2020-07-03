@@ -14,6 +14,7 @@
 class TimedHealth : public Health
 {
 public:
+	using Base = Health;
     TimedHealth(double ttl, ProcedureID proc_id)
 	: m_time_to_live(ttl)
 	, m_max_ttl(ttl)

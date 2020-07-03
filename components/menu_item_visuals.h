@@ -13,6 +13,7 @@
 class MenuItemVisuals : public Visuals
 {
 public:
+	using Base = Visuals;
 	MenuItemVisuals(SpritesheetID spr_id, EntityID self_id)
 	: m_spr_id(spr_id)
 	, m_self_id(self_id)

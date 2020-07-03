@@ -14,6 +14,7 @@
 class InstantMovement : public Movement
 {
 public:
+	using Base = Movement;
 	InstantMovement(double mass, double friction, double move_force)
     : m_mass(mass)
 	, m_friction(friction)

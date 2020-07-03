@@ -13,13 +13,14 @@
 class FullInteraction : public Interaction
 {
 public:
-	FullInteraction(int32_t group_vec, int8_t trigger_group, ProcedureID proc_id_self, ProcedureID on_exit_proc_id_self, ProcedureID proc_id_other)
+	using Base = Interaction;
+	FullInteraction(int32_t group_vec, int8_t trigger_group, ProcedureID proc_id_self, ProcedureID proc_id_other, ProcedureID on_exit_proc_id_self)
 	: m_group_vec(group_vec)
 	, m_trigger_group(trigger_group)
 	, m_triggered(false)
 	, m_proc_id_self(proc_id_self)
-	, m_on_exit_proc_id_self(on_exit_proc_id_self)
 	, m_proc_id_other(proc_id_other)
+	, m_on_exit_proc_id_self(on_exit_proc_id_self)
 	{}
 
 	FullInteraction(int8_t trigger_group, ProcedureID proc_id_self, ProcedureID on_exit_proc_id_self, ProcedureID proc_id_other)
@@ -62,7 +63,7 @@ private:
 	int32_t m_group_vec;
 	int8_t m_trigger_group;
 	bool m_triggered;
-	ProcedureID m_proc_id_self, m_on_exit_proc_id_self, m_proc_id_other;
+	ProcedureID m_proc_id_self, m_proc_id_other, m_on_exit_proc_id_self;
 
 };
 

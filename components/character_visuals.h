@@ -13,6 +13,7 @@
 class CharacterVisuals : public Visuals
 {
 public:
+	using Base = Visuals;
     static const unsigned int ANIMATION_DELAY_MS = 50;
 
     CharacterVisuals(SpritesheetID spr_id)

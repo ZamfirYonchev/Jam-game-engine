@@ -13,6 +13,7 @@
 class NullVisuals : public Visuals
 {
 public:
+	using Base = Visuals;
     void print(std::ostream& to) const
     {
     	to << "UseNullVisuals ";

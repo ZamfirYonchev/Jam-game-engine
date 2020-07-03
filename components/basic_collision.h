@@ -13,6 +13,7 @@
 class BasicCollision : public Collision
 {
 public:
+	using Base = Collision;
     BasicCollision(CollisionState state)
     : m_state(state)
     , m_standing_on(AIR)

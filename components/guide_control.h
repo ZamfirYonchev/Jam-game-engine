@@ -13,6 +13,7 @@
 class GuideControl : public Control
 {
 public:
+	using Base = Control;
 	GuideControl(EntityID self_id, EntityID target_id, double range)
 	: m_walk_dir(0)
 	, m_jump(false)

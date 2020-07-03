@@ -13,6 +13,7 @@
 class NullHealth : public Health
 {
 public:
+	using Base = Health;
     void print(std::ostream& to) const
     {
     	to << "UseNullHealth ";

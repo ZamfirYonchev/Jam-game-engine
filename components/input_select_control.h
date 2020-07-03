@@ -14,6 +14,7 @@
 class InputSelectControl : public Control
 {
 public:
+	using Base = Control;
 	InputSelectControl(InputHandler* input, int select, int max, ProcedureID proc_id)
     : m_input(input)
 	, m_select(select)

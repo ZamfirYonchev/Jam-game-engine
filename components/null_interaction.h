@@ -12,6 +12,8 @@
 
 class NullInteraction : public Interaction
 {
+public:
+	using Base = Interaction;
     void print(std::ostream& to) const
     {
     	to << "UseNullInteraction ";

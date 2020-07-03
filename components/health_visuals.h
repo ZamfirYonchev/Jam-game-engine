@@ -13,6 +13,7 @@
 class HealthVisuals : public Visuals
 {
 public:
+	using Base = Visuals;
 	HealthVisuals(EntityID self_id, SpritesheetID spr_id, uint16_t repeat_x)
 	: m_self_id(self_id)
 	, m_spr_id(spr_id)

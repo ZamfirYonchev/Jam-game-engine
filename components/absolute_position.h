@@ -13,6 +13,7 @@
 class AbsolutePosition : public Position
 {
 public:
+	using Base = Position;
     AbsolutePosition(double x, double y, double w, double h)
     : m_x(x), m_y(y), m_width(w), m_height(h) {}
     AbsolutePosition() : AbsolutePosition(0, 0, 0, 0) {}

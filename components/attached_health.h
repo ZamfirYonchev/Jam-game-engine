@@ -13,6 +13,7 @@
 class AttachedHealth : public Health
 {
 public:
+	using Base = Health;
 	AttachedHealth(EntityID attached_id, double offset_hp, double offset_max_hp)
 	: m_attached_id(attached_id)
 	, m_offset_hp(offset_hp)

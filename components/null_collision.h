@@ -13,6 +13,7 @@
 class NullCollision : public Collision
 {
 public:
+	using Base = Collision;
     void print(std::ostream& to) const
     {
     	to << "UseNullCollision ";

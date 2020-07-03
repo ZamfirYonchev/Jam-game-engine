@@ -14,6 +14,7 @@
 class InputControl : public Control
 {
 public:
+	using Base = Control;
     InputControl(InputHandler* input, ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id)
     : m_input(input)
     , m_walk_dir(0)

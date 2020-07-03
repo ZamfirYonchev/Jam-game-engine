@@ -13,6 +13,7 @@
 class NullControl : public Control
 {
 public:
+	using Base = Control;
     void print(std::ostream& to) const
     {
     	to << "UseNullControl ";
