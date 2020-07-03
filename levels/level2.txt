@@ -730,7 +730,7 @@ AddEntity #32 player health
  	UseHealthVisuals 16 10
 
 AddProcedure 6 #20
-	ReusePosition 6 1
+	ReusePosition 6
 	ReuseControl 6
 	ReuseMovement 6
 	ReuseCollision 6
