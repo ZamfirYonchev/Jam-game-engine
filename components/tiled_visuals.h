@@ -21,7 +21,7 @@ public:
     , m_layer(ACTION)
     {}
 
-    TiledVisuals() : TiledVisuals(-1, 0, 0) {}
+    TiledVisuals() : TiledVisuals(SpritesheetID{-1}, 0, 0) {}
 
     void print(std::ostream& to) const
     {

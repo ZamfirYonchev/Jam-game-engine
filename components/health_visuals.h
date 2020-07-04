@@ -20,7 +20,7 @@ public:
 	, m_repeat_x(repeat_x)
 	{}
 
-	HealthVisuals() : HealthVisuals(-1, -1, 0) {}
+	HealthVisuals() : HealthVisuals(EntityID{-1}, SpritesheetID{-1}, 0) {}
 
     void print(std::ostream& to) const
     {

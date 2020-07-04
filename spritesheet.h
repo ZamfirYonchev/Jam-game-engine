@@ -15,21 +15,21 @@
 class Spritesheet
 {
 public:
-    Spritesheet(uint8_t idle_start
-			  , uint8_t idle_size
-			  , uint8_t walk_start
-			  , uint8_t walk_size
-			  , uint8_t jump_start
-			  , uint8_t jump_size
-			  , uint8_t fall_start
-			  , uint8_t fall_size
-			  , uint8_t attack_start
-			  , uint8_t attack_size
-			  , uint8_t hit_start
-			  , uint8_t hit_size
-			  , uint8_t dead_start
-			  , uint8_t dead_size
-			  , double scale_factor
+    Spritesheet(const uint8_t idle_start
+			  , const uint8_t idle_size
+			  , const uint8_t walk_start
+			  , const uint8_t walk_size
+			  , const uint8_t jump_start
+			  , const uint8_t jump_size
+			  , const uint8_t fall_start
+			  , const uint8_t fall_size
+			  , const uint8_t attack_start
+			  , const uint8_t attack_size
+			  , const uint8_t hit_start
+			  , const uint8_t hit_size
+			  , const uint8_t dead_start
+			  , const uint8_t dead_size
+			  , const double scale_factor
 			  )
 	: m_sprites()
     , m_idle_sprite_start(idle_start)
@@ -53,9 +53,9 @@ public:
     : Spritesheet(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0)
     {}
 
-    void add_sprite(TextureID tex_index, int x, int y, int w, int h);
+    void add_sprite(const TextureID tex_index, const int x, const int y, const int w, const int h);
 
-    const optional_ref<const Sprite> sprite(unsigned int index) const
+    const optional_ref<const Sprite> sprite(const unsigned int index) const
     {
     	if(index < m_sprites.size())
             return optional_ref<const Sprite>(m_sprites[index]);
@@ -63,7 +63,7 @@ public:
     		return optional_ref<const Sprite>();
     }
 
-    optional_ref<Sprite> sprite(unsigned int index)
+    optional_ref<Sprite> sprite(const unsigned int index)
     {
     	if(index < m_sprites.size())
             return optional_ref<Sprite>(m_sprites[index]);
@@ -71,27 +71,27 @@ public:
     		return optional_ref<Sprite>();
     }
 
-    void set_scale_factor(double scale)
+    void set_scale_factor(const double scale)
     {
         m_scale_factor = scale;
     }
 
     double scale_factor() const { return m_scale_factor; }
 
-    void set_idle_sprite_start(unsigned int val) { m_idle_sprite_start = val; }
-    void set_idle_sprite_size (unsigned int val) { m_idle_sprite_size = val; }
-    void set_walk_sprite_start(unsigned int val) { m_walk_sprite_start = val; }
-    void set_walk_sprite_size (unsigned int val) { m_walk_sprite_size = val; }
-    void set_jump_sprite_start(unsigned int val) { m_jump_sprite_start = val; }
-    void set_jump_sprite_size (unsigned int val) { m_jump_sprite_size = val; }
-    void set_fall_sprite_start(unsigned int val) { m_fall_sprite_start = val; }
-    void set_fall_sprite_size (unsigned int val) { m_fall_sprite_size = val; }
-    void set_attack_sprite_start(unsigned int val){ m_attack_sprite_start = val; }
-    void set_attack_sprite_size (unsigned int val){ m_attack_sprite_size = val; }
-    void set_hit_sprite_start(unsigned int val) { m_hit_sprite_start = val; }
-    void set_hit_sprite_size (unsigned int val) { m_hit_sprite_size = val; }
-    void set_dead_sprite_start(unsigned int val) { m_dead_sprite_start = val; }
-    void set_dead_sprite_size (unsigned int val) { m_dead_sprite_size = val; }
+    void set_idle_sprite_start(const unsigned int val) { m_idle_sprite_start = val; }
+    void set_idle_sprite_size (const unsigned int val) { m_idle_sprite_size = val; }
+    void set_walk_sprite_start(const unsigned int val) { m_walk_sprite_start = val; }
+    void set_walk_sprite_size (const unsigned int val) { m_walk_sprite_size = val; }
+    void set_jump_sprite_start(const unsigned int val) { m_jump_sprite_start = val; }
+    void set_jump_sprite_size (const unsigned int val) { m_jump_sprite_size = val; }
+    void set_fall_sprite_start(const unsigned int val) { m_fall_sprite_start = val; }
+    void set_fall_sprite_size (const unsigned int val) { m_fall_sprite_size = val; }
+    void set_attack_sprite_start(const unsigned int val){ m_attack_sprite_start = val; }
+    void set_attack_sprite_size (const unsigned int val){ m_attack_sprite_size = val; }
+    void set_hit_sprite_start(const unsigned int val) { m_hit_sprite_start = val; }
+    void set_hit_sprite_size (const unsigned int val) { m_hit_sprite_size = val; }
+    void set_dead_sprite_start(const unsigned int val) { m_dead_sprite_start = val; }
+    void set_dead_sprite_size (const unsigned int val) { m_dead_sprite_size = val; }
 
     unsigned int idle_sprite_start()const { return m_idle_sprite_start; }
     unsigned int idle_sprite_size ()const { return m_idle_sprite_size; }

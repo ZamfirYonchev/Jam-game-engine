@@ -27,7 +27,7 @@ public:
     double hp() const { return 0; }
     double max_hp() const { return 0; }
     bool alive() const { return true; }
-    ProcedureID on_death_exec() const { return -1; }
+    ProcedureID on_death_exec() const { return ProcedureID{-1}; }
     void set_on_death_exec(ProcedureID proc_id) {}
     bool stunned() const { return false; }
 };

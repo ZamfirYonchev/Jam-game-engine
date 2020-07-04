@@ -14,13 +14,13 @@ class StaticVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-	StaticVisuals(SpritesheetID spr_id, int sprite)
+	StaticVisuals(const SpritesheetID spr_id, const int sprite)
 	: m_spr_id(spr_id)
 	, m_sprite(sprite)
 	, m_layer(FAR_BACKGROUND)
 	{}
 
-	StaticVisuals() : StaticVisuals(-1, 0) {}
+	StaticVisuals() : StaticVisuals(SpritesheetID{-1}, 0) {}
 
     void print(std::ostream& to) const
     {

@@ -29,19 +29,19 @@ void ModifyInteractionCommand::execute() const
 			interaction->set_trigger_group(interaction->trigger_group() + m_trigger_group);
 
 		if(is_negative_zero(m_proc_id_self))
-			interaction->set_proc_id_self(0);
+			interaction->set_proc_id_self(ProcedureID{0});
 		else
-			interaction->set_proc_id_self(interaction->proc_id_self() + m_proc_id_self);
+			interaction->set_proc_id_self(ProcedureID{interaction->proc_id_self() + int(m_proc_id_self)});
 
 		if(is_negative_zero(m_proc_id_other))
-			interaction->set_proc_id_other(0);
+			interaction->set_proc_id_other(ProcedureID{0});
 		else
-			interaction->set_proc_id_other(interaction->proc_id_other() + m_proc_id_other);
+			interaction->set_proc_id_other(ProcedureID{interaction->proc_id_other() + int(m_proc_id_other)});
 
 		if(is_negative_zero(m_on_exit_proc_id_self))
-			interaction->set_on_exit_proc_id_self(0);
+			interaction->set_on_exit_proc_id_self(ProcedureID{0});
 		else
-			interaction->set_on_exit_proc_id_self(interaction->on_exit_proc_id_self() + m_on_exit_proc_id_self);
+			interaction->set_on_exit_proc_id_self(ProcedureID{interaction->on_exit_proc_id_self() + int(m_on_exit_proc_id_self)});
 	}
 	else
 	{

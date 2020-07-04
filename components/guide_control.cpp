@@ -9,7 +9,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-void GuideControl::update_decisions(Time time_diff)
+void GuideControl::update_decisions(const Time time_diff)
 {
 	if(entity_system().entity(m_target_id))
 	{

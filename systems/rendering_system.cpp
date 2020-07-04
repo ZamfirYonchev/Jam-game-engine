@@ -67,7 +67,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 
-    const Position* screen_zone_position = entity_system().entity(0) ? entity_system().entity(0)->position() : Position::null;
+    const Position* screen_zone_position = entity_system().entity(EntityID{0}) ? entity_system().entity(EntityID{0})->position() : Position::null;
 
     const double m_screen_to_view_scale = screen_zone_position->h() ? 1.0*globals().resolution_y/screen_zone_position->h() : 1.0;
 

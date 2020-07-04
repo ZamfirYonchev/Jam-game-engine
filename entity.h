@@ -33,7 +33,7 @@ class Entity
 {
 public:
     Entity(EntityID id);
-    Entity() : Entity(-1) {}
+    Entity() : Entity(EntityID(-1)) {}
     ~Entity()
     {
     	clear();

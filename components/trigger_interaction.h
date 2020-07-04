@@ -22,7 +22,7 @@ public:
 	, m_on_exit_proc_id_self(on_exit_proc_id_self)
 	{}
 
-	TriggerInteraction() : TriggerInteraction(0, -1, -1, -1) {}
+	TriggerInteraction() : TriggerInteraction(0, ProcedureID{-1}, ProcedureID{-1}, ProcedureID{-1}) {}
 
     void print(std::ostream& to) const
     {

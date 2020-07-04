@@ -15,7 +15,7 @@ class InputSelectControl : public Control
 {
 public:
 	using Base = Control;
-	InputSelectControl(InputHandler* input, int select, int max, ProcedureID proc_id)
+	InputSelectControl(InputHandler* input, const int select, const int max, const ProcedureID proc_id)
     : m_input(input)
 	, m_select(select)
 	, m_max(max)
@@ -23,7 +23,7 @@ public:
     , m_proc_id(proc_id)
     {}
 
-    InputSelectControl() : InputSelectControl(nullptr, 0, 0, -1) {}
+    InputSelectControl() : InputSelectControl(nullptr, 0, 0, ProcedureID{-1}) {}
 
     void print(std::ostream& to) const
     {
@@ -51,7 +51,7 @@ public:
     void set_attack_proc_id(ProcedureID val) { m_proc_id = val; }
     void set_look_dir(LookDir val) {}
 
-    void update_decisions(int32_t time_diff)
+    void update_decisions(const Time time_diff)
     {
     	m_curr_selection += m_input->down() - m_input->up() + m_max;
     	m_curr_selection %= m_max;

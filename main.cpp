@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 
 		while(file.peek() != EOF)
 		{
-			const std::string token { [&](){ std::string result; file >> result; return result; }() };
+			const std::string token { [&](){ std::string result; file >> result; return result; }() }; // @suppress("Invalid arguments")
 
 			if(token == "ResolutionX")
 			{
@@ -57,15 +57,15 @@ int main(int argc, char** argv)
 					 , globals().fullscreen
 					 , true);
 
-		int32_t start_frame_time;
-		int32_t last_frame_time;
-		int32_t frame_diff = 10; //TODO: first frame difference
+		Time start_frame_time;
+		Time last_frame_time;
+		Time frame_diff = Time{10}; //TODO: first frame difference
 		int32_t number_of_frames = 0;
 
 		command_queue().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
-		start_frame_time = SDL_GetTicks();
-		last_frame_time = SDL_GetTicks();
+		start_frame_time = Time{SDL_GetTicks()};
+		last_frame_time = Time{SDL_GetTicks()};
 
 		do
 		{
@@ -84,8 +84,8 @@ int main(int argc, char** argv)
 			rendering_system().render_entities(frame_diff, globals().app_paused, sdl.renderer());
 
 			SDL_Delay(max(10-frame_diff, 0));
-			frame_diff = clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100);
-			last_frame_time = SDL_GetTicks();
+			frame_diff = Time(clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100));
+			last_frame_time = Time(SDL_GetTicks());
 			++number_of_frames;
 
 			if(globals().app_running == false || globals().app_needs_reload)

@@ -81,7 +81,7 @@
 #include "commands/export_entities_command.h"
 #include "utilities.h"
 
-void CommandQueue::process(Time time_diff)
+void CommandQueue::process(const Time time_diff)
 {
     while(m_commands.cbegin() != m_commands.cend())
     {
@@ -100,7 +100,7 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 
     while(input.good())
     {
-    	const std::string token { [&](){ std::string result; input >> result; return result; }() };
+    	const std::string token { [&](){ std::string result; input >> result; return result; }() }; // @suppress("Invalid arguments")
         if(input.eof())
             break;
 

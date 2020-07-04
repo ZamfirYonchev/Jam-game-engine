@@ -28,8 +28,8 @@ public:
 	, m_self_id(self_id)
     {}
 
-    InputControl(InputHandler* input, EntityID self_id) : InputControl(input, -1, 0, self_id) {}
-    InputControl() : InputControl(nullptr, 0) {}
+    InputControl(InputHandler* input, EntityID self_id) : InputControl(input, ProcedureID{-1}, 0, self_id) {}
+    InputControl() : InputControl(nullptr, EntityID{0}) {}
 
     void print(std::ostream& to) const
     {
@@ -52,7 +52,7 @@ public:
     void set_attack_proc_id(ProcedureID val) { m_shoot_proc_id = val; }
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(Time time_diff);
+    void update_decisions(const Time time_diff);
     void clear_decisions()
     {
         m_jump = false;

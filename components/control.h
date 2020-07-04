@@ -33,7 +33,7 @@ public:
     virtual void set_attack_proc_id(ProcedureID val) = 0;
     virtual void set_look_dir(LookDir val) = 0;
 
-    virtual void update_decisions(Time time) = 0;
+    virtual void update_decisions(const Time time) = 0;
     virtual void clear_decisions() = 0;
 
     static Control* null;

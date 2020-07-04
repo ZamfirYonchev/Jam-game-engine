@@ -24,7 +24,7 @@ public:
     void advance_animation(Time time_diff) {}
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const { return 0; }
     bool animation_count_max() const { return true; }
-    SpritesheetID spritesheet_id() { return 0; }
+    SpritesheetID spritesheet_id() { return SpritesheetID{0}; }
     void set_spritesheet_id(SpritesheetID spr_id) {}
     uint16_t repeat_x() const { return 0; }
     uint16_t repeat_y() const { return 0; }

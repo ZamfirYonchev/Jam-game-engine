@@ -35,7 +35,7 @@ public:
     bool decision_duck() const { return m_duck; }
     bool decision_attack() const { return false; }
     int8_t decision_walk() const { return m_walk_dir; }
-    ProcedureID attack_proc_id() const { return -1; }
+    ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
     LookDir look_dir() const { return m_look_dir; }
 
     void set_decision_jump(bool val) { m_jump = val; }
@@ -45,7 +45,7 @@ public:
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(Time time_diff);
+    void update_decisions(const Time time_diff);
     void clear_decisions()
     {
         m_walk_dir = 0;

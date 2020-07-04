@@ -43,22 +43,22 @@ public:
 
     TextureID last_texture_id() const
     {
-        return m_textures.size()-1;
+        return TextureID(m_textures.size()-1);
     }
 
     SpritesheetID last_spritesheet_id() const
     {
-        return m_spritesheets.size()-1;
+        return SpritesheetID(m_spritesheets.size()-1);
     }
 
     ProcedureID last_procedure_id() const
     {
-        return m_procedures.size()-1;
+        return ProcedureID(m_procedures.size()-1);
     }
 
     FontID last_font_id() const
     {
-    	return m_fonts.size()-1;
+    	return FontID(m_fonts.size()-1);
     }
 
     void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
@@ -67,7 +67,15 @@ public:
         m_textures.back().load_from_file(file, renderer);
     }
 
-    void addNewTextureFromString(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
+    void addNewTextureFromString
+	(
+		const std::string& text
+	  , const FontID font_id
+	  , const uint8_t r
+	  , const uint8_t g
+	  , const uint8_t b
+	  , SDL_Renderer* renderer
+	)
     {
     	if(font_id < m_fonts.size())
     	{
@@ -80,14 +88,14 @@ public:
     	}
     }
 
-    void addNewSpritesheet(int idle_start, int idle_size
-                         , int walk_start, int walk_size
-                         , int jump_start, int jump_size
-                         , int fall_start, int fall_size
-                         , int attack_start, int attack_size
-                         , int hit_start, int hit_size
-                         , int dead_start, int dead_size
-                         , double scale_factor
+    void addNewSpritesheet(const int idle_start,   const int idle_size
+                         , const int walk_start,   const int walk_size
+                         , const int jump_start,   const int jump_size
+                         , const int fall_start,   const int fall_size
+                         , const int attack_start, const int attack_size
+                         , const int hit_start,    const int hit_size
+                         , const int dead_start,   const int dead_size
+                         , const double scale_factor
                           )
     {
         m_spritesheets.push_back(Spritesheet(idle_start, idle_size

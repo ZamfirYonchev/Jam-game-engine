@@ -55,13 +55,13 @@ public:
 	}
 
     Entity& add_new_entity();
-    void remove_entity(EntityID id)
+    void remove_entity(const EntityID id)
     {
     	m_entities_to_remove.push_back(id);
     }
 
 
-    optional_ref<Entity> entity(EntityID id)
+    optional_ref<Entity> entity(const EntityID id)
     {
     	//EntityID actual_id = (id < 0) ? m_entities.size()-id : id;
     	if(id >= 0 && id < int(m_entities.size()))
@@ -79,7 +79,7 @@ public:
 
     void clean_removed_entites();
 
-    void add_accessed_entity(EntityID id)
+    void add_accessed_entity(const EntityID id)
     {
     	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities+1)%m_last_accessed_entities.size();
     	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
@@ -95,19 +95,20 @@ public:
 
     EntityID previous_entity_id() const
     {
-    	return m_last_accessed_entities[m_head_of_last_accessed_entities];
+    	return EntityID{m_last_accessed_entities[m_head_of_last_accessed_entities]};
     }
 
     EntityID previous_entity_id(unsigned int n) const
     {//TODO make sure n < size
-		return m_last_accessed_entities[(m_head_of_last_accessed_entities+m_last_accessed_entities.size()-n)%m_last_accessed_entities.size()];
+    	const int cycling_index = (m_head_of_last_accessed_entities+m_last_accessed_entities.size()-n)%m_last_accessed_entities.size();
+		return EntityID{m_last_accessed_entities[cycling_index]};
     }
 
 private:
     std::vector<Entity> m_entities;
     std::list<EntityID> m_entities_to_remove;
     std::list<EntityID> m_free_entities;
-    std::array<EntityID, 10> m_last_accessed_entities;
+    std::array<EntityID/*::Type*/, 10> m_last_accessed_entities;
     unsigned int m_head_of_last_accessed_entities;
 };
 

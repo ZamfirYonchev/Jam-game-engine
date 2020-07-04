@@ -17,7 +17,7 @@
 
 void CollisionSystem::update(const Time time_diff)
 {
-	const std::unordered_map<EntityID, bool> entity_last_triggered {entities_last_triggered_reset()};
+	const std::unordered_map<EntityID/*::Type*/, bool> entity_last_triggered {entities_last_triggered_reset()}; // @suppress("Invalid arguments")
 
 	for(auto it0 = entities.begin(); it0 != entities.end(); ++it0)
         for(auto it1 = std::next(it0); it1 != entities.end(); ++it1)
@@ -176,9 +176,9 @@ void CollisionSystem::update(const Time time_diff)
 	});
 }
 
-std::unordered_map<EntityID, bool> CollisionSystem::entities_last_triggered_reset()
+std::unordered_map<EntityID/*::Type*/, bool> CollisionSystem::entities_last_triggered_reset()
 {
-	std::unordered_map<EntityID, bool> entities_last_triggered;
+	std::unordered_map<EntityID/*::Type*/, bool> entities_last_triggered;
 
 	std::for_each(cbegin(entities), cend(entities),
 	[&](const EntityID id)

@@ -23,7 +23,7 @@ public:
     bool decision_duck() const { return false; }
     bool decision_attack() const { return false; }
     int8_t decision_walk() const { return 0; }
-    ProcedureID attack_proc_id() const { return -1; }
+    ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
     LookDir look_dir() const { return RIGHT; }
 
     void set_decision_jump(bool val) {}
@@ -33,7 +33,7 @@ public:
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) {}
 
-    void update_decisions(Time time) {}
+    void update_decisions(const Time time) {}
     void clear_decisions() {}
 };
 

@@ -9,7 +9,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-void ChaseAIControl::update_decisions(Time time_diff)
+void ChaseAIControl::update_decisions(const Time time_diff)
 {
 	m_current_attack_cooldown = max(m_current_attack_cooldown-time_diff, 0);
 

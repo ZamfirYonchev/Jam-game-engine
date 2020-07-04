@@ -15,7 +15,7 @@ class CollisionSystem : public SystemBase
 {
 public:
     void update(const Time time_diff);
-    std::unordered_map<EntityID, bool> entities_last_triggered_reset();
+    std::unordered_map<EntityID/*::Type*/, bool> entities_last_triggered_reset();
 };
 
 #endif /* SYSTEMS_COLLISION_SYSTEM_H_ */

@@ -24,7 +24,7 @@ public:
     , m_layer(ACTION)
     {}
 
-    CharacterVisuals() : CharacterVisuals(-1) {}
+    CharacterVisuals() : CharacterVisuals(SpritesheetID{-1}) {}
     ~CharacterVisuals() {}
 
     void print(std::ostream& to) const

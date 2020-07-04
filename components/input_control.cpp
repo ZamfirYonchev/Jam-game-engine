@@ -9,7 +9,7 @@
 #include "../math_ext.h"
 #include "../globals.h"
 
-void InputControl::update_decisions(int32_t time_diff)
+void InputControl::update_decisions(const Time time_diff)
 {
 	m_current_shoot_cooldown = max(m_current_shoot_cooldown-time_diff, 0);
 
