@@ -96,7 +96,7 @@ int main(int argc, char** argv)
 				collision_system().clear();
 				damage_system().clear();
 				rendering_system().clear();
-				command_queue().flush_commands();
+				command_queue().flush_commands(true);
 				entity_system().clear();
 
 				break;
