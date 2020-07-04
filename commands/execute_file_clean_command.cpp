@@ -11,7 +11,7 @@
 
 void ExecuteFileCleanCommand::execute() const
 {
-	command_queue().flush_commands();
+	command_queue().flush_commands(false);
 	resource_system().clear();
 	control_system().clear();
 	movement_system().clear();

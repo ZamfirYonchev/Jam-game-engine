@@ -11,7 +11,6 @@
 #include "command.h"
 #include <string>
 #include <SDL2/SDL.h>
-#include <istream>
 
 class ExecuteFileCommand : public Command
 {
@@ -23,7 +22,6 @@ public:
 
     void execute() const;
     std::unique_ptr<Command> clone() { return std::make_unique<ExecuteFileCommand>(m_filename, m_renderer); }
-    static void process_stream(std::istream& stream, SDL_Renderer* m_renderer, const bool insert_next);
 
 private:
     std::string m_filename;

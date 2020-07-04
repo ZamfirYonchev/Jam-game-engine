@@ -12,11 +12,13 @@
 #include "commands/null_command.h"
 #include <list>
 #include "types.h"
+#include <SDL2/SDL.h>
+#include <istream>
 
 class CommandQueue
 {
 public:
-    CommandQueue() = default;
+	CommandQueue() = default;
     ~CommandQueue() = default;
 
     CommandQueue(const CommandQueue& ) = delete;
@@ -34,6 +36,7 @@ public:
     int size() const { return m_commands.size(); }
 
     void process(Time time_diff);
+    void process_stream(std::istream& input, SDL_Renderer* renderer, const bool insert_commands_next);
 
     void push(std::unique_ptr<Command> cmd)
     {
@@ -60,10 +63,10 @@ public:
         m_commands.clear();
     }
 
-    void flush_commands()
+    void flush_commands(const bool flush_first_command)
     {
         for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-        	if(it != m_commands.begin())
+        	if(it != m_commands.begin() || flush_first_command)
 			{
 				*it = std::make_unique<NullCommand>();
 			}

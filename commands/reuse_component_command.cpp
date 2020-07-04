@@ -24,7 +24,7 @@ void ReuseComponentCommand<T>::execute() const
 	{
 		std::stringstream ss;
 		ss << entity_system().entity(m_source_id)->component<T>();
-		ExecuteFileCommand::process_stream(ss, m_renderer, true);
+		command_queue().process_stream(ss, m_renderer, true);
 	}
 	else
 	{
