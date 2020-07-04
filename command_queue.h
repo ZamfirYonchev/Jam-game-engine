@@ -36,7 +36,7 @@ public:
     int size() const { return m_commands.size(); }
 
     void process(Time time_diff);
-    void process_stream(std::istream& input, SDL_Renderer* renderer, const bool insert_commands_next);
+    void process_stream(std::istream& input, SDL_Renderer* renderer);
 
     void push(std::unique_ptr<Command> cmd)
     {
@@ -45,16 +45,19 @@ public:
 
     void insert_next(std::unique_ptr<Command> cmd)
     {
-        //TODO check std::next(begin(m_commands)) is valid
-		m_commands.insert(std::next(begin(m_commands)), std::move(cmd));
+		m_commands.push_front(std::move(cmd));
+    }
+
+    void insert_before(const std::list<std::unique_ptr<Command>>::iterator it, std::unique_ptr<Command> cmd)
+    {
+    	m_commands.insert(it, std::move(cmd));
     }
 
     std::unique_ptr<Command> pop_next()
     {
-        //TODO check std::next(begin(m_commands)) is valid
-        auto it = std::next(begin(m_commands));
-        std::unique_ptr<Command> cmd = std::move(*it);
-        m_commands.erase(it);
+        //TODO check m_commands not empty
+        std::unique_ptr<Command> cmd = std::move(m_commands.front());
+        m_commands.pop_front();
         return cmd;
     }
 

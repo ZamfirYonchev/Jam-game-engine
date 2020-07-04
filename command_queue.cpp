@@ -86,17 +86,17 @@ void CommandQueue::process(Time time_diff)
     while(m_commands.cbegin() != m_commands.cend())
     {
         auto cmd = std::move(m_commands.front());
-        cmd->execute();
         m_commands.pop_front();
+        cmd->execute();
     }
 }
 
-void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer, const bool insert_commands_next)
+void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 {
     std::string line;
     std::unique_ptr<Command> command;
     double vars[15];
-    //auto next_cmd_it = std::begin(m_commands);
+    auto next_cmd_it = std::begin(m_commands);
 
     while(input.good())
     {
@@ -599,10 +599,7 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer, c
         }
         else if(command)
         {
-			if(insert_commands_next)
-				insert_next(std::move(command));
-			else
-				push(std::move(command));
+        	insert_before(next_cmd_it, std::move(command));
         }
     }
 }

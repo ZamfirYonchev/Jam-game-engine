@@ -15,7 +15,7 @@ void ExecuteFileCommand::execute() const
 	if (file)
 	{
 		std::cout << "Parsing file " << m_filename << std::endl;
-		command_queue().process_stream(file, m_renderer, false);
+		command_queue().process_stream(file, m_renderer);
 	}
 	else
 		std::cerr << "File \"" << m_filename << "\" cannot be opened!" << std::endl;
