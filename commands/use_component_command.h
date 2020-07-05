@@ -18,6 +18,7 @@
 #include "../components/health_visuals.h"
 #include "../components/menu_item_visuals.h"
 #include "../components/build_position.h"
+#include "../components/tiled_visuals.h"
 
 template<typename T>
 class UseComponentCommand : public Command
@@ -152,6 +153,24 @@ public:
     std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<BuildPosition>>(m_builder_id); }
 private:
     SpritesheetID m_builder_id;
+};
+
+template<>
+class UseComponentCommand<TiledVisuals> : public Command
+{
+public:
+	UseComponentCommand<TiledVisuals>(const SpritesheetID spr_id, const double tile_w, const double tile_h)
+	: m_spr_id(spr_id)
+	, m_tile_w(tile_w)
+	, m_tile_h(tile_h)
+	{}
+
+    void execute() const;
+    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<TiledVisuals>>(m_spr_id, m_tile_w, m_tile_h); }
+private:
+    SpritesheetID m_spr_id;
+    double m_tile_w;
+    double m_tile_h;
 };
 
 #endif /* COMMANDS_USE_COMPONENT_COMMAND_H_ */

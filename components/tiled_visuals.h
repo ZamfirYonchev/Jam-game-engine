@@ -9,26 +9,28 @@
 #define COMPONENTS_TILED_VISUALS_H_
 
 #include "visuals.h"
+#include "../types.h"
 
 class TiledVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-    TiledVisuals(SpritesheetID spr_id, uint16_t repeat_x, uint16_t repeat_y)
+    TiledVisuals(SpritesheetID spr_id, double tile_w, double tile_h, EntityID self_id)
     : m_spritesheet_id(spr_id)
-    , m_repeat_x(repeat_x)
-    , m_repeat_y(repeat_y)
+    , m_tile_w(tile_w)
+    , m_tile_h(tile_h)
+	, m_self_id(self_id)
     , m_layer(ACTION)
     {}
 
-    TiledVisuals() : TiledVisuals(SpritesheetID{-1}, 0, 0) {}
+    TiledVisuals() : TiledVisuals(SpritesheetID{-1}, 0, 0, 0) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseTiledVisuals "
     	   << m_spritesheet_id << " "
-    	   << m_repeat_x << " "
-    	   << m_repeat_y << " ";
+    	   << m_tile_w << " "
+    	   << m_tile_h << " ";
     }
 
     RenderStates state() const { return IDLE; }
@@ -44,16 +46,17 @@ public:
     SpritesheetID spritesheet_id() { return m_spritesheet_id; }
     void set_spritesheet_id(SpritesheetID spr_id) { m_spritesheet_id = spr_id; }
 
-    uint16_t repeat_x() const { return m_repeat_x; }
-    uint16_t repeat_y() const { return m_repeat_y; }
-    void set_repeat_x(uint16_t val) { m_repeat_x = val; }
-    void set_repeat_y(uint16_t val) { m_repeat_y = val; }
+    uint16_t repeat_x() const;
+    uint16_t repeat_y() const;
+    void set_repeat_x(uint16_t val);
+    void set_repeat_y(uint16_t val);
     VisualLayer layer() const { return m_layer; }
     void set_layer(VisualLayer val) { m_layer = val; }
 
 private:
     SpritesheetID m_spritesheet_id;
-    uint16_t m_repeat_x, m_repeat_y;
+    double m_tile_w, m_tile_h;
+    EntityID m_self_id;
     VisualLayer m_layer;
 };
 

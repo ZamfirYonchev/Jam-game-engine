@@ -535,7 +535,7 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[0];
 				input >> vars[1];
 				input >> vars[2];
-				command = std::make_unique<UseComponentCommand<TiledVisuals>>(SpritesheetID(vars[0]), uint16_t(vars[1]), uint16_t(vars[2]));
+				command = std::make_unique<UseComponentCommand<TiledVisuals>>(SpritesheetID(vars[0]), vars[1], vars[2]);
 				break;
 
 			case hash("UseStaticVisuals"):

@@ -134,6 +134,93 @@ void UseComponentCommand<BuildPosition>::execute() const
 	}
 }
 
+void UseComponentCommand<TiledVisuals>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_visuals(new TiledVisuals(m_spr_id, m_tile_w, m_tile_h, entity_system().previous_entity()->id()));
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullPosition>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_position(Position::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullControl>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_control(Control::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullMovement>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_movement(Movement::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullCollision>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_collision(Collision::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullInteraction>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_interaction(Interaction::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullHealth>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_health(Health::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+template<>
+void UseComponentCommand<NullVisuals>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_visuals(Visuals::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
 template class UseComponentCommand<AbsolutePosition>;
 template class UseComponentCommand<AttachedPosition>;
 template class UseComponentCommand<NullPosition>;
