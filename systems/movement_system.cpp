@@ -34,12 +34,8 @@ void MovementSystem::update(const Time time_delta)
 			}
 			else
 			{
-				if(control->decision_jump())
-					movement->mod_force_y(movement->move_force());
-				if(control->decision_duck())
-					movement->mod_force_y(-movement->move_force());
+				movement->mod_force_y(movement->move_force()*(control->decision_jump() - control->decision_duck()));
 			}
-
 
 			movement->mod_force_x(movement->move_force()*control->decision_walk());
 
