@@ -1,12 +1,31 @@
-AddProcedure 5 #0: spawn solidifier
+AddProcedure 9 #0: start building
 	AddEntity
-	UseAbsolutePosition 0 0 20 20
+	UseBuildPosition 2
+	UseTiledVisuals 2 32 32
+	UseFullMovement 1 0.01 0.006 0.6 0
 	UseBasicCollision 0
-	UseTriggerInteraction 0 -1 1 -1
-	UseTimedHealth 1 -1
+	UseNormalInteraction 1
+	SelectEntity 2
+	UseInputControl 1 200 0
+	SelectEntity 3
+	
+AddProcedure 7 #1: spawn solidifier
+	SelectEntity 2
+	UseInputControl 0 200 0
+	AddEntity
+	UseAbsolutePosition -50 -50 100 100
+	UseBasicCollision 0
+	UseTriggerInteraction 0 -1 2 -1
+	UseTimedHealth 1 3
 
-AddProcedure 1 #1: solidify built object
+AddProcedure 1 #2: solidify built object
 	ModifyPosition 0 0 0 0
+	
+AddProcedure 1 #3: remove entity
+	RemoveEntity
+
+AddProcedure 1 #4: save entities
+	ExportEntities build_level.lvl
 
 AddTextureFromFile resources/bg_top.png #0: background top
 AddTextureFromFile resources/bg_middle.png #1: background middle
@@ -117,13 +136,11 @@ AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
 
 AddEntity #1: background
-UseTiledVisuals 3 20 5
-UseAbsolutePosition 0 0 120 600
+UseTiledVisuals 3 120 120
+UseAbsolutePosition 0 0 1366 768
 ModifyVisuals 0 0 0 0 -0
 
-AddEntity #2: dummy entity
-
-AddEntity #3: builder
+AddEntity #2: builder
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 1
 ModifyVisuals 0 0 0 0 -0
@@ -133,9 +150,13 @@ UseBasicCollision 1
 UseInputControl 0 100 0
 UseNormalInteraction 16
 
-AddEntity #4: built object
-UseBuildPosition 3
-UseTiledVisuals 2 6 6
-UseFullMovement 1 0.01 0.006 0.6 0
+AddEntity #3: dummy object
+
+AddEntity #4: save zone
+UseAbsolutePosition 100 100 20 20 
+UseCharacterVisuals 1
+ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 0 4
 UseBasicCollision 0
-UseNormalInteraction 1
+UseTriggerInteraction 0 4 -1 -1
+
