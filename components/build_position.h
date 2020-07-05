@@ -26,10 +26,7 @@ public:
     void print(std::ostream& to) const
     {
     	to << "UseBuildPosition "
-		   << m_self_id << " "
-		   << m_attached_id << " "
-    	   << m_origin_x << " "
-		   << m_origin_y << " ";
+		   << m_attached_id << " ";
     }
 
     double x() const;
