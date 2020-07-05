@@ -35,7 +35,7 @@ public:
     double fy() const { return 0; }
     double vx() const { return 0; }
     double vy() const { return 0; }
-    double mass() const { return 0; }
+    double mass() const { return 1; }
     double friction() const { return 0; }
     double move_force() const { return 0; }
     double jump_force() const { return 0; }
