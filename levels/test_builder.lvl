@@ -1,7 +1,12 @@
-AddProcedure 1 #0: solidify built object
-	Null
-#	Select
-#	ModifyPosition 0 0 0 0
+AddProcedure 5 #0: spawn solidifier
+	AddEntity
+	UseAbsolutePosition 0 0 20 20
+	UseBasicCollision 0
+	UseTriggerInteraction 0 -1 1 -1
+	UseTimedHealth 1 -1
+
+AddProcedure 1 #1: solidify built object
+	ModifyPosition 0 0 0 0
 
 AddTextureFromFile resources/bg_top.png #0: background top
 AddTextureFromFile resources/bg_middle.png #1: background middle
@@ -132,3 +137,5 @@ AddEntity #4: built object
 UseBuildPosition 3
 UseTiledVisuals 2 6 6
 UseFullMovement 1 0.01 0.006 0.6 0
+UseBasicCollision 0
+UseNormalInteraction 1
