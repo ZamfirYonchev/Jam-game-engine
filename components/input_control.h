@@ -23,7 +23,7 @@ public:
     , m_shoot(false)
     , m_shoot_proc_id(shoot_proc_id)
     , m_shoot_cooldown(shoot_cooldown)
-	, m_current_shoot_cooldown(0)
+	, m_current_shoot_cooldown(shoot_cooldown)
 	, m_look_dir(RIGHT)
 	, m_self_id(self_id)
 	, m_stability_control(stability_control)
