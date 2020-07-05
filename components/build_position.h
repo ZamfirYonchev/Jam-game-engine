@@ -10,6 +10,7 @@
 
 #include "position.h"
 #include "../types.h"
+#include <iostream>
 
 class BuildPosition : public Position
 {
@@ -36,14 +37,14 @@ public:
     double w() const;
     double h() const;
 
-    void set_x(double val) { m_origin_x = val; }
-    void set_y(double val) { m_origin_y = val; }
+    void set_x(double val) {}
+    void set_y(double val) {}
     void set_w(double val) {}
     void set_h(double val) {}
 
-    void mod_x(double val) { m_origin_x += val; }
-    void mod_y(double val) { m_origin_y += val; }
-    void mod_w(double val) {}
+    void mod_x(double val) {}
+    void mod_y(double val) {}
+    void mod_w(double val); //implement solidify
     void mod_h(double val) {}
 
 private:
