@@ -122,7 +122,7 @@ AddProcedure 10 #29: spawn bee at hive
 	ModifyVisuals 0 0 0 0 3
 	UseFullMovement 1 0.02 0.006 0.6 0
 	UseBasicCollision 1
-	UseInputControl -1 300
+	UseInputControl -1 300 0
 	UseFullInteraction 0 2 22 -1 23
 	ModifyInteraction 1 1 0 0 0 0
 	UseTimedHealth 10000 36

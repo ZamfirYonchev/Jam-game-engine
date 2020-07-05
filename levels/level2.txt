@@ -575,7 +575,6 @@ UseAbsolutePosition 100 100 58 94
 UseCharacterVisuals 9
 UseFullMovement 10 0.1 0.06 45 1
 UseBasicCollision 1
-UseInputControl -1 1000
 UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
@@ -588,9 +587,9 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 10
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-UseInstantMovement 1 0.1 0.5
+UseFullMovement 1 0.01 0.009 0.6 0
 UseBasicCollision 0
-UseInputControl 19 300
+UseInputControl 19 300 0
 UseNormalInteraction 0
 ModifyInteraction 1 1 0 0 0 0
 

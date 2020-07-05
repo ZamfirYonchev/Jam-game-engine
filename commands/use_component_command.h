@@ -17,6 +17,7 @@
 #include "../components/guide_control.h"
 #include "../components/health_visuals.h"
 #include "../components/menu_item_visuals.h"
+#include "../components/build_position.h"
 
 template<typename T>
 class UseComponentCommand : public Command
@@ -40,17 +41,19 @@ template<>
 class UseComponentCommand<InputControl> : public Command
 {
 public:
-	UseComponentCommand(const ProcedureID proc_id, const double proc_cooldown)
+	UseComponentCommand(const ProcedureID proc_id, const double proc_cooldown, bool stability_control)
 	: m_proc_id(proc_id)
 	, m_proc_cooldown(proc_cooldown)
+	, m_stability_control(stability_control)
 	{}
 
 	void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<InputControl>>(m_proc_id, m_proc_cooldown); }
+    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<InputControl>>(m_proc_id, m_proc_cooldown, m_stability_control); }
 
 private:
     ProcedureID m_proc_id;
     double m_proc_cooldown;
+    bool m_stability_control;
 };
 
 template<>
@@ -135,6 +138,20 @@ public:
     std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<MenuItemVisuals>>(m_spr_id); }
 private:
     SpritesheetID m_spr_id;
+};
+
+template<>
+class UseComponentCommand<BuildPosition> : public Command
+{
+public:
+	UseComponentCommand<BuildPosition>(EntityID builder_id)
+	: m_builder_id(builder_id)
+	{}
+
+    void execute() const;
+    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<BuildPosition>>(m_builder_id); }
+private:
+    SpritesheetID m_builder_id;
 };
 
 #endif /* COMMANDS_USE_COMPONENT_COMMAND_H_ */

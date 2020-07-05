@@ -59,7 +59,7 @@ void UseComponentCommand<T>::execute() const
 void UseComponentCommand<InputControl>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new InputControl(&input_handler(), m_proc_id, m_proc_cooldown, entity_system().previous_entity()->id()));
+		entity_system().previous_entity()->set_control(new InputControl(&input_handler(), m_proc_id, m_proc_cooldown, entity_system().previous_entity()->id(), m_stability_control));
 	else
 	{
 		//error globals().access_entity_id
@@ -113,6 +113,24 @@ void UseComponentCommand<MenuItemVisuals>::execute() const
 	else
 	{
 		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<BuildPosition>::execute() const
+{
+	if(entity_system().previous_entity() && entity_system().entity(m_builder_id))
+		entity_system().previous_entity()->set_position
+			(
+				new BuildPosition
+					( entity_system().previous_entity()->id()
+					, m_builder_id
+					, entity_system().entity(m_builder_id)->position()->x()
+					, entity_system().entity(m_builder_id)->position()->y()
+					)
+			);
+	else
+	{
+		//error globals().access_entity_id || m_builder_id
 	}
 }
 

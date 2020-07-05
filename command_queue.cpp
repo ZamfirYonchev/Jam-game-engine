@@ -45,6 +45,7 @@
 #include "commands/modify_visuals_command.h"
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
+#include "components/build_position.h"
 #include "components/null_position.h"
 #include "components/constant_control.h"
 #include "components/absolute_position.h"
@@ -392,6 +393,11 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 				command = std::make_unique<UseComponentCommand<AttachedPosition>>(EntityID(vars[0]), vars[1], vars[2], vars[3], vars[4]);
 				break;
 
+			case hash("UseBuildPosition"):
+				input >> vars[0];
+				command = std::make_unique<UseComponentCommand<BuildPosition>>(EntityID(vars[0]));
+				break;
+
 			case hash("UseNullControl"):
 				command = std::make_unique<UseComponentCommand<NullControl>>();
 				break;
@@ -407,7 +413,8 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 			case hash("UseInputControl"):
 				input >> vars[0];
 				input >> vars[1];
-				command = std::make_unique<UseComponentCommand<InputControl>>(ProcedureID(vars[0]), vars[1]);
+				input >> vars[2];
+				command = std::make_unique<UseComponentCommand<InputControl>>(ProcedureID(vars[0]), vars[1], bool(vars[2]));
 				break;
 
 			case hash("UseInputSelectControl"):

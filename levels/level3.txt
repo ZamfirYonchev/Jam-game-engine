@@ -52,7 +52,7 @@ AddProcedure 0 #9: spawn zombie
 ExtendProcedure 9 11
 	AddEntity
 	UseCharacterVisuals 13
-	UseFullMovement 0.5 2 0.004 1.6 1
+	UseFullMovement 10 0.1 0.04 45 1
 	UseBasicCollision 1
 	UseChaseAIControl 5 12 1000 50
 	UseCharacterHealth 5 5
@@ -61,7 +61,7 @@ ExtendProcedure 9 11
 	ModifyVisuals 0 0 0 0 -0
 	ModifyVisuals 0 0 0 0 2
 	UseAbsolutePosition 0 0 49 100
-
+	
 AddProcedure 0 #10: remove entity
 ExtendProcedure 10 1
 	RemoveEntity
@@ -83,15 +83,15 @@ ExtendProcedure 13 1
 
 AddProcedure 0 #14: stop movement
 ExtendProcedure 14 1
-	ModifyMovement -0 -0 0 0 0
+	ModifyMovement 0 0 -0 -0 0 0 0
 
 AddProcedure 0 #15: move down
 ExtendProcedure 15 1
-ModifyMovement 0 0 0 -0.003 0
+ModifyMovement 0 0 0 0 0 -0.003 0
 
 AddProcedure 0 #16: move up
 ExtendProcedure 16 1
-ModifyMovement 0 0 0 0.009 0
+ModifyMovement 0 0 0 0 0 0.009 0
 
 AddProcedure 0 #17: switch on
 ExtendProcedure 17 4
@@ -582,13 +582,12 @@ UseTiledVisuals 2 9 3
 AddEntity #5: player character
 UseAbsolutePosition 100 100 58 94
 UseCharacterVisuals 9
-UseFullMovement 0.5 2 0.006 1.6 1
+UseFullMovement 10 0.1 0.06 45 1
 UseBasicCollision 1
-UseInputControl -1 1000
 UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
-UseGuideControl 6 -1 0 100
+UseGuideControl 6 100
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 3
 
@@ -597,9 +596,9 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 10
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-UseInstantMovement 0.5
+UseFullMovement 1 0.01 0.009 0.6 0
 UseBasicCollision 0
-UseInputControl 19 300
+UseInputControl 19 300 0
 UseNormalInteraction 0
 ModifyInteraction 1 1 0 0 0 0
 
@@ -685,8 +684,8 @@ UseAbsolutePosition 332 20 160 64
 UseBasicCollision 2
 UseTiledVisuals 1 5 2
 UseNormalInteraction 16
-UseFullMovement 0.2 0 0.001 0 0
-UseConstantControl 1 0 0
+UseFullMovement 10 0.2 0.05 0 0
+UseConstantControl 1 0 0 0
 ModifyControl 0 0 0 1 0
 
 AddEntity #24: switch

@@ -15,7 +15,7 @@ class InputControl : public Control
 {
 public:
 	using Base = Control;
-    InputControl(InputHandler* input, ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id)
+    InputControl(InputHandler* input, ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id, bool stability_control)
     : m_input(input)
     , m_walk_dir(0)
     , m_jump(false)
@@ -26,16 +26,18 @@ public:
 	, m_current_shoot_cooldown(0)
 	, m_look_dir(RIGHT)
 	, m_self_id(self_id)
+	, m_stability_control(stability_control)
     {}
 
-    InputControl(InputHandler* input, EntityID self_id) : InputControl(input, ProcedureID{-1}, 0, self_id) {}
+    InputControl(InputHandler* input, EntityID self_id) : InputControl(input, ProcedureID{-1}, 0, self_id, false) {}
     InputControl() : InputControl(nullptr, EntityID{0}) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseInputControl "
     	   << m_shoot_proc_id << " "
-    	   << m_shoot_cooldown << " ";
+    	   << m_shoot_cooldown << " "
+		   << m_stability_control << " ";
     }
 
     bool decision_jump() const { return m_jump; }
@@ -72,6 +74,7 @@ private:
     int m_current_shoot_cooldown;
     LookDir m_look_dir;
     EntityID m_self_id;
+    bool m_stability_control;
 };
 
 
