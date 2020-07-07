@@ -169,6 +169,8 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 					const SDL_RendererFlip flip = (control->look_dir()==Control::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
 					AbsolutePosition screen_pos;
 					SDL_Rect dest;
+					const double pos_x = position->x() + position->w()/visuals->repeat_x()/2.0 - screen_zone_position->x();
+					const double pos_y = position->y() + position->h()/visuals->repeat_y()/2.0 - screen_zone_position->y();
 
 					for(int16_t rx = 0; rx < visuals->repeat_x(); ++rx)
 						for(int16_t ry = 0; ry < visuals->repeat_y(); ++ry)
@@ -182,12 +184,12 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 									SDL_Texture* texture = resource_system().texture(sprite->texture_id)->texture();
 									screen_pos.set_w(sprite->clip.w*scale_factor);
 									screen_pos.set_h(sprite->clip.h*scale_factor);
-									screen_pos.set_x(position->x() + position->w()/visuals->repeat_x()/2.0 - screen_pos.w()/2.0 + rx*screen_pos.w() - screen_zone_position->x());
-									screen_pos.set_y(position->y() + position->h()/visuals->repeat_y()/2.0 - screen_pos.h()/2.0 + ry*screen_pos.h() - screen_zone_position->y());
-									dest.w = screen_pos.w()*m_screen_to_view_scale;
-									dest.h = screen_pos.h()*m_screen_to_view_scale;
-									dest.x = screen_pos.x()*m_screen_to_view_scale;
-									dest.y = globals().resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale;
+									screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
+									screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
+									dest.w = screen_pos.w()*m_screen_to_view_scale + 0.5;
+									dest.h = screen_pos.h()*m_screen_to_view_scale + 0.5;
+									dest.x = screen_pos.x()*m_screen_to_view_scale + 0.5;
+									dest.y = globals().resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5;
 
 									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, globals().resolution_x, globals().resolution_y))
 									{
