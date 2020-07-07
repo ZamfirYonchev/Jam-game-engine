@@ -323,8 +323,8 @@ UseConstantControl 0 0 0 0
 FixViewWidth
 
 AddEntity #1: background
-UseTiledVisuals 0 20 1
-UseAbsolutePosition 0 0 812 768
+UseAbsolutePosition -300 0 4098 768
+UseTiledVisuals 0 1366 768
 ModifyVisuals 0 0 0 0 -0
 
 AddEntity #2: bee
@@ -356,24 +356,24 @@ UseAttachedPosition 0 1366 -10 -1356 20
 AddEntity #8: grass
 UseAbsolutePosition 0 0 3000 200
 UseBasicCollision 0
-UseTiledVisuals 2 15 1
+UseTiledVisuals 2 200 200
 
 AddEntity #9: grass
 UseAbsolutePosition -100 0 3000 200
 UseBasicCollision 0
-UseTiledVisuals 2 15 1
+UseTiledVisuals 2 200 200
 
 AddEntity #10: grass
 UseAbsolutePosition 0 -30 3000 200
 UseBasicCollision 0
-UseTiledVisuals 2 15 1
+UseTiledVisuals 2 200 200
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
 
 AddEntity #11: grass
 UseAbsolutePosition -100 -30 3000 200
 UseBasicCollision 0
-UseTiledVisuals 2 15 1
+UseTiledVisuals 2 200 200
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
 
@@ -563,7 +563,7 @@ CallProcedure 43 #entity 45: healing site
 AddEntity #46: grass
 UseAbsolutePosition 1000 30 400 200
 UseBasicCollision 0
-UseTiledVisuals 3 2 1
+UseTiledVisuals 3 200 200
 
 AddEntity #47: flower
 UseAbsolutePosition 1380 150 30 5
@@ -588,12 +588,12 @@ UseStaticVisuals 9 0
 AddEntity #51: grass
 UseAbsolutePosition 0 30 600 200
 UseBasicCollision 0
-UseTiledVisuals 3 3 1
+UseTiledVisuals 3 200 200
 	
 AddEntity #52: grass
 UseAbsolutePosition 0 1400 600 200
 UseBasicCollision 0
-UseTiledVisuals 3 3 1
+UseTiledVisuals 3 200 200
 
 AddEntity #53: cobweb
 UseAbsolutePosition 1400 350 370 339
