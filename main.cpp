@@ -64,8 +64,8 @@ int main(int argc, char** argv)
 
 		command_queue().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
-		start_frame_time = Time{SDL_GetTicks()};
-		last_frame_time = Time{SDL_GetTicks()};
+		start_frame_time = static_cast<Time>((SDL_GetTicks()));
+		last_frame_time = static_cast<Time>((SDL_GetTicks()));
 
 		do
 		{

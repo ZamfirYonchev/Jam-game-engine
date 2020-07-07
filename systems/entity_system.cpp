@@ -13,7 +13,7 @@ Entity& EntitySystem::add_new_entity()
 	EntityID id;
     if(m_free_entities.size() == 0)
     {
-    	id = EntityID{m_entities.size()};
+    	id = static_cast<EntityID>(m_entities.size());
     	m_entities.push_back(Entity(id));
     }
     else
