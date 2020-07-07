@@ -20,7 +20,7 @@ public:
 	, m_keyleft(SDLK_a)
 	, m_keyright(SDLK_d)
 	, m_keyshoot(SDLK_e)
-	, m_keyquit(SDLK_F10)
+	, m_keyquit(SDLK_ESCAPE)
 	, m_keyselect(SDLK_RETURN)
 	, m_left_pressed(false)
 	, m_right_pressed(false)
