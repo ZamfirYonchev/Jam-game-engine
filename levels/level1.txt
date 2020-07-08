@@ -291,8 +291,8 @@ AddEntity #0: screen
 UseAbsolutePosition 0 0 800 600
 
 AddEntity #1: background
-UseTiledVisuals 0 20 5
-UseAbsolutePosition 0 0 120 600
+UseAbsolutePosition -120 0 1440 600
+UseTiledVisuals 0 120 120
 ModifyVisuals 0 0 0 0 -0
 
 AddEntity #2: trigger zone move screen left 
@@ -308,7 +308,7 @@ UseTriggerInteraction 0 -1 1 -1
 AddEntity #4: ground platform
 UseAbsolutePosition 10 -22 2880 96
 UseBasicCollision 2
-UseTiledVisuals 1 90 3
+UseTiledVisuals 1 32 32
 
 AddEntity #5: player character
 UseAbsolutePosition 100 100 58 100
@@ -355,32 +355,32 @@ UseAttachedPosition 0 800 -10 -790 20
 AddEntity #11: platform
 UseAbsolutePosition 650 74 192 192
 UseBasicCollision 2
-UseTiledVisuals 4 6 6
+UseTiledVisuals 4 32 32
 
 AddEntity #12: platform bottom
 UseAbsolutePosition 650 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 8 6 3
+UseTiledVisuals 8 32 32
 
 AddEntity #13: platform
 UseAbsolutePosition 1290 74 192 192
 UseBasicCollision 2
-UseTiledVisuals 4 6 6
+UseTiledVisuals 4 32 32
 
 AddEntity #14: platform bottom
 UseAbsolutePosition 1290 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 8 6 3
+UseTiledVisuals 8 32 32
 
 AddEntity #15: platform
 UseAbsolutePosition 1642 74 192 256
 UseBasicCollision 2
-UseTiledVisuals 4 6 8
+UseTiledVisuals 4 32 32
 
 AddEntity #16: platform bottom
 UseAbsolutePosition 1642 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 8 6 3
+UseTiledVisuals 8 32 32
 
 AddEntity #17: exit
 UseBasicCollision 0
@@ -391,22 +391,22 @@ UseAbsolutePosition 2500 132 0 0
 AddEntity #18: platform
 UseAbsolutePosition -150 74 192 256
 UseBasicCollision 2
-UseTiledVisuals 4 6 8
+UseTiledVisuals 4 32 32
 
 AddEntity #19: platform bottom
 UseAbsolutePosition -150 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 6 6 3
+UseTiledVisuals 6 32 32
 
 AddEntity #18: platform
 UseAbsolutePosition 2794 74 192 256
 UseBasicCollision 2
-UseTiledVisuals 4 6 8
+UseTiledVisuals 4 32 32
 
 AddEntity #19: platform bottom
 UseAbsolutePosition 2794 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 7 6 3
+UseTiledVisuals 7 32 32
 
 
 ### Procedures

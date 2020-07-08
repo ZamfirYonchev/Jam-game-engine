@@ -551,8 +551,8 @@ AddEntity #0: screen
 UseAbsolutePosition 0 0 800 600
 
 AddEntity #1: background
-UseTiledVisuals 0 20 5
-UseAbsolutePosition 0 0 120 600
+UseAbsolutePosition -120 0 1440 600
+UseTiledVisuals 0 120 120
 ModifyVisuals 0 0 0 0 -0
 
 AddEntity #2: trigger zone move screen left 
@@ -568,7 +568,7 @@ UseTriggerInteraction 0 -1 1 -1
 AddEntity #4: ground platform
 UseAbsolutePosition 10 -22 288 96
 UseBasicCollision 2
-UseTiledVisuals 2 9 3
+UseTiledVisuals 2 32 32
 
 AddEntity #5: player character
 UseAbsolutePosition 100 100 58 94
@@ -622,26 +622,26 @@ UseAbsolutePosition 2100 132 0 0
 AddEntity #12: platform
 UseAbsolutePosition -150 74 192 256
 UseBasicCollision 2
-UseTiledVisuals 4 6 8
+UseTiledVisuals 4 32 32
 
 AddEntity #13: platform bottom
 UseAbsolutePosition -150 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 6 6 3
+UseTiledVisuals 6 32 32
 
 AddEntity #14: platform
 UseAbsolutePosition 2394 74 192 256
 UseBasicCollision 2
-UseTiledVisuals 4 6 8
+UseTiledVisuals 4 32 32
 
 AddEntity #15: platform bottom
 UseAbsolutePosition 2394 -22 192 96
 UseBasicCollision 2
-UseTiledVisuals 7 6 3
+UseTiledVisuals 7 32 32
 
 AddEntity #16: acid
 UseAbsolutePosition 298 -54 192 96
-UseTiledVisuals 12 6 3
+UseTiledVisuals 12 32 32
 UseDamageCollision 0 0.01
 
 AddEntity #17: acid bottom
@@ -653,11 +653,11 @@ AddZone 220 100 58 94 0 10 11 -1 #18: spawn zombie0 zone
 AddEntity #19: ground platform
 UseAbsolutePosition 490 -22 288 96
 UseBasicCollision 2
-UseTiledVisuals 1 9 3
+UseTiledVisuals 1 32 32
 
 AddEntity #20: acid
 UseAbsolutePosition 778 -54 576 96
-UseTiledVisuals 12 18 3
+UseTiledVisuals 12 32 32
 UseDamageCollision 0 0.01
 
 AddEntity #21: acid bottom
@@ -667,12 +667,12 @@ UseBasicCollision 2
 AddEntity #22: ground platform
 UseAbsolutePosition 1354 -22 1536 96
 UseBasicCollision 2
-UseTiledVisuals 3 48 3
+UseTiledVisuals 3 32 32
 
 AddEntity #23: hanging platform
 UseAbsolutePosition 932 200 288 64
 UseBasicCollision 2
-UseTiledVisuals 1 9 2
+UseTiledVisuals 1 32 32
 
 AddEntity #24: door bottom
 UseAbsolutePosition 1560 74 17 64
@@ -705,12 +705,12 @@ UseAbsolutePosition 1560 296 17 0
 AddEntity #28: platform above door
 UseAbsolutePosition 1554 202 96 320
 UseBasicCollision 2
-UseTiledVisuals 4 3 10
+UseTiledVisuals 4 32 32
 
 AddEntity #29: platform with button
 UseAbsolutePosition 1618 266 160 64
 UseBasicCollision 2
-UseTiledVisuals 4 5 2
+UseTiledVisuals 4 32 32
 
 AddEntity #30: switch
 UseAbsolutePosition 1682 330 18 64

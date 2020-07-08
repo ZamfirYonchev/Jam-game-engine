@@ -49,8 +49,8 @@ AddEntity #0: screen
 UseAbsolutePosition 0 0 800 600
 
 AddEntity #1: background
-UseTiledVisuals 0 20 5
-UseAbsolutePosition 0 0 120 600
+UseTiledVisuals 0 120 120
+UseAbsolutePosition 0 0 1080 600
 ModifyVisuals 0 0 0 0 -0
 
 AddEntity #2: button new game
