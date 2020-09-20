@@ -25,7 +25,7 @@ public:
     }
 
     Texture(const Texture&) = delete;
-    Texture(Texture&& rhs) : m_texture(rhs.m_texture)
+    Texture(Texture&& rhs) noexcept : m_texture(rhs.m_texture)
     {
     	rhs.m_texture = nullptr;
     }

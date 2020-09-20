@@ -36,9 +36,9 @@ class optional_ref
     public:
     optional_ref() : m_valid(false), m_value(nullValue) {}
     optional_ref(T& ref) : m_valid(true), m_value(ref) {}
-    optional_ref(T&& ref) : m_valid(true), m_value(ref) {}
+    optional_ref(T&& ref) noexcept : m_valid(true), m_value(ref) {}
     optional_ref(const optional_ref& rhs) : m_valid(rhs.m_valid), m_value(rhs.m_value) {}
-    optional_ref(optional_ref&& rhs) : m_valid(std::move(rhs.m_valid)), m_value(rhs.m_value) {}
+    optional_ref(optional_ref&& rhs) noexcept : m_valid(std::move(rhs.m_valid)), m_value(rhs.m_value) {}
     ~optional_ref() = default;
 
     optional_ref& operator=(const optional_ref& rhs) = delete; //undefined for now so don't use
@@ -49,7 +49,7 @@ class optional_ref
         return *this;
     }*/
 
-    optional_ref& operator=(optional_ref&& rhs) = delete; //undefined for now so don't use
+    optional_ref& operator=(optional_ref&& rhs) noexcept = delete; //undefined for now so don't use
     /*{
     	if(m_valid && rhs.m_valid)
     		m_value = rhs.m_value;

@@ -29,10 +29,10 @@ public:
 	}
 
 	Font(const Font&) = delete;
-	Font(Font&& rhs) : m_font(std::move(rhs.m_font)) { rhs.m_font = nullptr; }
+	Font(Font&& rhs) noexcept : m_font(std::move(rhs.m_font)) { rhs.m_font = nullptr; }
 
 	Font& operator=(const Font&) = delete;
-	Font& operator=(Font&& rhs)
+	Font& operator=(Font&& rhs) noexcept
 	{
 		if(m_font != nullptr)
 			TTF_CloseFont(m_font);

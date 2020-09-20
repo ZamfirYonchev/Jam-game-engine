@@ -25,14 +25,14 @@ public:
 	~SdlWindow();
 
 	SdlWindow(const SdlWindow&) = delete;
-	SdlWindow(SdlWindow&& rhs) : m_window(rhs.m_window), m_renderer(rhs.m_renderer)
+	SdlWindow(SdlWindow&& rhs) noexcept : m_window(rhs.m_window), m_renderer(rhs.m_renderer)
 	{
 		rhs.m_window = nullptr;
 		rhs.m_renderer = nullptr;
 	}
 
 	SdlWindow& operator=(const SdlWindow&) = delete;
-	SdlWindow& operator=(SdlWindow&& rhs)
+	SdlWindow& operator=(SdlWindow&& rhs) noexcept
 	{
 		SDL_DestroyWindow(m_window);
 		SDL_DestroyRenderer(m_renderer);
