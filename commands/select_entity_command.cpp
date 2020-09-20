@@ -11,5 +11,5 @@
 
 void SelectEntityCommand::execute() const
 {
-    entity_system().add_accessed_entity(resolved_entity(m_id));
+    entity_system().add_accessed_entity(entity_system().resolved_id(m_id));
 }
