@@ -25,11 +25,15 @@ public:
 	virtual ProcedureID proc_id_self() const = 0;
 	virtual ProcedureID proc_id_other() const = 0;
 	virtual ProcedureID on_exit_proc_id_self() const = 0;
+	virtual int32_t last_triggered_groups() const = 0;
+	virtual int32_t triggered_groups() const = 0;
+	virtual int32_t group_vector() const = 0;
 
 	virtual void clear_groups() = 0;
 	virtual void set_group(int group_id, bool val) = 0;
 	virtual void set_trigger_group(int8_t group) = 0;
-	virtual void set_triggered(bool triggered) = 0;
+	virtual void set_triggered_groups(int32_t group_vec) = 0;
+	virtual void update_last_triggered_groups() = 0;
 	virtual void set_proc_id_self(ProcedureID proc_id) = 0;
 	virtual void set_proc_id_other(ProcedureID proc_id) = 0;
 	virtual void set_on_exit_proc_id_self(ProcedureID proc_id) = 0;
