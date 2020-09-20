@@ -40,7 +40,8 @@ public:
     }
 
     Entity(const Entity&) = delete;
-    Entity(Entity&& rhs) : m_id(std::move(rhs.m_id))
+    Entity(Entity&& rhs) noexcept :
+    					   m_id(std::move(rhs.m_id))
     					 , m_position(std::move(rhs.m_position))
 						 , m_control(std::move(rhs.m_control))
     					 , m_movement(std::move(rhs.m_movement))
@@ -59,7 +60,7 @@ public:
     }
 
     Entity& operator=(const Entity&) = delete;
-    Entity& operator=(Entity&& rhs)
+    Entity& operator=(Entity&& rhs) noexcept
     {
     	delete m_position;
     	delete m_control;
