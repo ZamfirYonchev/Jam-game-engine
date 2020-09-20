@@ -19,6 +19,8 @@
 #include "../components/menu_item_visuals.h"
 #include "../components/build_position.h"
 #include "../components/tiled_visuals.h"
+#include "../components/attached_position.h"
+#include "../components/attached_health.h"
 
 template<typename T>
 class UseComponentCommand : public Command
@@ -171,6 +173,42 @@ private:
     SpritesheetID m_spr_id;
     double m_tile_w;
     double m_tile_h;
+};
+
+template<>
+class UseComponentCommand<AttachedPosition> : public Command
+{
+public:
+	UseComponentCommand<AttachedPosition>(const EntityID attached_id, const double offset_x, const double offset_y, const double offset_w, const double offset_h)
+	: m_attached_id(attached_id)
+	, m_offset_x(offset_x)
+	, m_offset_y(offset_y)
+	, m_offset_w(offset_w)
+	, m_offset_h(offset_h)
+	{}
+
+    void execute() const;
+    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<AttachedPosition>>(m_attached_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
+private:
+    EntityID m_attached_id;
+    double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
+};
+
+template<>
+class UseComponentCommand<AttachedHealth> : public Command
+{
+public:
+	UseComponentCommand<AttachedHealth>(const EntityID attached_id, const double offset_hp, const double offset_max_hp)
+	: m_attached_id(attached_id)
+	, m_offset_hp(offset_hp)
+	, m_offset_max_hp(offset_max_hp)
+	{}
+
+    void execute() const;
+    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<AttachedHealth>>(m_attached_id, m_offset_hp, m_offset_max_hp); }
+private:
+    EntityID m_attached_id;
+    double m_offset_hp, m_offset_max_hp;
 };
 
 #endif /* COMMANDS_USE_COMPONENT_COMMAND_H_ */

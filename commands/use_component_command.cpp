@@ -79,7 +79,7 @@ void UseComponentCommand<InputSelectControl>::execute() const
 void UseComponentCommand<ChaseAIControl>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new ChaseAIControl(entity_system().previous_entity()->id(), resolved_entity(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range));
+		entity_system().previous_entity()->set_control(new ChaseAIControl(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range));
 	else
 	{
 		//error globals().access_entity_id
@@ -89,7 +89,7 @@ void UseComponentCommand<ChaseAIControl>::execute() const
 void UseComponentCommand<GuideControl>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new GuideControl(entity_system().previous_entity()->id(), resolved_entity(m_target_id), m_range));
+		entity_system().previous_entity()->set_control(new GuideControl(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_range));
 	else
 	{
 		//error globals().access_entity_id
@@ -215,6 +215,38 @@ void UseComponentCommand<NullVisuals>::execute() const
 {
 	if(entity_system().previous_entity())
 		entity_system().previous_entity()->set_visuals(Visuals::null);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<AttachedPosition>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_position(new AttachedPosition{
+																			entity_system().resolved_id(m_attached_id)
+																			, m_offset_x
+																			, m_offset_y
+																			, m_offset_w
+																			, m_offset_h
+																			}
+														);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<AttachedHealth>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_health(new AttachedHealth{
+																			entity_system().resolved_id(m_attached_id)
+																			, m_offset_hp
+																			, m_offset_max_hp
+																		}
+														);
 	else
 	{
 		//error globals().access_entity_id
