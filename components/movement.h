@@ -21,12 +21,15 @@ public:
     virtual double fy() const = 0;
     virtual double vx() const = 0;
     virtual double vy() const = 0;
+    virtual double dx() const = 0;
+    virtual double dy() const = 0;
     virtual double mass() const = 0;
     virtual double friction() const = 0;
     virtual double move_force() const = 0;
     virtual double jump_force() const = 0;
     virtual bool gravity_affected() const = 0;
 
+    virtual void update(const Time time_diff) = 0;
     virtual void set_force_x(double val) = 0;
     virtual void set_force_y(double val) = 0;
     virtual void set_velocity_x(double val) = 0;
@@ -41,6 +44,8 @@ public:
     virtual void mod_force_y(double ay) = 0;
     virtual void mod_velocity_x(double vx) = 0;
     virtual void mod_velocity_y(double vy) = 0;
+    virtual void mod_dx(double dx) = 0;
+    virtual void mod_dy(double dy) = 0;
 
     static Movement* null;
 

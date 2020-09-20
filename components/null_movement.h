@@ -19,6 +19,7 @@ public:
     	to << "UseNullMovement ";
     }
 
+    void update(const Time time_diff) {}
     void set_force_x(double val) {}
     void set_force_y(double val) {}
     void mod_force_x(double val) {}
@@ -35,12 +36,16 @@ public:
     double fy() const { return 0; }
     double vx() const { return 0; }
     double vy() const { return 0; }
+    double dx() const { return 0; }
+    double dy() const { return 0; }
     double mass() const { return 1; }
     double friction() const { return 0; }
     double move_force() const { return 0; }
     double jump_force() const { return 0; }
     bool gravity_affected() const { return false; }
     void set_gravity_affected(bool val) {}
+    void mod_dx(double dx) {}
+    void mod_dy(double dy) {}
 };
 
 #endif /* COMPONENTS_NULL_MOVEMENT_H_ */
