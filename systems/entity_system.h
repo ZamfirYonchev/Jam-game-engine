@@ -31,7 +31,8 @@ public:
     }
 
     EntitySystem(const EntitySystem&) = delete;
-    EntitySystem(EntitySystem&& rhs) : m_entities(std::move(rhs.m_entities))
+    EntitySystem(EntitySystem&& rhs) noexcept :
+    								   m_entities(std::move(rhs.m_entities))
     								 , m_entities_to_remove(std::move(rhs.m_entities_to_remove))
     								 , m_free_entities(std::move(rhs.m_free_entities))
     								 , m_last_accessed_entities(std::move(rhs.m_last_accessed_entities))
@@ -39,7 +40,7 @@ public:
     {}
 
     EntitySystem& operator=(const EntitySystem&) = delete;
-    EntitySystem& operator=(EntitySystem&& rhs)
+    EntitySystem& operator=(EntitySystem&& rhs) noexcept
     {
     	clear();
     	m_entities = std::move(rhs.m_entities);
@@ -63,7 +64,6 @@ public:
 
     optional_ref<Entity> entity(const EntityID id)
     {
-    	//EntityID actual_id = (id < 0) ? m_entities.size()-id : id;
     	if(id >= 0 && id < int(m_entities.size()))
     		return optional_ref<Entity>(m_entities[id]);
     	else
@@ -87,22 +87,30 @@ public:
 
     optional_ref<Entity> previous_entity()
 	{
-    	if(previous_entity_id() < m_entities.size())
-    		return optional_ref<Entity>(m_entities[previous_entity_id()]);
-    	else
-    		return optional_ref<Entity>();
+    	return entity(previous_entity_id());
 	}
 
-    EntityID previous_entity_id() const
+    constexpr EntityID previous_entity_id() const
     {
     	return EntityID{m_last_accessed_entities[m_head_of_last_accessed_entities]};
     }
 
-    EntityID previous_entity_id(unsigned int n) const
+    constexpr EntityID previous_entity_id(unsigned int n) const
     {//TODO make sure n < size
     	const int cycling_index = (m_head_of_last_accessed_entities+m_last_accessed_entities.size()-n)%m_last_accessed_entities.size();
 		return EntityID{m_last_accessed_entities[cycling_index]};
     }
+
+    EntityID resolved_id(const EntityID in_entity_id)
+    {
+    	return EntityID{(in_entity_id >= 0)*in_entity_id + (in_entity_id < 0)*previous_entity_id(EntityID{-1-in_entity_id})};
+    }
+
+	optional_ref<Entity> resolved_entity(const EntityID in_entity_id)
+    {
+    	return entity(resolved_id(in_entity_id));
+    }
+
 
 private:
     std::vector<Entity> m_entities;
