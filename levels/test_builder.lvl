@@ -1,16 +1,16 @@
 AddProcedure 9 #0: start building
 	AddEntity
-	UseBuildPosition 2
+	UseBuildPosition 6 #builder
 	UseTiledVisuals 2 32 32
 	UseFullMovement 1 0.01 0.006 0.6 0
 	UseBasicCollision 0
 	UseNormalInteraction 1
-	SelectEntity 2
+	SelectEntity 6 #builder
 	UseInputControl 1 200 0
-	SelectEntity 3
+	SelectEntity 7 #dummy
 	
 AddProcedure 7 #1: spawn solidifier
-	SelectEntity 2
+	SelectEntity 6 #builder
 	UseInputControl 0 200 0
 	AddEntity
 	UseAbsolutePosition -50 -50 100 100
@@ -26,6 +26,22 @@ AddProcedure 1 #3: remove entity
 
 AddProcedure 1 #4: save entities
 	ExportEntities build_level.lvl
+
+
+AddProcedure 2 #5: move screen left
+SelectEntity 0
+UseConstantControl -1 0 0 0
+
+AddProcedure 2 #6: move screen right
+SelectEntity 0
+UseConstantControl 1 0 0 0
+
+AddProcedure 0 #7: move screen bottom
+AddProcedure 0 #8: move screen top
+
+AddProcedure 2 #9: stop moving screen
+SelectEntity 0
+UseConstantControl 0 0 0 0
 
 AddTextureFromFile resources/bg_top.png #0: background top
 AddTextureFromFile resources/bg_middle.png #1: background middle
@@ -140,7 +156,20 @@ UseTiledVisuals 3 120 120
 UseAbsolutePosition 0 0 1366 768
 ModifyVisuals 0 0 0 0 -0
 
-AddEntity #2: builder
+AddEntity #2: trigger zone move screen left 
+UseAttachedPosition 0 0 0 -0.9 0
+UseBasicCollision 0
+UseTriggerInteraction 1 0 -1 2
+
+AddEntity #3: trigger zone move screen right 
+UseAttachedPosition 0 0.9 0 -0.9 0
+UseBasicCollision 0
+UseTriggerInteraction 1 1 -1 2
+
+AddEntity #4: trigger zone move screen down 
+AddEntity #5: trigger zone move screen up 
+
+AddEntity #6: builder
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 1
 ModifyVisuals 0 0 0 0 -0
@@ -150,13 +179,13 @@ UseBasicCollision 1
 UseInputControl 0 100 0
 UseNormalInteraction 16
 
-AddEntity #3: dummy object
+AddEntity #7: dummy object
 
-AddEntity #4: save zone
+AddEntity #8: save zone
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 1
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
 UseBasicCollision 0
-UseTriggerInteraction 0 4 -1 -1
+UseTriggerInteraction 4 4 -1 -1 #builder tag
 
