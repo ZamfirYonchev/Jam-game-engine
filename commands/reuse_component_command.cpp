@@ -8,6 +8,7 @@
 #include "reuse_component_command.h"
 #include "../globals.h"
 #include <sstream>
+#include "../utilities.h"
 #include "execute_file_command.h"
 #include "../components/position.h"
 #include "../components/control.h"
@@ -20,10 +21,11 @@
 template<typename T>
 void ReuseComponentCommand<T>::execute() const
 {
-	if(entity_system().entity(m_source_id))
+	const auto entity_optional = entity_system().resolved_entity(m_source_id);
+	if(entity_optional)
 	{
 		std::stringstream ss;
-		ss << entity_system().entity(m_source_id)->component<T>();
+		ss << entity_optional->component<T>();
 		command_queue().process_stream(ss, m_renderer);
 	}
 	else
