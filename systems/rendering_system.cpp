@@ -214,10 +214,10 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 					if(globals().show_hitboxes)
 					{
 						const SDL_Rect hitbox
-							{ int(entity.position()->x() - screen_zone_position->x())
-							, int(globals().resolution_y-entity.position()->h() - entity.position()->y() + screen_zone_position->y())
-							, int(entity.position()->w())
-							, int(entity.position()->h())
+							{ int((entity.position()->x() - screen_zone_position->x())*m_screen_to_view_scale)
+							, int(globals().resolution_y + (-entity.position()->h() - entity.position()->y() + screen_zone_position->y())*m_screen_to_view_scale)
+							, int(entity.position()->w()*m_screen_to_view_scale)
+							, int(entity.position()->h()*m_screen_to_view_scale)
 							};
 						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 						SDL_RenderDrawRect(renderer, &hitbox);
