@@ -15,8 +15,7 @@
 
 void MovementSystem::update(const Time time_delta)
 {
-	std::for_each(cbegin(entities), cend(entities),
-	[time_delta](const EntityID id)
+	for(const auto id : entities)
 	{
     	if(entity_system().entity(id))
     	{
@@ -39,20 +38,10 @@ void MovementSystem::update(const Time time_delta)
 
 			movement->mod_force_x(movement->move_force()*control->decision_walk());
 
-			const double vx_avg = movement->vx() + time_delta*movement->fx()/movement->mass()/2.0;
-			const double vy_avg = movement->vy() + time_delta*movement->fy()/movement->mass()/2.0;
+			movement->update(time_delta); //update velocity and displacement
 
-			movement->mod_force_x(-vx_avg*movement->friction()); //account for air friction
-			movement->mod_force_y(-vy_avg*movement->friction()); //account for air friction
-
-			const double sx = (movement->vx() + time_delta*movement->fx()/movement->mass()/2.0)*time_delta;
-			const double sy = (movement->vy() + time_delta*movement->fy()/movement->mass()/2.0)*time_delta;
-
-			position->mod_x(sx);
-			position->mod_y(sy);
-
-			movement->mod_velocity_x(time_delta*movement->fx()/movement->mass());
-			movement->mod_velocity_y(time_delta*movement->fy()/movement->mass());
+			position->mod_x(movement->dx());
+			position->mod_y(movement->dy());
 
 			movement->set_force_x(0);
 			movement->set_force_y(0);
@@ -61,7 +50,7 @@ void MovementSystem::update(const Time time_delta)
     	{
     		//error *it
     	}
-	});
+	}
 }
 
 
