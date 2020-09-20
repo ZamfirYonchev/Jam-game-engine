@@ -22,8 +22,14 @@ Entity::Entity(EntityID id)
 
 void Entity::set_position(Position* _position)
 {
+	if(m_collision != Collision::null)
+		collision_system().remove_id(id());
+
 	release(m_position);
 	m_position = _position;
+
+	if(m_collision != Collision::null)
+		collision_system().add_id(id());
 }
 
 void Entity::set_control(Control* _control)
