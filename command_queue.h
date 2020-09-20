@@ -24,9 +24,9 @@ public:
     CommandQueue(const CommandQueue& ) = delete;
     CommandQueue& operator=(const CommandQueue& ) = delete;
 
-    CommandQueue(CommandQueue&& rhs) : m_commands(std::move(rhs.m_commands)) {}
+    CommandQueue(CommandQueue&& rhs) noexcept : m_commands(std::move(rhs.m_commands)) {}
 
-    CommandQueue& operator=(CommandQueue&& rhs)
+    CommandQueue& operator=(CommandQueue&& rhs) noexcept
     {
     	clear();
     	m_commands = std::move(rhs.m_commands);
