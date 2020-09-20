@@ -29,13 +29,13 @@ public:
     }
 
     FileParser(const FileParser& ) = delete;
-    FileParser(FileParser&& rhs)
+    FileParser(FileParser&& rhs) noexcept
     {
     	m_file = std::move(rhs.m_file);
     }
 
     FileParser& operator=(const FileParser& ) = delete;
-    FileParser& operator=(FileParser&& rhs)
+    FileParser& operator=(FileParser&& rhs) noexcept
     {
     	close();
     	m_file = std::move(rhs.m_file);
