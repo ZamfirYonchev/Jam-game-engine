@@ -27,10 +27,10 @@ public:
     }
 
     ResourceSystem(const ResourceSystem&) = delete;
-    ResourceSystem(ResourceSystem&& rhs) = default;
+    ResourceSystem(ResourceSystem&& rhs) noexcept = default;
 
     ResourceSystem& operator=(const ResourceSystem&) = delete;
-    ResourceSystem& operator=(ResourceSystem&& rhs)
+    ResourceSystem& operator=(ResourceSystem&& rhs) noexcept
     {
     	clear();
     	m_fonts = std::move(rhs.m_fonts);
