@@ -19,17 +19,17 @@ public:
     	to << "UseNullControl ";
     }
 
-    bool decision_jump() const { return false; }
-    bool decision_duck() const { return false; }
+    double decision_jump() const { return 0.0; }
+    double decision_duck() const { return 0.0; }
     bool decision_attack() const { return false; }
-    int8_t decision_walk() const { return 0; }
+    double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
     LookDir look_dir() const { return RIGHT; }
 
-    void set_decision_jump(bool val) {}
-    void set_decision_duck(bool val) {}
+    void set_decision_jump(double val) {}
+    void set_decision_duck(double val) {}
     void set_decision_attack(bool val) {}
-    void set_decision_walk(int8_t val) {}
+    void set_decision_walk(double val) {}
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) {}
 

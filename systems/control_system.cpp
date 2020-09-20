@@ -26,10 +26,19 @@ void ControlSystem::update(const Time time_diff)
 			const Health* health = entity.health();
 
 
-			if(health->alive() && health->stunned() == false)
+			if(health->alive())
+			{
 				control->update_decisions(time_diff);
+				if(health->stunned())
+				{
+					control->set_decision_walk(0.5*control->decision_walk());
+					control->set_decision_jump(0.5*control->decision_jump());
+					control->set_decision_duck(0.5*control->decision_duck());
+				}
+			}
 			else
 				control->clear_decisions();
+
 
 			if(control->decision_attack() && control->attack_proc_id() >= 0)
 			{

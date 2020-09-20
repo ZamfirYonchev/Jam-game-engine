@@ -16,14 +16,14 @@ void ModifyControlCommand::execute() const
 		Control* control = entity_system().previous_entity()->control();
 
 		if(is_negative_zero(m_decision_jump))
-			control->set_decision_jump(false);
+			control->set_decision_jump(0.0);
 		else
-			control->set_decision_jump(bool(m_decision_jump) ^ control->decision_jump());
+			control->set_decision_jump(m_decision_jump + control->decision_jump());
 
 		if(is_negative_zero(m_decision_duck))
-			control->set_decision_duck(false);
+			control->set_decision_duck(0.0);
 		else
-			control->set_decision_duck(bool(m_decision_duck) ^ control->decision_duck());
+			control->set_decision_duck(m_decision_duck + control->decision_duck());
 
 		if(is_negative_zero(m_decision_attack))
 			control->set_decision_attack(false);
@@ -33,7 +33,7 @@ void ModifyControlCommand::execute() const
 		if(is_negative_zero(m_decision_walk))
 			control->set_decision_walk(0);
 		else
-			control->set_decision_walk(clip(int8_t(m_decision_walk) + control->decision_walk(), -1, 1));
+			control->set_decision_walk(m_decision_walk + control->decision_walk());
 
 		if(is_negative_zero(m_look_dir))
 			control->set_look_dir(Control::RIGHT);

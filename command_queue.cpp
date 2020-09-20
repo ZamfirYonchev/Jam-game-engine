@@ -407,7 +407,7 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[1];
 				input >> vars[2];
 				input >> vars[3];
-				command = std::make_unique<UseComponentCommand<ConstantControl>>(int8_t(vars[0]), bool(vars[1]), bool(vars[2]), Control::LookDir(vars[3]));
+				command = std::make_unique<UseComponentCommand<ConstantControl>>(vars[0], vars[1], vars[2], Control::LookDir(vars[3]));
 				break;
 
 			case hash("UseInputControl"):
