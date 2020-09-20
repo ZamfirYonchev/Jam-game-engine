@@ -11,31 +11,40 @@
 #include <cmath>
 
 template <typename T>
-constexpr int sign(T val)
+constexpr int sign(const T val)
 {
-    return (T(0) < val) - (val < T(0));
+	if constexpr(std::is_integral<T>::value)
+	    return std::signbit(val);
+	else
+		return (T(0) < val) - (val < T(0));
 }
 
 template <typename T>
-constexpr T abs(T val)
+constexpr T abs(const T val)
 {
     return T(val * sign(val));
 }
 
 template <typename T>
-constexpr T max(T val0, T val1)
+constexpr T max(const T val0, const T val1)
 {
-    return T((val0+val1)/2.0 + abs(val0-val1)/2.0);
+	if constexpr(std::is_integral<T>::value)
+		return std::max(val0, val1);
+	else
+		return T(val0 * (val0 >= val1) + val1 * (val0 < val1));
 }
 
 template <typename T>
-constexpr T min(T val0, T val1)
+constexpr T min(const T val0, const T val1)
 {
-    return T((val0+val1)/2.0 - abs(val0-val1)/2.0);
+	if constexpr(std::is_integral<T>::value)
+		return std::min(val0, val1);
+	else
+		return T(val1 * (val0 >= val1) + val0 * (val0 < val1));
 }
 
 template <typename T>
-constexpr T clip(T val0, T val1, T val2)
+constexpr T clip(const T val0, const T val1, const T val2)
 {
     T min_val = min(val1, val2);
     T max_val = min_val + abs(val1-val2);
@@ -51,7 +60,7 @@ constexpr double lines_cross(const double x0, const double y0, const double w0, 
     const double t1 = ((x0-x1)*h0 - (y0-y1)*w0) / d;
     const double t0 = ((x0-x1)*h1 - (y0-y1)*w1) / d;
 
-    if(t0 >= 0 && t1 >= 0 && t1 <= 1.0)
+    if(t1 >= 0 && t1 <= 1.0)
         return t0;
     else
         return -1;
