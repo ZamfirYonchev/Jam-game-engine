@@ -17,11 +17,9 @@ class CollisionSystem : public SystemBase
 public:
     void update(const Time time_diff);
 
-    void add_id(const EntityID entity);
-    void remove_id(const EntityID entity);
-
     void clear()
     {
+    	SystemBase::clear();
     	entity_regions.clear();
     }
 
