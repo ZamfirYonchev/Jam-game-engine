@@ -14,6 +14,24 @@
 class Collision
 {
 public:
+
+	struct RegionLocation
+	{
+		int x, y;
+		int x_end, y_end;
+		RegionLocation() : x{0}, y{0}, x_end{0}, y_end{0} {}
+		RegionLocation(int _x, int _y, int _x_end, int _y_end) : x{_x}, y{_y}, x_end{_x_end}, y_end{_y_end} {}
+
+		bool operator==(const RegionLocation& rhs) const
+		{
+			return (x==rhs.x) && (y==rhs.y) && (x_end==rhs.x_end) && (y_end==rhs.y_end);
+		}
+
+		bool operator!=(const RegionLocation& rhs) const { return !(*this == rhs); }
+
+		bool is_null() const { return (x==x_end) || (y==y_end); }
+	};
+
     enum SurfaceType {AIR = 0, GROUND = 1};
     enum CollisionState {TRANSPARENT = 0, MOVEABLE = 1, SOLID = 2};
     virtual ~Collision() {}
@@ -23,11 +41,18 @@ public:
     virtual SurfaceType standing_on() const = 0;
     virtual double on_collision_damage() const = 0;
     virtual double elasticity() const = 0;
+    virtual const RegionLocation& region_location() const = 0;
 
     virtual void set_state(CollisionState val) = 0;
     virtual void set_standing_on(SurfaceType surface) = 0;
     virtual void set_collision_damage(double) = 0;
     virtual void set_elasticity(double val) = 0;
+
+    virtual void set_region_x(const int val) = 0;
+    virtual void set_region_y(const int val) = 0;
+    virtual void set_region_x_end(const unsigned int val) = 0;
+    virtual void set_region_y_end(const unsigned int val) = 0;
+    virtual void set_region_location(const RegionLocation& val) = 0;
 
     static Collision* null;
 

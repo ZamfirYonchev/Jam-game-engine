@@ -15,66 +15,13 @@
 #include "../commands/call_procedure_command.h"
 #include "../components/absolute_position.h"
 #include <algorithm>
-#include <limits>
+#include <unordered_set>
 
 struct CorrectionValues
 {
 	CorrectionValues() : x{0}, y{0}, vx{0}, vy{0} {}
 	double x, y, vx, vy;
 };
-
-void CollisionSystem::add_id(const EntityID entity_id)
-{
-	SystemBase::add_id(entity_id);
-
-	const auto entity_optional = entity_system().entity(entity_id);
-	if(entity_optional)
-	{
-		const Entity& entity = *entity_optional;
-		const int start_region_x = std::floor(entity.position()->x() / REGION_W);
-		const int start_region_y = std::floor(entity.position()->y() / REGION_H);
-		const int end_region_x = std::ceil((entity.position()->x()+entity.position()->w()) / REGION_W);
-		const int end_region_y = std::ceil((entity.position()->y()+entity.position()->h()) / REGION_H);
-
-		for(int region_x = start_region_x; region_x < end_region_x; ++region_x)
-			for(int region_y = start_region_y; region_y < end_region_y; ++region_y)
-			{
-				const RegionPosition region_pos = {region_x, region_y};
-				entity_regions[region_pos].insert(entity_id);
-				//std::cout << "Adding id " << entity_id << " to region[" << region_pos.x << ", " << region_pos.y << "]" << std::endl;
-			}
-	}
-	else
-	{
-		//error entity_id
-	}
-}
-
-void CollisionSystem::remove_id(const EntityID entity_id)
-{
-	SystemBase::remove_id(entity_id);
-
-	const auto& entity_optional = entity_system().entity(entity_id);
-	if(entity_optional)
-	{
-		const Entity& entity = *entity_optional;
-		const int start_region_x = std::floor(entity.position()->x() / REGION_W);
-		const int start_region_y = std::floor(entity.position()->y() / REGION_H);
-		const int end_region_x = std::ceil((entity.position()->x()+entity.position()->w()) / REGION_W);
-		const int end_region_y = std::ceil((entity.position()->y()+entity.position()->h()) / REGION_H);
-
-		for(int region_x = start_region_x; region_x < end_region_x; ++region_x)
-			for(int region_y = start_region_y; region_y < end_region_y; ++region_y)
-			{
-				const RegionPosition region_pos = {region_x, region_y};
-				entity_regions[region_pos].erase(entity_id);
-			}
-	}
-	else
-	{
-		//error entity_id
-	}
-}
 
 void CollisionSystem::update(const Time time_diff)
 {
@@ -94,28 +41,32 @@ void CollisionSystem::update(const Time time_diff)
 	//register+unregister entities from regions
 	for(const auto entity_id : entities)
 	{
-		const auto entity_optional = entity_system().entity(entity_id);
+		auto entity_optional = entity_system().entity(entity_id);
 		if(entity_optional)
 		{
-			const Entity& entity = *entity_optional;
-			if(entity_optional->movement()->dx() != 0 || entity_optional->movement()->dy() != 0)
+			Entity& entity = *entity_optional;
+			const Position* position = entity.position();
+
+			const Collision::RegionLocation& old_location = entity.collision()->region_location();
+			const Collision::RegionLocation new_location
 			{
-				const RegionPosition new_start_region {int(std::floor(entity.position()->x() / REGION_W)), int(std::floor(entity.position()->y() / REGION_H))};
-				const RegionPosition old_start_region {int(std::floor((entity.position()->x()-entity.movement()->dx()) / REGION_W)), int(std::floor((entity.position()->y()-entity.movement()->dy()) / REGION_H))};
+				int(std::floor(position->x() / REGION_W)),
+				int(std::floor(position->y() / REGION_W)),
+				int(std::ceil((position->x()+position->w()) / REGION_W)),
+				int(std::ceil((position->y()+position->h()) / REGION_H))
+			};
 
-				if(old_start_region != new_start_region)
-				{
-					const RegionPosition new_end_region = {int(std::ceil((entity.position()->x()+entity.position()->w()) / REGION_W)), int(std::ceil((entity.position()->y()+entity.position()->h()) / REGION_H))};
-					const RegionPosition old_end_region = {int(std::ceil((entity.position()->x()+entity.position()->w()-entity.movement()->dx()) / REGION_W)), int(std::ceil((entity.position()->y()+entity.position()->h()-entity.movement()->dy()) / REGION_H))};
+			if(old_location != new_location)
+			{
+				for(int region_x = old_location.x; region_x < old_location.x_end; ++region_x)
+					for(int region_y = old_location.y; region_y < old_location.y_end; ++region_y)
+						entity_regions[RegionPosition{region_x, region_y}].erase(entity_id);
 
-					for(int region_x = old_start_region.x; region_x <= old_end_region.x; ++region_x)
-						for(int region_y = old_start_region.y; region_y <= old_end_region.y; ++region_y)
-							entity_regions[RegionPosition{region_x, region_y}].erase(entity_id);
+				entity.collision()->set_region_location(new_location);
 
-					for(int region_x = new_start_region.x; region_x <= new_end_region.x; ++region_x)
-						for(int region_y = new_start_region.y; region_y <= new_end_region.y; ++region_y)
-							entity_regions[RegionPosition{region_x, region_y}].insert(entity_id);
-				}
+				for(int region_x = new_location.x; region_x < new_location.x_end; ++region_x)
+					for(int region_y = new_location.y; region_y < new_location.y_end; ++region_y)
+						entity_regions[RegionPosition{region_x, region_y}].insert(entity_id);
 			}
 		}
 		else
@@ -139,28 +90,23 @@ void CollisionSystem::update(const Time time_diff)
 		if(entity_optional)
 		{
 			Entity& entity0 = *entity_optional;
-			entity0.collision()->set_standing_on(Collision::AIR);
+			Collision* collision0 = entity0.collision();
+			Interaction* interaction0 = entity0.interaction();
 
-			const int start_region_x = std::floor(entity0.position()->x() / REGION_W);
-			const int start_region_y = std::floor(entity0.position()->y() / REGION_H);
-			const int end_region_x = std::ceil((entity0.position()->x()+entity0.position()->w()) / REGION_W);
-			const int end_region_y = std::ceil((entity0.position()->y()+entity0.position()->h()) / REGION_H);
+			collision0->set_standing_on(Collision::AIR);
+			const Collision::RegionLocation& location0 = collision0->region_location();
 
-			if(entity0.id() == 27)
-				std::cout << "Entity 27 " << "[" << entity0.position()->x() << ", " << entity0.position()->y() << "] regions start at " << start_region_x << ", " << start_region_y << " and ends at " << end_region_x << ", " << end_region_y << '\n';
-			std::set<EntityID> near_entities;
+			std::unordered_set<EntityID> near_entities;
+
+			for(int region_x = location0.x; region_x < location0.x_end; ++region_x)
+				for(int region_y = location0.y; region_y < location0.y_end; ++region_y)
+					for(const auto entity_id : entity_regions[RegionPosition{region_x, region_y}])
+						near_entities.insert(entity_id);
+
+			near_entities.erase(*it0); //remove self from the set
 
 			const double x1 = entity0.position()->x() + entity0.position()->w();
 			const double y1 = entity0.position()->y() + entity0.position()->h();
-
-			for(int region_x = start_region_x; region_x < end_region_x; ++region_x)
-				for(int region_y = start_region_y; region_y < end_region_y; ++region_y)
-				{
-					const RegionPosition current_region {region_x, region_y};
-					for(auto entity_id : entity_regions[current_region])
-						near_entities.insert(entity_id);
-				}
-			near_entities.erase(*it0); //remove self from the set
 
 			for(auto it1 = cbegin(near_entities); it1 != cend(near_entities); ++it1)
 			{
@@ -168,7 +114,6 @@ void CollisionSystem::update(const Time time_diff)
 				if(entity1_optional && entity1_optional->id() != entity0.id())
 				{
 					const Entity& entity1 = *entity1_optional;
-					Collision* collision0 = entity0.collision();
 					const Collision* collision1 = entity1.collision();
 
 					if(objects_collide(entity0.position()->x(), entity0.position()->y(), entity0.position()->w(), entity0.position()->h()
@@ -177,11 +122,9 @@ void CollisionSystem::update(const Time time_diff)
 					  )
 					{
 						//entities collide
-						Interaction* interaction0 = entity0.interaction();
 						const Interaction* interaction1 = entity1.interaction();
 
 						interaction0->set_triggered_groups(interaction1->group_vector());
-						//interaction1->set_triggered_groups(interaction0->group_vector());
 
 						if(interaction1->is_in_group(interaction0->trigger_group()))
 						{
@@ -201,10 +144,7 @@ void CollisionSystem::update(const Time time_diff)
 							}
 						}
 
-						if(entity0.id() == 2 && entity1.id() == 26)
-							std::cout << "colliding with id " << entity1.id() << '\n';
 						entity0.health()->mod_hp_change(-collision1->on_collision_damage()*time_diff);
-						//entity1.health()->mod_hp_change(-collision0->on_collision_damage()*time_diff);
 
 						const bool entity0_correctable = (collision0->state() == Collision::MOVEABLE)
 													  && (collision1->state() >= Collision::MOVEABLE);
@@ -229,7 +169,7 @@ void CollisionSystem::update(const Time time_diff)
 								{
 									collision_correction[entity0.id()].y = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dy()- entity0.movement()->dy());
 									collision_correction[entity0.id()].vy += dvy;
-									entity0.collision()->set_standing_on(Collision::GROUND);
+									collision0->set_standing_on(Collision::GROUND);
 								}
 							}
 							else if(dy < 0)
@@ -291,14 +231,10 @@ void CollisionSystem::update(const Time time_diff)
 		if(entity_optional)
 		{
 			const Interaction* interaction = entity_optional->interaction();
-			const int32_t last_triggered_groups = interaction->last_triggered_groups();
-			const int32_t triggered_groups = interaction->triggered_groups();
-			const int32_t trigger_group_mask = 1 << interaction->trigger_group();
-			const bool trigger_valid = ((last_triggered_groups ^ triggered_groups) & trigger_group_mask) != 0;
-			if(trigger_valid)
+			const bool last_triggered = (interaction->last_triggered_groups() >> interaction->trigger_group())%2;
+			const bool triggered      = (interaction->triggered_groups()      >> interaction->trigger_group())%2;
+			if(triggered != last_triggered)
 			{
-				const bool triggered = (triggered_groups & trigger_group_mask) != 0;
-
 				if(triggered && interaction->proc_id_self() >= 0)
 				{
 					command_queue().push(std::make_unique<SelectEntityCommand>(id));
@@ -312,5 +248,4 @@ void CollisionSystem::update(const Time time_diff)
 			}
 		}
 	}
-
 }
