@@ -343,7 +343,8 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[0];
 				input >> vars[1];
 				input >> vars[2];
-				command = std::make_unique<ModifyCollisionCommand>(vars[0], vars[1], vars[2]);
+				input >> vars[3];
+				command = std::make_unique<ModifyCollisionCommand>(vars[0], vars[1], vars[2], vars[3]);
 				break;
 
 			case hash("ModifyInteraction"):
@@ -464,7 +465,8 @@ void CommandQueue::process_stream(std::istream& input, SDL_Renderer* renderer)
 
 			case hash("UseBasicCollision"):
 				input >> vars[0];
-				command = std::make_unique<UseComponentCommand<BasicCollision>>(Collision::CollisionState(vars[0]));
+				input >> vars[1];
+				command = std::make_unique<UseComponentCommand<BasicCollision>>(Collision::CollisionState(vars[0]), vars[1]);
 				break;
 
 			case hash("UseDamageCollision"):

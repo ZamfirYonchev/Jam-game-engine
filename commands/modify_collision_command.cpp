@@ -29,6 +29,11 @@ void ModifyCollisionCommand::execute() const
 			collision->set_collision_damage(0);
 		else
 			collision->set_collision_damage(collision->on_collision_damage() + m_on_collision_damage);
+
+		if(is_negative_zero(m_elasticity))
+			collision->set_elasticity(0);
+		else
+			collision->set_elasticity(clip(collision->elasticity() + m_elasticity, 0.0, 1.0));
 	}
 	else
 	{

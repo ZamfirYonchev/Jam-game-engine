@@ -25,6 +25,8 @@ public:
     void set_standing_on(SurfaceType surface) {}
     double on_collision_damage() const { return 0; }
     void set_collision_damage(double) {}
+    double elasticity() const { return 1; }
+    void set_elasticity(double val) {}
 };
 
 #endif /* COMPONENTS_NULL_COLLISION_H_ */

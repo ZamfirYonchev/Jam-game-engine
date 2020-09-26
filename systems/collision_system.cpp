@@ -41,7 +41,7 @@ void CollisionSystem::add_id(const EntityID entity_id)
 			{
 				const RegionPosition region_pos = {region_x, region_y};
 				entity_regions[region_pos].insert(entity_id);
-				std::cout << "Adding id " << entity_id << " to region[" << region_pos.x << ", " << region_pos.y << "]" << std::endl;
+				//std::cout << "Adding id " << entity_id << " to region[" << region_pos.x << ", " << region_pos.y << "]" << std::endl;
 			}
 	}
 	else
@@ -139,10 +139,15 @@ void CollisionSystem::update(const Time time_diff)
 		if(entity_optional)
 		{
 			Entity& entity0 = *entity_optional;
+			entity0.collision()->set_standing_on(Collision::AIR);
+
 			const int start_region_x = std::floor(entity0.position()->x() / REGION_W);
 			const int start_region_y = std::floor(entity0.position()->y() / REGION_H);
 			const int end_region_x = std::ceil((entity0.position()->x()+entity0.position()->w()) / REGION_W);
 			const int end_region_y = std::ceil((entity0.position()->y()+entity0.position()->h()) / REGION_H);
+
+			if(entity0.id() == 27)
+				std::cout << "Entity 27 " << "[" << entity0.position()->x() << ", " << entity0.position()->y() << "] regions start at " << start_region_x << ", " << start_region_y << " and ends at " << end_region_x << ", " << end_region_y << '\n';
 			std::set<EntityID> near_entities;
 
 			const double x1 = entity0.position()->x() + entity0.position()->w();
@@ -158,9 +163,7 @@ void CollisionSystem::update(const Time time_diff)
 			near_entities.erase(*it0); //remove self from the set
 
 			for(auto it1 = cbegin(near_entities); it1 != cend(near_entities); ++it1)
-			//for(auto it1 = cbegin(entities); it1 != cend(entities); ++it1)
 			{
-				//if(*it1 == *it0) continue;
 				const auto entity1_optional = entity_system().entity(*it1);
 				if(entity1_optional && entity1_optional->id() != entity0.id())
 				{
@@ -198,6 +201,8 @@ void CollisionSystem::update(const Time time_diff)
 							}
 						}
 
+						if(entity0.id() == 2 && entity1.id() == 26)
+							std::cout << "colliding with id " << entity1.id() << '\n';
 						entity0.health()->mod_hp_change(-collision1->on_collision_damage()*time_diff);
 						//entity1.health()->mod_hp_change(-collision0->on_collision_damage()*time_diff);
 
@@ -214,8 +219,8 @@ void CollisionSystem::update(const Time time_diff)
 							const double sw = entity1.position()->w() + entity0.position()->w();
 							const double sh = entity1.position()->h() + entity0.position()->h();
 
-							const double dvx = 2*(entity1.movement()->vx()-entity0.movement()->vx())*((entity1.collision()->state()==Collision::CollisionState::SOLID) ? 1 : entity1.movement()->mass()/(entity0.movement()->mass()+entity1.movement()->mass()));
-							const double dvy = 2*(entity1.movement()->vy()-entity0.movement()->vy())*((entity1.collision()->state()==Collision::CollisionState::SOLID) ? 1 : entity1.movement()->mass()/(entity0.movement()->mass()+entity1.movement()->mass()));
+							const double dvx = 2*(entity1.movement()->vx()-entity0.movement()->vx())*((entity1.collision()->state()==Collision::CollisionState::SOLID) ? 1 : entity1.movement()->mass()/(entity0.movement()->mass()+entity1.movement()->mass()))*collision0->elasticity()*collision1->elasticity();
+							const double dvy = 2*(entity1.movement()->vy()-entity0.movement()->vy())*((entity1.collision()->state()==Collision::CollisionState::SOLID) ? 1 : entity1.movement()->mass()/(entity0.movement()->mass()+entity1.movement()->mass()))*collision0->elasticity()*collision1->elasticity();
 
 							if(dy > 0)
 							{
@@ -224,6 +229,7 @@ void CollisionSystem::update(const Time time_diff)
 								{
 									collision_correction[entity0.id()].y = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dy()- entity0.movement()->dy());
 									collision_correction[entity0.id()].vy += dvy;
+									entity0.collision()->set_standing_on(Collision::GROUND);
 								}
 							}
 							else if(dy < 0)
@@ -232,7 +238,6 @@ void CollisionSystem::update(const Time time_diff)
 								if(t >= 0.0)
 								{
 									collision_correction[entity0.id()].y = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dy()- entity0.movement()->dy());
-									entity0.collision()->set_standing_on(Collision::GROUND);
 									collision_correction[entity0.id()].vy += dvy;
 								}
 							}

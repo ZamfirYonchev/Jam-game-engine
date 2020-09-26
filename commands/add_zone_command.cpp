@@ -16,7 +16,7 @@ void AddZoneCommand::execute() const
 {
 	Entity& entity = entity_system().add_new_entity();
 	entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
-    entity.set_collision(new BasicCollision(Collision::TRANSPARENT));
+    entity.set_collision(new BasicCollision(Collision::TRANSPARENT, 1));
     entity.set_interaction(new TriggerInteraction(m_trigger_group, m_on_enter_proc_id_self, m_on_enter_proc_id_other, m_on_exit_proc_id_self));
     entity_system().add_accessed_entity(entity.id());
 }

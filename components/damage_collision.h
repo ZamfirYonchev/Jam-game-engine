@@ -33,6 +33,8 @@ public:
     void set_standing_on(SurfaceType surface) {}
     double on_collision_damage() const { return m_damage; }
     void set_collision_damage(double damage) { m_damage = damage; }
+    double elasticity() const { return 1; }
+    void set_elasticity(double val) {}
 
 private:
     CollisionState m_state;

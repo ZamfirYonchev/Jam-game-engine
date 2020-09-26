@@ -20,7 +20,7 @@ void AddCharacterCommand::execute() const
 	Entity& entity = entity_system().add_new_entity();
     entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
     entity.set_movement(new FullMovement(0.5, 2, 0.012, 1.5, true));
-    entity.set_collision(new BasicCollision(Collision::MOVEABLE));
+    entity.set_collision(new BasicCollision(Collision::MOVEABLE, 1));
     entity.set_interaction(new NormalInteraction());
     entity.set_health(new CharacterHealth(m_hp));
     entity.set_visuals(new CharacterVisuals(m_spr_id));
