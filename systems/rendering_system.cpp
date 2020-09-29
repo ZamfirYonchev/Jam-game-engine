@@ -16,10 +16,7 @@ void RenderingSystem::add_id(const EntityID entity)
 	if(entity_system().entity(entity))
 	{
 		const int layer = entity_system().entity(entity)->visuals()->layer();
-		const auto it = std::find_if(cbegin(entities[layer]), cend(entities[layer]), [entity](const EntityID id) { return id == entity; });
-
-		if(it == cend(entities[layer]))
-			entities[layer].push_back(entity);
+		entities[layer].insert(entity);
 	}
 	else
 	{
@@ -32,10 +29,7 @@ void RenderingSystem::remove_id(const EntityID entity)
 	if(entity_system().entity(entity))
 	{
 		const int layer = entity_system().entity(entity)->visuals()->layer();
-		const auto it = std::find_if(cbegin(entities[layer]), cend(entities[layer]), [entity](const EntityID id) { return id == entity; });
-
-		if(it != cend(entities[layer]))
-			entities[layer].erase(it);
+		entities[layer].erase(entity);
 	}
 	else
 	{
@@ -73,8 +67,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 
     for(auto layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
     {
-    	std::for_each(cbegin(entities[layer]), cend(entities[layer]),
-    	[&](const EntityID id)
+		for(const EntityID id : entities[layer])
 		{
 			if(entity_system().entity(id))
 			{
@@ -232,7 +225,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 			{
 				//error *it
 			}
-    	});
+    	}
     }
 
     SDL_RenderPresent(renderer);

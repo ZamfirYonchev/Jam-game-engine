@@ -9,7 +9,7 @@
 #define SYSTEMS_RENDERING_SYSTEM_H_
 
 #include "../types.h"
-#include <list>
+#include <set>
 #include "../components/visuals.h"
 #include <SDL2/SDL.h>
 
@@ -29,7 +29,7 @@ public:
     void render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer) const;
 
 protected:
-    std::list<EntityID> entities[Visuals::NUM_OF_LAYERS];
+    std::set<EntityID> entities[Visuals::NUM_OF_LAYERS];
 };
 
 #endif /* SYSTEMS_RENDERING_SYSTEM_H_ */
