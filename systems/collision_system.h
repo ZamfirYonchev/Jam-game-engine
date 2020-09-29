@@ -10,7 +10,7 @@
 
 #include "system_base.h"
 #include <unordered_map>
-#include <set>
+#include <unordered_set>
 
 class CollisionSystem : public SystemBase
 {
@@ -48,7 +48,7 @@ private:
     	}
     };
 
-    std::unordered_map<RegionPosition, std::set<EntityID>, RegionPositionHashFn> entity_regions;
+    std::unordered_map<RegionPosition, std::unordered_set<EntityID>, RegionPositionHashFn> entity_regions;
     static const unsigned int REGION_W = 32;
     static const unsigned int REGION_H = 32;
 };
