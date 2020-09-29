@@ -22,71 +22,47 @@ Entity::Entity(EntityID id)
 
 void Entity::set_position(Position* _position)
 {
-	if(m_collision != Collision::null)
-		collision_system().remove_id(id());
-
 	release(m_position);
 	m_position = _position;
-
-	if(m_collision != Collision::null)
-		collision_system().add_id(id());
 }
 
 void Entity::set_control(Control* _control)
 {
-	if(m_control != Control::null && _control == Control::null)
-	{
+	const int8_t change = (_control != Control::null) - (m_control != Control::null);
+	if(change < 0)
 		control_system().remove_id(id());
-		m_control = _control;
-	}
 
 	release(m_control);
+	m_control = _control;
 
-	if(m_control == Control::null && _control != Control::null)
-	{
-		m_control = _control;
+	if(change > 0)
 		control_system().add_id(id());
-	}
-	else
-		m_control = _control;
 }
 
 void Entity::set_movement(Movement* _movement)
 {
-	if(m_movement != Movement::null && _movement == Movement::null)
-	{
+	const int8_t change = (_movement != Movement::null) - (m_movement != Movement::null);
+	if(change < 0)
 		movement_system().remove_id(id());
-		m_movement = _movement;
-	}
 
 	release(m_movement);
+	m_movement = _movement;
 
-	if(m_movement == Movement::null && _movement != Movement::null)
-	{
-		m_movement = _movement;
+	if(change > 0)
 		movement_system().add_id(id());
-	}
-	else
-		m_movement = _movement;
 }
 
 void Entity::set_collision(Collision* _collision)
 {
-	if(m_collision != Collision::null && _collision == Collision::null)
-	{
+	const int8_t change = (_collision != Collision::null) - (m_collision != Collision::null);
+	if(change < 0)
 		collision_system().remove_id(id());
-		m_collision = _collision;
-	}
 
 	release(m_collision);
+	m_collision = _collision;
 
-	if(m_collision == Collision::null && _collision != Collision::null)
-	{
-		m_collision = _collision;
+	if(change > 0)
 		collision_system().add_id(id());
-	}
-	else
-		m_collision = _collision;
 }
 
 void Entity::set_interaction(Interaction* _interaction)
@@ -97,37 +73,31 @@ void Entity::set_interaction(Interaction* _interaction)
 
 void Entity::set_health(Health* _health)
 {
-	if(m_health != Health::null && _health == Health::null)
-	{
+	const int8_t change = (_health != Health::null) - (m_health != Health::null);
+	if(change < 0)
 		damage_system().remove_id(id());
-		m_health = _health;
-	}
 
 	release(m_health);
+	m_health = _health;
 
-	if(m_health == Health::null && _health != Health::null)
-	{
-		m_health = _health;
+	if(change > 0)
 		damage_system().add_id(id());
-	}
-	else
-		m_health = _health;
 }
 
 void Entity::set_visuals(Visuals* _visuals)
 {
-	if(m_visuals != Visuals::null && _visuals == Visuals::null)
+	const int8_t change = (_visuals != Visuals::null) - (m_visuals != Visuals::null);
+	const bool layer_change = (_visuals != Visuals::null) && (m_visuals != Visuals::null) && (m_visuals->layer() != _visuals->layer());
+
+	if(change < 0 || layer_change)
 		rendering_system().remove_id(id());
 
 	release(m_visuals);
+	m_visuals = _visuals;
 
-	if(m_visuals == Visuals::null && _visuals != Visuals::null)
-	{
-		m_visuals = _visuals;
+	if(change > 0 || layer_change)
 		rendering_system().add_id(id());
-	}
-	else
-		m_visuals = _visuals;
+
 }
 
 template<>
