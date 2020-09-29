@@ -9,7 +9,7 @@
 #define SYSTEMS_SYSTEM_BASE_H_
 
 #include "../types.h"
-#include <list>
+#include <unordered_set>
 #include <algorithm>
 
 class SystemBase
@@ -17,16 +17,12 @@ class SystemBase
 public:
     void add_id(const EntityID entity)
     {
-    	auto it = std::find_if(cbegin(entities), cend(entities), [entity](EntityID id){ return id == entity; });
-    	if(it == cend(entities))
-    		entities.push_back(entity);
+		entities.insert(entity);
     }
 
     void remove_id(const EntityID entity)
     {
-    	auto it = std::find_if(cbegin(entities), cend(entities), [entity](EntityID id){ return id == entity; });
-    	if(it != cend(entities))
-			entities.erase(it);
+		entities.erase(entity);
     }
 
     void clear()
@@ -35,7 +31,7 @@ public:
     }
 
 protected:
-    std::list<EntityID> entities;
+    std::unordered_set<EntityID> entities;
 };
 
 #endif /* SYSTEMS_SYSTEM_BASE_H_ */
