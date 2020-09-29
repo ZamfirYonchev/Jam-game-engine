@@ -9,7 +9,7 @@
 #define SYSTEMS_ENTITY_SYSTEM_H_
 
 #include <vector>
-#include <list>
+#include <unordered_set>
 #include <array>
 #include "../entity.h"
 #include "../types.h"
@@ -58,7 +58,7 @@ public:
     Entity& add_new_entity();
     void remove_entity(const EntityID id)
     {
-    	m_entities_to_remove.push_back(id);
+    	m_entities_to_remove.insert(id);
     }
 
 
@@ -114,8 +114,8 @@ public:
 
 private:
     std::vector<Entity> m_entities;
-    std::list<EntityID> m_entities_to_remove;
-    std::list<EntityID> m_free_entities;
+    std::unordered_set<EntityID> m_entities_to_remove;
+    std::unordered_set<EntityID> m_free_entities;
     std::array<EntityID/*::Type*/, 10> m_last_accessed_entities;
     unsigned int m_head_of_last_accessed_entities;
 };

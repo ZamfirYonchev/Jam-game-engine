@@ -18,8 +18,8 @@ Entity& EntitySystem::add_new_entity()
     }
     else
     {
-    	id = m_free_entities.front();
-    	m_free_entities.pop_front();
+    	id = *m_free_entities.begin();
+    	m_free_entities.erase(id);
     }
 
     return m_entities[id];
@@ -35,7 +35,7 @@ void EntitySystem::clean_removed_entites()
 		rendering_system().remove_id(*it);
 
 		m_entities[*it].clear();
-		m_free_entities.push_back(*it);
+		m_free_entities.insert(*it);
 	}
 	m_entities_to_remove.clear();
 }
