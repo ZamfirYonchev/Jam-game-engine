@@ -151,10 +151,11 @@ AddProcedure 2 #35: frog0 stop attack
 	SelectEntity 26
 	UseNullControl
 	
-AddProcedure 3 #36: bee dead
+AddProcedure 4 #36: bee dead
 	ModifyMovement 0 0 0 0 0 0 1
 	ModifyInteraction -0 0 0 0 0 0
 	ModifyInteraction 10 1 0 0 0 0
+	UseBasicCollision 0 1
 
 AddProcedure 1 #37: 1 flower collected event
 	DebugMessage 0 one flower collected
