@@ -15,7 +15,7 @@
 double BuildPosition::x() const
 {
 	if(entity_system().entity(m_attached_id))
-		return min(m_origin_x, entity_system().entity(m_attached_id)->position()->x());
+		return min(m_origin_x, entity_system().entity(m_attached_id)->component<Position>().x());
 	else
 		return m_origin_x;
 }
@@ -23,7 +23,7 @@ double BuildPosition::x() const
 double BuildPosition::y() const
 {
 	if(entity_system().entity(m_attached_id))
-		return min(m_origin_y, entity_system().entity(m_attached_id)->position()->y());
+		return min(m_origin_y, entity_system().entity(m_attached_id)->component<Position>().y());
 	else
 		return m_origin_y;
 }
@@ -31,7 +31,7 @@ double BuildPosition::y() const
 double BuildPosition::w() const
 {
 	if(entity_system().entity(m_attached_id))
-		return abs(m_origin_x - entity_system().entity(m_attached_id)->position()->x());
+		return abs(m_origin_x - entity_system().entity(m_attached_id)->component<Position>().x());
 	else
 		return 0;
 }
@@ -39,7 +39,7 @@ double BuildPosition::w() const
 double BuildPosition::h() const
 {
 	if(entity_system().entity(m_attached_id))
-		return abs(m_origin_y - entity_system().entity(m_attached_id)->position()->y());
+		return abs(m_origin_y - entity_system().entity(m_attached_id)->component<Position>().y());
 	else
 		return 0;
 }

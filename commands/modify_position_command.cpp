@@ -13,27 +13,27 @@ void ModifyPositionCommand::execute() const
 {
 	if(entity_system().previous_entity())
 	{
-		Position* position = entity_system().previous_entity()->position();
+		auto& position = entity_system().previous_entity()->component<Position>();
 
 		if(is_negative_zero(m_x))
-			position->set_x(m_x);
+			position.set_x(m_x);
 		else
-			position->mod_x(m_x);
+			position.mod_x(m_x);
 
 		if(is_negative_zero(m_y))
-			position->set_y(m_y);
+			position.set_y(m_y);
 		else
-			position->mod_y(m_y);
+			position.mod_y(m_y);
 
 		if(is_negative_zero(m_w))
-			position->set_w(m_w);
+			position.set_w(m_w);
 		else
-			position->mod_w(m_w);
+			position.mod_w(m_w);
 
 		if(is_negative_zero(m_h))
-			position->set_h(m_h);
+			position.set_h(m_h);
 		else
-			position->mod_h(m_h);
+			position.mod_h(m_h);
 	}
 	else
 	{

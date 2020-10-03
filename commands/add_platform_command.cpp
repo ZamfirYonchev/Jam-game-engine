@@ -15,8 +15,8 @@
 void AddPlatformCommand::execute() const
 {
 	Entity& entity = entity_system().add_new_entity();
-    entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
-    entity.set_collision(new BasicCollision(Collision::SOLID, 1));
-    entity.set_visuals(new TiledVisuals(m_spr_id, m_tile_w, m_tile_h, entity.id()));
+    entity.set_component<AbsolutePosition>(m_x, m_y, m_w, m_h);
+    entity.set_component<BasicCollision>(Collision::SOLID, 1.0);
+    entity.set_component<TiledVisuals>(m_spr_id, m_tile_w, m_tile_h, entity.id());
     entity_system().add_accessed_entity(entity.id());
 }

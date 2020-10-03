@@ -10,20 +10,20 @@
 
 uint16_t TiledVisuals::repeat_x() const
 {
-	return std::ceil(entity_system().entity(m_self_id)->position()->w()/m_tile_w);
+	return std::ceil(entity_system().entity(m_self_id)->component<Position>().w()/m_tile_w);
 }
 
 uint16_t TiledVisuals::repeat_y() const
 {
-	return std::ceil(entity_system().entity(m_self_id)->position()->h()/m_tile_h);
+	return std::ceil(entity_system().entity(m_self_id)->component<Position>().h()/m_tile_h);
 }
 
 void TiledVisuals::set_repeat_x(uint16_t val)
 {
-	m_tile_w = entity_system().entity(m_self_id)->position()->w()/val;
+	m_tile_w = entity_system().entity(m_self_id)->component<Position>().w()/val;
 }
 
 void TiledVisuals::set_repeat_y(uint16_t val)
 {
-	m_tile_h = entity_system().entity(m_self_id)->position()->h()/val;
+	m_tile_h = entity_system().entity(m_self_id)->component<Position>().h()/val;
 }

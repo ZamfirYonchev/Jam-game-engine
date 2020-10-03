@@ -13,27 +13,27 @@ void ModifyCollisionCommand::execute() const
 {
 	if(entity_system().previous_entity())
 	{
-		Collision* collision = entity_system().previous_entity()->collision();
+		auto& collision = entity_system().previous_entity()->component<Collision>();
 
 		if(is_negative_zero(m_state))
-			collision->set_state(Collision::CollisionState(0));
+			collision.set_state(Collision::CollisionState(0));
 		else
-			collision->set_state(Collision::CollisionState((int(m_state) + collision->state())%3));
+			collision.set_state(Collision::CollisionState((int(m_state) + collision.state())%3));
 
 		if(is_negative_zero(m_standing_on))
-			collision->set_standing_on(Collision::AIR);
+			collision.set_standing_on(Collision::AIR);
 		else
-			collision->set_standing_on(Collision::SurfaceType((collision->standing_on()+1)%4));
+			collision.set_standing_on(Collision::SurfaceType((collision.standing_on()+1)%4));
 
 		if(is_negative_zero(m_on_collision_damage))
-			collision->set_collision_damage(0);
+			collision.set_collision_damage(0);
 		else
-			collision->set_collision_damage(collision->on_collision_damage() + m_on_collision_damage);
+			collision.set_collision_damage(collision.on_collision_damage() + m_on_collision_damage);
 
 		if(is_negative_zero(m_elasticity))
-			collision->set_elasticity(0);
+			collision.set_elasticity(0);
 		else
-			collision->set_elasticity(clip(collision->elasticity() + m_elasticity, 0.0, 1.0));
+			collision.set_elasticity(clip(collision.elasticity() + m_elasticity, 0.0, 1.0));
 	}
 	else
 	{

@@ -19,32 +19,33 @@ void MovementSystem::update(const Time time_delta)
 	{
     	if(entity_system().entity(id))
     	{
-			const Control* control = entity_system().entity(id)->control();
-			Movement* movement = entity_system().entity(id)->movement();
-			const Collision* collision = entity_system().entity(id)->collision();
-			Position* position  = entity_system().entity(id)->position();
+    		Entity& entity = *entity_system().entity(id);
+			const auto& control = entity.component<Control>();
+			auto& movement = entity.component<Movement>();
+			const auto& collision = entity.component<Collision>();
+			auto& position  = entity.component<Position>();
 
-			if(movement->gravity_affected())
+			if(movement.gravity_affected())
 			{
-				movement->mod_force_y(GRAVITY_ACCEL*movement->mass());
+				movement.mod_force_y(GRAVITY_ACCEL*movement.mass());
 
-				if(control->decision_jump() && collision->standing_on() == Collision::GROUND)
-					movement->mod_velocity_y(movement->jump_force()/movement->mass());
+				if(control.decision_jump() && collision.standing_on() == Collision::GROUND)
+					movement.mod_velocity_y(movement.jump_force()/movement.mass());
 			}
 			else
 			{
-				movement->mod_force_y(movement->move_force()*(control->decision_jump() - control->decision_duck()));
+				movement.mod_force_y(movement.move_force()*(control.decision_jump() - control.decision_duck()));
 			}
 
-			movement->mod_force_x(movement->move_force()*control->decision_walk());
+			movement.mod_force_x(movement.move_force()*control.decision_walk());
 
-			movement->update(time_delta); //update velocity and displacement
+			movement.update(time_delta); //update velocity and displacement
 
-			position->mod_x(movement->dx());
-			position->mod_y(movement->dy());
+			position.mod_x(movement.dx());
+			position.mod_y(movement.dy());
 
-			movement->set_force_x(0);
-			movement->set_force_y(0);
+			movement.set_force_x(0);
+			movement.set_force_y(0);
     	}
     	else
     	{

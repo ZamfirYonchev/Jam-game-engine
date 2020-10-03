@@ -30,7 +30,7 @@ void CollisionSystem::update(const Time time_diff)
 		auto entity_optional = entity_system().entity(entity_id);
 		if(entity_optional)
 		{
-			entity_optional->interaction()->update_last_triggered_groups();
+			entity_optional->component<Interaction>().update_last_triggered_groups();
 		}
 		else
 		{
@@ -45,15 +45,15 @@ void CollisionSystem::update(const Time time_diff)
 		if(entity_optional)
 		{
 			Entity& entity = *entity_optional;
-			const Position* position = entity.position();
+			const auto& position = entity.component<Position>();
 
-			const Collision::RegionLocation& old_location = entity.collision()->region_location();
+			const Collision::RegionLocation& old_location = entity.component<Collision>().region_location();
 			const Collision::RegionLocation new_location
 			{
-				int(std::floor(position->x() / REGION_W)),
-				int(std::floor(position->y() / REGION_W)),
-				int(std::ceil((position->x()+position->w()) / REGION_W)),
-				int(std::ceil((position->y()+position->h()) / REGION_H))
+				int(std::floor(position.x() / REGION_W)),
+				int(std::floor(position.y() / REGION_W)),
+				int(std::ceil((position.x()+position.w()) / REGION_W)),
+				int(std::ceil((position.y()+position.h()) / REGION_H))
 			};
 
 			if(old_location != new_location)
@@ -62,7 +62,7 @@ void CollisionSystem::update(const Time time_diff)
 					for(int region_y = old_location.y; region_y < old_location.y_end; ++region_y)
 						entity_regions[RegionPosition{region_x, region_y}].erase(entity_id);
 
-				entity.collision()->set_region_location(new_location);
+				entity.component<Collision>().set_region_location(new_location);
 
 				for(int region_x = new_location.x; region_x < new_location.x_end; ++region_x)
 					for(int region_y = new_location.y; region_y < new_location.y_end; ++region_y)
@@ -80,7 +80,7 @@ void CollisionSystem::update(const Time time_diff)
 	for(const auto entity_id : entities)
 	{
 		const auto entity_optional = entity_system().entity(entity_id);
-		if(entity_optional && entity_optional->collision()->state() == Collision::CollisionState::MOVEABLE)
+		if(entity_optional && entity_optional->component<Collision>().state() == Collision::CollisionState::MOVEABLE)
 			collision_correction.insert(std::make_pair(entity_id, CorrectionValues{}));
 	}
 
@@ -90,11 +90,12 @@ void CollisionSystem::update(const Time time_diff)
 		if(entity_optional)
 		{
 			Entity& entity0 = *entity_optional;
-			Collision* collision0 = entity0.collision();
-			Interaction* interaction0 = entity0.interaction();
+			auto& collision0 = entity0.component<Collision>();
+			auto& interaction0 = entity0.component<Interaction>();
+			auto& position0 = entity0.component<Position>();
 
-			collision0->set_standing_on(Collision::AIR);
-			const Collision::RegionLocation& location0 = collision0->region_location();
+			collision0.set_standing_on(Collision::AIR);
+			const Collision::RegionLocation& location0 = collision0.region_location();
 
 			std::unordered_set<EntityID> near_entities;
 
@@ -105,8 +106,8 @@ void CollisionSystem::update(const Time time_diff)
 
 			near_entities.erase(*it0); //remove self from the set
 
-			const double x1 = entity0.position()->x() + entity0.position()->w();
-			const double y1 = entity0.position()->y() + entity0.position()->h();
+			const double x1 = entity0.component<Position>().x() + entity0.component<Position>().w();
+			const double y1 = entity0.component<Position>().y() + entity0.component<Position>().h();
 
 			for(auto it1 = cbegin(near_entities); it1 != cend(near_entities); ++it1)
 			{
@@ -114,62 +115,63 @@ void CollisionSystem::update(const Time time_diff)
 				if(entity1_optional && entity1_optional->id() != entity0.id())
 				{
 					const Entity& entity1 = *entity1_optional;
-					const Collision* collision1 = entity1.collision();
+					const auto& collision1 = entity1.component<Collision>();
+					const auto& position1 = entity1.component<Position>();
 
-					if(objects_collide(entity0.position()->x(), entity0.position()->y(), entity0.position()->w(), entity0.position()->h()
-									 , entity1.position()->x(), entity1.position()->y(), entity1.position()->w(), entity1.position()->h()
+					if(objects_collide(position0.x(), position0.y(), position0.w(), position0.h()
+									 , position1.x(), position1.y(), position1.w(), position1.h()
 									  )
 					  )
 					{
 						//entities collide
-						const Interaction* interaction1 = entity1.interaction();
+						const auto& interaction1 = entity1.component<Interaction>();
 
-						interaction0->set_triggered_groups(interaction1->group_vector());
+						interaction0.set_triggered_groups(interaction1.group_vector());
 
-						if(interaction1->is_in_group(interaction0->trigger_group()))
+						if(interaction1.is_in_group(interaction0.trigger_group()))
 						{
-							if(interaction0->proc_id_other() >= 0)
+							if(interaction0.proc_id_other() >= 0)
 							{
 								command_queue().push(std::make_unique<SelectEntityCommand>(entity1.id()));
-								command_queue().push(std::make_unique<CallProcedureCommand>(interaction0->proc_id_other()));
+								command_queue().push(std::make_unique<CallProcedureCommand>(interaction0.proc_id_other()));
 							}
 						}
 
-						if(interaction0->is_in_group(interaction1->trigger_group()))
+						if(interaction0.is_in_group(interaction1.trigger_group()))
 						{
-							if(interaction1->proc_id_other() >= 0)
+							if(interaction1.proc_id_other() >= 0)
 							{
 								command_queue().push(std::make_unique<SelectEntityCommand>(entity0.id()));
-								command_queue().push(std::make_unique<CallProcedureCommand>(interaction1->proc_id_other()));
+								command_queue().push(std::make_unique<CallProcedureCommand>(interaction1.proc_id_other()));
 							}
 						}
 
-						entity0.health()->mod_hp_change(-collision1->on_collision_damage()*time_diff);
+						entity0.component<Health>().mod_hp_change(-collision1.on_collision_damage()*time_diff);
 
-						const bool entity0_correctable = (collision0->state() == Collision::MOVEABLE)
-													  && (collision1->state() >= Collision::MOVEABLE);
+						const bool entity0_correctable = (collision0.state() == Collision::MOVEABLE)
+													  && (collision1.state() >= Collision::MOVEABLE);
 
 						if(entity0_correctable)
 						{
-							const double dx = entity1.movement()->dx() - entity0.movement()->dx();
-							const double dy = entity1.movement()->dy() - entity0.movement()->dy();
+							const double dx = entity1.component<Movement>().dx() - entity0.component<Movement>().dx();
+							const double dy = entity1.component<Movement>().dy() - entity0.component<Movement>().dy();
 
-							const double x2 = entity1.position()->x();
-							const double y2 = entity1.position()->y();
-							const double sw = entity1.position()->w() + entity0.position()->w();
-							const double sh = entity1.position()->h() + entity0.position()->h();
+							const double x2 = position1.x();
+							const double y2 = position1.y();
+							const double sw = position1.w() + position0.w();
+							const double sh = position1.h() + position0.h();
 
-							const double dvx = 2*(entity1.movement()->vx()-entity0.movement()->vx())*((entity1.collision()->state()==Collision::CollisionState::SOLID) ? 1 : entity1.movement()->mass()/(entity0.movement()->mass()+entity1.movement()->mass()))*collision0->elasticity()*collision1->elasticity();
-							const double dvy = 2*(entity1.movement()->vy()-entity0.movement()->vy())*((entity1.collision()->state()==Collision::CollisionState::SOLID) ? 1 : entity1.movement()->mass()/(entity0.movement()->mass()+entity1.movement()->mass()))*collision0->elasticity()*collision1->elasticity();
+							const double dvx = 2*(entity1.component<Movement>().vx()-entity0.component<Movement>().vx())*((collision1.state()==Collision::CollisionState::SOLID) ? 1 : entity1.component<Movement>().mass()/(entity0.component<Movement>().mass()+entity1.component<Movement>().mass()))*collision0.elasticity()*collision1.elasticity();
+							const double dvy = 2*(entity1.component<Movement>().vy()-entity0.component<Movement>().vy())*((collision1.state()==Collision::CollisionState::SOLID) ? 1 : entity1.component<Movement>().mass()/(entity0.component<Movement>().mass()+entity1.component<Movement>().mass()))*collision0.elasticity()*collision1.elasticity();
 
 							if(dy > 0)
 							{
 								const double t = clip(lines_cross(x1, y1, dx, dy, x2, y2+sh, sw, 0), -1.0, 1.0);
 								if(t >= 0.0)
 								{
-									collision_correction[entity0.id()].y = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dy()- entity0.movement()->dy());
+									collision_correction[entity0.id()].y = t*((collision1.state()==Collision::CollisionState::SOLID)*entity1.component<Movement>().dy()- entity0.component<Movement>().dy());
 									collision_correction[entity0.id()].vy += dvy;
-									collision0->set_standing_on(Collision::GROUND);
+									collision0.set_standing_on(Collision::GROUND);
 								}
 							}
 							else if(dy < 0)
@@ -177,7 +179,7 @@ void CollisionSystem::update(const Time time_diff)
 								const double t = lines_cross(x1, y1, dx, dy, x2, y2, sw, 0);
 								if(t >= 0.0)
 								{
-									collision_correction[entity0.id()].y = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dy()- entity0.movement()->dy());
+									collision_correction[entity0.id()].y = t*((collision1.state()==Collision::CollisionState::SOLID)*entity1.component<Movement>().dy()- entity0.component<Movement>().dy());
 									collision_correction[entity0.id()].vy += dvy;
 								}
 							}
@@ -188,7 +190,7 @@ void CollisionSystem::update(const Time time_diff)
 								const double t = clip(lines_cross(x1, y1, dx, dy, x2, y2, 0, sh), -1.0, 1.0);
 								if(t >= 0.0)
 								{
-									collision_correction[entity0.id()].x = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dx()- entity0.movement()->dx());
+									collision_correction[entity0.id()].x = t*((collision1.state()==Collision::CollisionState::SOLID)*entity1.component<Movement>().dx()- entity0.component<Movement>().dx());
 									collision_correction[entity0.id()].vx += dvx;
 								}
 							}
@@ -197,7 +199,7 @@ void CollisionSystem::update(const Time time_diff)
 								const double t = clip(lines_cross(x1, y1, dx, dy, x2+sw, y2, 0, sh), -1.0, 1.0);
 								if(t >= 0.0)
 								{
-									collision_correction[entity0.id()].x = t*((entity1.collision()->state()==Collision::CollisionState::SOLID)*entity1.movement()->dx()- entity0.movement()->dx());
+									collision_correction[entity0.id()].x = t*((collision1.state()==Collision::CollisionState::SOLID)*entity1.component<Movement>().dx()- entity0.component<Movement>().dx());
 									collision_correction[entity0.id()].vx += dvx;
 								}
 							}
@@ -215,14 +217,14 @@ void CollisionSystem::update(const Time time_diff)
 
 	for(const auto entity_pair : collision_correction)
 	{
-		Position* position = entity_system().entity(entity_pair.first)->position();
-		Movement* movement = entity_system().entity(entity_pair.first)->movement();
-		position->mod_x(entity_pair.second.x);
-		position->mod_y(entity_pair.second.y);
-		movement->mod_dx(entity_pair.second.x);
-		movement->mod_dy(entity_pair.second.y);
-		movement->mod_velocity_x(entity_pair.second.vx);
-		movement->mod_velocity_y(entity_pair.second.vy);
+		auto& position = entity_system().entity(entity_pair.first)->component<Position>();
+		auto& movement = entity_system().entity(entity_pair.first)->component<Movement>();
+		position.mod_x(entity_pair.second.x);
+		position.mod_y(entity_pair.second.y);
+		movement.mod_dx(entity_pair.second.x);
+		movement.mod_dy(entity_pair.second.y);
+		movement.mod_velocity_x(entity_pair.second.vx);
+		movement.mod_velocity_y(entity_pair.second.vy);
 	}
 
 	for(const auto id : entities)
@@ -230,20 +232,20 @@ void CollisionSystem::update(const Time time_diff)
 		auto entity_optional = entity_system().entity(id);
 		if(entity_optional)
 		{
-			const Interaction* interaction = entity_optional->interaction();
-			const bool last_triggered = (interaction->last_triggered_groups() >> interaction->trigger_group())%2;
-			const bool triggered      = (interaction->triggered_groups()      >> interaction->trigger_group())%2;
+			const auto& interaction = entity_optional->component<Interaction>();
+			const bool last_triggered = (interaction.last_triggered_groups() >> interaction.trigger_group())%2;
+			const bool triggered      = (interaction.triggered_groups()      >> interaction.trigger_group())%2;
 			if(triggered != last_triggered)
 			{
-				if(triggered && interaction->proc_id_self() >= 0)
+				if(triggered && interaction.proc_id_self() >= 0)
 				{
 					command_queue().push(std::make_unique<SelectEntityCommand>(id));
-					command_queue().push(std::make_unique<CallProcedureCommand>(interaction->proc_id_self()));
+					command_queue().push(std::make_unique<CallProcedureCommand>(interaction.proc_id_self()));
 				}
-				else if(!triggered && interaction->on_exit_proc_id_self() >= 0)
+				else if(!triggered && interaction.on_exit_proc_id_self() >= 0)
 				{
 					command_queue().push(std::make_unique<SelectEntityCommand>(id));
-					command_queue().push(std::make_unique<CallProcedureCommand>(interaction->on_exit_proc_id_self()));
+					command_queue().push(std::make_unique<CallProcedureCommand>(interaction.on_exit_proc_id_self()));
 				}
 			}
 		}

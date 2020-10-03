@@ -17,11 +17,11 @@
 void AddProjectileCommand::execute() const
 {
 	Entity& entity = entity_system().add_new_entity();
-    entity.set_position(new AbsolutePosition(m_x, m_y, m_w, m_h));
-    entity.set_control(new ConstantControl(1, false, false, Control::RIGHT));
-    entity.set_movement(new FullMovement(false));
-    entity.set_collision(new DamageCollision(Collision::TRANSPARENT, 0.01));
-    entity.set_visuals(new StaticVisuals(m_spr_id, 0));
+    entity.set_component<AbsolutePosition>(m_x, m_y, m_w, m_h);
+    entity.set_component<ConstantControl>(1.0, 0.0, 0.0, Control::RIGHT);
+    entity.set_component<FullMovement>(false);
+    entity.set_component<DamageCollision>(Collision::TRANSPARENT, 0.01);
+    entity.set_component<StaticVisuals>(m_spr_id, 0);
     rendering_system().set_entity_layer(entity.id(), Visuals::FOREGROUND);
     entity_system().add_accessed_entity(entity.id());
 }

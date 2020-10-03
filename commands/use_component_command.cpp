@@ -47,97 +47,8 @@
 template<typename T>
 void UseComponentCommand<T>::execute() const
 {
-	using BaseT = typename T::Base;
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<BaseT>(new T(m_component));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<InputControl>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new InputControl(&input_handler(), m_proc_id, m_proc_cooldown, entity_system().previous_entity()->id(), m_stability_control));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<InputSelectControl>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new InputSelectControl(&input_handler(), m_select, m_max, m_proc_id));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<ChaseAIControl>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new ChaseAIControl(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<GuideControl>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(new GuideControl(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_range));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<HealthVisuals>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_visuals(new HealthVisuals(entity_system().previous_entity()->id(), m_spr_id, m_repeat_x));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<MenuItemVisuals>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_visuals(new MenuItemVisuals(m_spr_id, entity_system().previous_entity()->id()));
-	else
-	{
-		//error globals().access_entity_id
-	}
-}
-
-void UseComponentCommand<BuildPosition>::execute() const
-{
-	if(entity_system().previous_entity() && entity_system().entity(m_builder_id))
-		entity_system().previous_entity()->set_position
-			(
-				new BuildPosition
-					( entity_system().previous_entity()->id()
-					, m_builder_id
-					, entity_system().entity(m_builder_id)->position()->x()
-					, entity_system().entity(m_builder_id)->position()->y()
-					)
-			);
-	else
-	{
-		//error globals().access_entity_id || m_builder_id
-	}
-}
-
-void UseComponentCommand<TiledVisuals>::execute() const
-{
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_visuals(new TiledVisuals(m_spr_id, m_tile_w, m_tile_h, entity_system().previous_entity()->id()));
+		entity_system().previous_entity()->set_component<T>(m_component);
 	else
 	{
 		//error globals().access_entity_id
@@ -148,7 +59,7 @@ template<>
 void UseComponentCommand<NullPosition>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_position(Position::null);
+		entity_system().previous_entity()->set_component<NullPosition>();
 	else
 	{
 		//error globals().access_entity_id
@@ -159,7 +70,7 @@ template<>
 void UseComponentCommand<NullControl>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_control(Control::null);
+		entity_system().previous_entity()->set_component<NullControl>();
 	else
 	{
 		//error globals().access_entity_id
@@ -170,7 +81,7 @@ template<>
 void UseComponentCommand<NullMovement>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_movement(Movement::null);
+		entity_system().previous_entity()->set_component<NullMovement>();
 	else
 	{
 		//error globals().access_entity_id
@@ -181,7 +92,7 @@ template<>
 void UseComponentCommand<NullCollision>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_collision(Collision::null);
+		entity_system().previous_entity()->set_component<NullCollision>();
 	else
 	{
 		//error globals().access_entity_id
@@ -192,7 +103,7 @@ template<>
 void UseComponentCommand<NullInteraction>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_interaction(Interaction::null);
+		entity_system().previous_entity()->set_component<NullInteraction>();
 	else
 	{
 		//error globals().access_entity_id
@@ -203,7 +114,7 @@ template<>
 void UseComponentCommand<NullHealth>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_health(Health::null);
+		entity_system().previous_entity()->set_component<NullHealth>();
 	else
 	{
 		//error globals().access_entity_id
@@ -214,7 +125,92 @@ template<>
 void UseComponentCommand<NullVisuals>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_visuals(Visuals::null);
+		entity_system().previous_entity()->set_component<NullVisuals>();
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<InputControl>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<InputControl>(&input_handler(), m_proc_id, m_proc_cooldown, entity_system().previous_entity()->id(), m_stability_control);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<InputSelectControl>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<InputSelectControl>(&input_handler(), m_select, m_max, m_proc_id);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<ChaseAIControl>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<ChaseAIControl>(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<GuideControl>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<GuideControl>(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_range);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<HealthVisuals>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<HealthVisuals>(entity_system().previous_entity()->id(), m_spr_id, m_repeat_x);
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<MenuItemVisuals>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<MenuItemVisuals>(m_spr_id, entity_system().previous_entity()->id());
+	else
+	{
+		//error globals().access_entity_id
+	}
+}
+
+void UseComponentCommand<BuildPosition>::execute() const
+{
+	if(entity_system().previous_entity() && entity_system().entity(m_builder_id))
+		entity_system().previous_entity()->set_component<BuildPosition>
+														( entity_system().previous_entity()->id()
+														, m_builder_id
+														, entity_system().entity(m_builder_id)->component<Position>().x()
+														, entity_system().entity(m_builder_id)->component<Position>().y()
+														);
+	else
+	{
+		//error globals().access_entity_id || m_builder_id
+	}
+}
+
+void UseComponentCommand<TiledVisuals>::execute() const
+{
+	if(entity_system().previous_entity())
+		entity_system().previous_entity()->set_component<TiledVisuals>(m_spr_id, m_tile_w, m_tile_h, entity_system().previous_entity()->id());
 	else
 	{
 		//error globals().access_entity_id
@@ -224,13 +220,13 @@ void UseComponentCommand<NullVisuals>::execute() const
 void UseComponentCommand<AttachedPosition>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_position(new AttachedPosition{
-																			entity_system().resolved_id(m_attached_id)
-																			, m_offset_x
-																			, m_offset_y
-																			, m_offset_w
-																			, m_offset_h
-																			}
+		entity_system().previous_entity()->set_component<AttachedPosition>
+														(
+														entity_system().resolved_id(m_attached_id)
+														, m_offset_x
+														, m_offset_y
+														, m_offset_w
+														, m_offset_h
 														);
 	else
 	{
@@ -241,11 +237,11 @@ void UseComponentCommand<AttachedPosition>::execute() const
 void UseComponentCommand<AttachedHealth>::execute() const
 {
 	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_health(new AttachedHealth{
-																			entity_system().resolved_id(m_attached_id)
-																			, m_offset_hp
-																			, m_offset_max_hp
-																		}
+		entity_system().previous_entity()->set_component<AttachedHealth>
+														(
+															entity_system().resolved_id(m_attached_id)
+															, m_offset_hp
+															, m_offset_max_hp
 														);
 	else
 	{
@@ -255,7 +251,6 @@ void UseComponentCommand<AttachedHealth>::execute() const
 
 template class UseComponentCommand<AbsolutePosition>;
 template class UseComponentCommand<AttachedPosition>;
-template class UseComponentCommand<NullPosition>;
 template class UseComponentCommand<ChaseAIControl>;
 template class UseComponentCommand<ConstantControl>;
 template class UseComponentCommand<GuideControl>;
@@ -265,26 +260,21 @@ template class UseComponentCommand<NullControl>;
 
 template class UseComponentCommand<FullMovement>;
 template class UseComponentCommand<InstantMovement>;
-template class UseComponentCommand<NullMovement>;
 
 template class UseComponentCommand<BasicCollision>;
 template class UseComponentCommand<DamageCollision>;
-template class UseComponentCommand<NullCollision>;
 
 template class UseComponentCommand<FullInteraction>;
 template class UseComponentCommand<NormalInteraction>;
 template class UseComponentCommand<TriggerInteraction>;
-template class UseComponentCommand<NullInteraction>;
 
 template class UseComponentCommand<AttachedHealth>;
 template class UseComponentCommand<CharacterHealth>;
 template class UseComponentCommand<TimedHealth>;
-template class UseComponentCommand<NullHealth>;
 
 template class UseComponentCommand<CharacterVisuals>;
 template class UseComponentCommand<HealthVisuals>;
 template class UseComponentCommand<MenuItemVisuals>;
 template class UseComponentCommand<StaticVisuals>;
 template class UseComponentCommand<TiledVisuals>;
-template class UseComponentCommand<NullVisuals>;
 
