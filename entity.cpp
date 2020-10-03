@@ -19,91 +19,47 @@ Entity::Entity(EntityID id)
 , m_visuals(Visuals::null)
 {}
 
-
-void Entity::set_position(Position* _position)
+Entity::Entity(Entity&& rhs) noexcept :
+					   m_id(std::move(rhs.m_id))
+					 , m_position(std::move(rhs.m_position))
+					 , m_control(std::move(rhs.m_control))
+					 , m_movement(std::move(rhs.m_movement))
+					 , m_collision(std::move(rhs.m_collision))
+					 , m_interaction(std::move(rhs.m_interaction))
+					 , m_health(std::move(rhs.m_health))
+					 , m_visuals(std::move(rhs.m_visuals))
 {
-	release(m_position);
-	m_position = _position;
 }
 
-void Entity::set_control(Control* _control)
+Entity& Entity::operator=(Entity&& rhs) noexcept
 {
-	const int8_t change = (_control != Control::null) - (m_control != Control::null);
-	if(change < 0)
-		control_system().remove_id(id());
+	m_id = std::move(rhs.m_id);
+	m_position = std::move(rhs.m_position);
+	m_control = std::move(rhs.m_control);
+	m_movement = std::move(rhs.m_movement);
+	m_collision = std::move(rhs.m_collision);
+	m_interaction = std::move(rhs.m_interaction);
+	m_health = std::move(rhs.m_health);
+	m_visuals = std::move(rhs.m_visuals);
 
-	release(m_control);
-	m_control = _control;
-
-	if(change > 0)
-		control_system().add_id(id());
+	return *this;
 }
 
-void Entity::set_movement(Movement* _movement)
+void Entity::clear()
 {
-	const int8_t change = (_movement != Movement::null) - (m_movement != Movement::null);
-	if(change < 0)
-		movement_system().remove_id(id());
-
-	release(m_movement);
-	m_movement = _movement;
-
-	if(change > 0)
-		movement_system().add_id(id());
-}
-
-void Entity::set_collision(Collision* _collision)
-{
-	const int8_t change = (_collision != Collision::null) - (m_collision != Collision::null);
-	if(change < 0)
-		collision_system().remove_id(id());
-
-	release(m_collision);
-	m_collision = _collision;
-
-	if(change > 0)
-		collision_system().add_id(id());
-}
-
-void Entity::set_interaction(Interaction* _interaction)
-{
-	release(m_interaction);
-	m_interaction = _interaction;
-}
-
-void Entity::set_health(Health* _health)
-{
-	const int8_t change = (_health != Health::null) - (m_health != Health::null);
-	if(change < 0)
-		damage_system().remove_id(id());
-
-	release(m_health);
-	m_health = _health;
-
-	if(change > 0)
-		damage_system().add_id(id());
-}
-
-void Entity::set_visuals(Visuals* _visuals)
-{
-	const int8_t change = (_visuals != Visuals::null) - (m_visuals != Visuals::null);
-	const bool layer_change = (_visuals != Visuals::null) && (m_visuals != Visuals::null) && (m_visuals->layer() != _visuals->layer());
-
-	if(change < 0 || layer_change)
-		rendering_system().remove_id(id());
-
-	release(m_visuals);
-	m_visuals = _visuals;
-
-	if(change > 0 || layer_change)
-		rendering_system().add_id(id());
-
+	m_position = std::move(make_unique_component<NullPosition>());
+	m_control = std::move(make_unique_component<NullControl>());
+	m_movement = std::move(make_unique_component<NullMovement>());
+	m_collision = std::move(make_unique_component<NullCollision>());
+	m_interaction = std::move(make_unique_component<NullInteraction>());
+	m_health = std::move(make_unique_component<NullHealth>());
+	m_visuals = std::move(make_unique_component<NullVisuals>());
 }
 
 template<>
 Position& Entity::component()
 {
-	return *position();
+	return *m_position;
 }
 
 template<>
@@ -145,7 +101,7 @@ Visuals& Entity::component()
 template<>
 const Position& Entity::component() const
 {
-	return *position();
+	return *m_position;
 }
 
 template<>
@@ -185,44 +141,81 @@ const Visuals& Entity::component() const
 }
 
 template<>
-void Entity::set_component(Position* component)
+void Entity::set_component_ptr<Position>(unique_component_ptr<Position> _position)
 {
-	set_position(component);
+	m_position = std::move(_position);
 }
 
 template<>
-void Entity::set_component(Control* component)
+void Entity::set_component_ptr<Control>(unique_component_ptr<Control> _control)
 {
-	set_control(component);
+	const int8_t change = (_control.get() != Control::null) - (m_control.get() != Control::null);
+	if(change < 0)
+		control_system().remove_id(id());
+
+	m_control = std::move(_control);
+
+	if(change > 0)
+		control_system().add_id(id());
 }
 
 template<>
-void Entity::set_component(Movement* component)
+void Entity::set_component_ptr<Movement>(unique_component_ptr<Movement> _movement)
 {
-	set_movement(component);
+	const int8_t change = (_movement.get() != Movement::null) - (m_movement.get() != Movement::null);
+	if(change < 0)
+		movement_system().remove_id(id());
+
+	m_movement = std::move(_movement);
+
+	if(change > 0)
+		movement_system().add_id(id());
 }
 
 template<>
-void Entity::set_component(Collision* component)
+void Entity::set_component_ptr<Collision>(unique_component_ptr<Collision> _collision)
 {
-	set_collision(component);
+	const int8_t change = (_collision.get() != Collision::null) - (m_collision.get() != Collision::null);
+	if(change < 0)
+		collision_system().remove_id(id());
+
+	m_collision = std::move(_collision);
+
+	if(change > 0)
+		collision_system().add_id(id());
 }
 
 template<>
-void Entity::set_component(Interaction* component)
+void Entity::set_component_ptr<Interaction>(unique_component_ptr<Interaction> _interaction)
 {
-	set_interaction(component);
+	m_interaction = std::move(_interaction);
 }
 
 template<>
-void Entity::set_component(Health* component)
+void Entity::set_component_ptr<Health>(unique_component_ptr<Health> _health)
 {
-	set_health(component);
+	const int8_t change = (_health.get() != Health::null) - (m_health.get() != Health::null);
+	if(change < 0)
+		damage_system().remove_id(id());
+
+	m_health = std::move(_health);
+
+	if(change > 0)
+		damage_system().add_id(id());
 }
 
 template<>
-void Entity::set_component(Visuals* component)
+void Entity::set_component_ptr<Visuals>(unique_component_ptr<Visuals> _visuals)
 {
-	set_visuals(component);
-}
+	const int8_t change = (_visuals.get() != Visuals::null) - (m_visuals.get() != Visuals::null);
+	const bool layer_change = (_visuals.get() != Visuals::null) && (m_visuals.get() != Visuals::null) && (m_visuals->layer() != _visuals->layer());
 
+	if(change < 0 || layer_change)
+		rendering_system().remove_id(id());
+
+	m_visuals = std::move(_visuals);
+
+	if(change > 0 || layer_change)
+		rendering_system().add_id(id());
+
+}

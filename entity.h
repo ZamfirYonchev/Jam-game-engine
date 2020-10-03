@@ -15,19 +15,20 @@
 #include "components/interaction.h"
 #include "components/health.h"
 #include "components/visuals.h"
+#include "components/null_position.h"
+#include "components/null_control.h"
+#include "components/null_movement.h"
+#include "components/null_collision.h"
+#include "components/null_interaction.h"
+#include "components/null_health.h"
+#include "components/null_visuals.h"
 #include "types.h"
 #include <utility>
 #include <ostream>
-
-template <class T>
-void release(T*& t)
-{
-	if(t != T::null)
-	{
-		delete t;
-		t = T::null;
-	}
-}
+#include <memory>
+#include <type_traits>
+#include "components/component.h"
+#include <iostream>
 
 class Entity
 {
@@ -40,115 +41,43 @@ public:
     }
 
     Entity(const Entity&) = delete;
-    Entity(Entity&& rhs) noexcept :
-    					   m_id(std::move(rhs.m_id))
-    					 , m_position(std::move(rhs.m_position))
-						 , m_control(std::move(rhs.m_control))
-    					 , m_movement(std::move(rhs.m_movement))
-						 , m_collision(std::move(rhs.m_collision))
-						 , m_interaction(std::move(rhs.m_interaction))
-						 , m_health(std::move(rhs.m_health))
-						 , m_visuals(std::move(rhs.m_visuals))
-    {
-    	rhs.m_position = nullptr;
-    	rhs.m_control = nullptr;
-    	rhs.m_movement = nullptr;
-    	rhs.m_collision = nullptr;
-    	rhs.m_interaction = nullptr;
-    	rhs.m_health = nullptr;
-    	rhs.m_visuals = nullptr;
-    }
+    Entity(Entity&& rhs) noexcept;
 
     Entity& operator=(const Entity&) = delete;
-    Entity& operator=(Entity&& rhs) noexcept
-    {
-    	delete m_position;
-    	delete m_control;
-    	delete m_movement;
-    	delete m_collision;
-    	delete m_interaction;
-    	delete m_health;
-    	delete m_visuals;
-
-    	m_id = std::move(rhs.m_id);
-		m_position = std::move(rhs.m_position);
-		m_control = std::move(rhs.m_control);
-		m_movement = std::move(rhs.m_movement);
-		m_collision = std::move(rhs.m_collision);
-		m_interaction = std::move(rhs.m_interaction);
-		m_health = std::move(rhs.m_health);
-		m_visuals = std::move(rhs.m_visuals);
-
-		rhs.m_position = nullptr;
-    	rhs.m_control = nullptr;
-    	rhs.m_movement = nullptr;
-    	rhs.m_collision = nullptr;
-    	rhs.m_interaction = nullptr;
-    	rhs.m_health = nullptr;
-    	rhs.m_visuals = nullptr;
-
-    	return *this;
-    }
-
-    Position* position() { return m_position; }
-    Control* control() { return m_control; }
-    Movement* movement() { return m_movement; }
-    Collision* collision() { return m_collision; }
-    Interaction* interaction() { return m_interaction; }
-    Health* health() { return m_health; }
-    Visuals* visuals() { return m_visuals; }
-
-    const Position* position() const { return m_position; }
-    const Control* control() const { return m_control; }
-    const Movement* movement() const { return m_movement; }
-    const Collision* collision() const { return m_collision; }
-    const Interaction* interaction() const { return m_interaction; }
-    const Health* health() const { return m_health; }
-    const Visuals* visuals() const { return m_visuals; }
+    Entity& operator=(Entity&& rhs) noexcept;
 
     template<typename T>
-    T& component();
+    T& component() { return *T::null; }
 
     template<typename T>
-    const T& component() const;
+    const T& component() const  { return *T::null; }
 
-    void set_position(Position* _position);
-    void set_control(Control* _control);
-    void set_movement(Movement* _movement);
-    void set_collision(Collision* _collision);
-    void set_interaction(Interaction* _interaction);
-    void set_health(Health* _health);
-    void set_visuals(Visuals* _visuals);
+	template<typename T, typename... Args>
+	void set_component(Args&&... args)
+	{
+		set_component_ptr(make_unique_component<T>(std::forward<Args>(args)...));
+	}
 
-    template<typename T>
-    void set_component(T* component);
+	template<typename T>
+	void set_component_ptr(unique_component_ptr<T> _component) { std::cerr << "Missing set_component_ptr for component " << *_component << '\n';}
 
-    void set_id(EntityID id)
+	void set_id(EntityID id)
     { m_id = id; }
 
     EntityID id() const { return m_id; }
 
-    void clear()
-    {
-    	release(m_position);
-    	release(m_control);
-    	release(m_movement);
-    	release(m_collision);
-    	release(m_interaction);
-    	release(m_health);
-    	release(m_visuals);
-    }
+    void clear();
 
     friend std::ostream& operator<<(std::ostream& stream, const Entity& entity)
     {
     	stream << "AddEntity\n"
-    	   << *(entity.position())
-		   << *(entity.control())
-		   << *(entity.movement())
-		   << *(entity.collision())
-		   << *(entity.interaction())
-		   << *(entity.health())
-		   << *(entity.visuals())
+    	   << *(entity.m_position)
+		   << *(entity.m_control)
+		   << *(entity.m_movement)
+		   << *(entity.m_collision)
+		   << *(entity.m_interaction)
+		   << *(entity.m_health)
+		   << *(entity.m_visuals)
 		   << std::endl;
 
     	return stream;
@@ -156,13 +85,13 @@ public:
 
 private:
     EntityID m_id;
-    Position* m_position;
-    Control* m_control;
-    Movement* m_movement;
-    Collision* m_collision;
-    Interaction* m_interaction;
-    Health* m_health;
-    Visuals* m_visuals;
+    unique_component_ptr<Position> m_position;
+    unique_component_ptr<Control> m_control;
+    unique_component_ptr<Movement> m_movement;
+    unique_component_ptr<Collision> m_collision;
+    unique_component_ptr<Interaction> m_interaction;
+    unique_component_ptr<Health> m_health;
+    unique_component_ptr<Visuals> m_visuals;
 };
 
 #endif /* ENTITY_H_ */
