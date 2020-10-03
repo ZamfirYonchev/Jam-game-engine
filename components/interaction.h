@@ -11,9 +11,12 @@
 #include "../types.h"
 #include <ostream>
 
+class NullInteraction;
+
 class Interaction
 {
 public:
+	using Null = NullInteraction;
 	static const int NUM_OF_GROUPS = 32;
 
 	virtual ~Interaction() {}

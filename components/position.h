@@ -10,9 +10,12 @@
 
 #include <ostream>
 
+class NullPosition;
+
 class Position
 {
 public:
+	using Null = NullPosition;
     virtual ~Position() {}
     virtual void print(std::ostream& to) const = 0;
 

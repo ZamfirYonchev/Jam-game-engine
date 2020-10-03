@@ -11,9 +11,12 @@
 #include "../types.h"
 #include <ostream>
 
+class NullMovement;
+
 class Movement
 {
 public:
+	using Null = NullMovement;
     virtual ~Movement() {}
     virtual void print(std::ostream& to) const = 0;
 

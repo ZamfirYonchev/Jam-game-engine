@@ -11,10 +11,12 @@
 #include "../types.h"
 #include <ostream>
 
+class NullCollision;
+
 class Collision
 {
 public:
-
+	using Null = NullCollision;
 	struct RegionLocation
 	{
 		int x, y;

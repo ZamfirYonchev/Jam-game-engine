@@ -11,9 +11,12 @@
 #include "../types.h"
 #include <ostream>
 
+class NullVisuals;
+
 class Visuals
 {
 public:
+	using Null = NullVisuals;
     enum RenderStates { IDLE, WALK, JUMP, FALL, ATTACK, HIT, DEAD};
     enum VisualLayer {FAR_BACKGROUND = 0, CLOSE_BACKGROUND = 1, ACTION = 2, ACTION_FRONT = 3, FOREGROUND = 4};
     static constexpr int ANIMATION_DELAY_MS = 50;

@@ -11,9 +11,12 @@
 #include "../types.h"
 #include <ostream>
 
+class NullHealth;
+
 class Health
 {
 public:
+	using Null = NullHealth;
     virtual ~Health() {}
     virtual void print(std::ostream& to) const = 0;
 
