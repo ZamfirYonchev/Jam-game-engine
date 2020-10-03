@@ -38,7 +38,7 @@ public:
 	ProcedureID proc_id_self() const { return ProcedureID{-1}; }
 	ProcedureID proc_id_other() const { return ProcedureID{-1}; }
 	ProcedureID on_exit_proc_id_self() const { return ProcedureID{-1}; }
-	bool triggered() const {}
+	bool triggered() const { return false; }
 
 	void set_trigger_group(int8_t group) {}
 	void set_proc_id_self(ProcedureID proc_id) {}
