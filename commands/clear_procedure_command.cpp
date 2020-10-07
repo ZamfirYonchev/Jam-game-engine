@@ -6,13 +6,14 @@
  */
 
 #include "clear_procedure_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void ClearProcedureCommand::execute() const
 {
-	if(resource_system().procedure(m_id))
+	if(system<ResourceSystem>().procedure(m_id))
 	{
-		resource_system().procedure(m_id)->clear();
+		system<ResourceSystem>().procedure(m_id)->clear();
 	}
 	else
 	{

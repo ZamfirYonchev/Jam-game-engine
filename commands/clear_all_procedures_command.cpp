@@ -6,9 +6,10 @@
  */
 
 #include "clear_all_procedures_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void ClearAllProceduresCommand::execute() const
 {
-	resource_system().clear_procedures();
+	system<ResourceSystem>().clear_procedures();
 }

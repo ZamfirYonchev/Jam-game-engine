@@ -6,14 +6,15 @@
  */
 
 #include "modify_control_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ModifyControlCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& control = entity_system().previous_entity()->component<Control>();
+		auto& control = system<EntitySystem>().previous_entity()->component<Control>();
 
 		if(is_negative_zero(m_decision_jump))
 			control.set_decision_jump(0.0);

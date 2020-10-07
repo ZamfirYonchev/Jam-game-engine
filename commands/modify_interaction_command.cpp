@@ -6,14 +6,15 @@
  */
 
 #include "modify_interaction_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ModifyInteractionCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& interaction = entity_system().previous_entity()->component<Interaction>();
+		auto& interaction = system<EntitySystem>().previous_entity()->component<Interaction>();
 
 		if(is_negative_zero(m_group))
 			interaction.clear_groups();

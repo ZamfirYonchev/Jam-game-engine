@@ -6,14 +6,15 @@
  */
 
 #include "modify_position_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ModifyPositionCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& position = entity_system().previous_entity()->component<Position>();
+		auto& position = system<EntitySystem>().previous_entity()->component<Position>();
 
 		if(is_negative_zero(m_x))
 			position.set_x(m_x);

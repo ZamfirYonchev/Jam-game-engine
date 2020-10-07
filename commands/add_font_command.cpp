@@ -6,9 +6,10 @@
  */
 
 #include "add_font_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void AddFontCommand::execute() const
 {
-	resource_system().addNewFont(m_file, m_size);
+	system<ResourceSystem>().addNewFont(m_file, m_size);
 }

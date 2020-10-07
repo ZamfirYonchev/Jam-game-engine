@@ -6,8 +6,10 @@
  */
 
 #include "use_component_command.h"
-#include "../globals.h"
 #include "../utilities.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
+
 #include "../components/absolute_position.h"
 #include "../components/attached_position.h"
 #include "../components/null_position.h"
@@ -47,8 +49,8 @@
 template<typename T>
 void UseComponentCommand<T>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<T>(m_component);
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<T>(m_component);
 	else
 	{
 		//error globals().access_entity_id
@@ -58,8 +60,8 @@ void UseComponentCommand<T>::execute() const
 template<>
 void UseComponentCommand<NullPosition>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullPosition>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullPosition>();
 	else
 	{
 		//error globals().access_entity_id
@@ -69,8 +71,8 @@ void UseComponentCommand<NullPosition>::execute() const
 template<>
 void UseComponentCommand<NullControl>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullControl>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullControl>();
 	else
 	{
 		//error globals().access_entity_id
@@ -80,8 +82,8 @@ void UseComponentCommand<NullControl>::execute() const
 template<>
 void UseComponentCommand<NullMovement>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullMovement>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullMovement>();
 	else
 	{
 		//error globals().access_entity_id
@@ -91,8 +93,8 @@ void UseComponentCommand<NullMovement>::execute() const
 template<>
 void UseComponentCommand<NullCollision>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullCollision>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullCollision>();
 	else
 	{
 		//error globals().access_entity_id
@@ -102,8 +104,8 @@ void UseComponentCommand<NullCollision>::execute() const
 template<>
 void UseComponentCommand<NullInteraction>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullInteraction>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullInteraction>();
 	else
 	{
 		//error globals().access_entity_id
@@ -113,8 +115,8 @@ void UseComponentCommand<NullInteraction>::execute() const
 template<>
 void UseComponentCommand<NullHealth>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullHealth>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullHealth>();
 	else
 	{
 		//error globals().access_entity_id
@@ -124,8 +126,8 @@ void UseComponentCommand<NullHealth>::execute() const
 template<>
 void UseComponentCommand<NullVisuals>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<NullVisuals>();
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<NullVisuals>();
 	else
 	{
 		//error globals().access_entity_id
@@ -134,8 +136,8 @@ void UseComponentCommand<NullVisuals>::execute() const
 
 void UseComponentCommand<InputControl>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<InputControl>(&input_handler(), m_proc_id, m_proc_cooldown, entity_system().previous_entity()->id(), m_stability_control);
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<InputControl>(&system<InputHandler>(), m_proc_id, m_proc_cooldown, system<EntitySystem>().previous_entity()->id(), m_stability_control);
 	else
 	{
 		//error globals().access_entity_id
@@ -144,8 +146,8 @@ void UseComponentCommand<InputControl>::execute() const
 
 void UseComponentCommand<InputSelectControl>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<InputSelectControl>(&input_handler(), m_select, m_max, m_proc_id);
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<InputSelectControl>(&system<InputHandler>(), m_select, m_max, m_proc_id);
 	else
 	{
 		//error globals().access_entity_id
@@ -154,8 +156,8 @@ void UseComponentCommand<InputSelectControl>::execute() const
 
 void UseComponentCommand<ChaseAIControl>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<ChaseAIControl>(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range);
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<ChaseAIControl>(system<EntitySystem>().previous_entity()->id(), system<EntitySystem>().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range);
 	else
 	{
 		//error globals().access_entity_id
@@ -164,8 +166,8 @@ void UseComponentCommand<ChaseAIControl>::execute() const
 
 void UseComponentCommand<GuideControl>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<GuideControl>(entity_system().previous_entity()->id(), entity_system().resolved_id(m_target_id), m_range);
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<GuideControl>(system<EntitySystem>().previous_entity()->id(), system<EntitySystem>().resolved_id(m_target_id), m_range);
 	else
 	{
 		//error globals().access_entity_id
@@ -174,8 +176,8 @@ void UseComponentCommand<GuideControl>::execute() const
 
 void UseComponentCommand<HealthVisuals>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<HealthVisuals>(entity_system().previous_entity()->id(), m_spr_id, m_repeat_x);
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<HealthVisuals>(system<EntitySystem>().previous_entity()->id(), m_spr_id, m_repeat_x);
 	else
 	{
 		//error globals().access_entity_id
@@ -184,8 +186,8 @@ void UseComponentCommand<HealthVisuals>::execute() const
 
 void UseComponentCommand<MenuItemVisuals>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<MenuItemVisuals>(m_spr_id, entity_system().previous_entity()->id());
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<MenuItemVisuals>(m_spr_id, system<EntitySystem>().previous_entity()->id());
 	else
 	{
 		//error globals().access_entity_id
@@ -194,12 +196,12 @@ void UseComponentCommand<MenuItemVisuals>::execute() const
 
 void UseComponentCommand<BuildPosition>::execute() const
 {
-	if(entity_system().previous_entity() && entity_system().entity(m_builder_id))
-		entity_system().previous_entity()->set_component<BuildPosition>
-														( entity_system().previous_entity()->id()
+	if(system<EntitySystem>().previous_entity() && system<EntitySystem>().entity(m_builder_id))
+		system<EntitySystem>().previous_entity()->set_component<BuildPosition>
+														( system<EntitySystem>().previous_entity()->id()
 														, m_builder_id
-														, entity_system().entity(m_builder_id)->component<Position>().x()
-														, entity_system().entity(m_builder_id)->component<Position>().y()
+														, system<EntitySystem>().entity(m_builder_id)->component<Position>().x()
+														, system<EntitySystem>().entity(m_builder_id)->component<Position>().y()
 														);
 	else
 	{
@@ -209,8 +211,8 @@ void UseComponentCommand<BuildPosition>::execute() const
 
 void UseComponentCommand<TiledVisuals>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<TiledVisuals>(m_spr_id, m_tile_w, m_tile_h, entity_system().previous_entity()->id());
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<TiledVisuals>(m_spr_id, m_tile_w, m_tile_h, system<EntitySystem>().previous_entity()->id());
 	else
 	{
 		//error globals().access_entity_id
@@ -219,10 +221,10 @@ void UseComponentCommand<TiledVisuals>::execute() const
 
 void UseComponentCommand<AttachedPosition>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<AttachedPosition>
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<AttachedPosition>
 														(
-														entity_system().resolved_id(m_attached_id)
+														system<EntitySystem>().resolved_id(m_attached_id)
 														, m_offset_x
 														, m_offset_y
 														, m_offset_w
@@ -236,10 +238,10 @@ void UseComponentCommand<AttachedPosition>::execute() const
 
 void UseComponentCommand<AttachedHealth>::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().previous_entity()->set_component<AttachedHealth>
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().previous_entity()->set_component<AttachedHealth>
 														(
-															entity_system().resolved_id(m_attached_id)
+															system<EntitySystem>().resolved_id(m_attached_id)
 															, m_offset_hp
 															, m_offset_max_hp
 														);

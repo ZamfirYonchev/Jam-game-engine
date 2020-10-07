@@ -6,18 +6,26 @@
  */
 
 #include "execute_file_clean_command.h"
-#include "../globals.h"
 #include "execute_file_command.h"
+#include "../systems/systems.h"
+#include "../command_queue.h"
+#include "../systems/resource_system.h"
+#include "../systems/control_system.h"
+#include "../systems/movement_system.h"
+#include "../systems/collision_system.h"
+#include "../systems/damage_system.h"
+#include "../systems/rendering_system.h"
+#include "../systems/entity_system.h"
 
 void ExecuteFileCleanCommand::execute() const
 {
-	command_queue().flush_commands(false);
-	resource_system().clear();
-	control_system().clear();
-	movement_system().clear();
-	collision_system().clear();
-	damage_system().clear();
-	rendering_system().clear();
-	entity_system().clear();
-	command_queue().push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
+	system<CommandQueue>().flush_commands(false);
+	system<ResourceSystem>().clear();
+	system<ControlSystem>().clear();
+	system<MovementSystem>().clear();
+	system<CollisionSystem>().clear();
+	system<DamageSystem>().clear();
+	system<RenderingSystem>().clear();
+	system<EntitySystem>().clear();
+	system<CommandQueue>().push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
 }

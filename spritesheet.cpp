@@ -6,11 +6,12 @@
  */
 
 #include "spritesheet.h"
-#include "globals.h"
+#include "systems/systems.h"
+#include "systems/resource_system.h"
 
 void Spritesheet::add_sprite(TextureID tex_index, int x, int y, int w, int h)
 {
-    if(tex_index < resource_system().textures().size())
+    if(tex_index < system<ResourceSystem>().textures().size())
     {
         m_sprites.push_back({tex_index, {x, y, w, h}});
     }

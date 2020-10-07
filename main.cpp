@@ -13,6 +13,19 @@
 #include "globals.h"
 #include "math_ext.h"
 #include "commands/execute_file_clean_command.h"
+#include "systems/systems.h"
+#include "systems/control_system.h"
+#include "systems/movement_system.h"
+#include "systems/collision_system.h"
+#include "systems/damage_system.h"
+#include "systems/rendering_system.h"
+#include "systems/entity_system.h"
+#include "systems/resource_system.h"
+#include "command_queue.h"
+#include "input_handler.h"
+#include <iostream>
+
+const Systems<ControlSystem, MovementSystem, CollisionSystem, DamageSystem> systems;
 
 int main(int argc, char** argv)
 {
@@ -62,26 +75,21 @@ int main(int argc, char** argv)
 		Time frame_diff = Time{10}; //TODO: first frame difference
 		int32_t number_of_frames = 0;
 
-		command_queue().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
+		system<CommandQueue>().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
 		start_frame_time = static_cast<Time>((SDL_GetTicks()));
 		last_frame_time = static_cast<Time>((SDL_GetTicks()));
 
 		do
 		{
-			input_handler().process_input();
-			command_queue().process(frame_diff);
-			entity_system().clean_removed_entites();
+			system<InputHandler>().process_input();
+			system<CommandQueue>().process(frame_diff);
+			system<EntitySystem>().clean_removed_entites();
 
 			if(globals().app_paused == false)
-			{
-				control_system().update(frame_diff);
-				movement_system().update(frame_diff);
-				collision_system().update(frame_diff);
-				damage_system().update(frame_diff);
-			}
+				systems.update(frame_diff);
 
-			rendering_system().render_entities(frame_diff, globals().app_paused, sdl.renderer());
+			system<RenderingSystem>().render_entities(frame_diff, globals().app_paused, sdl.renderer());
 
 			SDL_Delay(max(10-frame_diff, 0));
 			frame_diff = Time(clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100));
@@ -90,14 +98,13 @@ int main(int argc, char** argv)
 
 			if(globals().app_running == false || globals().app_needs_reload)
 			{
-				resource_system().clear(); //cleanup textures otherwise when SdlWindow is destroyed we get a memory leak
-				control_system().clear();
-				movement_system().clear();
-				collision_system().clear();
-				damage_system().clear();
-				rendering_system().clear();
-				command_queue().flush_commands(true);
-				entity_system().clear();
+				systems.clear();
+				system<RenderingSystem>().clear();
+				system<CommandQueue>().clear();
+				//system<ResourceSystem>().clear();
+				//system<EntitySystem>().clear();
+				system<ResourceSystem>().clear();
+				system<EntitySystem>().clear();
 
 				break;
 			}

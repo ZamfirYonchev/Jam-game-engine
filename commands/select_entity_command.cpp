@@ -6,10 +6,11 @@
  */
 
 #include "select_entity_command.h"
-#include "../globals.h"
 #include "../utilities.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void SelectEntityCommand::execute() const
 {
-    entity_system().add_accessed_entity(entity_system().resolved_id(m_id));
+    system<EntitySystem>().add_accessed_entity(system<EntitySystem>().resolved_id(m_id));
 }

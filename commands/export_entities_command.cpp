@@ -6,15 +6,17 @@
  */
 
 #include "export_entities_command.h"
-#include "../globals.h"
 #include <fstream>
+#include <iostream>
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ExportEntitiesCommand::execute() const
 {
 	std::ofstream file {m_filename};
 
 	if(file)
-		for(auto& entity : entity_system().entities())
+		for(auto& entity : system<EntitySystem>().entities())
 		{
 			file << entity << std::endl;
 		}

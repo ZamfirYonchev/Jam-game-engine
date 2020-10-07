@@ -6,13 +6,14 @@
  */
 
 #include "attached_health.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 double AttachedHealth::hp() const
 {
-	if(entity_system().entity(m_attached_id))
+	if(system<EntitySystem>().entity(m_attached_id))
 	{
-		return entity_system().entity(m_attached_id)->component<Health>().hp() + m_offset_hp;
+		return system<EntitySystem>().entity(m_attached_id)->component<Health>().hp() + m_offset_hp;
 	}
 	else
 	{
@@ -23,9 +24,9 @@ double AttachedHealth::hp() const
 
 double AttachedHealth::max_hp() const
 {
-	if(entity_system().entity(m_attached_id))
+	if(system<EntitySystem>().entity(m_attached_id))
 	{
-		return entity_system().entity(m_attached_id)->component<Health>().max_hp() + m_offset_max_hp;
+		return system<EntitySystem>().entity(m_attached_id)->component<Health>().max_hp() + m_offset_max_hp;
 	}
 	else
 	{

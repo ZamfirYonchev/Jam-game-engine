@@ -6,10 +6,11 @@
  */
 
 #include "clear_all_entities_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ClearAllEntitiesCommand::execute() const
 {
-	entity_system().clear();
+	system<EntitySystem>().clear();
 }
 

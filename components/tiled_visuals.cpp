@@ -6,24 +6,26 @@
  */
 
 #include "tiled_visuals.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
+#include "../math_ext.h"
 
 uint16_t TiledVisuals::repeat_x() const
 {
-	return std::ceil(entity_system().entity(m_self_id)->component<Position>().w()/m_tile_w);
+	return std::ceil(system<EntitySystem>().entity(m_self_id)->component<Position>().w()/m_tile_w);
 }
 
 uint16_t TiledVisuals::repeat_y() const
 {
-	return std::ceil(entity_system().entity(m_self_id)->component<Position>().h()/m_tile_h);
+	return std::ceil(system<EntitySystem>().entity(m_self_id)->component<Position>().h()/m_tile_h);
 }
 
 void TiledVisuals::set_repeat_x(uint16_t val)
 {
-	m_tile_w = entity_system().entity(m_self_id)->component<Position>().w()/val;
+	m_tile_w = system<EntitySystem>().entity(m_self_id)->component<Position>().w()/val;
 }
 
 void TiledVisuals::set_repeat_y(uint16_t val)
 {
-	m_tile_h = entity_system().entity(m_self_id)->component<Position>().h()/val;
+	m_tile_h = system<EntitySystem>().entity(m_self_id)->component<Position>().h()/val;
 }

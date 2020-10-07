@@ -6,12 +6,13 @@
  */
 
 #include "call_procedure_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void CallProcedureCommand::execute() const
 {
-	if(resource_system().procedure(m_id))
-		resource_system().procedure(m_id)->execute();
+	if(system<ResourceSystem>().procedure(m_id))
+		system<ResourceSystem>().procedure(m_id)->execute();
 	else
 	{
 		//error m_id

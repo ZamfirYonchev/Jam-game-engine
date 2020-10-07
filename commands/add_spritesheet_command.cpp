@@ -6,11 +6,13 @@
  */
 
 #include "add_spritesheet_command.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 #include "../globals.h"
 
 void AddSpritesheetCommand::execute() const
 {
-	resource_system().addNewSpritesheet(m_idle_start, m_idle_size
+	system<ResourceSystem>().addNewSpritesheet(m_idle_start, m_idle_size
                                             , m_walk_start, m_walk_size
                                             , m_jump_start, m_jump_size
                                             , m_fall_start, m_fall_size
@@ -19,5 +21,5 @@ void AddSpritesheetCommand::execute() const
                                             , m_dead_start, m_dead_size
                                             , m_scale_factor
                                              );
-    globals().access_spritesheet_id = resource_system().last_spritesheet_id();
+    globals().access_spritesheet_id = system<ResourceSystem>().last_spritesheet_id();
 }

@@ -6,14 +6,15 @@
  */
 
 #include "modify_health_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ModifyHealthCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& health = entity_system().previous_entity()->component<Health>();
+		auto& health = system<EntitySystem>().previous_entity()->component<Health>();
 
 		if(is_negative_zero(m_max_hp))
 			health.set_max_hp(0);

@@ -7,7 +7,8 @@
 
 #include "input_control.h"
 #include "../math_ext.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void InputControl::update_decisions(const Time time_diff)
 {
@@ -19,7 +20,7 @@ void InputControl::update_decisions(const Time time_diff)
 
 	m_look_dir = m_walk_dir > 0 ? RIGHT : m_walk_dir < 0 ? LEFT : m_look_dir;
 
-	const auto& self_entity = *(entity_system().entity(m_self_id));
+	const auto& self_entity = *(system<EntitySystem>().entity(m_self_id));
 
 	if(m_stability_control && m_walk_dir == 0 && abs(self_entity.component<Movement>().vx()) > self_entity.component<Movement>().move_force()/self_entity.component<Movement>().mass())
     {

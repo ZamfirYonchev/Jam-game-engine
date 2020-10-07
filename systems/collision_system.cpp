@@ -9,13 +9,15 @@
 #include "../components/collision.h"
 #include "../components/interaction.h"
 #include "../entity.h"
-#include "../globals.h"
 #include "../math_ext.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
 #include "../components/absolute_position.h"
 #include <algorithm>
 #include <unordered_set>
+#include "../command_queue.h"
+#include "systems.h"
+#include "entity_system.h"
 
 struct CorrectionValues
 {
@@ -27,7 +29,7 @@ void CollisionSystem::update(const Time time_diff)
 {
 	for(const auto entity_id : entities)
 	{
-		auto entity_optional = entity_system().entity(entity_id);
+		auto entity_optional = system<EntitySystem>().entity(entity_id);
 		if(entity_optional)
 		{
 			entity_optional->component<Interaction>().update_last_triggered_groups();
@@ -41,7 +43,7 @@ void CollisionSystem::update(const Time time_diff)
 	//register+unregister entities from regions
 	for(const auto entity_id : entities)
 	{
-		auto entity_optional = entity_system().entity(entity_id);
+		auto entity_optional = system<EntitySystem>().entity(entity_id);
 		if(entity_optional)
 		{
 			Entity& entity = *entity_optional;
@@ -79,14 +81,14 @@ void CollisionSystem::update(const Time time_diff)
 
 	for(const auto entity_id : entities)
 	{
-		const auto entity_optional = entity_system().entity(entity_id);
+		const auto entity_optional = system<EntitySystem>().entity(entity_id);
 		if(entity_optional && entity_optional->component<Collision>().state() == Collision::CollisionState::MOVEABLE)
 			collision_correction.insert(std::make_pair(entity_id, CorrectionValues{}));
 	}
 
 	for(auto it0 = cbegin(entities); it0 != cend(entities); ++it0)
 	{
-		auto entity_optional = entity_system().entity(*it0);
+		auto entity_optional = system<EntitySystem>().entity(*it0);
 		if(entity_optional)
 		{
 			Entity& entity0 = *entity_optional;
@@ -111,7 +113,7 @@ void CollisionSystem::update(const Time time_diff)
 
 			for(auto it1 = cbegin(near_entities); it1 != cend(near_entities); ++it1)
 			{
-				const auto entity1_optional = entity_system().entity(*it1);
+				const auto entity1_optional = system<EntitySystem>().entity(*it1);
 				if(entity1_optional && entity1_optional->id() != entity0.id())
 				{
 					const Entity& entity1 = *entity1_optional;
@@ -132,8 +134,8 @@ void CollisionSystem::update(const Time time_diff)
 						{
 							if(interaction0.proc_id_other() >= 0)
 							{
-								command_queue().push(std::make_unique<SelectEntityCommand>(entity1.id()));
-								command_queue().push(std::make_unique<CallProcedureCommand>(interaction0.proc_id_other()));
+								system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(entity1.id()));
+								system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction0.proc_id_other()));
 							}
 						}
 
@@ -141,8 +143,8 @@ void CollisionSystem::update(const Time time_diff)
 						{
 							if(interaction1.proc_id_other() >= 0)
 							{
-								command_queue().push(std::make_unique<SelectEntityCommand>(entity0.id()));
-								command_queue().push(std::make_unique<CallProcedureCommand>(interaction1.proc_id_other()));
+								system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(entity0.id()));
+								system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction1.proc_id_other()));
 							}
 						}
 
@@ -217,8 +219,8 @@ void CollisionSystem::update(const Time time_diff)
 
 	for(const auto entity_pair : collision_correction)
 	{
-		auto& position = entity_system().entity(entity_pair.first)->component<Position>();
-		auto& movement = entity_system().entity(entity_pair.first)->component<Movement>();
+		auto& position = system<EntitySystem>().entity(entity_pair.first)->component<Position>();
+		auto& movement = system<EntitySystem>().entity(entity_pair.first)->component<Movement>();
 		position.mod_x(entity_pair.second.x);
 		position.mod_y(entity_pair.second.y);
 		movement.mod_dx(entity_pair.second.x);
@@ -229,7 +231,7 @@ void CollisionSystem::update(const Time time_diff)
 
 	for(const auto id : entities)
 	{
-		auto entity_optional = entity_system().entity(id);
+		auto entity_optional = system<EntitySystem>().entity(id);
 		if(entity_optional)
 		{
 			const auto& interaction = entity_optional->component<Interaction>();
@@ -239,13 +241,13 @@ void CollisionSystem::update(const Time time_diff)
 			{
 				if(triggered && interaction.proc_id_self() >= 0)
 				{
-					command_queue().push(std::make_unique<SelectEntityCommand>(id));
-					command_queue().push(std::make_unique<CallProcedureCommand>(interaction.proc_id_self()));
+					system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(id));
+					system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction.proc_id_self()));
 				}
 				else if(!triggered && interaction.on_exit_proc_id_self() >= 0)
 				{
-					command_queue().push(std::make_unique<SelectEntityCommand>(id));
-					command_queue().push(std::make_unique<CallProcedureCommand>(interaction.on_exit_proc_id_self()));
+					system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(id));
+					system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction.on_exit_proc_id_self()));
 				}
 			}
 		}

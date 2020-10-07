@@ -6,13 +6,15 @@
  */
 
 #include "add_procedure_command.h"
-#include "../globals.h"
 #include "extend_procedure_command.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
+#include "../globals.h"
 
 void AddProcedureCommand::execute() const
 {
-	resource_system().addNewProcedure();
-    globals().access_procedure_id = resource_system().last_procedure_id();
+	system<ResourceSystem>().addNewProcedure();
+    globals().access_procedure_id = system<ResourceSystem>().last_procedure_id();
 
     if(m_num_of_cmds > 0)
     {

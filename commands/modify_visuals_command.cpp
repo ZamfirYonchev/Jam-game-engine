@@ -6,14 +6,16 @@
  */
 
 #include "modify_visuals_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
+#include "../systems/rendering_system.h"
 
 void ModifyVisualsCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& visuals = entity_system().previous_entity()->component<Visuals>();
+		auto& visuals = system<EntitySystem>().previous_entity()->component<Visuals>();
 
 		if(is_negative_zero(m_render_state))
 			visuals.set_new_state(Visuals::IDLE);
@@ -39,23 +41,23 @@ void ModifyVisualsCommand::execute() const
 		{
 			if(visuals.layer() != 0)
 			{
-				rendering_system().remove_id(entity_system().previous_entity()->id());
+				system<RenderingSystem>().remove_id(system<EntitySystem>().previous_entity()->id());
 				visuals.set_layer(Visuals::VisualLayer(0));
-				rendering_system().add_id(entity_system().previous_entity()->id());
+				system<RenderingSystem>().add_id(system<EntitySystem>().previous_entity()->id());
 			}
 		}
 		else
 		{
 			if(m_layer != 0)
 			{
-				rendering_system().remove_id(entity_system().previous_entity()->id());
+				system<RenderingSystem>().remove_id(system<EntitySystem>().previous_entity()->id());
 				visuals.set_layer(Visuals::VisualLayer(visuals.layer()+int(m_layer)));
-				rendering_system().add_id(entity_system().previous_entity()->id());
+				system<RenderingSystem>().add_id(system<EntitySystem>().previous_entity()->id());
 			}
 		}
 	}
 	else
 	{
-		//error entity_system().previous_entity()
+		//error system<EntitySystem>().previous_entity()
 	}
 }

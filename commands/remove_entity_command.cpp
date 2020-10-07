@@ -6,15 +6,16 @@
  */
 
 #include "remove_entity_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void RemoveEntityCommand::execute() const
 {
-	if(entity_system().previous_entity())
-		entity_system().remove_entity(entity_system().previous_entity()->id());
+	if(system<EntitySystem>().previous_entity())
+		system<EntitySystem>().remove_entity(system<EntitySystem>().previous_entity()->id());
 	else
 	{
-		//error entity_system().previous_entity()
+		//error system<EntitySystem>().previous_entity()
 	}
 }
 

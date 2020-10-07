@@ -6,17 +6,20 @@
  */
 
 #include "rendering_system.h"
-#include "../globals.h"
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
 #include "../components/null_position.h"
 #include <algorithm>
+#include "entity_system.h"
+#include "resource_system.h"
+#include "systems.h"
+#include "../globals.h"
 
 void RenderingSystem::add_id(const EntityID entity)
 {
-	if(entity_system().entity(entity))
+	if(system<EntitySystem>().entity(entity))
 	{
-		const int layer = entity_system().entity(entity)->component<Visuals>().layer();
+		const int layer = system<EntitySystem>().entity(entity)->component<Visuals>().layer();
 		entities[layer].insert(entity);
 	}
 	else
@@ -27,9 +30,9 @@ void RenderingSystem::add_id(const EntityID entity)
 
 void RenderingSystem::remove_id(const EntityID entity)
 {
-	if(entity_system().entity(entity))
+	if(system<EntitySystem>().entity(entity))
 	{
-		const int layer = entity_system().entity(entity)->component<Visuals>().layer();
+		const int layer = system<EntitySystem>().entity(entity)->component<Visuals>().layer();
 		entities[layer].erase(entity);
 	}
 	else
@@ -40,9 +43,9 @@ void RenderingSystem::remove_id(const EntityID entity)
 
 void RenderingSystem::set_entity_layer(const EntityID entity_id, const Visuals::VisualLayer layer)
 {
-	if(entity_system().entity(entity_id))
+	if(system<EntitySystem>().entity(entity_id))
 	{
-		auto& visuals = entity_system().entity(entity_id)->component<Visuals>();
+		auto& visuals = system<EntitySystem>().entity(entity_id)->component<Visuals>();
 		if(layer != visuals.layer())
 		{
 			remove_id(entity_id);
@@ -62,7 +65,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 
-    const auto& screen_zone_position = entity_system().entity(EntityID{0}) ? entity_system().entity(EntityID{0})->component<Position>() : *Position::null;
+    const auto& screen_zone_position = system<EntitySystem>().entity(EntityID{0}) ? system<EntitySystem>().entity(EntityID{0})->component<Position>() : *Position::null;
 
     const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*globals().resolution_y/screen_zone_position.h() : 1.0;
 
@@ -70,9 +73,9 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
     {
 		for(const EntityID id : entities[layer])
 		{
-			if(entity_system().entity(id))
+			if(system<EntitySystem>().entity(id))
 			{
-				Entity& entity = *(entity_system().entity(id));
+				Entity& entity = *(system<EntitySystem>().entity(id));
 				auto& visuals = entity.component<Visuals>();
 				const auto& movement = entity.component<Movement>();
 				const auto& position = entity.component<Position>();
@@ -156,7 +159,7 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 					}
 				}
 
-				const optional_ref<Spritesheet> spritesheet = resource_system().spritesheet(visuals.spritesheet_id());
+				const optional_ref<Spritesheet> spritesheet = system<ResourceSystem>().spritesheet(visuals.spritesheet_id());
 				if(spritesheet)
 				{
 					double scale_factor = spritesheet->scale_factor();
@@ -172,10 +175,10 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
 							const optional_ref<const Sprite> sprite = spritesheet->sprite(visuals.animation_sprite(rx, ry));
 							if(sprite)
 							{
-								if(resource_system().texture(sprite->texture_id))
+								if(system<ResourceSystem>().texture(sprite->texture_id))
 								{
 									//TODO: to optimize and add constness
-									SDL_Texture* texture = resource_system().texture(sprite->texture_id)->texture();
+									SDL_Texture* texture = system<ResourceSystem>().texture(sprite->texture_id)->texture();
 									screen_pos.set_w(sprite->clip.w*scale_factor);
 									screen_pos.set_h(sprite->clip.h*scale_factor);
 									screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);

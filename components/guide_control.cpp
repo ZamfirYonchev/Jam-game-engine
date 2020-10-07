@@ -6,15 +6,16 @@
  */
 
 #include "guide_control.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/entity_system.h"
+#include "../systems/systems.h"
 
 void GuideControl::update_decisions(const Time time_diff)
 {
-	if(entity_system().entity(m_target_id))
+	if(system<EntitySystem>().entity(m_target_id))
 	{
-		const auto& target_position = entity_system().entity(m_target_id)->component<Position>();
-		const auto& self_position = entity_system().entity(m_self_id)->component<Position>();
+		const auto& target_position = system<EntitySystem>().entity(m_target_id)->component<Position>();
+		const auto& self_position = system<EntitySystem>().entity(m_self_id)->component<Position>();
 		const double distance_x = target_position.x() - self_position.x() + (target_position.w() - self_position.w())/2.0;
 		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
 

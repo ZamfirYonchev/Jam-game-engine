@@ -8,6 +8,8 @@
 #include "input_handler.h"
 #include "globals.h"
 #include "commands/quit_command.h"
+#include "systems/systems.h"
+#include "command_queue.h"
 
 void InputHandler::process_input()
 {
@@ -43,7 +45,7 @@ void InputHandler::process_input()
                 else if(m_event.key.keysym.sym == m_keyselect)
                     m_select_pressed = true;
                 else if(m_event.key.keysym.sym == m_keyquit || m_event.key.keysym.sym == SDLK_F10)
-                    command_queue().push(std::make_unique<QuitCommand>());
+                    system<CommandQueue>().push(std::make_unique<QuitCommand>());
                 else if(m_event.key.keysym.sym == SDLK_r)
                     globals().app_needs_reload = true;
                 else if(m_event.key.keysym.sym == m_keypause)

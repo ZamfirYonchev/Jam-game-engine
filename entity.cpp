@@ -6,7 +6,12 @@
  */
 
 #include "entity.h"
-#include "globals.h"
+#include "systems/systems.h"
+#include "systems/control_system.h"
+#include "systems/movement_system.h"
+#include "systems/collision_system.h"
+#include "systems/damage_system.h"
+#include "systems/rendering_system.h"
 
 Entity::Entity(EntityID id)
 : m_id(id)
@@ -151,12 +156,12 @@ void Entity::set_component_ptr<Control>(unique_component_ptr<Control> _control)
 {
 	const int8_t change = (_control.get() != Control::null) - (m_control.get() != Control::null);
 	if(change < 0)
-		control_system().remove_id(id());
+		system<ControlSystem>().remove_id(id());
 
 	m_control = std::move(_control);
 
 	if(change > 0)
-		control_system().add_id(id());
+		system<ControlSystem>().add_id(id());
 }
 
 template<>
@@ -164,12 +169,12 @@ void Entity::set_component_ptr<Movement>(unique_component_ptr<Movement> _movemen
 {
 	const int8_t change = (_movement.get() != Movement::null) - (m_movement.get() != Movement::null);
 	if(change < 0)
-		movement_system().remove_id(id());
+		system<MovementSystem>().remove_id(id());
 
 	m_movement = std::move(_movement);
 
 	if(change > 0)
-		movement_system().add_id(id());
+		system<MovementSystem>().add_id(id());
 }
 
 template<>
@@ -177,12 +182,12 @@ void Entity::set_component_ptr<Collision>(unique_component_ptr<Collision> _colli
 {
 	const int8_t change = (_collision.get() != Collision::null) - (m_collision.get() != Collision::null);
 	if(change < 0)
-		collision_system().remove_id(id());
+		system<CollisionSystem>().remove_id(id());
 
 	m_collision = std::move(_collision);
 
 	if(change > 0)
-		collision_system().add_id(id());
+		system<CollisionSystem>().add_id(id());
 }
 
 template<>
@@ -196,12 +201,12 @@ void Entity::set_component_ptr<Health>(unique_component_ptr<Health> _health)
 {
 	const int8_t change = (_health.get() != Health::null) - (m_health.get() != Health::null);
 	if(change < 0)
-		damage_system().remove_id(id());
+		system<DamageSystem>().remove_id(id());
 
 	m_health = std::move(_health);
 
 	if(change > 0)
-		damage_system().add_id(id());
+		system<DamageSystem>().add_id(id());
 }
 
 template<>
@@ -211,11 +216,11 @@ void Entity::set_component_ptr<Visuals>(unique_component_ptr<Visuals> _visuals)
 	const bool layer_change = (_visuals.get() != Visuals::null) && (m_visuals.get() != Visuals::null) && (m_visuals->layer() != _visuals->layer());
 
 	if(change < 0 || layer_change)
-		rendering_system().remove_id(id());
+		system<RenderingSystem>().remove_id(id());
 
 	m_visuals = std::move(_visuals);
 
 	if(change > 0 || layer_change)
-		rendering_system().add_id(id());
+		system<RenderingSystem>().add_id(id());
 
 }

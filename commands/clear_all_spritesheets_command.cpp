@@ -6,9 +6,10 @@
  */
 
 #include "clear_all_spritesheets_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void ClearAllSpritesheetsCommand::execute() const
 {
-	resource_system().clear_spritesheets();
+	system<ResourceSystem>().clear_spritesheets();
 }

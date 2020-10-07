@@ -6,9 +6,10 @@
  */
 
 #include "add_texture_from_file_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void AddTextureFromFileCommand::execute() const
 {
-	resource_system().addNewTextureFromFile(m_file, m_renderer);
+	system<ResourceSystem>().addNewTextureFromFile(m_file, m_renderer);
 }

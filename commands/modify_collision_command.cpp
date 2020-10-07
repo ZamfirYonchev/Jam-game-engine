@@ -6,14 +6,15 @@
  */
 
 #include "modify_collision_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ModifyCollisionCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& collision = entity_system().previous_entity()->component<Collision>();
+		auto& collision = system<EntitySystem>().previous_entity()->component<Collision>();
 
 		if(is_negative_zero(m_state))
 			collision.set_state(Collision::CollisionState(0));

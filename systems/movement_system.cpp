@@ -9,17 +9,18 @@
 #include "../components/movement.h"
 #include "../components/control.h"
 #include "../components/collision.h"
-#include "../globals.h"
 #include "../math_ext.h"
 #include <algorithm>
+#include "entity_system.h"
+#include "systems.h"
 
 void MovementSystem::update(const Time time_delta)
 {
 	for(const auto id : entities)
 	{
-    	if(entity_system().entity(id))
+    	if(system<EntitySystem>().entity(id))
     	{
-    		Entity& entity = *entity_system().entity(id);
+    		Entity& entity = *system<EntitySystem>().entity(id);
 			const auto& control = entity.component<Control>();
 			auto& movement = entity.component<Movement>();
 			const auto& collision = entity.component<Collision>();

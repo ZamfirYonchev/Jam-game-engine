@@ -6,9 +6,10 @@
  */
 
 #include "add_texture_from_string_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void AddTextureFromStringCommand::execute() const
 {
-	resource_system().addNewTextureFromString(m_text, m_font_id, m_r, m_g, m_b, m_renderer);
+	system<ResourceSystem>().addNewTextureFromString(m_text, m_font_id, m_r, m_g, m_b, m_renderer);
 }

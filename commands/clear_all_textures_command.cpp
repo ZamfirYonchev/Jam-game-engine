@@ -6,9 +6,10 @@
  */
 
 #include "clear_all_textures_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../systems/resource_system.h"
 
 void ClearAllTexturesCommand::execute() const
 {
-	resource_system().clear_textures();
+	system<ResourceSystem>().clear_textures();
 }

@@ -6,14 +6,15 @@
  */
 
 #include "modify_movement_command.h"
-#include "../globals.h"
 #include "../math_ext.h"
+#include "../systems/systems.h"
+#include "../systems/entity_system.h"
 
 void ModifyMovementCommand::execute() const
 {
-	if(entity_system().previous_entity())
+	if(system<EntitySystem>().previous_entity())
 	{
-		auto& movement = entity_system().previous_entity()->component<Movement>();
+		auto& movement = system<EntitySystem>().previous_entity()->component<Movement>();
 
 		if(is_negative_zero(m_mass))
 			movement.set_mass(m_mass);

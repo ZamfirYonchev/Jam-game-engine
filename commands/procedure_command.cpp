@@ -6,11 +6,12 @@
  */
 
 #include "procedure_command.h"
-#include "../globals.h"
+#include "../systems/systems.h"
+#include "../command_queue.h"
 
 void ProcedureCommand::execute() const
 {
     for(auto it = m_commands.rbegin(); it != m_commands.rend(); ++it)
-    	command_queue().insert_next((*it)->clone());
+    	system<CommandQueue>().insert_next((*it)->clone());
 }
 

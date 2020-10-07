@@ -11,26 +11,6 @@
 #include "types.h"
 #include <string>
 
-#include "systems/entity_system.h"
-#include "systems/resource_system.h"
-#include "systems/control_system.h"
-#include "systems/movement_system.h"
-#include "systems/collision_system.h"
-#include "systems/damage_system.h"
-#include "systems/rendering_system.h"
-#include "input_handler.h"
-#include "command_queue.h"
-
-InputHandler& input_handler();
-CommandQueue& command_queue();
-EntitySystem& entity_system();
-ResourceSystem& resource_system();
-ControlSystem& control_system();
-MovementSystem& movement_system();
-CollisionSystem& collision_system();
-DamageSystem& damage_system();
-RenderingSystem& rendering_system();
-
 struct Globals
 {
 	Globals() : app_running(true)
