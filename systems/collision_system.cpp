@@ -15,8 +15,8 @@
 #include "../components/absolute_position.h"
 #include <algorithm>
 #include <unordered_set>
-#include "../command_queue.h"
 #include "systems.h"
+#include "command_system.h"
 #include "entity_system.h"
 
 struct CorrectionValues
@@ -134,8 +134,8 @@ void CollisionSystem::update(const Time time_diff)
 						{
 							if(interaction0.proc_id_other() >= 0)
 							{
-								system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(entity1.id()));
-								system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction0.proc_id_other()));
+								system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(entity1.id()));
+								system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(interaction0.proc_id_other()));
 							}
 						}
 
@@ -143,8 +143,8 @@ void CollisionSystem::update(const Time time_diff)
 						{
 							if(interaction1.proc_id_other() >= 0)
 							{
-								system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(entity0.id()));
-								system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction1.proc_id_other()));
+								system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(entity0.id()));
+								system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(interaction1.proc_id_other()));
 							}
 						}
 
@@ -241,13 +241,13 @@ void CollisionSystem::update(const Time time_diff)
 			{
 				if(triggered && interaction.proc_id_self() >= 0)
 				{
-					system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(id));
-					system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction.proc_id_self()));
+					system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(id));
+					system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(interaction.proc_id_self()));
 				}
 				else if(!triggered && interaction.on_exit_proc_id_self() >= 0)
 				{
-					system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(id));
-					system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(interaction.on_exit_proc_id_self()));
+					system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(id));
+					system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(interaction.on_exit_proc_id_self()));
 				}
 			}
 		}

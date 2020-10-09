@@ -21,8 +21,8 @@
 #include "systems/rendering_system.h"
 #include "systems/entity_system.h"
 #include "systems/resource_system.h"
-#include "command_queue.h"
-#include "input_handler.h"
+#include "systems/command_system.h"
+#include "systems/input_system.h"
 #include <iostream>
 
 const Systems<ControlSystem, MovementSystem, CollisionSystem, DamageSystem> systems;
@@ -75,15 +75,15 @@ int main(int argc, char** argv)
 		Time frame_diff = Time{10}; //TODO: first frame difference
 		int32_t number_of_frames = 0;
 
-		system<CommandQueue>().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
+		system<CommandSystem>().push(std::make_unique<ExecuteFileCleanCommand>(globals().level_name, sdl.renderer()));
 
 		start_frame_time = static_cast<Time>((SDL_GetTicks()));
 		last_frame_time = static_cast<Time>((SDL_GetTicks()));
 
 		do
 		{
-			system<InputHandler>().process_input();
-			system<CommandQueue>().process(frame_diff);
+			system<InputSystem>().process_input();
+			system<CommandSystem>().process(frame_diff);
 			system<EntitySystem>().clean_removed_entites();
 
 			if(globals().app_paused == false)
@@ -100,9 +100,7 @@ int main(int argc, char** argv)
 			{
 				systems.clear();
 				system<RenderingSystem>().clear();
-				system<CommandQueue>().clear();
-				//system<ResourceSystem>().clear();
-				//system<EntitySystem>().clear();
+				system<CommandSystem>().clear();
 				system<ResourceSystem>().clear();
 				system<EntitySystem>().clear();
 

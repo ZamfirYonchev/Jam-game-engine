@@ -1,19 +1,18 @@
 /*
- * input_handler.h
+ * input_system.h
  *
- *  Created on: Nov 10, 2019
+ *  Created on: Oct 7, 2020
  *      Author: zamfi
  */
 
-#ifndef INPUT_HANDLER_H_
-#define INPUT_HANDLER_H_
-
+#ifndef SYSTEMS_INPUT_SYSTEM_H_
+#define SYSTEMS_INPUT_SYSTEM_H_
 #include "SDL2/SDL.h"
 
-class InputHandler
+class InputSystem
 {
 public:
-	InputHandler()
+	InputSystem()
 	: m_keypause(SDLK_p)
 	, m_keyjump(SDLK_w)
 	, m_keydown(SDLK_s)
@@ -48,4 +47,4 @@ private:
     SDL_Event m_event;
 };
 
-#endif /* INPUT_HANDLER_H_ */
+#endif /* SYSTEMS_INPUT_SYSTEM_H_ */

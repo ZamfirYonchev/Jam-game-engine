@@ -12,7 +12,7 @@
 #include "../components/absolute_position.h"
 #include "../systems/systems.h"
 #include "../systems/entity_system.h"
-#include "../command_queue.h"
+#include "../systems/command_system.h"
 
 double BuildPosition::x() const
 {
@@ -48,6 +48,6 @@ double BuildPosition::h() const
 
 void BuildPosition::mod_w(double val)
 {
-	system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(m_self_id));
-	system<CommandQueue>().push(std::make_unique<UseComponentCommand<AbsolutePosition>>(x(), y(), w(), h()));
+	system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(m_self_id));
+	system<CommandSystem>().push(std::make_unique<UseComponentCommand<AbsolutePosition>>(x(), y(), w(), h()));
 }

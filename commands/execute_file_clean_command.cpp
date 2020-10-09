@@ -8,7 +8,7 @@
 #include "execute_file_clean_command.h"
 #include "execute_file_command.h"
 #include "../systems/systems.h"
-#include "../command_queue.h"
+#include "../systems/command_system.h"
 #include "../systems/resource_system.h"
 #include "../systems/control_system.h"
 #include "../systems/movement_system.h"
@@ -19,7 +19,7 @@
 
 void ExecuteFileCleanCommand::execute() const
 {
-	system<CommandQueue>().flush_commands(false);
+	system<CommandSystem>().flush_commands(false);
 	system<ResourceSystem>().clear();
 	system<ControlSystem>().clear();
 	system<MovementSystem>().clear();
@@ -27,5 +27,5 @@ void ExecuteFileCleanCommand::execute() const
 	system<DamageSystem>().clear();
 	system<RenderingSystem>().clear();
 	system<EntitySystem>().clear();
-	system<CommandQueue>().push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
+	system<CommandSystem>().push(std::make_unique<ExecuteFileCommand>(m_filename, m_renderer));
 }

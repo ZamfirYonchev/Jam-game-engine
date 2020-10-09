@@ -8,7 +8,7 @@
 #include "extend_procedure_command.h"
 #include "../systems/systems.h"
 #include "../systems/resource_system.h"
-#include "../command_queue.h"
+#include "../systems/command_system.h"
 
 void ExtendProcedureCommand::execute() const
 {
@@ -16,7 +16,7 @@ void ExtendProcedureCommand::execute() const
     {
 		for(int i = 0; i < m_num_of_cmds; ++i)
 		{
-			std::unique_ptr<Command> cmd = system<CommandQueue>().pop_next();
+			std::unique_ptr<Command> cmd = system<CommandSystem>().pop_next();
 			system<ResourceSystem>().procedure(m_id)->add_command(std::move(cmd));
 		}
     }

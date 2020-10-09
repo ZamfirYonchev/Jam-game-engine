@@ -17,7 +17,7 @@
 #include "../components/visuals.h"
 #include "../systems/systems.h"
 #include "../systems/entity_system.h"
-#include "../command_queue.h"
+#include "../systems/command_system.h"
 
 template<typename T>
 void ReuseComponentCommand<T>::execute() const
@@ -27,7 +27,7 @@ void ReuseComponentCommand<T>::execute() const
 	{
 		std::stringstream ss;
 		ss << entity_optional->component<T>();
-		system<CommandQueue>().process_stream(ss, m_renderer);
+		system<CommandSystem>().process_stream(ss, m_renderer);
 	}
 	else
 	{

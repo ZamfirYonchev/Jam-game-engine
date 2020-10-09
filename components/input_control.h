@@ -9,16 +9,14 @@
 #define COMPONENTS_INPUT_CONTROL_H_
 
 #include "control.h"
-#include "../input_handler.h"
 #include "../math_ext.h"
 
 class InputControl : public Control
 {
 public:
 	using Base = Control;
-    InputControl(InputHandler* input, ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id, bool stability_control)
-    : m_input(input)
-    , m_walk_dir(0)
+    InputControl(ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id, bool stability_control)
+    : m_walk_dir(0)
     , m_jump(false)
 	, m_duck(false)
     , m_shoot(false)
@@ -30,8 +28,8 @@ public:
 	, m_stability_control(stability_control)
     {}
 
-    InputControl(InputHandler* input, EntityID self_id) : InputControl(input, ProcedureID{-1}, 0, self_id, false) {}
-    InputControl() : InputControl(nullptr, EntityID{0}) {}
+    InputControl(EntityID self_id) : InputControl(ProcedureID{-1}, 0, self_id, false) {}
+    InputControl() : InputControl(EntityID{0}) {}
 
     void print(std::ostream& to) const
     {
@@ -65,7 +63,6 @@ public:
     }
 
 private:
-    InputHandler* m_input;
     double m_walk_dir, m_jump, m_duck;
     bool m_shoot;
     ProcedureID m_shoot_proc_id;

@@ -9,21 +9,21 @@
 #define COMPONENTS_INPUT_SELECT_CONTROL_H_
 
 #include "control.h"
-#include "../input_handler.h"
+#include "../systems/systems.h"
+#include "../systems/input_system.h"
 
 class InputSelectControl : public Control
 {
 public:
 	using Base = Control;
-	InputSelectControl(InputHandler* input, const int select, const int max, const ProcedureID proc_id)
-    : m_input(input)
-	, m_select(select)
+	InputSelectControl(const int select, const int max, const ProcedureID proc_id)
+    : m_select(select)
 	, m_max(max)
 	, m_curr_selection(0)
     , m_proc_id(proc_id)
     {}
 
-    InputSelectControl() : InputSelectControl(nullptr, 0, 0, ProcedureID{-1}) {}
+    InputSelectControl() : InputSelectControl(0, 0, ProcedureID{-1}) {}
 
     void print(std::ostream& to) const
     {
@@ -37,7 +37,7 @@ public:
     double decision_duck() const { return 0.0; }
     bool decision_attack() const
     {
-    	return m_select == m_curr_selection && m_input->select();
+    	return m_select == m_curr_selection && system<InputSystem>().select();
     }
 
     double decision_walk() const { return 0.0; }
@@ -53,14 +53,13 @@ public:
 
     void update_decisions(const Time time_diff)
     {
-    	m_curr_selection += m_input->down() - m_input->up() + m_max;
+    	m_curr_selection += system<InputSystem>().down() - system<InputSystem>().up() + m_max;
     	m_curr_selection %= m_max;
     }
 
     void clear_decisions() {}
 
 private:
-    InputHandler* m_input;
     int m_select, m_max, m_curr_selection;
     ProcedureID m_proc_id;
 };

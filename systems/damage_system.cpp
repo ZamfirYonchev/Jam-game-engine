@@ -10,9 +10,9 @@
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
 #include <algorithm>
-#include "../command_queue.h"
-#include "entity_system.h"
 #include "systems.h"
+#include "entity_system.h"
+#include "command_system.h"
 
 void DamageSystem::update(const Time time_diff)
 {
@@ -28,8 +28,8 @@ void DamageSystem::update(const Time time_diff)
 			health.update_health(time_diff);
 			if(was_alive && health.alive() == false && health.on_death_exec() >= 0)
 			{
-				system<CommandQueue>().push(std::make_unique<SelectEntityCommand>(entity.id()));
-				system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(health.on_death_exec()));
+				system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(entity.id()));
+				system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(health.on_death_exec()));
 			}
     	}
     	else

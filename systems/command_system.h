@@ -1,32 +1,32 @@
 /*
- * command_queue.h
+ * command_system.h
  *
- *  Created on: Nov 24, 2019
+ *  Created on: Oct 7, 2020
  *      Author: zamfi
  */
 
-#ifndef COMMAND_QUEUE_H_
-#define COMMAND_QUEUE_H_
+#ifndef SYSTEMS_COMMAND_SYSTEM_H_
+#define SYSTEMS_COMMAND_SYSTEM_H_
 
-#include "commands/command.h"
-#include "commands/null_command.h"
+#include "../commands/command.h"
+#include "../commands/null_command.h"
 #include <list>
-#include "types.h"
+#include "../types.h"
 #include <SDL2/SDL.h>
 #include <istream>
 
-class CommandQueue
+class CommandSystem
 {
 public:
-	CommandQueue() = default;
-    ~CommandQueue() = default;
+	CommandSystem() = default;
+    ~CommandSystem() = default;
 
-    CommandQueue(const CommandQueue& ) = delete;
-    CommandQueue& operator=(const CommandQueue& ) = delete;
+    CommandSystem(const CommandSystem& ) = delete;
+    CommandSystem& operator=(const CommandSystem& ) = delete;
 
-    CommandQueue(CommandQueue&& rhs) noexcept : m_commands(std::move(rhs.m_commands)) {}
+    CommandSystem(CommandSystem&& rhs) noexcept : m_commands(std::move(rhs.m_commands)) {}
 
-    CommandQueue& operator=(CommandQueue&& rhs) noexcept
+    CommandSystem& operator=(CommandSystem&& rhs) noexcept
     {
     	clear();
     	m_commands = std::move(rhs.m_commands);
@@ -79,4 +79,5 @@ private:
     std::list<std::unique_ptr<Command>> m_commands;
 };
 
-#endif /* COMMAND_QUEUE_H_ */
+
+#endif /* SYSTEMS_COMMAND_SYSTEM_H_ */

@@ -12,9 +12,9 @@
 #include "../commands/modify_position_command.h"
 #include "../commands/modify_control_command.h"
 #include <algorithm>
-#include "../command_queue.h"
-#include "entity_system.h"
 #include "systems.h"
+#include "entity_system.h"
+#include "command_system.h"
 
 void ControlSystem::update(const Time time_diff)
 {
@@ -45,20 +45,20 @@ void ControlSystem::update(const Time time_diff)
 			if(control.decision_attack() && control.attack_proc_id() >= 0)
 			{
 				const auto& position = entity.component<Position>();
-				system<CommandQueue>().push(std::make_unique<CallProcedureCommand>(control.attack_proc_id()));
+				system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(control.attack_proc_id()));
 				if(control.look_dir() == Control::LEFT)
 				{
-					system<CommandQueue>().push(std::make_unique<ModifyPositionCommand>(position.x(), position.y(), 0, 0));
-					system<CommandQueue>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
-					system<CommandQueue>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -1, control.look_dir()));
+					system<CommandSystem>().push(std::make_unique<ModifyPositionCommand>(position.x(), position.y(), 0, 0));
+					system<CommandSystem>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
+					system<CommandSystem>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -1, control.look_dir()));
 				}
 				else // Look dir is right
 				{
 					//command_queue().push(new ModifyPositionCommand(-0.0, 0, 0, 0));
 					//command_queue().push(new ModifyPositionCommand(position->x()+position->w(), position->y(), 0, 0));
-					system<CommandQueue>().push(std::make_unique<ModifyPositionCommand>(position.x(), position.y(), 0, 0));
-					system<CommandQueue>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
-					system<CommandQueue>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, 1, control.look_dir()));
+					system<CommandSystem>().push(std::make_unique<ModifyPositionCommand>(position.x(), position.y(), 0, 0));
+					system<CommandSystem>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, -0.0, -0.0));
+					system<CommandSystem>().push(std::make_unique<ModifyControlCommand>(0, 0, 0, 1, control.look_dir()));
 				}
 			}
     	}
