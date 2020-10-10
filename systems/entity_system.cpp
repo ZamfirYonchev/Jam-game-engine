@@ -6,12 +6,7 @@
  */
 
 #include "entity_system.h"
-#include "systems.h"
-#include "control_system.h"
-#include "movement_system.h"
-#include "collision_system.h"
-#include "damage_system.h"
-#include "rendering_system.h"
+#include "../definitions.h"
 
 Entity& EntitySystem::add_new_entity()
 {
@@ -34,10 +29,7 @@ void EntitySystem::clean_removed_entites()
 {
 	for(const auto id : m_entities_to_remove)
 	{
-		system<MovementSystem>().remove_id(id);
-		system<CollisionSystem>().remove_id(id);
-		system<DamageSystem>().remove_id(id);
-		system<RenderingSystem>().remove_id(id);
+		AllSystems::remove_id(id);
 
 		m_entities[id].clear();
 		m_free_entities.insert(id);

@@ -29,6 +29,11 @@ struct Systems
 	{
 		[[maybe_unused]] const auto dummy = { (system<SystemTs>().update(time_diff), 0)...};
 	}
+
+	static void remove_id(const EntityID id)
+	{
+		[[maybe_unused]] const auto dummy = { (system<SystemTs>().remove_id(id), 0)...};
+	}
 };
 
 #endif /* SYSTEMS_SYSTEMS_H_ */

@@ -13,11 +13,6 @@
 #include "globals.h"
 #include "math_ext.h"
 #include "commands/execute_file_clean_command.h"
-#include "systems/systems.h"
-#include "systems/control_system.h"
-#include "systems/movement_system.h"
-#include "systems/collision_system.h"
-#include "systems/damage_system.h"
 #include "systems/rendering_system.h"
 #include "systems/entity_system.h"
 #include "systems/resource_system.h"
@@ -25,7 +20,7 @@
 #include "systems/input_system.h"
 #include <iostream>
 
-const Systems<ControlSystem, MovementSystem, CollisionSystem, DamageSystem> systems;
+#include "definitions.h"
 
 int main(int argc, char** argv)
 {
@@ -87,7 +82,7 @@ int main(int argc, char** argv)
 			system<EntitySystem>().clean_removed_entites();
 
 			if(globals().app_paused == false)
-				systems.update(frame_diff);
+				AllSystems::update(frame_diff);
 
 			system<RenderingSystem>().render_entities(frame_diff, globals().app_paused, sdl.renderer());
 
@@ -98,7 +93,7 @@ int main(int argc, char** argv)
 
 			if(globals().app_running == false || globals().app_needs_reload)
 			{
-				systems.clear();
+				AllSystems::clear();
 				system<RenderingSystem>().clear();
 				system<CommandSystem>().clear();
 				system<ResourceSystem>().clear();
