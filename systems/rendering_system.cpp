@@ -17,35 +17,21 @@
 
 void RenderingSystem::add_id(const EntityID entity)
 {
-	if(system<EntitySystem>().entity(entity))
-	{
-		const int layer = system<EntitySystem>().entity(entity)->component<Visuals>().layer();
-		entities[layer].insert(entity);
-	}
-	else
-	{
-		//error entity
-	}
+	const int layer = system<EntitySystem>().entity_component<Visuals>(entity).layer();
+	entities[layer].insert(entity);
 }
 
 void RenderingSystem::remove_id(const EntityID entity)
 {
-	if(system<EntitySystem>().entity(entity))
-	{
-		const int layer = system<EntitySystem>().entity(entity)->component<Visuals>().layer();
-		entities[layer].erase(entity);
-	}
-	else
-	{
-		//error entity
-	}
+	const int layer = system<EntitySystem>().entity_component<Visuals>(entity).layer();
+	entities[layer].erase(entity);
 }
 
 void RenderingSystem::set_entity_layer(const EntityID entity_id, const Visuals::VisualLayer layer)
 {
-	if(system<EntitySystem>().entity(entity_id))
+	auto& visuals = system<EntitySystem>().entity_component<Visuals>(entity_id);
+	if(visuals)
 	{
-		auto& visuals = system<EntitySystem>().entity(entity_id)->component<Visuals>();
 		if(layer != visuals.layer())
 		{
 			remove_id(entity_id);
@@ -59,13 +45,32 @@ void RenderingSystem::set_entity_layer(const EntityID entity_id, const Visuals::
 	}
 }
 
+/*void RenderingSystem::update_entity_layers()
+{
+	for(auto entity_id : entities)
+	{
+		const auto entity_optional = system<EntitySystem>().entity(entity_id);
+		if(entity_optional)
+		{
+			if(entity_optional->visuals())
+			{
+
+			}
+		}
+		else
+		{
+			//error entity_id
+		}
+	}
+}*/
+
 void RenderingSystem::render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer) const
 {
     //SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);
 
-    const auto& screen_zone_position = system<EntitySystem>().entity(EntityID{0}) ? system<EntitySystem>().entity(EntityID{0})->component<Position>() : *Position::null;
+    const auto& screen_zone_position = system<EntitySystem>().entity_component<Position>(EntityID{0});
 
     const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*globals().resolution_y/screen_zone_position.h() : 1.0;
 
@@ -73,18 +78,17 @@ void RenderingSystem::render_entities(const Time time_diff, const bool paused, S
     {
 		for(const EntityID id : entities[layer])
 		{
-			if(system<EntitySystem>().entity(id))
+			auto& visuals = system<EntitySystem>().entity_component<Visuals>(id);
+			if(visuals)
 			{
-				Entity& entity = *(system<EntitySystem>().entity(id));
-				auto& visuals = entity.component<Visuals>();
-				const auto& movement = entity.component<Movement>();
-				const auto& position = entity.component<Position>();
-				const auto& control = entity.component<Control>();
+				const auto& movement = system<EntitySystem>().entity_component<Movement>(id);
+				const auto& position = system<EntitySystem>().entity_component<Position>(id);
+				const auto& control = system<EntitySystem>().entity_component<Control>(id);
 
 				if(paused == false)
 				{
-					const auto& collision = entity.component<Collision>();
-					const auto& health = entity.component<Health>();
+					const auto& collision = system<EntitySystem>().entity_component<Collision>(id);
+					const auto& health = system<EntitySystem>().entity_component<Health>(id);
 
 					switch(visuals.state())
 					{

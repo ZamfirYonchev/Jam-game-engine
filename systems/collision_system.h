@@ -11,6 +11,7 @@
 #include "system_base.h"
 #include <unordered_map>
 #include <unordered_set>
+#include "../components/collision.h"
 
 class CollisionSystem : public SystemBase
 {
@@ -20,7 +21,8 @@ public:
     void clear()
     {
     	SystemBase::clear();
-    	entity_regions.clear();
+    	entities_per_region.clear();
+    	regions_per_entity.clear();
     }
 
 private:
@@ -48,8 +50,9 @@ private:
     	}
     };
 
-    std::unordered_map<RegionPosition, std::unordered_set<EntityID>, RegionPositionHashFn> entity_regions;
-    static const unsigned int REGION_W = 32;
+    std::unordered_map<RegionPosition, std::unordered_set<EntityID>, RegionPositionHashFn> entities_per_region;
+    std::unordered_map<EntityID, Collision::RegionLocation> regions_per_entity;
+	static const unsigned int REGION_W = 32;
     static const unsigned int REGION_H = 32;
 };
 

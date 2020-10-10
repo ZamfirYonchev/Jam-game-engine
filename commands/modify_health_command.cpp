@@ -12,10 +12,9 @@
 
 void ModifyHealthCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& health = system<EntitySystem>().entity_component<Health>(system<EntitySystem>().previous_entity_id());
+	if(health)
 	{
-		auto& health = system<EntitySystem>().previous_entity()->component<Health>();
-
 		if(is_negative_zero(m_max_hp))
 			health.set_max_hp(0);
 		else

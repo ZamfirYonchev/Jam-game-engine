@@ -43,6 +43,8 @@ public:
 
 	static Interaction* null;
 
+    operator bool() const { return this != null; }
+
     friend std::ostream& operator<< (std::ostream& out, const Interaction& component)
     {
     	component.print(out);

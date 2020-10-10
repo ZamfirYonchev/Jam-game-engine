@@ -11,26 +11,10 @@
 
 double AttachedHealth::hp() const
 {
-	if(system<EntitySystem>().entity(m_attached_id))
-	{
-		return system<EntitySystem>().entity(m_attached_id)->component<Health>().hp() + m_offset_hp;
-	}
-	else
-	{
-		//error m_attached_id
-		return 0;
-	}
+	return system<EntitySystem>().entity_component<Health>(m_attached_id).hp() + m_offset_hp;
 }
 
 double AttachedHealth::max_hp() const
 {
-	if(system<EntitySystem>().entity(m_attached_id))
-	{
-		return system<EntitySystem>().entity(m_attached_id)->component<Health>().max_hp() + m_offset_max_hp;
-	}
-	else
-	{
-		//error m_attached_id
-		return 0;
-	}
+	return system<EntitySystem>().entity_component<Health>(m_attached_id).max_hp() + m_offset_max_hp;
 }

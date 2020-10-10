@@ -12,10 +12,9 @@
 
 void ModifyPositionCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& position = system<EntitySystem>().entity_component<Position>(system<EntitySystem>().previous_entity_id());
+	if(position)
 	{
-		auto& position = system<EntitySystem>().previous_entity()->component<Position>();
-
 		if(is_negative_zero(m_x))
 			position.set_x(m_x);
 		else

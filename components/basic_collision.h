@@ -18,7 +18,6 @@ public:
     : m_state(state)
     , m_standing_on(AIR)
 	, m_elasticity(elasticity)
-	, m_location({})
     {}
 
     BasicCollision() : BasicCollision(TRANSPARENT, 1) {}
@@ -38,18 +37,10 @@ public:
     double elasticity() const { return m_elasticity; }
     void set_elasticity(double val) { m_elasticity = val; }
 
-    const RegionLocation& region_location() const { return m_location; }
-    void set_region_x(const int val) { m_location.x = val; }
-    void set_region_y(const int val) { m_location.y = val; }
-    void set_region_x_end(const unsigned int val) { m_location.x_end = val; }
-    void set_region_y_end(const unsigned int val) { m_location.y_end = val; }
-    void set_region_location(const RegionLocation& val) { m_location = val; }
-
 private:
     CollisionState m_state;
     SurfaceType m_standing_on;
     double m_elasticity;
-    RegionLocation m_location;
 };
 
 #endif /* COMPONENTS_BASIC_COLLISION_H_ */

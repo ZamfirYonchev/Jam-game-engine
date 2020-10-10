@@ -12,10 +12,9 @@
 
 void ModifyMovementCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& movement = system<EntitySystem>().entity_component<Movement>(system<EntitySystem>().previous_entity_id());
+	if(movement)
 	{
-		auto& movement = system<EntitySystem>().previous_entity()->component<Movement>();
-
 		if(is_negative_zero(m_mass))
 			movement.set_mass(m_mass);
 		else

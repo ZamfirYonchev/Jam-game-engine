@@ -12,10 +12,9 @@
 
 void ModifyControlCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& control = system<EntitySystem>().entity_component<Control>(system<EntitySystem>().previous_entity_id());
+	if(control)
 	{
-		auto& control = system<EntitySystem>().previous_entity()->component<Control>();
-
 		if(is_negative_zero(m_decision_jump))
 			control.set_decision_jump(0.0);
 		else

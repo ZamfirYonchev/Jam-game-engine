@@ -27,16 +27,6 @@ public:
     void set_collision_damage(double) {}
     double elasticity() const { return 1; }
     void set_elasticity(double val) {}
-
-    const RegionLocation& region_location() const { return null_location; }
-    void set_region_x(int val) {}
-    void set_region_y(int val) {}
-    void set_region_x_end(const unsigned int val) {}
-    void set_region_y_end(const unsigned int val) {}
-    void set_region_location(const RegionLocation& val) {}
-
-private:
-    static const RegionLocation null_location;
 };
 
 #endif /* COMPONENTS_NULL_COLLISION_H_ */

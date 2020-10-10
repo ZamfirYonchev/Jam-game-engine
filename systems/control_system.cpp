@@ -18,15 +18,12 @@
 
 void ControlSystem::update(const Time time_diff)
 {
-	std::for_each(cbegin(entities), cend(entities),
-	[time_diff](const EntityID id)
+	for(const auto id : entities)
 	{
-    	if(system<EntitySystem>().entity(id))
+		auto& control = system<EntitySystem>().entity_component<Control>(id);
+    	if(control)
     	{
-			Entity& entity = *(system<EntitySystem>().entity(id));
-			auto& control = entity.component<Control>();
-			const auto& health = entity.component<Health>();
-
+			const auto& health = system<EntitySystem>().entity_component<Health>(id);
 
 			if(health.alive())
 			{
@@ -44,7 +41,7 @@ void ControlSystem::update(const Time time_diff)
 
 			if(control.decision_attack() && control.attack_proc_id() >= 0)
 			{
-				const auto& position = entity.component<Position>();
+				const auto& position = system<EntitySystem>().entity_component<Position>(id);
 				system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(control.attack_proc_id()));
 				if(control.look_dir() == Control::LEFT)
 				{
@@ -66,5 +63,5 @@ void ControlSystem::update(const Time time_diff)
     	{
     		//error *it
     	}
-	});
+	}
 }

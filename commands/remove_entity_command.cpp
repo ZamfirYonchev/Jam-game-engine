@@ -11,11 +11,6 @@
 
 void RemoveEntityCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().remove_entity(system<EntitySystem>().previous_entity()->id());
-	else
-	{
-		//error system<EntitySystem>().previous_entity()
-	}
+	system<EntitySystem>().remove_entity(system<EntitySystem>().previous_entity_id());
 }
 

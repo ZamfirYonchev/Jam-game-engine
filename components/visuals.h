@@ -43,6 +43,8 @@ public:
 
     static Visuals* null;
 
+    operator bool() const { return this != null; }
+
     friend std::ostream& operator<< (std::ostream& out, const Visuals& component)
     {
     	component.print(out);

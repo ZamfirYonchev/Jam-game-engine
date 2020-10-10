@@ -22,17 +22,10 @@
 template<typename T>
 void ReuseComponentCommand<T>::execute() const
 {
-	const auto entity_optional = system<EntitySystem>().resolved_entity(m_source_id);
-	if(entity_optional)
-	{
-		std::stringstream ss;
-		ss << entity_optional->component<T>();
-		system<CommandSystem>().process_stream(ss, m_renderer);
-	}
-	else
-	{
-		//error m_source_id
-	}
+	const auto& component = system<EntitySystem>().entity_component<T>(system<EntitySystem>().resolved_id(m_source_id));
+	std::stringstream ss;
+	ss << component;
+	system<CommandSystem>().process_stream(ss, m_renderer);
 }
 
 //a hack to make linker happy

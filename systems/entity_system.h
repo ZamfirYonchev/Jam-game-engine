@@ -13,8 +13,6 @@
 #include <array>
 #include "../entity.h"
 #include "../types.h"
-#include <optional>
-#include "../optional_ref.h"
 
 class EntitySystem
 {
@@ -61,13 +59,29 @@ public:
     	m_entities_to_remove.insert(id);
     }
 
-
-    optional_ref<Entity> entity(const EntityID id)
+    template<typename T>
+    T& entity_component(const EntityID id)
     {
     	if(id >= 0 && id < int(m_entities.size()))
-    		return optional_ref<Entity>(m_entities[id]);
+    		return m_entities[id].component<T>();
     	else
-    		return optional_ref<Entity>();
+    		return *T::null;
+    }
+
+    template<typename T>
+    const T& entity_component(const EntityID id) const
+    {
+    	if(id >= 0 && id < int(m_entities.size()))
+    		return m_entities[id].component<T>();
+    	else
+    		return *T::null;
+    }
+
+    template<typename T, typename... Args>
+	void set_entity_component(const EntityID id, Args&&... args)
+    {
+    	if(id >= 0 && id < int(m_entities.size()))
+    		m_entities[id].set_component<T>(std::forward<Args>(args)...);
     }
 
     void clear()
@@ -85,11 +99,6 @@ public:
     	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
     }
 
-    optional_ref<Entity> previous_entity()
-	{
-    	return entity(previous_entity_id());
-	}
-
     constexpr EntityID previous_entity_id() const
     {
     	return EntityID{m_last_accessed_entities[m_head_of_last_accessed_entities]};
@@ -105,12 +114,6 @@ public:
     {
     	return EntityID{(in_entity_id >= 0)*in_entity_id + (in_entity_id < 0)*previous_entity_id(EntityID{-1-in_entity_id})};
     }
-
-	optional_ref<Entity> resolved_entity(const EntityID in_entity_id)
-    {
-    	return entity(resolved_id(in_entity_id));
-    }
-
 
 private:
     std::vector<Entity> m_entities;

@@ -22,11 +22,11 @@ void InputControl::update_decisions(const Time time_diff)
 
 	m_look_dir = m_walk_dir > 0 ? RIGHT : m_walk_dir < 0 ? LEFT : m_look_dir;
 
-	const auto& self_entity = *(system<EntitySystem>().entity(m_self_id));
+	const auto& self_movement = system<EntitySystem>().entity_component<Movement>(m_self_id);
 
-	if(m_stability_control && m_walk_dir == 0 && abs(self_entity.component<Movement>().vx()) > self_entity.component<Movement>().move_force()/self_entity.component<Movement>().mass())
+	if(m_stability_control && m_walk_dir == 0 && abs(self_movement.vx()) > self_movement.move_force()/self_movement.mass())
     {
-    	m_walk_dir = -sign(self_entity.component<Movement>().vx());
+    	m_walk_dir = -sign(self_movement.vx());
     }
 
     m_shoot = input.shooting() && (m_current_shoot_cooldown == 0);

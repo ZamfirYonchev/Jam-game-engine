@@ -18,13 +18,12 @@ void MovementSystem::update(const Time time_delta)
 {
 	for(const auto id : entities)
 	{
-    	if(system<EntitySystem>().entity(id))
+		auto& movement = system<EntitySystem>().entity_component<Movement>(id);
+    	if(movement)
     	{
-    		Entity& entity = *system<EntitySystem>().entity(id);
-			const auto& control = entity.component<Control>();
-			auto& movement = entity.component<Movement>();
-			const auto& collision = entity.component<Collision>();
-			auto& position  = entity.component<Position>();
+			const auto& control = system<EntitySystem>().entity_component<Control>(id);
+			const auto& collision = system<EntitySystem>().entity_component<Collision>(id);
+			auto& position  = system<EntitySystem>().entity_component<Position>(id);
 
 			if(movement.gravity_affected())
 			{

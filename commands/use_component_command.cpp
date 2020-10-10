@@ -49,129 +49,58 @@
 template<typename T>
 void UseComponentCommand<T>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<T>(m_component);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<T>(system<EntitySystem>().previous_entity_id(), m_component);
 }
 
 void UseComponentCommand<InputControl>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<InputControl>(m_proc_id, m_proc_cooldown, system<EntitySystem>().previous_entity()->id(), m_stability_control);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<InputControl>(system<EntitySystem>().previous_entity_id(), m_proc_id, m_proc_cooldown, system<EntitySystem>().previous_entity_id(), m_stability_control);
 }
 
 void UseComponentCommand<InputSelectControl>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<InputSelectControl>(m_select, m_max, m_proc_id);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<InputSelectControl>(system<EntitySystem>().previous_entity_id(), m_select, m_max, m_proc_id);
 }
 
 void UseComponentCommand<ChaseAIControl>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<ChaseAIControl>(system<EntitySystem>().previous_entity()->id(), system<EntitySystem>().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<ChaseAIControl>(system<EntitySystem>().previous_entity_id(), system<EntitySystem>().previous_entity_id(), system<EntitySystem>().resolved_id(m_target_id), m_attack_id, m_attack_cooldown, m_attack_range);
 }
 
 void UseComponentCommand<GuideControl>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<GuideControl>(system<EntitySystem>().previous_entity()->id(), system<EntitySystem>().resolved_id(m_target_id), m_range);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<GuideControl>(system<EntitySystem>().previous_entity_id(), system<EntitySystem>().previous_entity_id(), system<EntitySystem>().resolved_id(m_target_id), m_range);
 }
 
 void UseComponentCommand<HealthVisuals>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<HealthVisuals>(system<EntitySystem>().previous_entity()->id(), m_spr_id, m_repeat_x);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<HealthVisuals>(system<EntitySystem>().previous_entity_id(), system<EntitySystem>().previous_entity_id(), m_spr_id, m_repeat_x);
 }
 
 void UseComponentCommand<MenuItemVisuals>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<MenuItemVisuals>(m_spr_id, system<EntitySystem>().previous_entity()->id());
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<MenuItemVisuals>(system<EntitySystem>().previous_entity_id(), m_spr_id, system<EntitySystem>().previous_entity_id());
 }
 
 void UseComponentCommand<BuildPosition>::execute() const
 {
-	if(system<EntitySystem>().previous_entity() && system<EntitySystem>().entity(m_builder_id))
-		system<EntitySystem>().previous_entity()->set_component<BuildPosition>
-														( system<EntitySystem>().previous_entity()->id()
-														, m_builder_id
-														, system<EntitySystem>().entity(m_builder_id)->component<Position>().x()
-														, system<EntitySystem>().entity(m_builder_id)->component<Position>().y()
-														);
-	else
-	{
-		//error globals().access_entity_id || m_builder_id
-	}
+	const auto& builder_pos = system<EntitySystem>().entity_component<Position>(m_builder_id);
+	system<EntitySystem>().set_entity_component<BuildPosition>(system<EntitySystem>().previous_entity_id(), system<EntitySystem>().previous_entity_id(), m_builder_id, builder_pos.x(), builder_pos.y());
 }
 
 void UseComponentCommand<TiledVisuals>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<TiledVisuals>(m_spr_id, m_tile_w, m_tile_h, system<EntitySystem>().previous_entity()->id());
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<TiledVisuals>(system<EntitySystem>().previous_entity_id(), m_spr_id, m_tile_w, m_tile_h, system<EntitySystem>().previous_entity_id());
 }
 
 void UseComponentCommand<AttachedPosition>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<AttachedPosition>
-														(
-														system<EntitySystem>().resolved_id(m_attached_id)
-														, m_offset_x
-														, m_offset_y
-														, m_offset_w
-														, m_offset_h
-														);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<AttachedPosition>(system<EntitySystem>().previous_entity_id(), system<EntitySystem>().resolved_id(m_attached_id), m_offset_x, m_offset_y, m_offset_w, m_offset_h);
 }
 
 void UseComponentCommand<AttachedHealth>::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
-		system<EntitySystem>().previous_entity()->set_component<AttachedHealth>
-														(
-															system<EntitySystem>().resolved_id(m_attached_id)
-															, m_offset_hp
-															, m_offset_max_hp
-														);
-	else
-	{
-		//error globals().access_entity_id
-	}
+	system<EntitySystem>().set_entity_component<AttachedHealth>(system<EntitySystem>().previous_entity_id(), system<EntitySystem>().resolved_id(m_attached_id), m_offset_hp, m_offset_max_hp);
 }
 
 template class UseComponentCommand<AbsolutePosition>;

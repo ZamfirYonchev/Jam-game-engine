@@ -12,11 +12,6 @@
 
 void FixViewWidthCommand::execute() const
 {
-	auto& position = system<EntitySystem>().entity(EntityID{0})->component<Position>();
-	if(system<EntitySystem>().entity(EntityID{0}))
-		position.set_w(int(position.h()*globals().resolution_x/globals().resolution_y));
-	else
-	{
-		//error system<EntitySystem>().entity(0)
-	}
+	auto& position = system<EntitySystem>().entity_component<Position>(EntityID{0});
+	position.set_w(int(position.h()*globals().resolution_x/globals().resolution_y));
 }

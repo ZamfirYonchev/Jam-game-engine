@@ -36,6 +36,8 @@ public:
 
     static Position* null;
 
+    operator bool() const { return this != null; }
+
     friend std::ostream& operator<< (std::ostream& out, const Position& component)
     {
     	component.print(out);

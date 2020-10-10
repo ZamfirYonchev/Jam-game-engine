@@ -41,6 +41,8 @@ public:
 
     static Control* null;
 
+    operator bool() const { return this != null; }
+
     friend std::ostream& operator<< (std::ostream& out, const Control& component)
     {
     	component.print(out);

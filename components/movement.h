@@ -52,6 +52,8 @@ public:
 
     static Movement* null;
 
+    operator bool() const { return this != null; }
+
     friend std::ostream& operator<< (std::ostream& out, const Movement& component)
     {
     	component.print(out);

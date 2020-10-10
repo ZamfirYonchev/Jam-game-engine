@@ -12,10 +12,9 @@
 
 void ModifyCollisionCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& collision = system<EntitySystem>().entity_component<Collision>(system<EntitySystem>().previous_entity_id());
+	if(collision)
 	{
-		auto& collision = system<EntitySystem>().previous_entity()->component<Collision>();
-
 		if(is_negative_zero(m_state))
 			collision.set_state(Collision::CollisionState(0));
 		else

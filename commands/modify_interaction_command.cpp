@@ -12,10 +12,9 @@
 
 void ModifyInteractionCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& interaction = system<EntitySystem>().entity_component<Interaction>(system<EntitySystem>().previous_entity_id());
+	if(interaction)
 	{
-		auto& interaction = system<EntitySystem>().previous_entity()->component<Interaction>();
-
 		if(is_negative_zero(m_group))
 			interaction.clear_groups();
 		else

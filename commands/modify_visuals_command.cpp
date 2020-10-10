@@ -13,10 +13,9 @@
 
 void ModifyVisualsCommand::execute() const
 {
-	if(system<EntitySystem>().previous_entity())
+	auto& visuals = system<EntitySystem>().entity_component<Visuals>(system<EntitySystem>().previous_entity_id());
+	if(visuals)
 	{
-		auto& visuals = system<EntitySystem>().previous_entity()->component<Visuals>();
-
 		if(is_negative_zero(m_render_state))
 			visuals.set_new_state(Visuals::IDLE);
 		else
@@ -41,18 +40,18 @@ void ModifyVisualsCommand::execute() const
 		{
 			if(visuals.layer() != 0)
 			{
-				system<RenderingSystem>().remove_id(system<EntitySystem>().previous_entity()->id());
+				system<RenderingSystem>().remove_id(system<EntitySystem>().previous_entity_id());
 				visuals.set_layer(Visuals::VisualLayer(0));
-				system<RenderingSystem>().add_id(system<EntitySystem>().previous_entity()->id());
+				system<RenderingSystem>().add_id(system<EntitySystem>().previous_entity_id());
 			}
 		}
 		else
 		{
 			if(m_layer != 0)
 			{
-				system<RenderingSystem>().remove_id(system<EntitySystem>().previous_entity()->id());
+				system<RenderingSystem>().remove_id(system<EntitySystem>().previous_entity_id());
 				visuals.set_layer(Visuals::VisualLayer(visuals.layer()+int(m_layer)));
-				system<RenderingSystem>().add_id(system<EntitySystem>().previous_entity()->id());
+				system<RenderingSystem>().add_id(system<EntitySystem>().previous_entity_id());
 			}
 		}
 	}

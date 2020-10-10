@@ -34,7 +34,7 @@ public:
 		bool is_null() const { return (x==x_end) || (y==y_end); }
 	};
 
-    enum SurfaceType {AIR = 0, GROUND = 1};
+	enum SurfaceType {AIR = 0, GROUND = 1};
     enum CollisionState {TRANSPARENT = 0, MOVEABLE = 1, SOLID = 2};
     virtual ~Collision() {}
     virtual void print(std::ostream& to) const = 0;
@@ -43,20 +43,15 @@ public:
     virtual SurfaceType standing_on() const = 0;
     virtual double on_collision_damage() const = 0;
     virtual double elasticity() const = 0;
-    virtual const RegionLocation& region_location() const = 0;
 
     virtual void set_state(CollisionState val) = 0;
     virtual void set_standing_on(SurfaceType surface) = 0;
     virtual void set_collision_damage(double) = 0;
     virtual void set_elasticity(double val) = 0;
 
-    virtual void set_region_x(const int val) = 0;
-    virtual void set_region_y(const int val) = 0;
-    virtual void set_region_x_end(const unsigned int val) = 0;
-    virtual void set_region_y_end(const unsigned int val) = 0;
-    virtual void set_region_location(const RegionLocation& val) = 0;
-
     static Collision* null;
+
+    operator bool() const { return this != null; }
 
     friend std::ostream& operator<< (std::ostream& out, const Collision& component)
     {

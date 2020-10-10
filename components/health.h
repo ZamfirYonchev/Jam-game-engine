@@ -37,6 +37,8 @@ public:
 
     static Health* null;
 
+    operator bool() const { return this != null; }
+
     friend std::ostream& operator<< (std::ostream& out, const Health& component)
     {
     	component.print(out);

@@ -12,14 +12,6 @@
 
 uint8_t HealthVisuals::animation_sprite(uint16_t rx, uint16_t ry) const
 {
-	if(system<EntitySystem>().entity(m_self_id))
-	{
-		const auto& health = system<EntitySystem>().entity(m_self_id)->component<Health>();
-		return (m_repeat_x != 0) && (health.max_hp() != 0) && (1.0*rx/m_repeat_x) < (1.0*health.hp()/health.max_hp());
-	}
-	else
-	{
-		//error m_self_id
-		return 0;
-	}
+	const auto& health = system<EntitySystem>().entity_component<Health>(m_self_id);
+	return (m_repeat_x != 0) && (health.max_hp() != 0) && (1.0*rx/m_repeat_x) < (1.0*health.hp()/health.max_hp());
 }

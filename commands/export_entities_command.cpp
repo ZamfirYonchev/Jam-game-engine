@@ -16,7 +16,7 @@ void ExportEntitiesCommand::execute() const
 	std::ofstream file {m_filename};
 
 	if(file)
-		for(auto& entity : system<EntitySystem>().entities())
+		for(const auto& entity : system<EntitySystem>().entities())
 		{
 			file << entity << std::endl;
 		}

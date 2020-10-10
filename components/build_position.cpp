@@ -16,34 +16,22 @@
 
 double BuildPosition::x() const
 {
-	if(system<EntitySystem>().entity(m_attached_id))
-		return min(m_origin_x, system<EntitySystem>().entity(m_attached_id)->component<Position>().x());
-	else
-		return m_origin_x;
+	return min(m_origin_x, system<EntitySystem>().entity_component<Position>(m_attached_id).x());
 }
 
 double BuildPosition::y() const
 {
-	if(system<EntitySystem>().entity(m_attached_id))
-		return min(m_origin_y, system<EntitySystem>().entity(m_attached_id)->component<Position>().y());
-	else
-		return m_origin_y;
+	return min(m_origin_y, system<EntitySystem>().entity_component<Position>(m_attached_id).y());
 }
 
 double BuildPosition::w() const
 {
-	if(system<EntitySystem>().entity(m_attached_id))
-		return abs(m_origin_x - system<EntitySystem>().entity(m_attached_id)->component<Position>().x());
-	else
-		return 0;
+	return abs(m_origin_x - system<EntitySystem>().entity_component<Position>(m_attached_id).x());
 }
 
 double BuildPosition::h() const
 {
-	if(system<EntitySystem>().entity(m_attached_id))
-		return abs(m_origin_y - system<EntitySystem>().entity(m_attached_id)->component<Position>().y());
-	else
-		return 0;
+	return abs(m_origin_y - system<EntitySystem>().entity_component<Position>(m_attached_id).y());
 }
 
 void BuildPosition::mod_w(double val)
