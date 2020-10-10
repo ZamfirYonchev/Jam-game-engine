@@ -85,7 +85,7 @@
 
 void CommandSystem::process(const Time time_diff)
 {
-    while(m_commands.cbegin() != m_commands.cend())
+    while(m_commands.size() > 0)
     {
         auto cmd = std::move(m_commands.front());
         m_commands.pop_front();
