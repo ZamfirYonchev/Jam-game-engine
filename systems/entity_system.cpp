@@ -32,15 +32,15 @@ Entity& EntitySystem::add_new_entity()
 
 void EntitySystem::clean_removed_entites()
 {
-	for(auto it = m_entities_to_remove.begin(); it != m_entities_to_remove.end(); ++it)
+	for(const auto id : m_entities_to_remove)
 	{
-		system<MovementSystem>().remove_id(*it);
-		system<CollisionSystem>().remove_id(*it);
-		system<DamageSystem>().remove_id(*it);
-		system<RenderingSystem>().remove_id(*it);
+		system<MovementSystem>().remove_id(id);
+		system<CollisionSystem>().remove_id(id);
+		system<DamageSystem>().remove_id(id);
+		system<RenderingSystem>().remove_id(id);
 
-		m_entities[*it].clear();
-		m_free_entities.insert(*it);
+		m_entities[id].clear();
+		m_free_entities.insert(id);
 	}
 	m_entities_to_remove.clear();
 }
