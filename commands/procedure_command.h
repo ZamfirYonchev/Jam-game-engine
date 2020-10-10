@@ -25,12 +25,12 @@ public:
     }
 
     void execute() const;
-    std::unique_ptr<Command> clone()
+    std::unique_ptr<Command> clone() const
     {
-        ProcedureCommand cmd = ProcedureCommand();
-        for(auto it = m_commands.begin(); it != m_commands.end(); ++it)
-            cmd.add_command((*it)->clone());
-        return std::make_unique<ProcedureCommand>(std::move(cmd));
+    	auto proc_cmd_ptr = std::make_unique<ProcedureCommand>();
+        for(const auto& cmd : m_commands)
+        	proc_cmd_ptr->add_command(cmd->clone());
+        return proc_cmd_ptr;
     }
 
 private:
