@@ -21,7 +21,7 @@ public:
 	{}
 
 	void execute() const;
-	std::unique_ptr<Command> clone() { return std::make_unique<ModifyCollisionCommand>(m_state, m_standing_on, m_on_collision_damage, m_elasticity); }
+	std::unique_ptr<Command> clone() const { return std::make_unique<ModifyCollisionCommand>(m_state, m_standing_on, m_on_collision_damage, m_elasticity); }
 private:
 	double m_state, m_standing_on, m_on_collision_damage, m_elasticity;
 };

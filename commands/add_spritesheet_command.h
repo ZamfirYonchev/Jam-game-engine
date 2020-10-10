@@ -32,7 +32,7 @@ public:
                         {}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<AddSpritesheetCommand>(m_idle_start, m_idle_size
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddSpritesheetCommand>(m_idle_start, m_idle_size
                                                           , m_walk_start, m_walk_size
                                                           , m_jump_start, m_jump_size
                                                           , m_fall_start, m_fall_size

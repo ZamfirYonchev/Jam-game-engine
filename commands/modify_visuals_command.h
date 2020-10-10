@@ -22,7 +22,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<ModifyVisualsCommand>(m_render_state, m_repeat_x, m_repeat_y, m_spr_id, m_layer); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<ModifyVisualsCommand>(m_render_state, m_repeat_x, m_repeat_y, m_spr_id, m_layer); }
 private:
 	double m_render_state, m_repeat_x, m_repeat_y, m_spr_id, m_layer;
 };

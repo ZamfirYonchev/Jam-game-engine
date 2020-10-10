@@ -24,7 +24,7 @@ public:
 	{}
 
 	void execute() const;
-	std::unique_ptr<Command> clone() { return std::make_unique<ModifyMovementCommand>(m_mass, m_friction, m_vx, m_vy, m_fx, m_fy, m_gravity_affected); }
+	std::unique_ptr<Command> clone() const { return std::make_unique<ModifyMovementCommand>(m_mass, m_friction, m_vx, m_vy, m_fx, m_fy, m_gravity_affected); }
 private:
     double m_mass, m_friction, m_vx, m_vy, m_fx, m_fy, m_gravity_affected;
 };

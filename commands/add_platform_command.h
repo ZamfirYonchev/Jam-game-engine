@@ -25,7 +25,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<AddPlatformCommand>(m_x, m_y, m_w, m_h, m_spr_id, m_tile_w, m_tile_h); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddPlatformCommand>(m_x, m_y, m_w, m_h, m_spr_id, m_tile_w, m_tile_h); }
 
 private:
     double m_x, m_y, m_w, m_h;

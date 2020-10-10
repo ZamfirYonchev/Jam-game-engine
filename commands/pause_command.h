@@ -16,7 +16,7 @@ public:
     PauseCommand(bool paused) : m_paused(paused) {}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<PauseCommand>(m_paused); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<PauseCommand>(m_paused); }
 private:
     bool m_paused;
 };

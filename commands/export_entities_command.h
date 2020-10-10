@@ -20,7 +20,7 @@ public:
     {}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<ExportEntitiesCommand>(m_filename); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<ExportEntitiesCommand>(m_filename); }
 
 private:
     std::string m_filename;

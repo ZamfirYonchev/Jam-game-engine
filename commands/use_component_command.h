@@ -31,7 +31,7 @@ public:
 	: m_component(std::forward<Args>(args)...) {}
 
 	void execute() const;
-    std::unique_ptr<Command> clone()
+    std::unique_ptr<Command> clone() const
     {
     	return std::make_unique<UseComponentCommand<T>>(m_component);
     }
@@ -51,7 +51,7 @@ public:
 	{}
 
 	void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<InputControl>>(m_proc_id, m_proc_cooldown, m_stability_control); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<InputControl>>(m_proc_id, m_proc_cooldown, m_stability_control); }
 
 private:
     ProcedureID m_proc_id;
@@ -70,7 +70,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<InputSelectControl>>(m_select, m_max, m_proc_id); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<InputSelectControl>>(m_select, m_max, m_proc_id); }
 private:
     int m_select;
     int m_max;
@@ -89,7 +89,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<ChaseAIControl>>(m_target_id, m_attack_id, m_attack_cooldown, m_attack_range); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<ChaseAIControl>>(m_target_id, m_attack_id, m_attack_cooldown, m_attack_range); }
 
 private:
     EntityID m_target_id;
@@ -107,7 +107,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<GuideControl>>(m_target_id, m_range); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<GuideControl>>(m_target_id, m_range); }
 private:
     EntityID m_target_id;
     double m_range;
@@ -123,7 +123,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<HealthVisuals>>(m_spr_id, m_repeat_x); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<HealthVisuals>>(m_spr_id, m_repeat_x); }
 private:
     SpritesheetID m_spr_id;
     uint16_t m_repeat_x;
@@ -138,7 +138,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<MenuItemVisuals>>(m_spr_id); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<MenuItemVisuals>>(m_spr_id); }
 private:
     SpritesheetID m_spr_id;
 };
@@ -152,7 +152,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<BuildPosition>>(m_builder_id); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<BuildPosition>>(m_builder_id); }
 private:
     SpritesheetID m_builder_id;
 };
@@ -168,7 +168,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<TiledVisuals>>(m_spr_id, m_tile_w, m_tile_h); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<TiledVisuals>>(m_spr_id, m_tile_w, m_tile_h); }
 private:
     SpritesheetID m_spr_id;
     double m_tile_w;
@@ -188,7 +188,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<AttachedPosition>>(m_attached_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<AttachedPosition>>(m_attached_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
 private:
     EntityID m_attached_id;
     double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
@@ -205,7 +205,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<UseComponentCommand<AttachedHealth>>(m_attached_id, m_offset_hp, m_offset_max_hp); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<AttachedHealth>>(m_attached_id, m_offset_hp, m_offset_max_hp); }
 private:
     EntityID m_attached_id;
     double m_offset_hp, m_offset_max_hp;

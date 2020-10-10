@@ -15,7 +15,7 @@ class Command
 public:
     virtual ~Command() {}
     virtual void execute() const = 0;
-    virtual std::unique_ptr<Command> clone() = 0;
+    virtual std::unique_ptr<Command> clone() const = 0;
 };
 
 #endif /* COMMANDS_COMMAND_H_ */

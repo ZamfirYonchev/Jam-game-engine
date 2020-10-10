@@ -20,7 +20,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<ModifyHealthCommand>(m_max_hp, m_hp, m_hp_change); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<ModifyHealthCommand>(m_max_hp, m_hp, m_hp_change); }
 private:
 	double m_max_hp, m_hp, m_hp_change;
 };

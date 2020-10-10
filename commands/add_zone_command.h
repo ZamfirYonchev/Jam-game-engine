@@ -26,7 +26,7 @@ public:
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<AddZoneCommand>(m_x, m_y, m_w, m_h, m_trigger_group, m_on_enter_proc_id_self, m_on_enter_proc_id_other, m_on_exit_proc_id_self); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddZoneCommand>(m_x, m_y, m_w, m_h, m_trigger_group, m_on_enter_proc_id_self, m_on_enter_proc_id_other, m_on_exit_proc_id_self); }
 
 private:
     double m_x, m_y, m_w, m_h;

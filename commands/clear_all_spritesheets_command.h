@@ -16,7 +16,7 @@ public:
 	ClearAllSpritesheetsCommand() {}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<ClearAllSpritesheetsCommand>(); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<ClearAllSpritesheetsCommand>(); }
 };
 
 #endif /* COMMANDS_CLEAR_ALL_SPRITESHEETS_COMMAND_H_ */

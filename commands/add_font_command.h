@@ -19,7 +19,7 @@ public:
 	, m_size(size)
 	{}
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<AddFontCommand>(m_file, m_size); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddFontCommand>(m_file, m_size); }
 
 private:
     std::string m_file;

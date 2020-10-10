@@ -19,7 +19,7 @@ public:
     {}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<CallProcedureCommand>(m_id); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<CallProcedureCommand>(m_id); }
 
 private:
     ProcedureID m_id;

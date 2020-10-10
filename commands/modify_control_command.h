@@ -22,7 +22,7 @@ public:
 	{}
 
 	void execute() const;
-	std::unique_ptr<Command> clone() { return std::make_unique<ModifyControlCommand>(m_decision_jump, m_decision_duck, m_decision_attack, m_decision_walk, m_look_dir); }
+	std::unique_ptr<Command> clone() const { return std::make_unique<ModifyControlCommand>(m_decision_jump, m_decision_duck, m_decision_attack, m_decision_walk, m_look_dir); }
 private:
     double m_decision_jump;
     double m_decision_duck;

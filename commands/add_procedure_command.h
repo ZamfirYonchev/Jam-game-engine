@@ -16,7 +16,7 @@ public:
     AddProcedureCommand(int num_of_cmds) : m_num_of_cmds(num_of_cmds) {}
 
     void execute() const;
-    std::unique_ptr<Command> clone() { return std::make_unique<AddProcedureCommand>(m_num_of_cmds); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddProcedureCommand>(m_num_of_cmds); }
 private:
     int m_num_of_cmds;
 };

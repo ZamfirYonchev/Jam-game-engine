@@ -23,7 +23,7 @@ public:
 
     void execute() const;
 
-	std::unique_ptr<Command> clone() { return std::make_unique<ReuseComponentCommand>(m_source_id, m_renderer); }
+	std::unique_ptr<Command> clone() const { return std::make_unique<ReuseComponentCommand>(m_source_id, m_renderer); }
 
 private:
     EntityID m_source_id;
