@@ -11,6 +11,6 @@
 
 void AddEntityCommand::execute() const
 {
-	Entity& entity = system<EntitySystem>().add_new_entity();
+	const Entity& entity = system<EntitySystem>().add_new_entity();
     system<EntitySystem>().add_accessed_entity(entity.id());
 }
