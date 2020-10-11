@@ -14,6 +14,8 @@
 #include "resource_system.h"
 #include "systems.h"
 #include "../globals.h"
+#include "../utilities.h"
+#include <list>
 
 void RenderingSystem::add_id(const EntityID entity)
 {
@@ -45,27 +47,28 @@ void RenderingSystem::set_entity_layer(const EntityID entity_id, const Visuals::
 	}
 }
 
-/*void RenderingSystem::update_entity_layers()
+void RenderingSystem::update_entity_layers()
 {
-	for(auto entity_id : entities)
+	std::list<EntityID> ids_to_add;
+
+	for(int layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
 	{
-		const auto entity_optional = system<EntitySystem>().entity(entity_id);
-		if(entity_optional)
+		discard_if(entities[layer],
+		[&](const auto entity_id)
 		{
-			if(entity_optional->visuals())
-			{
-
-			}
-		}
-		else
-		{
-			//error entity_id
-		}
+			ids_to_add.push_back(entity_id);
+			return layer != system<EntitySystem>().entity_component<Visuals>(entity_id).layer();
+		});
 	}
-}*/
 
-void RenderingSystem::render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer) const
+	for(const auto entity_id : ids_to_add)
+		entities[system<EntitySystem>().entity_component<Visuals>(entity_id).layer()].insert(entity_id);
+}
+
+void RenderingSystem::render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer)
 {
+	update_entity_layers();
+
     //SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderClear(renderer);

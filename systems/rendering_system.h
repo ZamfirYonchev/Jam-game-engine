@@ -12,6 +12,7 @@
 #include <set>
 #include "../components/visuals.h"
 #include <SDL2/SDL.h>
+#include <unordered_map>
 
 class RenderingSystem
 {
@@ -26,7 +27,8 @@ public:
     }
 
     void set_entity_layer(EntityID entity, Visuals::VisualLayer layer);
-    void render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer) const;
+    void update_entity_layers();
+    void render_entities(const Time time_diff, const bool paused, SDL_Renderer* renderer);
 
 protected:
     std::set<EntityID> entities[Visuals::NUM_OF_LAYERS];
