@@ -13,6 +13,7 @@
 #include <array>
 #include "../entity.h"
 #include "../types.h"
+#include <algorithm>
 
 class EntitySystem
 {
@@ -48,10 +49,17 @@ public:
     	return *this;
     }
 
-    const std::vector<Entity>& entities() const
-	{
-    	return m_entities;
-	}
+    template<typename F>
+    void for_each(F func) const
+    {
+    	std::for_each(std::cbegin(m_entities), std::cend(m_entities), func);
+    }
+
+    template<typename F>
+    void for_each(F func)
+    {
+    	std::for_each(std::begin(m_entities), std::end(m_entities), func);
+    }
 
     Entity& add_new_entity();
     void remove_entity(const EntityID id)

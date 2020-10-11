@@ -16,12 +16,7 @@ void ExportEntitiesCommand::execute() const
 	std::ofstream file {m_filename};
 
 	if(file)
-		for(const auto& entity : system<EntitySystem>().entities())
-		{
-			file << entity << std::endl;
-		}
+		system<EntitySystem>().for_each([&](const auto& entity){ file << entity << std::endl; });
 	else
-	{
 		std::cerr << "Could not open file " << m_filename << " for write." << std::endl;
-	}
 }
