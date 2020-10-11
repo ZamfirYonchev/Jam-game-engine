@@ -56,8 +56,13 @@ void RenderingSystem::update_entity_layers()
 		discard_if(entities[layer],
 		[&](const auto entity_id)
 		{
-			ids_to_add.push_back(entity_id);
-			return layer != system<EntitySystem>().entity_component<Visuals>(entity_id).layer();
+			const bool wrong_layer = layer != system<EntitySystem>().entity_component<Visuals>(entity_id).layer();
+			if(wrong_layer)
+			{
+				std::cerr << "Debug: entity " << entity_id << " layer is wrong. Fixing. \n";
+				ids_to_add.push_back(entity_id);
+			}
+			return wrong_layer;
 		});
 	}
 
