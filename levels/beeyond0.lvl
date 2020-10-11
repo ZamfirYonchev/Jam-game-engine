@@ -46,8 +46,7 @@ AddProcedure 0 #8: unused
 
 AddProcedure 0 #9: unused
 
-AddProcedure 0 #10: remove entity
-ExtendProcedure 10 1
+AddProcedure 1 #10: remove entity
 	RemoveEntity
 	
 AddProcedure 0 #11: unused
@@ -115,7 +114,7 @@ AddProcedure 2 #28: fresh-to-dead flower
 	UseStaticVisuals 5 3
 	UseNullHealth
 	
-AddProcedure 10 #29: spawn bee at hive
+AddProcedure 10 #29: reset bee at hive
 	UseAbsolutePosition 140 335 60 37
 	UseCharacterVisuals 1
 	ModifyVisuals 0 0 0 0 -0
@@ -151,11 +150,12 @@ AddProcedure 2 #35: frog0 stop attack
 	SelectEntity 26
 	UseNullControl
 	
-AddProcedure 4 #36: bee dead
+AddProcedure 5 #36: bee dead
 	ModifyMovement 0 0 0 0 0 0 1
-	ModifyInteraction -0 0 0 0 0 0
-	ModifyInteraction 10 1 0 0 0 0
+	UseNullControl
+	UseNullHealth
 	UseBasicCollision 0 1
+	UseTriggerInteraction 10 29 -1 -1
 
 AddProcedure 1 #37: 1 flower collected event
 	DebugMessage 0 one flower collected
@@ -467,7 +467,7 @@ ModifyInteraction 3 1 0 0 0 0
 AddEntity #25: level bottom
 UseAbsolutePosition 0 -20 3000 20
 UseBasicCollision 2 1
-UseFullInteraction 2048 10 -1 29 -1
+UseNormalInteraction 1024
 
 AddEntity #26: frog
 UseAbsolutePosition 1000 0 91 59
