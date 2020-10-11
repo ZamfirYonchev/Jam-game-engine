@@ -9,6 +9,7 @@
 #define SYSTEMS_SYSTEMS_H_
 
 #include "../types.h"
+#include <initializer_list>
 
 template<typename SystemT>
 inline SystemT& system()
@@ -22,17 +23,23 @@ struct Systems
 {
 	static void clear()
 	{
-		[[maybe_unused]] const auto dummy = { (system<SystemTs>().clear(), 0)...};
+		(void) std::initializer_list<int>{ (system<SystemTs>().clear(), 0)...};
+	}
+
+	template<typename ComponentT>
+	static void component_updated(const ComponentT& c)
+	{
+		//todo
 	}
 
 	static void update(const Time time_diff)
 	{
-		[[maybe_unused]] const auto dummy = { (system<SystemTs>().update(time_diff), 0)...};
+		(void) std::initializer_list<int>{ (system<SystemTs>().update(time_diff), 0)...};
 	}
 
 	static void remove_id(const EntityID id)
 	{
-		[[maybe_unused]] const auto dummy = { (system<SystemTs>().remove_id(id), 0)...};
+		(void) std::initializer_list<int>{ (system<SystemTs>().remove_id(id), 0)...};
 	}
 };
 
