@@ -129,7 +129,7 @@ void CollisionSystem::update(const Time time_diff)
 						{
 							if(interaction1.proc_id_other() >= 0)
 							{
-								system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(id1));
+								system<CommandSystem>().push(std::make_unique<SelectEntityCommand>(id0));
 								system<CommandSystem>().push(std::make_unique<CallProcedureCommand>(interaction1.proc_id_other()));
 							}
 						}
