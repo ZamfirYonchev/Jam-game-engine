@@ -30,6 +30,9 @@ public:
         entities.clear();
     }
 
+    template<typename T>
+    void component_updated(const T&, const EntityID id) {}
+
 protected:
     std::unordered_set<EntityID> entities;
 };
