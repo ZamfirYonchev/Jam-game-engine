@@ -19,7 +19,7 @@
 void AddProjectileCommand::execute() const
 {
 	Entity& entity = system<EntitySystem>().add_new_entity();
-    entity.set_component<AbsolutePosition>(m_x, m_y, m_w, m_h);
+    entity.set_component<AbsolutePosition>(m_pos);
     entity.set_component<ConstantControl>(1.0, 0.0, 0.0, Control::RIGHT);
     entity.set_component<FullMovement>(false);
     entity.set_component<DamageCollision>(Collision::TRANSPARENT, 0.01);

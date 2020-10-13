@@ -259,7 +259,7 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[3];
 				input >> vars[4];
 				input >> vars[5];
-				command = std::make_unique<AddCharacterCommand>(vars[0], vars[1], vars[2], vars[3], vars[4], SpritesheetID(vars[5]));
+				command = std::make_unique<AddCharacterCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, vars[4], SpritesheetID(vars[5]));
 				break;
 
 			case hash("AddPlatform"):
@@ -270,7 +270,7 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[4];
 				input >> vars[5];
 				input >> vars[6];
-				command = std::make_unique<AddPlatformCommand>(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]), vars[5], vars[6]);
+				command = std::make_unique<AddPlatformCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, SpritesheetID(vars[4]), vars[5], vars[6]);
 				break;
 
 			case hash("AddProjectile"):
@@ -279,7 +279,7 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[2];
 				input >> vars[3];
 				input >> vars[4];
-				command = std::make_unique<AddProjectileCommand>(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]));
+				command = std::make_unique<AddProjectileCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, SpritesheetID(vars[4]));
 				break;
 
 			case hash("AddZone"):
@@ -291,7 +291,7 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[5];
 				input >> vars[6];
 				input >> vars[7];
-				command = std::make_unique<AddZoneCommand>(vars[0], vars[1], vars[2], vars[3], int8_t(vars[4]), ProcedureID(vars[5]), ProcedureID(vars[6]), ProcedureID(vars[7]));
+				command = std::make_unique<AddZoneCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, int8_t(vars[4]), ProcedureID(vars[5]), ProcedureID(vars[6]), ProcedureID(vars[7]));
 				break;
 
 			case hash("AddVisualObject"):
@@ -301,7 +301,7 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[3];
 				input >> vars[4];
 				input >> vars[5];
-				command = std::make_unique<AddVisualObjectCommand>(vars[0], vars[1], vars[2], vars[3], SpritesheetID(vars[4]), int(vars[5]));
+				command = std::make_unique<AddVisualObjectCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, SpritesheetID(vars[4]), int(vars[5]));
 				break;
 
 			case hash("AddEntity"):

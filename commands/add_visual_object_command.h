@@ -10,24 +10,22 @@
 
 #include "command.h"
 #include "../types.h"
+#include "../components/absolute_position.h"
 
 class AddVisualObjectCommand : public Command
 {
 public:
-    AddVisualObjectCommand(double x, double y, double w, double h, SpritesheetID spr_id, int sprite)
-	: m_x(x)
-	, m_y(y)
-	, m_w(w)
-	, m_h(h)
+    AddVisualObjectCommand(const AbsolutePosition& pos, SpritesheetID spr_id, int sprite)
+	: m_pos(pos)
 	, m_spr_id(spr_id)
 	, m_sprite(sprite)
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<AddVisualObjectCommand>(m_x, m_y, m_w, m_h, m_spr_id, m_sprite); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddVisualObjectCommand>(m_pos, m_spr_id, m_sprite); }
 
 private:
-    double m_x, m_y, m_w, m_h;
+    AbsolutePosition m_pos;
     SpritesheetID m_spr_id;
     int m_sprite;
 };

@@ -15,7 +15,7 @@
 void AddVisualObjectCommand::execute() const
 {
 	Entity& entity = system<EntitySystem>().add_new_entity();
-	entity.set_component<AbsolutePosition>(m_x, m_y, m_w, m_h);
+	entity.set_component<AbsolutePosition>(m_pos);
 	entity.set_component<StaticVisuals>(m_spr_id, m_sprite);
     system<EntitySystem>().add_accessed_entity(entity.id());
 }

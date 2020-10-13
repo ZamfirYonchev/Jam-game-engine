@@ -10,25 +10,23 @@
 
 #include "command.h"
 #include "../types.h"
+#include "../components/absolute_position.h"
 
 class AddPlatformCommand : public Command
 {
 public:
-    AddPlatformCommand(double x, double y, double w, double h, SpritesheetID spr_id, double tile_w, double tile_h)
-	: m_x(x)
-	, m_y(y)
-	, m_w(w)
-	, m_h(h)
+    AddPlatformCommand(const AbsolutePosition& pos, SpritesheetID spr_id, double tile_w, double tile_h)
+	: m_pos(pos)
 	, m_spr_id(spr_id)
 	, m_tile_w(tile_w)
 	, m_tile_h(tile_h)
 	{}
 
     void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<AddPlatformCommand>(m_x, m_y, m_w, m_h, m_spr_id, m_tile_w, m_tile_h); }
+    std::unique_ptr<Command> clone() const { return std::make_unique<AddPlatformCommand>(m_pos, m_spr_id, m_tile_w, m_tile_h); }
 
 private:
-    double m_x, m_y, m_w, m_h;
+    AbsolutePosition m_pos;
     SpritesheetID m_spr_id;
     double m_tile_w, m_tile_h;
 };

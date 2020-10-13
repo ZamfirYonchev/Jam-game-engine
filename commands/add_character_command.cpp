@@ -19,7 +19,7 @@
 void AddCharacterCommand::execute() const
 {
 	Entity& entity = system<EntitySystem>().add_new_entity();
-    entity.set_component<AbsolutePosition>(m_x, m_y, m_w, m_h);
+    entity.set_component<AbsolutePosition>(m_pos);
     entity.set_component<FullMovement>(0.5, 2.0, 0.012, 1.5, true);
     entity.set_component<BasicCollision>(Collision::MOVEABLE, 1.0);
     entity.set_component<NormalInteraction>();
