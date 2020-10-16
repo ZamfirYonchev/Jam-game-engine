@@ -30,11 +30,6 @@
 #include "../commands/add_spritesheet_command.h"
 #include "../commands/add_sprite_command.h"
 #include "../commands/add_procedure_command.h"
-#include "../commands/add_character_command.h"
-#include "../commands/add_platform_command.h"
-#include "../commands/add_projectile_command.h"
-#include "../commands/add_zone_command.h"
-#include "../commands/add_visual_object_command.h"
 #include "../commands/add_entity_command.h"
 #include "../commands/remove_entity_command.h"
 #include "../commands/modify_position_command.h"
@@ -226,14 +221,14 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 				input >> vars[12];
 				input >> vars[13];
 				input >> vars[14];
-				command = std::make_unique<AddSpritesheetCommand>(int(vars[0]), int(vars[1])
-												  , int(vars[2]), int(vars[3])
-												  , int(vars[4]), int(vars[5])
-												  , int(vars[6]), int(vars[7])
-												  , int(vars[8]), int(vars[9])
-												  , int(vars[10]), int(vars[11])
-												  , int(vars[12]), int(vars[13])
-												  , double(vars[14])
+				command = std::make_unique<AddSpritesheetCommand>(Spritesheet{int(vars[0]), int(vars[1])
+																		  , int(vars[2]), int(vars[3])
+																		  , int(vars[4]), int(vars[5])
+																		  , int(vars[6]), int(vars[7])
+																		  , int(vars[8]), int(vars[9])
+																		  , int(vars[10]), int(vars[11])
+																		  , int(vars[12]), int(vars[13])
+																		  , double(vars[14])}
 													);
 				break;
 
@@ -250,58 +245,6 @@ void CommandSystem::process_stream(std::istream& input, SDL_Renderer* renderer)
 			case hash("AddProcedure"):
 				input >> vars[0];
 				command = std::make_unique<AddProcedureCommand>(int(vars[0]));
-				break;
-
-			case hash("AddCharacter"):
-				input >> vars[0];
-				input >> vars[1];
-				input >> vars[2];
-				input >> vars[3];
-				input >> vars[4];
-				input >> vars[5];
-				command = std::make_unique<AddCharacterCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, vars[4], SpritesheetID(vars[5]));
-				break;
-
-			case hash("AddPlatform"):
-				input >> vars[0];
-				input >> vars[1];
-				input >> vars[2];
-				input >> vars[3];
-				input >> vars[4];
-				input >> vars[5];
-				input >> vars[6];
-				command = std::make_unique<AddPlatformCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, SpritesheetID(vars[4]), vars[5], vars[6]);
-				break;
-
-			case hash("AddProjectile"):
-				input >> vars[0];
-				input >> vars[1];
-				input >> vars[2];
-				input >> vars[3];
-				input >> vars[4];
-				command = std::make_unique<AddProjectileCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, SpritesheetID(vars[4]));
-				break;
-
-			case hash("AddZone"):
-				input >> vars[0];
-				input >> vars[1];
-				input >> vars[2];
-				input >> vars[3];
-				input >> vars[4];
-				input >> vars[5];
-				input >> vars[6];
-				input >> vars[7];
-				command = std::make_unique<AddZoneCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, int8_t(vars[4]), ProcedureID(vars[5]), ProcedureID(vars[6]), ProcedureID(vars[7]));
-				break;
-
-			case hash("AddVisualObject"):
-				input >> vars[0];
-				input >> vars[1];
-				input >> vars[2];
-				input >> vars[3];
-				input >> vars[4];
-				input >> vars[5];
-				command = std::make_unique<AddVisualObjectCommand>(AbsolutePosition{vars[0], vars[1], vars[2], vars[3]}, SpritesheetID(vars[4]), int(vars[5]));
 				break;
 
 			case hash("AddEntity"):

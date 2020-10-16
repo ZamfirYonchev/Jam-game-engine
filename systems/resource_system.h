@@ -88,26 +88,9 @@ public:
     	}
     }
 
-    void addNewSpritesheet(const int idle_start,   const int idle_size
-                         , const int walk_start,   const int walk_size
-                         , const int jump_start,   const int jump_size
-                         , const int fall_start,   const int fall_size
-                         , const int attack_start, const int attack_size
-                         , const int hit_start,    const int hit_size
-                         , const int dead_start,   const int dead_size
-                         , const double scale_factor
-                          )
+    void addNewSpritesheet(const Spritesheet& spritesheet)
     {
-        m_spritesheets.push_back(Spritesheet(idle_start, idle_size
-											   , walk_start, walk_size
-											   , jump_start, jump_size
-											   , fall_start, fall_size
-											   , attack_start, attack_size
-											   , hit_start, hit_size
-											   , dead_start, dead_size
-											   , scale_factor
-												)
-                                );
+        m_spritesheets.push_back(spritesheet);
     }
 
     void addNewSprite(SpritesheetID spritesheet_id, const Sprite& sprite)
