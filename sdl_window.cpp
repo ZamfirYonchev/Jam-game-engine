@@ -21,8 +21,8 @@ SdlWindow::~SdlWindow()
 	SDL_Quit();
 }
 
-void SdlWindow::init_video(const uint16_t res_width
-						  , const uint16_t res_height
+void SdlWindow::init_video(uint16_t& res_width
+						  ,uint16_t& res_height
 						  , const bool fullscreen
 						  , const bool double_buffer
 					)
@@ -94,8 +94,8 @@ void SdlWindow::init_video(const uint16_t res_width
 		return;
 	}
 
-	globals().resolution_x = final_res_w;
-	globals().resolution_y = final_res_h;
+	res_width = final_res_w;
+	res_height = final_res_h;
 
 	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
 	SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
