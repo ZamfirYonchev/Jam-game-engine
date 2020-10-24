@@ -40,4 +40,10 @@ void discard_if(std::set<T, Comp, Alloc>& c, Predicate pred) {
     }
 }
 
+template<typename T>
+constexpr bool is_null_component(const T& component)
+{
+	return &component == T::null;
+}
+
 #endif /* UTILITIES_H_ */
