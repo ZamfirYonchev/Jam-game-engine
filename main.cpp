@@ -704,7 +704,7 @@ int main(int argc, char** argv)
 			rendering_system.render_entities(frame_diff, entity_system, resource_system, globals);
 
 			SDL_Delay(max(10-Time(frame_diff), 0));
-			frame_diff = clip(AbsTime(SDL_GetTicks()-last_frame_time), 1u, 100u);
+			frame_diff = clip(Time(SDL_GetTicks()-last_frame_time), 1, 100);
 			last_frame_time = AbsTime(SDL_GetTicks());
 			++number_of_frames;
 
