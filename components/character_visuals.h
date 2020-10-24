@@ -10,22 +10,22 @@
 
 #include "visuals.h"
 
+class ResourceSystem;
+
 class CharacterVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
     static const unsigned int ANIMATION_DELAY_MS = 50;
 
-    CharacterVisuals(SpritesheetID spr_id)
+    CharacterVisuals(SpritesheetID spr_id, ResourceSystem& resource_system)
     : m_current_state(IDLE)
     , m_animation_count(0)
     , m_animation_time(0)
     , m_spritesheet_id(spr_id)
     , m_layer(ACTION)
+    , m_resource_system(resource_system)
     {}
-
-    CharacterVisuals() : CharacterVisuals(SpritesheetID{-1}) {}
-    ~CharacterVisuals() {}
 
     void print(std::ostream& to) const
     {
@@ -80,6 +80,7 @@ private:
     double m_animation_time;
     SpritesheetID m_spritesheet_id;
     VisualLayer m_layer;
+    ResourceSystem& m_resource_system;
 };
 
 #endif /* COMPONENTS_CHARACTER_VISUALS_H_ */

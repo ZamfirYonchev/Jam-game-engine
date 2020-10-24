@@ -11,16 +11,19 @@
 #include "position.h"
 #include "../types.h"
 #include <iostream>
+#include "../math_ext.h"
 
+template<typename EntitySystemT>
 class BuildPosition : public Position
 {
 public:
 	using Base = Position;
-	BuildPosition(EntityID self_id, EntityID attached_id, double origin_x, double origin_y)
+	BuildPosition(EntityID self_id, EntityID attached_id, double origin_x, double origin_y, EntitySystemT& entity_system)
     : m_self_id(self_id)
 	, m_attached_id(attached_id)
     , m_origin_x(origin_x)
     , m_origin_y(origin_y)
+	, m_entity_system(entity_system)
     {}
 
     void print(std::ostream& to) const
@@ -29,10 +32,25 @@ public:
 		   << m_attached_id << " ";
     }
 
-    double x() const;
-    double y() const;
-    double w() const;
-    double h() const;
+    double x() const
+    {
+    	return min(m_origin_x, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).x());
+    }
+
+    double y() const
+    {
+    	return min(m_origin_y, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).y());
+    }
+
+    double w() const
+    {
+    	return abs(m_origin_x - m_entity_system.entity_component(m_attached_id, (Position*)nullptr).x());
+    }
+
+    double h() const
+    {
+    	return abs(m_origin_y - m_entity_system.entity_component(m_attached_id, (Position*)nullptr).y());
+    }
 
     void set_x(double val) {}
     void set_y(double val) {}
@@ -41,12 +59,14 @@ public:
 
     void mod_x(double val) {}
     void mod_y(double val) {}
-    void mod_w(double val); //implement solidify
+    void mod_w(double val) {}
     void mod_h(double val) {}
 
-private:
     EntityID m_self_id, m_attached_id;
     double m_origin_x, m_origin_y;
+
+private:
+    EntitySystemT& m_entity_system;
 };
 
 #endif /* COMPONENTS_BUILD_POSITION_H_ */

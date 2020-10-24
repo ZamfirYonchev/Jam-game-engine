@@ -9,14 +9,17 @@
 #define COMPONENTS_MENU_ITEM_VISUALS_H_
 
 #include "visuals.h"
+#include "control.h"
 
+template<typename EntitySystemT>
 class MenuItemVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-	MenuItemVisuals(SpritesheetID spr_id, EntityID self_id)
-	: m_spr_id(spr_id)
-	, m_self_id(self_id)
+	MenuItemVisuals(SpritesheetID spr_id, EntityID self_id, EntitySystemT& entity_system)
+	: m_self_id(self_id)
+	, m_spr_id(spr_id)
+	, m_entity_system(entity_system)
 	{}
 
     void print(std::ostream& to) const
@@ -28,7 +31,13 @@ public:
     RenderStates state() const { return IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
-    uint8_t animation_sprite(uint16_t rx, uint16_t ry) const;
+
+    uint8_t animation_sprite(uint16_t rx, uint16_t ry) const
+    {
+    	const auto& control = m_entity_system.entity_component(m_self_id, (Control*)nullptr);
+    	return control.decision_attack() ? 2 : control.decision_jump() ? 1 : 0;
+    }
+
     bool animation_count_max() const { return true; }
     SpritesheetID spritesheet_id() { return m_spr_id; }
     void set_spritesheet_id(SpritesheetID spr_id) { m_spr_id = spr_id; }
@@ -39,9 +48,11 @@ public:
     VisualLayer layer() const { return FOREGROUND; }
     void set_layer(VisualLayer val) {}
 
+    EntityID m_self_id;
+
 private:
     SpritesheetID m_spr_id;
-    EntityID m_self_id;
+    EntitySystemT& m_entity_system;
 };
 
 #endif /* COMPONENTS_MENU_ITEM_VISUALS_H_ */

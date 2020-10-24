@@ -13,7 +13,7 @@
 struct free_if_not_nullobj
 {
 	template<typename T>
-	void operator()(const T* p){ if(p != T::null) delete p; };
+	void operator()(T* p){ if(p != T::null) delete p; p = T::null; };
 };
 
 template<typename T>
