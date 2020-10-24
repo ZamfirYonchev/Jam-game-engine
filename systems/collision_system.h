@@ -32,7 +32,7 @@ public:
 
 	CollisionSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, AbsProcedureID>>& procedure_calls)
 	{
 		for(const auto entity_id : entities)
 		{
@@ -74,7 +74,7 @@ public:
 			}
 		}
 
-		std::unordered_map<EntityID, CorrectionValues> collision_correction;
+		std::unordered_map<AbsEntityID, CorrectionValues> collision_correction;
 
 		for(const auto entity_id : entities)
 		{
@@ -94,7 +94,7 @@ public:
 				collision0.set_standing_on(Collision::AIR);
 				const Collision::RegionLocation& location0 = regions_per_entity[id0];
 
-				std::unordered_set<EntityID> near_entities;
+				std::unordered_set<AbsEntityID> near_entities;
 
 				for(int region_x = location0.x; region_x < location0.x_end; ++region_x)
 					for(int region_y = location0.y; region_y < location0.y_end; ++region_y)
@@ -237,7 +237,7 @@ public:
 	}
 
     template<typename T>
-    void component_updated(const T& component, const EntityID id, const int8_t change)
+    void component_updated(const T& component, const AbsEntityID id, const int8_t change)
     {
     	if constexpr(std::is_same<T, Collision>::value)
 		{
@@ -287,8 +287,8 @@ private:
     };
 
     EntitySystemT& m_entity_system;
-    std::unordered_map<RegionPosition, std::unordered_set<EntityID>, RegionPositionHashFn> entities_per_region;
-    std::unordered_map<EntityID, Collision::RegionLocation> regions_per_entity;
+    std::unordered_map<RegionPosition, std::unordered_set<AbsEntityID>, RegionPositionHashFn> entities_per_region;
+    std::unordered_map<AbsEntityID, Collision::RegionLocation> regions_per_entity;
 	static const unsigned int REGION_W = 32;
     static const unsigned int REGION_H = 32;
 };

@@ -15,12 +15,12 @@
 class SystemBase
 {
 public:
-    void add_id(const EntityID entity)
+    void add_id(const AbsEntityID entity)
     {
 		entities.insert(entity);
     }
 
-    void remove_id(const EntityID entity)
+    void remove_id(const AbsEntityID entity)
     {
 		entities.erase(entity);
     }
@@ -31,7 +31,7 @@ public:
     }
 
 protected:
-    std::unordered_set<EntityID> entities;
+    std::unordered_set<AbsEntityID> entities;
 };
 
 #endif /* SYSTEMS_SYSTEM_BASE_H_ */

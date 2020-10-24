@@ -23,14 +23,6 @@ class ExplicitAlias
     T m_value;
 };
 
-/*using EntityID = ExplicitAlias<int32_t>;
-using SpritesheetID = ExplicitAlias<int32_t>;
-using TextureID = ExplicitAlias<int32_t>;
-using ProcedureID = ExplicitAlias<int32_t>;
-using SoundID = ExplicitAlias<int32_t>;
-using FontID = ExplicitAlias<int32_t>;
-using Time = ExplicitAlias<int32_t>;
-*/
 using EntityID = int32_t;
 using SpritesheetID = int32_t;
 using TextureID = int32_t;
@@ -38,6 +30,14 @@ using ProcedureID = int32_t;
 using SoundID = int32_t;
 using FontID = int32_t;
 using Time = int32_t;
+
+using AbsEntityID = std::size_t;
+using AbsSpritesheetID = std::size_t;
+using AbsTextureID = std::size_t;
+using AbsProcedureID = std::size_t;
+using AbsSoundID = std::size_t;
+using AbsFontID = std::size_t;
+using AbsTime = uint32_t;
 
 
 #endif /* TYPES_H_ */

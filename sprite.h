@@ -13,15 +13,15 @@
 
 struct Sprite
 {
-    Sprite(const TextureID texture_id, const SDL_Rect& rect)
+    Sprite(const AbsTextureID texture_id, const SDL_Rect& rect)
     : texture_id(texture_id)
     , clip(rect)
     {}
 
-    Sprite() : Sprite(TextureID(0), {0, 0, 0, 0}) {}
+    Sprite() : Sprite(AbsTextureID(0), {0, 0, 0, 0}) {}
 
 
-    TextureID texture_id;
+    AbsTextureID texture_id;
     SDL_Rect clip;
 };
 

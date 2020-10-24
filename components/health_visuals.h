@@ -16,7 +16,7 @@ class HealthVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-	HealthVisuals(EntityID self_id, SpritesheetID spr_id, uint16_t repeat_x, EntitySystemT& entity_system)
+	HealthVisuals(AbsEntityID self_id, AbsSpritesheetID spr_id, uint16_t repeat_x, EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_spr_id(spr_id)
 	, m_repeat_x(repeat_x)
@@ -41,8 +41,8 @@ public:
     }
 
     bool animation_count_max() const { return true; }
-    SpritesheetID spritesheet_id() { return m_spr_id; }
-    void set_spritesheet_id(SpritesheetID spr_id) { m_spr_id = spr_id; }
+    AbsSpritesheetID spritesheet_id() { return m_spr_id; }
+    void set_spritesheet_id(AbsSpritesheetID spr_id) { m_spr_id = spr_id; }
     uint16_t repeat_x() const { return m_repeat_x; }
     virtual uint16_t repeat_y() const { return 1; }
     virtual void set_repeat_x(uint16_t val) { m_repeat_x = val; }
@@ -50,10 +50,10 @@ public:
     VisualLayer layer() const { return CLOSE_BACKGROUND; }
     void set_layer(VisualLayer val) {}
 
-    EntityID m_self_id;
+    AbsEntityID m_self_id;
 
 private:
-    SpritesheetID m_spr_id;
+    AbsSpritesheetID m_spr_id;
     uint16_t m_repeat_x;
     EntitySystemT& m_entity_system;
 };

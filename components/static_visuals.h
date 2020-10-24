@@ -14,13 +14,11 @@ class StaticVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-	StaticVisuals(const SpritesheetID spr_id, const int sprite)
+	StaticVisuals(const AbsSpritesheetID spr_id, const int sprite)
 	: m_spr_id(spr_id)
 	, m_sprite(sprite)
 	, m_layer(FAR_BACKGROUND)
 	{}
-
-	StaticVisuals() : StaticVisuals(SpritesheetID{-1}, 0) {}
 
     void print(std::ostream& to) const
     {
@@ -34,8 +32,8 @@ public:
     void advance_animation(Time time_diff) {}
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const { return m_sprite; }
     bool animation_count_max() const { return true; }
-    SpritesheetID spritesheet_id() { return m_spr_id; }
-    void set_spritesheet_id(SpritesheetID spr_id) { m_spr_id = spr_id; }
+    AbsSpritesheetID spritesheet_id() { return m_spr_id; }
+    void set_spritesheet_id(AbsSpritesheetID spr_id) { m_spr_id = spr_id; }
     uint16_t repeat_x() const { return 1; }
     virtual uint16_t repeat_y() const { return 1; }
     virtual void set_repeat_x(uint16_t val) {}
@@ -44,7 +42,7 @@ public:
     void set_layer(VisualLayer val) { m_layer = val; }
 
 private:
-    SpritesheetID m_spr_id;
+    AbsSpritesheetID m_spr_id;
     uint16_t m_sprite;
     VisualLayer m_layer;
 };

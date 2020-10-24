@@ -18,7 +18,7 @@ public:
 	using Base = Visuals;
     static const unsigned int ANIMATION_DELAY_MS = 50;
 
-    CharacterVisuals(SpritesheetID spr_id, ResourceSystem& resource_system)
+    CharacterVisuals(AbsSpritesheetID spr_id, ResourceSystem& resource_system)
     : m_current_state(IDLE)
     , m_animation_count(0)
     , m_animation_time(0)
@@ -61,8 +61,8 @@ public:
         return m_animation_count + animation_state_offset();
     }
 
-    SpritesheetID spritesheet_id() { return m_spritesheet_id; }
-    void set_spritesheet_id(SpritesheetID spr_id) { m_spritesheet_id = spr_id; }
+    AbsSpritesheetID spritesheet_id() { return m_spritesheet_id; }
+    void set_spritesheet_id(AbsSpritesheetID spr_id) { m_spritesheet_id = spr_id; }
 
     uint16_t repeat_x() const { return 1; }
     uint16_t repeat_y() const { return 1; }
@@ -76,9 +76,9 @@ private:
     uint8_t animation_state_size() const;
 
     RenderStates m_current_state;
-    unsigned int m_animation_count;
+    uint8_t m_animation_count;
     double m_animation_time;
-    SpritesheetID m_spritesheet_id;
+    AbsSpritesheetID m_spritesheet_id;
     VisualLayer m_layer;
     ResourceSystem& m_resource_system;
 };

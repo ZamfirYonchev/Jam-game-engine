@@ -55,7 +55,7 @@ public:
     : Spritesheet(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.0)
     {}
 
-    void add_sprite(const TextureID tex_index, const int x, const int y, const int w, const int h);
+    void add_sprite(const AbsTextureID tex_index, const int x, const int y, const int w, const int h);
 
     const optional_ref<const Sprite> sprite(const unsigned int index) const
     {

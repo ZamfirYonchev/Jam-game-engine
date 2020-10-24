@@ -16,7 +16,7 @@ class MenuItemVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-	MenuItemVisuals(SpritesheetID spr_id, EntityID self_id, EntitySystemT& entity_system)
+	MenuItemVisuals(AbsSpritesheetID spr_id, AbsEntityID self_id, EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_spr_id(spr_id)
 	, m_entity_system(entity_system)
@@ -39,8 +39,8 @@ public:
     }
 
     bool animation_count_max() const { return true; }
-    SpritesheetID spritesheet_id() { return m_spr_id; }
-    void set_spritesheet_id(SpritesheetID spr_id) { m_spr_id = spr_id; }
+    AbsSpritesheetID spritesheet_id() { return m_spr_id; }
+    void set_spritesheet_id(AbsSpritesheetID spr_id) { m_spr_id = spr_id; }
     uint16_t repeat_x() const { return 1; }
     uint16_t repeat_y() const { return 1; }
     void set_repeat_x(uint16_t val) {}
@@ -48,10 +48,10 @@ public:
     VisualLayer layer() const { return FOREGROUND; }
     void set_layer(VisualLayer val) {}
 
-    EntityID m_self_id;
+    AbsEntityID m_self_id;
 
 private:
-    SpritesheetID m_spr_id;
+    AbsSpritesheetID m_spr_id;
     EntitySystemT& m_entity_system;
 };
 

@@ -206,9 +206,9 @@ public:
     template<typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+		m_component.m_self_id = entity_system.previous_entity_id();
 		m_component.m_attached_id = entity_system.resolved_id(m_component.m_attached_id);
 		const Position& builder_pos = entity_system.entity_component(m_component.m_attached_id, (Position*)nullptr);
-		m_component.m_self_id = entity_system.previous_entity_id();
 		m_component.m_origin_x = builder_pos.x();
 		m_component.m_origin_y = builder_pos.y();
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);

@@ -23,13 +23,12 @@ template<typename... Ts>
 class Entity
 {
 public:
-    Entity(EntityID id)
+    Entity(AbsEntityID id)
 	: m_id(id)
 	{
     	clear();
 	}
 
-    Entity() : Entity(EntityID(-1)) {}
     ~Entity()
     {
     	clear();
@@ -72,10 +71,9 @@ public:
 			rendering_system.component_updated(component((BaseT*)nullptr), m_id, change);
 	}
 
-	void set_id(EntityID id)
-    { m_id = id; }
+	void set_id(const AbsEntityID id) { m_id = id; }
 
-    EntityID id() const { return m_id; }
+	AbsEntityID id() const { return m_id; }
 
     void clear()
     {
@@ -92,7 +90,7 @@ public:
     }
 
 private:
-    EntityID m_id;
+    AbsEntityID m_id;
     TypePack<unique_component_ptr<Ts>...> m_component_pack;
 };
 

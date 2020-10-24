@@ -21,7 +21,7 @@ struct Globals;
 class AddTextureFromStringCommand
 {
 public:
-    AddTextureFromStringCommand(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b)
+    AddTextureFromStringCommand(const std::string& text, AbsFontID font_id, uint8_t r, uint8_t g, uint8_t b)
 	: m_text(text)
 	, m_font_id(font_id)
 	, m_r(r)
@@ -37,7 +37,7 @@ public:
 
 private:
     std::string m_text;
-    FontID m_font_id;
+    AbsFontID m_font_id;
     uint8_t m_r, m_g, m_b;
 };
 

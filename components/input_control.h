@@ -18,7 +18,7 @@ class InputControl : public Control
 {
 public:
 	using Base = Control;
-    InputControl(ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id, bool stability_control, EntitySystemT& entity_system, InputSystem& input_system)
+    InputControl(ProcedureID shoot_proc_id, double shoot_cooldown, AbsEntityID self_id, bool stability_control, EntitySystemT& entity_system, InputSystem& input_system)
     : m_self_id(self_id)
 	, m_walk_dir(0)
     , m_jump(false)
@@ -86,7 +86,7 @@ public:
         m_walk_dir = 0.0;
     }
 
-    EntityID m_self_id;
+    AbsEntityID m_self_id;
 
 private:
     double m_walk_dir, m_jump, m_duck;

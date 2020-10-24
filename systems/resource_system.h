@@ -38,21 +38,6 @@ public:
     	return *this;
     }
 
-    TextureID last_texture_id() const
-    {
-        return TextureID(m_textures.size()-1);
-    }
-
-    SpritesheetID last_spritesheet_id() const
-    {
-        return SpritesheetID(m_spritesheets.size()-1);
-    }
-
-    FontID last_font_id() const
-    {
-    	return FontID(m_fonts.size()-1);
-    }
-
     void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
     {
         m_textures.emplace_back();
@@ -62,7 +47,7 @@ public:
     void addNewTextureFromString
 	(
 		const std::string& text
-	  , const FontID font_id
+	  , const AbsFontID font_id
 	  , const uint8_t r
 	  , const uint8_t g
 	  , const uint8_t b
@@ -80,14 +65,16 @@ public:
     	}
     }
 
-    void addNewSpritesheet(const Spritesheet& spritesheet)
+    AbsSpritesheetID addNewSpritesheet(const Spritesheet& spritesheet)
     {
+    	const AbsSpritesheetID spr_id = m_spritesheets.size();
         m_spritesheets.push_back(spritesheet);
+        return spr_id;
     }
 
-    void addNewSprite(const SpritesheetID spritesheet_id, const Sprite& sprite)
+    void addNewSprite(const AbsSpritesheetID spritesheet_id, const Sprite& sprite)
     {
-        if(spritesheet_id < m_spritesheets.size() && sprite.texture_id < m_textures.size())
+    	if(spritesheet_id < m_spritesheets.size() && sprite.texture_id < m_textures.size())
         {
         	m_spritesheets[spritesheet_id].add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
         }
@@ -97,9 +84,11 @@ public:
         }
     }
 
-    void addNewFont(const std::string& font_file, const int size)
+    AbsFontID addNewFont(const std::string& font_file, const int size)
     {
+    	const AbsFontID font_id = m_fonts.size();
     	m_fonts.push_back(Font(font_file, size));
+    	return font_id;
     }
 
     const std::vector<Texture>& textures() const
@@ -107,7 +96,7 @@ public:
         return m_textures;
     }
 
-    optional_ref<Texture> texture(const TextureID tex_id)
+    optional_ref<Texture> texture(const AbsTextureID tex_id)
     {
         if(tex_id < m_textures.size())
             return optional_ref<Texture>(m_textures[tex_id]);
@@ -120,7 +109,7 @@ public:
         return m_spritesheets;
     }
 
-    optional_ref<Spritesheet> spritesheet(SpritesheetID spr_id)
+    optional_ref<Spritesheet> spritesheet(const AbsSpritesheetID spr_id)
     {
         if(spr_id < m_spritesheets.size())
         	return optional_ref<Spritesheet>(m_spritesheets[spr_id]);
@@ -128,7 +117,7 @@ public:
         	return optional_ref<Spritesheet>();
     }
 
-    optional_ref<Font> font(FontID id)
+    optional_ref<Font> font(const AbsFontID id)
     {
     	if(id < m_fonts.size())
     		return optional_ref<Font>(m_fonts[id]);

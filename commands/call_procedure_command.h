@@ -19,15 +19,13 @@ struct Globals;
 class CallProcedureCommand
 {
 public:
-    CallProcedureCommand(ProcedureID id)
-    : m_id(id)
-    {}
+    CallProcedureCommand(const AbsProcedureID proc_id) : m_proc_id(proc_id) {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	if(command_system.procedure(m_id))
-    		(*command_system.procedure(m_id))(entity_system, resource_system, input_system, command_system, rendering_system, all_systems, globals);
+    	if(command_system.procedure(m_proc_id))
+    		(*command_system.procedure(m_proc_id))(entity_system, resource_system, input_system, command_system, rendering_system, all_systems, globals);
     	else
     	{
     		//error m_id
@@ -35,7 +33,7 @@ public:
     }
 
 private:
-    ProcedureID m_id;
+    AbsProcedureID m_proc_id;
 };
 
 

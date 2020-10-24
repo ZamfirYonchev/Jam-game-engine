@@ -25,7 +25,7 @@ class DamageSystem : public SystemBase
 public:
 	DamageSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, AbsProcedureID>>& procedure_calls)
 	{
 		for(const auto id : entities)
 		{
@@ -50,7 +50,7 @@ public:
 	}
 
     template<typename T>
-    void component_updated(const T& component, const EntityID id, const int8_t change)
+    void component_updated(const T& component, const AbsEntityID id, const int8_t change)
     {
     	if constexpr(std::is_same<T, Health>::value)
 		{

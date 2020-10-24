@@ -25,8 +25,7 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	resource_system.addNewSpritesheet(m_spritesheet);
-        globals.access_spritesheet_id = resource_system.last_spritesheet_id();
+    	globals.access_spritesheet_id = resource_system.addNewSpritesheet(m_spritesheet);
     }
 
 private:

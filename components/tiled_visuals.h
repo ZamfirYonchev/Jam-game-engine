@@ -18,7 +18,7 @@ class TiledVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-    TiledVisuals(SpritesheetID spr_id, double tile_w, double tile_h, EntityID self_id, EntitySystemT& entity_system)
+    TiledVisuals(AbsSpritesheetID spr_id, double tile_w, double tile_h, AbsEntityID self_id, EntitySystemT& entity_system)
     : m_self_id(self_id)
     , m_spritesheet_id(spr_id)
     , m_tile_w(tile_w)
@@ -45,8 +45,8 @@ public:
     	return (rx > 0) * (1 + (rx==(repeat_x()-1))) + 3*((ry > 0) * (1 + (ry==(repeat_y()-1))));
     }
 
-    SpritesheetID spritesheet_id() { return m_spritesheet_id; }
-    void set_spritesheet_id(SpritesheetID spr_id) { m_spritesheet_id = spr_id; }
+    AbsSpritesheetID spritesheet_id() { return m_spritesheet_id; }
+    void set_spritesheet_id(AbsSpritesheetID spr_id) { m_spritesheet_id = spr_id; }
 
     uint16_t repeat_x() const
     {
@@ -71,10 +71,10 @@ public:
     VisualLayer layer() const { return m_layer; }
     void set_layer(VisualLayer val) { m_layer = val; }
 
-    EntityID m_self_id;
+    AbsEntityID m_self_id;
 
 private:
-    SpritesheetID m_spritesheet_id;
+    AbsSpritesheetID m_spritesheet_id;
     double m_tile_w, m_tile_h;
     VisualLayer m_layer;
     EntitySystemT& m_entity_system;

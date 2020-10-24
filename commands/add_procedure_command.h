@@ -20,13 +20,12 @@ struct Globals;
 class AddProcedureCommand
 {
 public:
-    AddProcedureCommand(int num_of_cmds) : m_num_of_cmds(num_of_cmds) {}
+    AddProcedureCommand(size_t num_of_cmds) : m_num_of_cmds(num_of_cmds) {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	command_system.addNewProcedure();
-        globals.access_procedure_id = command_system.last_procedure_id();
+    	globals.access_procedure_id = command_system.addNewProcedure();
 
         if(m_num_of_cmds > 0)
         {
@@ -35,7 +34,7 @@ public:
     }
 
 private:
-    int m_num_of_cmds;
+    size_t m_num_of_cmds;
 };
 
 

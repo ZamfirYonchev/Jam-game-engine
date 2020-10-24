@@ -10,6 +10,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include <limits>
 #include "math_ext.h"
 #include "globals.h"
 
@@ -60,7 +61,7 @@ void SdlWindow::init_video(uint16_t& res_width
 	atexit(SDL_Quit);
 
 	const uint32_t requested_size = res_width * res_height;
-	uint32_t closest_size_diff = -1;
+	uint32_t closest_size_diff = std::numeric_limits<uint32_t>::max();
 	uint16_t final_res_w = res_width, final_res_h = res_height;
 
     for(int display_mode_i = 0; display_mode_i < SDL_GetNumDisplayModes(0); ++display_mode_i)
@@ -72,8 +73,8 @@ void SdlWindow::init_video(uint16_t& res_width
             return;
         }
 
-        const int32_t size_diff = requested_size + mode.w*mode.h - 2*min(int(res_width), mode.w) * min(int(res_height), mode.h);
-		if((closest_size_diff == -1) || (size_diff < closest_size_diff))
+        const uint32_t size_diff = requested_size + mode.w*mode.h - 2*min(int(res_width), mode.w) * min(int(res_height), mode.h);
+		if(size_diff < closest_size_diff)
 		{
 			closest_size_diff = size_diff;
 			final_res_w = mode.w;

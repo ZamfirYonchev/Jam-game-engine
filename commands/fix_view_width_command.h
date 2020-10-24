@@ -24,7 +24,7 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-		Position& position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
+		Position& position = entity_system.entity_component(AbsEntityID{0}, (Position*)nullptr);
 		position.set_w(int(position.h()*globals.resolution_x/globals.resolution_y));
 	}
 

@@ -188,14 +188,31 @@ int main(int argc, char** argv)
 			[](std::istream& input){
 				double id, num_of_cmds;
 				input >> id >> num_of_cmds;
-				return ExtendProcedureCommand{ProcedureID(id), int(num_of_cmds)};
+				if(id < 0)
+				{
+					std::cerr << "ExtendProcedure: procedure id must be >= 0\n";
+					id *= -1;
+				}
+				if(num_of_cmds < 0)
+				{
+					std::cerr << "ExtendProcedure: number of commands must be >= 0\n";
+					num_of_cmds *= -1;
+				}
+
+				return ExtendProcedureCommand{AbsProcedureID(id), size_t(num_of_cmds)};
 			});
 
 		command_system.register_command("ClearProcedure",
 			[](std::istream& input){
 				double id;
 				input >> id;
-				return ClearProcedureCommand{ProcedureID(id)};
+				if(id < 0)
+				{
+					std::cerr << "ClearProcedure: procedure id must be >= 0\n";
+					id *= -1;
+				}
+
+				return ClearProcedureCommand{AbsProcedureID(id)};
 			});
 
 		command_system.register_command("Pause",
@@ -248,7 +265,13 @@ int main(int argc, char** argv)
 			[](std::istream& input){
 				double id;
 				input >> id;
-				return CallProcedureCommand{ProcedureID(id)};
+				if(id < 0)
+				{
+					std::cerr << "CallProcedure: procedure id must be >= 0\n";
+					id *= -1;
+				}
+
+				return CallProcedureCommand{AbsProcedureID(id)};
 			});
 
 		command_system.register_command("AddFont",
@@ -272,7 +295,13 @@ int main(int argc, char** argv)
 				std::string str;
 				input >> id >> r >> g >> b;
 				std::getline(input, str);
-				return AddTextureFromStringCommand{str, FontID(id), uint8_t(r), uint8_t(g), uint8_t(b)};
+				if(id < 0)
+				{
+					std::cerr << "AddTextureFromString: font id must be >= 0\n";
+					id *= -1;
+				}
+
+				return AddTextureFromStringCommand{str, AbsFontID(id), uint8_t(r), uint8_t(g), uint8_t(b)};
 			});
 
 		command_system.register_command("AddSpritesheet",
@@ -311,14 +340,30 @@ int main(int argc, char** argv)
 			[](std::istream& input){
 				double spr_id, tex_id, x, y, w, h;
 				input >> spr_id >> tex_id >> x >> y >> w >> h;
-				return AddSpriteCommand{SpritesheetID(spr_id), TextureID(tex_id), int(x), int(y), int(w), int(h)};
+				if(spr_id < 0)
+				{
+					std::cerr << "AddSprite: spritesheet id must be >= 0\n";
+					spr_id *= -1;
+				}
+				if(tex_id < 0)
+				{
+					std::cerr << "AddSprite: texture id must be >= 0\n";
+					tex_id *= -1;
+				}
+
+				return AddSpriteCommand{AbsSpritesheetID(spr_id), AbsTextureID(tex_id), int(x), int(y), int(w), int(h)};
 			});
 
 		command_system.register_command("AddProcedure",
 			[](std::istream& input){
 				double num_of_cmds;
 				input >> num_of_cmds;
-				return AddProcedureCommand{int(num_of_cmds)};
+				if(num_of_cmds < 0)
+				{
+					std::cerr << "AddProcedure: number of commands must be >= 0\n";
+					num_of_cmds *= -1;
+				}
+				return AddProcedureCommand{size_t(num_of_cmds)};
 			});
 
 		command_system.register_command("AddEntity",
@@ -403,7 +448,7 @@ int main(int argc, char** argv)
 			[&](std::istream& input){
 				double id;
 				input >> id;
-				return UseComponentCommand<BuildPosition<decltype(entity_system)>>{EntityID{}, EntityID(id), 0.0, 0.0, entity_system};
+				return UseComponentCommand<BuildPosition<decltype(entity_system)>>{AbsEntityID{}, EntityID(id), 0.0, 0.0, entity_system};
 			});
 
 		command_system.register_command("UseNullControl",
@@ -422,7 +467,7 @@ int main(int argc, char** argv)
 			[&](std::istream& input){
 				double proc_id, cooldown, stability_control;
 				input >> proc_id >> cooldown >> stability_control;
-				return UseComponentCommand<InputControl<decltype(entity_system)>>{ProcedureID(proc_id), cooldown, EntityID{}, bool(stability_control), entity_system, input_system};
+				return UseComponentCommand<InputControl<decltype(entity_system)>>{ProcedureID(proc_id), cooldown, AbsEntityID{}, bool(stability_control), entity_system, input_system};
 			});
 
 		command_system.register_command("UseInputSelectControl",
@@ -436,14 +481,14 @@ int main(int argc, char** argv)
 			[&](std::istream& input){
 				double target_id, proc_id, cooldown, range;
 				input >> target_id >> proc_id >> cooldown >> range;
-				return UseComponentCommand<ChaseAIControl<decltype(entity_system)>>{EntityID{}, EntityID(target_id), ProcedureID(proc_id), cooldown, range, entity_system};
+				return UseComponentCommand<ChaseAIControl<decltype(entity_system)>>{AbsEntityID{}, EntityID(target_id), ProcedureID(proc_id), cooldown, range, entity_system};
 			});
 
 		command_system.register_command("UseGuideControl",
 			[&](std::istream& input){
 				double target_id, range;
 				input >> target_id >> range;
-				return UseComponentCommand<GuideControl<decltype(entity_system)>>{EntityID{}, EntityID(target_id), range, entity_system};
+				return UseComponentCommand<GuideControl<decltype(entity_system)>>{AbsEntityID{}, EntityID(target_id), range, entity_system};
 			});
 
 		command_system.register_command("UseNullMovement",
@@ -552,7 +597,7 @@ int main(int argc, char** argv)
 			[&](std::istream& input){
 				double spr_id, w, h;
 				input >> spr_id >> w >> h;
-				return UseComponentCommand<TiledVisuals<decltype(entity_system)>>{spr_id, w, h, EntityID{}, entity_system};
+				return UseComponentCommand<TiledVisuals<decltype(entity_system)>>{spr_id, w, h, AbsEntityID{}, entity_system};
 			});
 
 		command_system.register_command("UseStaticVisuals",
@@ -566,14 +611,14 @@ int main(int argc, char** argv)
 			[&](std::istream& input){
 				double spr_id, repeat_x;
 				input >> spr_id >> repeat_x;
-				return UseComponentCommand<HealthVisuals<decltype(entity_system)>>{EntityID{}, spr_id, repeat_x, entity_system};
+				return UseComponentCommand<HealthVisuals<decltype(entity_system)>>{AbsEntityID{}, spr_id, repeat_x, entity_system};
 			});
 
 		command_system.register_command("UseMenuItemVisuals",
 			[&](std::istream& input){
 				double spr_id;
 				input >> spr_id;
-				return UseComponentCommand<MenuItemVisuals<decltype(entity_system)>>{spr_id, EntityID{}, entity_system};
+				return UseComponentCommand<MenuItemVisuals<decltype(entity_system)>>{spr_id, AbsEntityID{}, entity_system};
 			});
 
 		command_system.register_command("ReusePosition",
@@ -637,15 +682,15 @@ int main(int argc, char** argv)
 				return FinalizeBuildCommand{};
 			});
 
-		Time start_frame_time;
-		Time last_frame_time;
-		Time frame_diff = Time{10}; //TODO: first frame difference
+		AbsTime start_frame_time;
+		AbsTime last_frame_time;
+		AbsTime frame_diff {10}; //TODO: first frame difference
 		int32_t number_of_frames = 0;
 
 		command_system.push(ExecuteFileCleanCommand{globals.level_name});
 
-		start_frame_time = static_cast<Time>((SDL_GetTicks()));
-		last_frame_time = static_cast<Time>((SDL_GetTicks()));
+		start_frame_time = AbsTime(SDL_GetTicks());
+		last_frame_time = AbsTime(SDL_GetTicks());
 
 		do
 		{
@@ -658,9 +703,9 @@ int main(int argc, char** argv)
 
 			rendering_system.render_entities(frame_diff, entity_system, resource_system, globals);
 
-			SDL_Delay(max(10-frame_diff, 0));
-			frame_diff = Time(clip(int32_t(SDL_GetTicks()-last_frame_time), 1, 100));
-			last_frame_time = Time(SDL_GetTicks());
+			SDL_Delay(max(10-Time(frame_diff), 0));
+			frame_diff = clip(AbsTime(SDL_GetTicks()-last_frame_time), 1u, 100u);
+			last_frame_time = AbsTime(SDL_GetTicks());
 			++number_of_frames;
 
 		} while(globals.app_running == true && globals.app_needs_reload == false);

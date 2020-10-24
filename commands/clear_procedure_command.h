@@ -19,14 +19,14 @@ struct Globals;
 class ClearProcedureCommand
 {
 public:
-    ClearProcedureCommand(ProcedureID id) : m_id(id) {}
+    ClearProcedureCommand(const AbsProcedureID proc_id) : m_proc_id(proc_id) {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	if(command_system.procedure(m_id))
+    	if(command_system.procedure(m_proc_id))
     	{
-    		command_system.procedure(m_id)->clear();
+    		command_system.procedure(m_proc_id)->clear();
     	}
     	else
     	{
@@ -35,7 +35,7 @@ public:
     }
 
 private:
-    ProcedureID m_id;
+    AbsProcedureID m_proc_id;
 };
 
 

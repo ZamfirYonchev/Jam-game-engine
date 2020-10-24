@@ -17,7 +17,7 @@ class GuideControl : public Control
 {
 public:
 	using Base = Control;
-	GuideControl(EntityID self_id, EntityID target_id, double range, EntitySystemT& entity_system)
+	GuideControl(AbsEntityID self_id, EntityID target_id, double range, EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
@@ -77,7 +77,8 @@ public:
         m_duck = 0.0;
     }
 
-    EntityID m_self_id, m_target_id;
+    AbsEntityID m_self_id;
+	EntityID m_target_id;
 
 private:
     double m_walk_dir, m_jump, m_duck;
