@@ -14,10 +14,15 @@
 #include "../entity.h"
 #include "../types.h"
 #include <algorithm>
+#include "../type_pack.h"
 
+class RenderingSystem;
+
+template<typename... Ts>
 class EntitySystem
 {
 public:
+	using EntityT = Entity<Ts...>;
 	EntitySystem() : m_entities()
 				   , m_entities_to_remove()
 				   , m_free_entities()
@@ -61,45 +66,72 @@ public:
     	std::for_each(std::begin(m_entities), std::end(m_entities), func);
     }
 
-    Entity& add_new_entity();
+    EntityID add_new_entity()
+    {
+    	EntityID id;
+        if(m_free_entities.size() == 0)
+        {
+        	id = static_cast<EntityID>(m_entities.size());
+        	m_entities.push_back(EntityT(id));
+        }
+        else
+        {
+        	id = *m_free_entities.begin();
+        	m_free_entities.erase(id);
+        }
+
+        return id;
+    }
+
     void remove_entity(const EntityID id)
     {
     	m_entities_to_remove.insert(id);
     }
 
     template<typename T>
-    T& entity_component(const EntityID id)
+    T& entity_component(const EntityID id, const T* ptr)
     {
     	if(id >= 0 && id < int(m_entities.size()))
-    		return m_entities[id].component<T>();
+    		return m_entities[id].component(ptr);
     	else
     		return *T::null;
     }
 
     template<typename T>
-    const T& entity_component(const EntityID id) const
+    const T& entity_component(const EntityID id, const T* ptr) const
     {
     	if(id >= 0 && id < int(m_entities.size()))
-    		return m_entities[id].component<T>();
+    		return m_entities[id].component(ptr);
     	else
     		return *T::null;
     }
 
-    template<typename T, typename... Args>
-	void set_entity_component(const EntityID id, Args&&... args)
+    template<typename T, typename AllSystemsT>
+	void set_entity_component(const EntityID id, AllSystemsT& all_systems, RenderingSystem& rendering_system, const T& component)
     {
     	if(id >= 0 && id < int(m_entities.size()))
-    		m_entities[id].set_component<T>(std::forward<Args>(args)...);
+    		m_entities[id].set_component(all_systems, rendering_system, component);
     }
 
     void clear()
     {
-        m_entities.clear();
         m_entities_to_remove.clear();
-        m_free_entities.clear();
+    	m_free_entities.clear();
+        m_entities.clear();
     }
 
-    void clean_removed_entites();
+    template<typename AllSystemsT>
+    void clean_removed_entites(AllSystemsT& all_systems)
+    {
+    	for(const auto id : m_entities_to_remove)
+    	{
+    		all_systems.remove_id(id);
+
+    		m_entities[id].clear();
+    		m_free_entities.insert(id);
+    	}
+    	m_entities_to_remove.clear();
+    }
 
     void add_accessed_entity(const EntityID id)
     {
@@ -124,7 +156,7 @@ public:
     }
 
 private:
-    std::vector<Entity> m_entities;
+    std::vector<EntityT> m_entities;
     std::unordered_set<EntityID> m_entities_to_remove;
     std::unordered_set<EntityID> m_free_entities;
     std::array<EntityID/*::Type*/, 10> m_last_accessed_entities;
