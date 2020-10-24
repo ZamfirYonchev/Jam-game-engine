@@ -8,20 +8,7 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
-#include "components/position.h"
-#include "components/control.h"
-#include "components/movement.h"
-#include "components/collision.h"
-#include "components/interaction.h"
-#include "components/health.h"
 #include "components/visuals.h"
-#include "components/null_position.h"
-#include "components/null_control.h"
-#include "components/null_movement.h"
-#include "components/null_collision.h"
-#include "components/null_interaction.h"
-#include "components/null_health.h"
-#include "components/null_visuals.h"
 #include "types.h"
 #include <utility>
 #include <ostream>
@@ -29,11 +16,19 @@
 #include <type_traits>
 #include "components/component.h"
 #include <iostream>
+#include "utilities.h"
+#include "type_pack.h"
 
+template<typename... Ts>
 class Entity
 {
 public:
-    Entity(EntityID id);
+    Entity(EntityID id)
+	: m_id(id)
+	{
+    	clear();
+	}
+
     Entity() : Entity(EntityID(-1)) {}
     ~Entity()
     {
@@ -41,57 +36,64 @@ public:
     }
 
     Entity(const Entity&) = delete;
-    Entity(Entity&& rhs) noexcept;
+    Entity(Entity&& rhs) noexcept = default;
 
     Entity& operator=(const Entity&) = delete;
-    Entity& operator=(Entity&& rhs) noexcept;
+    Entity& operator=(Entity&& rhs) noexcept = default;
 
     template<typename T>
-    T& component() { return *T::null; }
+    T& component(const T*)
+    {
+    	return *(m_component_pack.access((unique_component_ptr<T>*)nullptr));
+    }
 
     template<typename T>
-    const T& component() const  { return *T::null; }
+    const T& component(const T*) const
+    {
+    	return *(m_component_pack.access((unique_component_ptr<T>*)nullptr));
+    }
 
-	template<typename T, typename... Args>
-	void set_component(Args&&... args)
+    template<typename T>
+	void set_component_ptr(unique_component_ptr<T> _component)
+    {
+    	m_component_pack.access(&_component) = std::move(_component);
+    }
+
+    template<typename T, typename AllSystemsT, typename RenderingSystemT>
+	void set_component(AllSystemsT& all_systems, RenderingSystemT& rendering_system, const T& _component)
 	{
-		set_component_ptr(make_unique_component<T>(std::forward<Args>(args)...));
-	}
+    	using BaseT = typename T::Base;
+		const int8_t change = is_null_component(component((BaseT*)nullptr)) - is_null_component(_component);
 
-	template<typename T>
-	void set_component_ptr(unique_component_ptr<T> _component) { std::cerr << "Missing set_component_ptr for component " << *_component << '\n';}
+		set_component_ptr<BaseT>(make_unique_component<T>(_component));
+
+		all_systems.component_updated(component((BaseT*)nullptr), m_id, change);
+		if constexpr(std::is_same<BaseT, Visuals>::value)
+			rendering_system.component_updated(component((BaseT*)nullptr), m_id, change);
+	}
 
 	void set_id(EntityID id)
     { m_id = id; }
 
     EntityID id() const { return m_id; }
 
-    void clear();
+    void clear()
+    {
+    	((void) m_component_pack.access((unique_component_ptr<Ts>*)nullptr).reset(Ts::null), ...);
+    }
 
     friend std::ostream& operator<<(std::ostream& stream, const Entity& entity)
     {
-    	stream << "AddEntity\n"
-    	   << *(entity.m_position)
-		   << *(entity.m_control)
-		   << *(entity.m_movement)
-		   << *(entity.m_collision)
-		   << *(entity.m_interaction)
-		   << *(entity.m_health)
-		   << *(entity.m_visuals)
-		   << std::endl;
+		stream << "AddEntity\n";
+    	((stream << entity.component((Ts*)nullptr)), ...);
+		stream << std::endl;
 
     	return stream;
     }
 
 private:
     EntityID m_id;
-    unique_component_ptr<Position> m_position;
-    unique_component_ptr<Control> m_control;
-    unique_component_ptr<Movement> m_movement;
-    unique_component_ptr<Collision> m_collision;
-    unique_component_ptr<Interaction> m_interaction;
-    unique_component_ptr<Health> m_health;
-    unique_component_ptr<Visuals> m_visuals;
+    TypePack<unique_component_ptr<Ts>...> m_component_pack;
 };
 
 #endif /* ENTITY_H_ */

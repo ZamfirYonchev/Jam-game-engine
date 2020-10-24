@@ -32,6 +32,4 @@ struct Globals
     std::string level_name;
 };
 
-Globals& globals();
-
 #endif /* GLOBALS_H_ */
