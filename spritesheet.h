@@ -12,6 +12,8 @@
 #include <vector>
 #include "optional_ref.h"
 
+class ResourceSystem;
+
 class Spritesheet
 {
 public:
