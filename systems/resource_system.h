@@ -13,8 +13,6 @@
 #include "../texture.h"
 #include "../font.h"
 #include "../spritesheet.h"
-#include "../commands/procedure_command.h"
-#include "../optional_ref.h"
 
 class ResourceSystem
 {
@@ -34,7 +32,6 @@ public:
     {
     	clear();
     	m_fonts = std::move(rhs.m_fonts);
-    	m_procedures = std::move(rhs.m_procedures);
     	m_spritesheets = std::move(rhs.m_spritesheets);
     	m_textures = std::move(rhs.m_textures);
 
@@ -49,11 +46,6 @@ public:
     SpritesheetID last_spritesheet_id() const
     {
         return SpritesheetID(m_spritesheets.size()-1);
-    }
-
-    ProcedureID last_procedure_id() const
-    {
-        return ProcedureID(m_procedures.size()-1);
     }
 
     FontID last_font_id() const
@@ -93,9 +85,9 @@ public:
         m_spritesheets.push_back(spritesheet);
     }
 
-    void addNewSprite(SpritesheetID spritesheet_id, const Sprite& sprite)
+    void addNewSprite(const SpritesheetID spritesheet_id, const Sprite& sprite)
     {
-        if(spritesheet_id < m_spritesheets.size())
+        if(spritesheet_id < m_spritesheets.size() && sprite.texture_id < m_textures.size())
         {
         	m_spritesheets[spritesheet_id].add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
         }
@@ -105,12 +97,7 @@ public:
         }
     }
 
-    void addNewProcedure()
-    {
-        m_procedures.emplace_back();
-    }
-
-    void addNewFont(const std::string& font_file, int size)
+    void addNewFont(const std::string& font_file, const int size)
     {
     	m_fonts.push_back(Font(font_file, size));
     }
@@ -120,7 +107,7 @@ public:
         return m_textures;
     }
 
-    optional_ref<Texture> texture(TextureID tex_id)
+    optional_ref<Texture> texture(const TextureID tex_id)
     {
         if(tex_id < m_textures.size())
             return optional_ref<Texture>(m_textures[tex_id]);
@@ -141,19 +128,6 @@ public:
         	return optional_ref<Spritesheet>();
     }
 
-    const std::vector<ProcedureCommand>& procedures() const
-    {
-        return m_procedures;
-    }
-
-    optional_ref<ProcedureCommand> procedure(ProcedureID id)
-    {
-        if(id < m_procedures.size())
-        	return optional_ref<ProcedureCommand>(m_procedures[id]);
-		else
-			return optional_ref<ProcedureCommand>();
-    }
-
     optional_ref<Font> font(FontID id)
     {
     	if(id < m_fonts.size())
@@ -172,11 +146,6 @@ public:
         m_spritesheets.clear();
     }
 
-    void clear_procedures()
-    {
-        m_procedures.clear();
-    }
-
     void clear_fonts()
     {
         m_fonts.clear();
@@ -186,14 +155,12 @@ public:
     {
         clear_textures();
         clear_spritesheets();
-        clear_procedures();
         clear_fonts();
     }
 
 private:
     std::vector<Texture> m_textures;
     std::vector<Spritesheet> m_spritesheets;
-    std::vector<ProcedureCommand> m_procedures;
     std::vector<Font> m_fonts;
 };
 
