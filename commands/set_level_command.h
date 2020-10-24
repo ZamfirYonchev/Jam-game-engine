@@ -8,18 +8,26 @@
 #ifndef COMMANDS_SET_LEVEL_COMMAND_H_
 #define COMMANDS_SET_LEVEL_COMMAND_H_
 
-#include "command.h"
 #include <string>
+#include "../globals.h"
 
-class SetLevelCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class SetLevelCommand
 {
 public:
 	SetLevelCommand(const std::string& level)
 	: m_level(level)
 	{}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<SetLevelCommand>(m_level); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		globals.level_name = m_level;
+	}
 
 private:
     std::string m_level;

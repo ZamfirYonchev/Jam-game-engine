@@ -8,16 +8,31 @@
 #ifndef COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 #define COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 
-#include "command.h"
 #include "../types.h"
+#include "../systems/resource_system.h"
 
-class ClearProcedureCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class ClearProcedureCommand
 {
 public:
     ClearProcedureCommand(ProcedureID id) : m_id(id) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<ClearProcedureCommand>(m_id); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	if(command_system.procedure(m_id))
+    	{
+    		command_system.procedure(m_id)->clear();
+    	}
+    	else
+    	{
+    		//error m_id
+    	}
+    }
 
 private:
     ProcedureID m_id;

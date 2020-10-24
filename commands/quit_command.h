@@ -8,15 +8,23 @@
 #ifndef COMMANDS_QUIT_COMMAND_H_
 #define COMMANDS_QUIT_COMMAND_H_
 
-#include "command.h"
+#include "../globals.h"
 
-class QuitCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class QuitCommand
 {
 public:
     QuitCommand() {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<QuitCommand>(); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+        globals.app_running = false;
+    }
 };
 
 

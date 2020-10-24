@@ -8,10 +8,16 @@
 #ifndef COMMANDS_EXTEND_PROCEDURE_COMMAND_H_
 #define COMMANDS_EXTEND_PROCEDURE_COMMAND_H_
 
-#include "command.h"
 #include "../types.h"
+#include "../systems/resource_system.h"
+#include "../systems/command_system.h"
 
-class ExtendProcedureCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class ExtendProcedureCommand
 {
 public:
     ExtendProcedureCommand(ProcedureID id, int num_of_commands)
@@ -19,8 +25,21 @@ public:
     , m_num_of_cmds(num_of_commands)
     {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<ExtendProcedureCommand>(m_id, m_num_of_cmds); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+        if(command_system.procedure(m_id))
+        {
+    		for(int i = 0; i < m_num_of_cmds; ++i)
+    		{
+    			command_system.procedure(m_id)->add_command(command_system.pop_next());
+    		}
+        }
+        else
+        {
+        	//error m_id
+        }
+    }
 
 private:
     ProcedureID m_id;

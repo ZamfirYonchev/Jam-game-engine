@@ -8,10 +8,15 @@
 #ifndef COMMANDS_DEBUG_MESSAGE_COMMAND_H_
 #define COMMANDS_DEBUG_MESSAGE_COMMAND_H_
 
-#include "command.h"
 #include <string>
+#include <iostream>
 
-class DebugMessageCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class DebugMessageCommand
 {
 public:
 	enum Severity {DEBUG = 0, NOTE = 1, ERROR = 2};
@@ -20,8 +25,14 @@ public:
 	, m_severity(sev)
 	{}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<DebugMessageCommand>(m_text, m_severity); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	if(m_severity != ERROR)
+    		std::cout << m_text << std::endl;
+    	else
+    		std::cerr << m_text << std::endl;
+    }
 
 private:
     std::string m_text;

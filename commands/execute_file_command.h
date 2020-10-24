@@ -8,24 +8,38 @@
 #ifndef COMMANDS_EXECUTE_FILE_COMMAND_H_
 #define COMMANDS_EXECUTE_FILE_COMMAND_H_
 
-#include "command.h"
 #include <string>
-#include <SDL2/SDL.h>
+#include <fstream>
+#include "../systems/command_system.h"
+#include <iostream>
 
-class ExecuteFileCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class ExecuteFileCommand
 {
 public:
-    ExecuteFileCommand(const std::string& filename, SDL_Renderer* renderer)
+    ExecuteFileCommand(const std::string& filename)
     : m_filename(filename)
-	, m_renderer(renderer)
     {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<ExecuteFileCommand>(m_filename, m_renderer); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	std::ifstream file {m_filename};
+    	if (file)
+    	{
+    		std::cout << "Parsing file " << m_filename << std::endl;
+    		command_system.process_stream(file);
+    	}
+    	else
+    		std::cerr << "File \"" << m_filename << "\" cannot be opened!" << std::endl;
+    }
 
 private:
     std::string m_filename;
-    SDL_Renderer* m_renderer;
 };
 
 

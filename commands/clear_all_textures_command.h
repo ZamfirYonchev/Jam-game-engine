@@ -8,15 +8,23 @@
 #ifndef COMMANDS_CLEAR_ALL_TEXTURES_COMMAND_H_
 #define COMMANDS_CLEAR_ALL_TEXTURES_COMMAND_H_
 
-#include "command.h"
+#include "../systems/resource_system.h"
 
-class ClearAllTexturesCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class ClearAllTexturesCommand
 {
 public:
 	ClearAllTexturesCommand() {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<ClearAllTexturesCommand>(); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		resource_system.clear_textures();
+	}
 };
 
 

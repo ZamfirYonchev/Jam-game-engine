@@ -8,30 +8,37 @@
 #ifndef COMMANDS_ADD_TEXTURE_FROM_STRING_COMMAND_H_
 #define COMMANDS_ADD_TEXTURE_FROM_STRING_COMMAND_H_
 
-#include "command.h"
 #include <string>
-#include <SDL2/SDL.h>
 #include "../types.h"
+#include "../systems/resource_system.h"
+#include "../systems/rendering_system.h"
 
-class AddTextureFromStringCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class AddTextureFromStringCommand
 {
 public:
-    AddTextureFromStringCommand(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
+    AddTextureFromStringCommand(const std::string& text, FontID font_id, uint8_t r, uint8_t g, uint8_t b)
 	: m_text(text)
 	, m_font_id(font_id)
 	, m_r(r)
 	, m_g(g)
 	, m_b(b)
-	, m_renderer(renderer) {}
+	{}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<AddTextureFromStringCommand>(m_text, m_font_id, m_r, m_g, m_b, m_renderer); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	resource_system.addNewTextureFromString(m_text, m_font_id, m_r, m_g, m_b, rendering_system.renderer());
+    }
 
 private:
     std::string m_text;
     FontID m_font_id;
     uint8_t m_r, m_g, m_b;
-    SDL_Renderer* m_renderer;
 };
 
 

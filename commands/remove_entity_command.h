@@ -8,15 +8,21 @@
 #ifndef COMMANDS_REMOVE_ENTITY_COMMAND_H_
 #define COMMANDS_REMOVE_ENTITY_COMMAND_H_
 
-#include "command.h"
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
 
-class RemoveEntityCommand : public Command
+class RemoveEntityCommand
 {
 public:
     RemoveEntityCommand() {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<RemoveEntityCommand>(); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	entity_system.remove_entity(entity_system.previous_entity_id());
+    }
 };
 
 

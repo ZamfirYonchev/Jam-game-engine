@@ -8,15 +8,22 @@
 #ifndef COMMANDS_PROCEDURE_COMMAND_H_
 #define COMMANDS_PROCEDURE_COMMAND_H_
 
-#include "command.h"
 #include <list>
+#include "../systems/command_system.h"
 
-class ProcedureCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+template<typename CommandSystemT>
+class ProcedureCommand
 {
 public:
-    void add_command(std::unique_ptr<Command> cmd)
+	using CommandT = typename CommandSystemT::CommandT;
+    void add_command(const CommandT& cmd)
     {
-        m_commands.push_back(std::move(cmd));
+        m_commands.push_back(cmd);
     }
 
     void clear()
@@ -24,17 +31,15 @@ public:
         m_commands.clear();
     }
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const
+    template<typename EntitySystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	auto proc_cmd_ptr = std::make_unique<ProcedureCommand>();
-        for(const auto& cmd : m_commands)
-        	proc_cmd_ptr->add_command(cmd->clone());
-        return proc_cmd_ptr;
+        for(auto it = m_commands.rbegin(); it != m_commands.rend(); ++it)
+        	command_system.insert_next(*it);
     }
 
 private:
-    std::list<std::unique_ptr<Command>> m_commands;
+    std::list<CommandT> m_commands;
 };
 
 

@@ -8,10 +8,16 @@
 #ifndef COMMANDS_ADD_SPRITE_COMMAND_H_
 #define COMMANDS_ADD_SPRITE_COMMAND_H_
 
-#include "command.h"
 #include "../types.h"
+#include <SDL2/SDL.h>
+#include "../systems/resource_system.h"
 
-class AddSpriteCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class AddSpriteCommand
 {
 public:
     AddSpriteCommand(SpritesheetID spr_id, TextureID tex_id, int x, int y, int w, int h)
@@ -22,8 +28,27 @@ public:
     , m_w(w)
     , m_h(h)
     {}
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<AddSpriteCommand>(m_spr_id, m_tex_id, m_x, m_y, m_w, m_h); }
+
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	int width, height;
+    	if(m_w == 0 || m_h == 0)
+    	{
+    		if(resource_system.texture(m_tex_id))
+    			SDL_QueryTexture(resource_system.texture(m_tex_id)->texture(), nullptr, nullptr, &width, &height);
+    		else
+    		{
+    			//todo add error message
+    			return;
+    		}
+    	}
+
+    	width = (m_w == 0) ? width  : m_w;
+    	height = (m_h == 0) ? height : m_h;
+
+    	resource_system.spritesheet(m_spr_id)->add_sprite(m_tex_id, m_x, m_y, width, height);
+    }
 
 private:
     SpritesheetID m_spr_id;

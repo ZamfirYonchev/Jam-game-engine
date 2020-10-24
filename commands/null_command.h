@@ -8,13 +8,18 @@
 #ifndef COMMANDS_NULL_COMMAND_H_
 #define COMMANDS_NULL_COMMAND_H_
 
-#include "command.h"
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
 
-class NullCommand : public Command
+class NullCommand
 {
 public:
-    void execute() const {}
-    std::unique_ptr<Command> clone() const { return std::make_unique<NullCommand>(); }
+
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {}
 };
 
 #endif /* COMMANDS_NULL_COMMAND_H_ */

@@ -8,18 +8,25 @@
 #ifndef COMMANDS_SELECT_ENTITY_COMMAND_H_
 #define COMMANDS_SELECT_ENTITY_COMMAND_H_
 
-#include "command.h"
 #include "../types.h"
 
-class SelectEntityCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class SelectEntityCommand
 {
 public:
 	SelectEntityCommand(EntityID id)
 	: m_id(id)
 	{}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<SelectEntityCommand>(m_id); }
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		entity_system.add_accessed_entity(entity_system.resolved_id(m_id));
+	}
 
 private:
     EntityID m_id;

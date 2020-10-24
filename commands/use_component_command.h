@@ -8,207 +8,283 @@
 #ifndef COMMANDS_USE_COMPONENT_COMMAND_H_
 #define COMMANDS_USE_COMPONENT_COMMAND_H_
 
-#include "command.h"
 #include "../types.h"
 #include "null_command.h"
+
+#include "../components/absolute_position.h"
+#include "../components/attached_position.h"
+#include "../components/build_position.h"
+#include "../components/null_position.h"
+
+#include "../components/chase_ai_control.h"
+#include "../components/constant_control.h"
+#include "../components/guide_control.h"
 #include "../components/input_control.h"
 #include "../components/input_select_control.h"
-#include "../components/chase_ai_control.h"
-#include "../components/guide_control.h"
+#include "../components/null_control.h"
+
+#include "../components/full_movement.h"
+#include "../components/instant_movement.h"
+#include "../components/null_movement.h"
+
+#include "../components/basic_collision.h"
+#include "../components/damage_collision.h"
+#include "../components/null_collision.h"
+
+#include "../components/full_interaction.h"
+#include "../components/normal_interaction.h"
+#include "../components/trigger_interaction.h"
+#include "../components/null_interaction.h"
+
+#include "../components/attached_health.h"
+#include "../components/character_health.h"
+#include "../components/timed_health.h"
+#include "../components/null_health.h"
+
+#include "../components/character_visuals.h"
 #include "../components/health_visuals.h"
 #include "../components/menu_item_visuals.h"
-#include "../components/build_position.h"
+#include "../components/static_visuals.h"
 #include "../components/tiled_visuals.h"
-#include "../components/attached_position.h"
-#include "../components/attached_health.h"
+#include "../components/null_visuals.h"
+
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
 
 template<typename T>
-class UseComponentCommand : public Command
+class UseComponentCommand
 {
 public:
 	template<typename... Args>
 	UseComponentCommand(Args&&... args)
 	: m_component(std::forward<Args>(args)...) {}
 
-	void execute() const;
-    std::unique_ptr<Command> clone() const
-    {
-    	return std::make_unique<UseComponentCommand<T>>(m_component);
-    }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
 
 private:
-    T m_component;
+    const T m_component;
 };
 
-template<>
-class UseComponentCommand<InputControl> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<InputControl<EntitySystemT>>
 {
 public:
-	UseComponentCommand(const ProcedureID proc_id, const double proc_cooldown, bool stability_control)
-	: m_proc_id(proc_id)
-	, m_proc_cooldown(proc_cooldown)
-	, m_stability_control(stability_control)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-	void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<InputControl>>(m_proc_id, m_proc_cooldown, m_stability_control); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
 
 private:
-    ProcedureID m_proc_id;
-    double m_proc_cooldown;
-    bool m_stability_control;
+    mutable InputControl<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<InputSelectControl> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<ChaseAIControl<EntitySystemT>>
 {
 public:
-	UseComponentCommand<InputSelectControl>(int select, int max, ProcedureID proc_id)
-	: m_select(select)
-	, m_max(max)
-	, m_proc_id(proc_id)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<InputSelectControl>>(m_select, m_max, m_proc_id); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		m_component.m_target_id = entity_system.resolved_id(m_component.m_target_id);
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    int m_select;
-    int m_max;
-    ProcedureID m_proc_id;
+    mutable ChaseAIControl<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<ChaseAIControl> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<GuideControl<EntitySystemT>>
 {
 public:
-	UseComponentCommand<ChaseAIControl>(EntityID target_id, ProcedureID attack_id, double attack_cooldown, double attack_range)
-	: m_target_id(target_id)
-	, m_attack_id(attack_id)
-	, m_attack_cooldown(attack_cooldown)
-	, m_attack_range(attack_range)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<ChaseAIControl>>(m_target_id, m_attack_id, m_attack_cooldown, m_attack_range); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
 
 private:
-    EntityID m_target_id;
-    ProcedureID m_attack_id;
-    double m_attack_cooldown, m_attack_range;
+    mutable GuideControl<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<GuideControl> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<HealthVisuals<EntitySystemT>>
 {
 public:
-	UseComponentCommand<GuideControl>(EntityID target_id, double range)
-	: m_target_id(target_id)
-	, m_range(range)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<GuideControl>>(m_target_id, m_range); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    EntityID m_target_id;
-    double m_range;
+    mutable HealthVisuals<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<HealthVisuals> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<MenuItemVisuals<EntitySystemT>>
 {
 public:
-	UseComponentCommand<HealthVisuals>(SpritesheetID spr_id, uint16_t repeat_x)
-	: m_spr_id(spr_id)
-	, m_repeat_x(repeat_x)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<HealthVisuals>>(m_spr_id, m_repeat_x); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    SpritesheetID m_spr_id;
-    uint16_t m_repeat_x;
+    mutable MenuItemVisuals<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<MenuItemVisuals> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<BuildPosition<EntitySystemT>>
 {
 public:
-	UseComponentCommand<MenuItemVisuals>(SpritesheetID spr_id)
-	: m_spr_id(spr_id)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<MenuItemVisuals>>(m_spr_id); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_attached_id = entity_system.resolved_id(m_component.m_attached_id);
+		const Position& builder_pos = entity_system.entity_component(m_component.m_attached_id, (Position*)nullptr);
+		m_component.m_self_id = entity_system.previous_entity_id();
+		m_component.m_origin_x = builder_pos.x();
+		m_component.m_origin_y = builder_pos.y();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    SpritesheetID m_spr_id;
+    mutable BuildPosition<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<BuildPosition> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<TiledVisuals<EntitySystemT>>
 {
 public:
-	UseComponentCommand<BuildPosition>(EntityID builder_id)
-	: m_builder_id(builder_id)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<BuildPosition>>(m_builder_id); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    SpritesheetID m_builder_id;
+    mutable TiledVisuals<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<TiledVisuals> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<AttachedPosition<EntitySystemT>>
 {
 public:
-	UseComponentCommand<TiledVisuals>(const SpritesheetID spr_id, const double tile_w, const double tile_h)
-	: m_spr_id(spr_id)
-	, m_tile_w(tile_w)
-	, m_tile_h(tile_h)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<TiledVisuals>>(m_spr_id, m_tile_w, m_tile_h); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_attached_id = entity_system.resolved_id(m_component.m_attached_id);
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    SpritesheetID m_spr_id;
-    double m_tile_w;
-    double m_tile_h;
+    mutable AttachedPosition<EntitySystemT> m_component;
 };
 
-template<>
-class UseComponentCommand<AttachedPosition> : public Command
+template<typename EntitySystemT>
+class UseComponentCommand<AttachedHealth<EntitySystemT>>
 {
 public:
-	UseComponentCommand<AttachedPosition>(const EntityID attached_id, const double offset_x, const double offset_y, const double offset_w, const double offset_h)
-	: m_attached_id(attached_id)
-	, m_offset_x(offset_x)
-	, m_offset_y(offset_y)
-	, m_offset_w(offset_w)
-	, m_offset_h(offset_h)
-	{}
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
 
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<AttachedPosition>>(m_attached_id, m_offset_x, m_offset_y, m_offset_w, m_offset_h); }
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_attached_id = entity_system.resolved_id(m_component.m_attached_id);
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
 private:
-    EntityID m_attached_id;
-    double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
-};
-
-template<>
-class UseComponentCommand<AttachedHealth> : public Command
-{
-public:
-	UseComponentCommand<AttachedHealth>(const EntityID attached_id, const double offset_hp, const double offset_max_hp)
-	: m_attached_id(attached_id)
-	, m_offset_hp(offset_hp)
-	, m_offset_max_hp(offset_max_hp)
-	{}
-
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<UseComponentCommand<AttachedHealth>>(m_attached_id, m_offset_hp, m_offset_max_hp); }
-private:
-    EntityID m_attached_id;
-    double m_offset_hp, m_offset_max_hp;
+    mutable AttachedHealth<EntitySystemT> m_component;
 };
 
 #endif /* COMMANDS_USE_COMPONENT_COMMAND_H_ */

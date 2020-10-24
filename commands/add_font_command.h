@@ -8,18 +8,27 @@
 #ifndef COMMANDS_ADD_FONT_COMMAND_H_
 #define COMMANDS_ADD_FONT_COMMAND_H_
 
-#include "command.h"
 #include <string>
+#include "../systems/resource_system.h"
 
-class AddFontCommand : public Command
+class ResourceSystem;
+class InputSystem;
+class RenderingSystem;
+struct Globals;
+
+class AddFontCommand
 {
 public:
 	AddFontCommand(const std::string& file, int size)
 	: m_file(file)
 	, m_size(size)
 	{}
-    void execute() const;
-    std::unique_ptr<Command> clone() const { return std::make_unique<AddFontCommand>(m_file, m_size); }
+
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    {
+    	resource_system.addNewFont(m_file, m_size);
+    }
 
 private:
     std::string m_file;
