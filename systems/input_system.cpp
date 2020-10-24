@@ -8,10 +8,8 @@
 #include "input_system.h"
 #include "../globals.h"
 #include "../commands/quit_command.h"
-#include "systems.h"
-#include "command_system.h"
 
-void InputSystem::process_input()
+void InputSystem::process_input(Globals& globals)
 {
 	m_up_pressed = false;
 	m_down_pressed = false;
@@ -22,7 +20,7 @@ void InputSystem::process_input()
         switch(m_event.type)
         {
             case SDL_QUIT:
-                globals().app_running = false;
+                globals.app_running = false;
             break;
 
             case SDL_KEYDOWN:
@@ -45,13 +43,13 @@ void InputSystem::process_input()
                 else if(m_event.key.keysym.sym == m_keyselect)
                     m_select_pressed = true;
                 else if(m_event.key.keysym.sym == m_keyquit || m_event.key.keysym.sym == SDLK_F10)
-                    system<CommandSystem>().push(std::make_unique<QuitCommand>());
+                	globals.app_running = false;
                 else if(m_event.key.keysym.sym == SDLK_r)
-                    globals().app_needs_reload = true;
+                    globals.app_needs_reload = true;
                 else if(m_event.key.keysym.sym == m_keypause)
-                    globals().app_paused = !globals().app_paused;
+                    globals.app_paused = !globals.app_paused;
                 else if(m_event.key.keysym.sym == SDLK_h)
-                    globals().show_hitboxes = !globals().show_hitboxes;
+                    globals.show_hitboxes = !globals.show_hitboxes;
             break;
 
             case SDL_KEYUP:

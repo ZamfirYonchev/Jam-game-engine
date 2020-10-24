@@ -9,6 +9,8 @@
 #define SYSTEMS_INPUT_SYSTEM_H_
 #include "SDL2/SDL.h"
 
+struct Globals;
+
 class InputSystem
 {
 public:
@@ -31,7 +33,7 @@ public:
 	, m_select_pressed(false)
 	{}
 
-    void process_input();
+    void process_input(Globals& globals);
     bool jumping() const { return m_jump_pressed; }
     bool ducking() const { return m_duck_pressed; }
     bool shooting() const { return m_shoot_pressed; }
