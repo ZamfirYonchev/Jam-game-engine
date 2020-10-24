@@ -470,7 +470,7 @@ UseBasicCollision 2 1
 UseNormalInteraction 1024
 
 AddEntity #26: frog
-UseAbsolutePosition 1000 0 91 59
+UseAbsolutePosition 1002 0 91 59
 UseBasicCollision 1 0.5
 UseCharacterVisuals 8
 ModifyVisuals 0 0 0 0 -0
