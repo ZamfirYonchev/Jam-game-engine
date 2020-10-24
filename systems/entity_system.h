@@ -55,15 +55,15 @@ public:
     }
 
     template<typename F>
-    void for_each(F func) const
+    void for_each(F&& func) const
     {
-    	std::for_each(std::cbegin(m_entities), std::cend(m_entities), func);
+    	std::for_each(std::cbegin(m_entities), std::cend(m_entities), std::forward<F>(func));
     }
 
     template<typename F>
-    void for_each(F func)
+    void for_each(F&& func)
     {
-    	std::for_each(std::begin(m_entities), std::end(m_entities), func);
+    	std::for_each(std::begin(m_entities), std::end(m_entities), std::forward<F>(func));
     }
 
     AbsEntityID add_new_entity()

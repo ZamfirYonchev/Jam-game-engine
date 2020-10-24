@@ -7,7 +7,6 @@
 
 #include "input_system.h"
 #include "../globals.h"
-#include "../commands/quit_command.h"
 
 void InputSystem::process_input(Globals& globals)
 {

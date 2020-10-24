@@ -9,12 +9,7 @@
 #define SYSTEMS_DAMAGE_SYSTEM_H_
 
 #include "system_base.h"
-#include <sstream>
 #include "../components/health.h"
-#include "../commands/select_entity_command.h"
-#include "../commands/call_procedure_command.h"
-#include <algorithm>
-#include "entity_system.h"
 #include <list>
 #include <utility>
 #include <type_traits>

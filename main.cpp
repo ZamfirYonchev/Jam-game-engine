@@ -699,7 +699,7 @@ int main(int argc, char** argv)
 			entity_system.clean_removed_entites(all_systems);
 
 			if(globals.app_paused == false)
-				all_systems.update(frame_diff, entity_system, command_system.procedure_call_list());
+				all_systems.update(frame_diff, entity_system, command_system.procedure_calls());
 
 			rendering_system.render_entities(frame_diff, entity_system, resource_system, globals);
 

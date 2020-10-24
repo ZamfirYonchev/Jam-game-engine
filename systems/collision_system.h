@@ -15,12 +15,7 @@
 #include "../components/interaction.h"
 #include "../components/health.h"
 #include "../components/movement.h"
-#include <sstream>
 #include "../math_ext.h"
-#include "../commands/select_entity_command.h"
-#include "../commands/call_procedure_command.h"
-#include "../components/absolute_position.h"
-#include <algorithm>
 #include <list>
 #include <utility>
 #include <type_traits>

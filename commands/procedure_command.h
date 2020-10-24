@@ -9,7 +9,6 @@
 #define COMMANDS_PROCEDURE_COMMAND_H_
 
 #include <list>
-#include "../systems/command_system.h"
 
 class ResourceSystem;
 class InputSystem;

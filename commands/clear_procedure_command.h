@@ -9,7 +9,6 @@
 #define COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 
 #include "../types.h"
-#include "../systems/resource_system.h"
 
 class ResourceSystem;
 class InputSystem;

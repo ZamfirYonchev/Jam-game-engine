@@ -9,7 +9,6 @@
 #define COMMANDS_EXPORT_ENTITIES_COMMAND_H_
 
 #include <string>
-#include <istream>
 #include <fstream>
 #include <iostream>
 

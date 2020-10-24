@@ -14,13 +14,12 @@
 #include "../utilities.h"
 #include "../commands/null_command.h"
 #include <iostream>
-#include <istream>
 #include <string>
 #include <vector>
 #include "../commands/procedure_command.h"
-#include "../optional_ref.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
+#include "../optional_ref.h"
 #include <utility>
 
 class ResourceSystem;
@@ -189,7 +188,7 @@ public:
         m_procedures.clear();
     }
 
-    std::list<std::pair<EntityID, AbsProcedureID>>& procedure_call_list()
+    std::list<std::pair<EntityID, AbsProcedureID>>& procedure_calls()
 	{
     	return m_procedure_calls;
 	}

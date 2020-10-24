@@ -8,8 +8,6 @@
 #ifndef COMMANDS_CLEAR_ALL_PROCEDURES_COMMAND_H_
 #define COMMANDS_CLEAR_ALL_PROCEDURES_COMMAND_H_
 
-#include "../systems/resource_system.h"
-
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;

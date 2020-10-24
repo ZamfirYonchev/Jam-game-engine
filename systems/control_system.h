@@ -9,13 +9,8 @@
 #define SYSTEMS_CONTROL_SYSTEM_H_
 
 #include "system_base.h"
-#include <sstream>
 #include "../components/control.h"
 #include "../components/health.h"
-#include "../commands/call_procedure_command.h"
-#include "../commands/modify_position_command.h"
-#include "../commands/modify_control_command.h"
-#include <algorithm>
 #include <list>
 #include <utility>
 #include <type_traits>

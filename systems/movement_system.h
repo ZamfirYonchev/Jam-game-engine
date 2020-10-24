@@ -9,14 +9,11 @@
 #define SYSTEMS_MOVEMENT_SYSTEM_H_
 
 #include "system_base.h"
-#include <sstream>
 #include "../components/position.h"
 #include "../components/control.h"
 #include "../components/movement.h"
 #include "../components/collision.h"
 #include "../math_ext.h"
-#include <algorithm>
-#include "entity_system.h"
 #include <list>
 #include <utility>
 #include <type_traits>

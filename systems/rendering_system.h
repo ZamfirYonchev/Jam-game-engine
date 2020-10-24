@@ -10,23 +10,18 @@
 
 #include "../types.h"
 #include <set>
+#include <unordered_map>
+#include <SDL2/SDL.h>
 #include "../components/visuals.h"
 #include "../components/collision.h"
 #include "../components/movement.h"
 #include "../components/position.h"
 #include "../components/control.h"
 #include "../components/health.h"
-#include <SDL2/SDL.h>
-#include <unordered_map>
-
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
-#include "../components/null_position.h"
-#include <algorithm>
 #include "resource_system.h"
 #include "../globals.h"
-#include "../utilities.h"
-#include <list>
 
 class RenderingSystem
 {

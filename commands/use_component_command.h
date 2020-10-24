@@ -11,42 +11,18 @@
 #include "../types.h"
 #include "null_command.h"
 
-#include "../components/absolute_position.h"
-#include "../components/attached_position.h"
 #include "../components/build_position.h"
-#include "../components/null_position.h"
+#include "../components/attached_position.h"
 
-#include "../components/chase_ai_control.h"
-#include "../components/constant_control.h"
-#include "../components/guide_control.h"
 #include "../components/input_control.h"
-#include "../components/input_select_control.h"
-#include "../components/null_control.h"
-
-#include "../components/full_movement.h"
-#include "../components/instant_movement.h"
-#include "../components/null_movement.h"
-
-#include "../components/basic_collision.h"
-#include "../components/damage_collision.h"
-#include "../components/null_collision.h"
-
-#include "../components/full_interaction.h"
-#include "../components/normal_interaction.h"
-#include "../components/trigger_interaction.h"
-#include "../components/null_interaction.h"
+#include "../components/guide_control.h"
+#include "../components/chase_ai_control.h"
 
 #include "../components/attached_health.h"
-#include "../components/character_health.h"
-#include "../components/timed_health.h"
-#include "../components/null_health.h"
 
-#include "../components/character_visuals.h"
 #include "../components/health_visuals.h"
 #include "../components/menu_item_visuals.h"
-#include "../components/static_visuals.h"
 #include "../components/tiled_visuals.h"
-#include "../components/null_visuals.h"
 
 class ResourceSystem;
 class InputSystem;

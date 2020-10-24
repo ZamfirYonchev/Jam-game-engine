@@ -7,6 +7,7 @@
 
 #ifndef SYSTEMS_INPUT_SYSTEM_H_
 #define SYSTEMS_INPUT_SYSTEM_H_
+
 #include "SDL2/SDL.h"
 
 struct Globals;

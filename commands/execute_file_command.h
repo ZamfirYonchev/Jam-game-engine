@@ -10,7 +10,6 @@
 
 #include <string>
 #include <fstream>
-#include "../systems/command_system.h"
 #include <iostream>
 
 class ResourceSystem;
