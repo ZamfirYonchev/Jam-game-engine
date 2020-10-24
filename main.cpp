@@ -147,8 +147,7 @@ int main(int argc, char** argv)
 					 , globals.fullscreen
 					 , true);
 
-		std::list<std::pair<EntityID, ProcedureID>> procedure_calls;
-		EntitySystem<Position, Control,Movement,Collision,Interaction,Health,Visuals> entity_system;
+		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
 		InputSystem input_system;
@@ -651,11 +650,11 @@ int main(int argc, char** argv)
 		do
 		{
 			input_system.process_input(globals);
-			command_system.process(procedure_calls, resource_system, rendering_system, input_system, globals);
+			command_system.process(resource_system, rendering_system, input_system, globals);
 			entity_system.clean_removed_entites(all_systems);
 
 			if(globals.app_paused == false)
-				all_systems.update(frame_diff, entity_system, procedure_calls);
+				all_systems.update(frame_diff, entity_system, command_system.procedure_call_list());
 
 			rendering_system.render_entities(frame_diff, entity_system, resource_system, globals);
 

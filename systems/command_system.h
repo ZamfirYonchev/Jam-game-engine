@@ -21,6 +21,7 @@
 #include "../optional_ref.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
+#include <utility>
 
 class ResourceSystem;
 class InputSystem;
@@ -52,14 +53,14 @@ public:
 
     int size() const { return m_commands.size(); }
 
-    void process(std::list<std::pair<EntityID, ProcedureID>>& procedure_calls, ResourceSystem& resource_system, RenderingSystem& rendering_system, InputSystem& input_system, Globals& globals)
+    void process(ResourceSystem& resource_system, RenderingSystem& rendering_system, InputSystem& input_system, Globals& globals)
     {
-    	while(procedure_calls.size() > 0)
+    	while(m_procedure_calls.size() > 0)
     	{
-    		const auto& pair = procedure_calls.front();
+    		const auto& pair = m_procedure_calls.front();
     		m_commands.emplace_back(SelectEntityCommand{pair.first});
     		m_commands.emplace_back(CallProcedureCommand{pair.second});
-    		procedure_calls.pop_front();
+    		m_procedure_calls.pop_front();
     	}
 
         while(m_commands.size() > 0)
@@ -191,7 +192,13 @@ public:
         m_procedures.clear();
     }
 
+    std::list<std::pair<EntityID, ProcedureID>>& procedure_call_list()
+	{
+    	return m_procedure_calls;
+	}
+
 private:
+	std::list<std::pair<EntityID, ProcedureID>> m_procedure_calls;
     std::list<CommandT> m_commands;
     std::unordered_map<unsigned long, std::function<CommandT(std::istream& input)>> m_command_parser;
     std::vector<ProcedureCommand<CommandSystem>> m_procedures;
