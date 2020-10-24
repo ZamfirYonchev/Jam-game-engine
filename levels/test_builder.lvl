@@ -3,7 +3,7 @@ AddProcedure 9 #0: start building
 	UseBuildPosition 6 #builder
 	UseTiledVisuals 2 32 32
 	UseFullMovement 1 0.01 0.006 0.6 0
-	UseBasicCollision 0
+	UseBasicCollision 0 0
 	UseNormalInteraction 1
 	SelectEntity 6 #builder
 	UseInputControl 1 200 0
@@ -13,13 +13,13 @@ AddProcedure 7 #1: spawn solidifier
 	SelectEntity 6 #builder
 	UseInputControl 0 200 0
 	AddEntity
-	UseAbsolutePosition -50 -50 100 100
-	UseBasicCollision 0
+	UseAbsolutePosition 0 0 1000 1000 #-50 -50 100 100
+	UseBasicCollision 0 0
 	UseTriggerInteraction 0 -1 2 -1
 	UseTimedHealth 1 3
 
 AddProcedure 1 #2: solidify built object
-	ModifyPosition 0 0 0 0
+	FinalizeBuild
 	
 AddProcedure 1 #3: remove entity
 	RemoveEntity
@@ -158,12 +158,12 @@ ModifyVisuals 0 0 0 0 -0
 
 AddEntity #2: trigger zone move screen left 
 UseAttachedPosition 0 0 0 -0.9 0
-UseBasicCollision 0
+UseBasicCollision 0 0
 UseTriggerInteraction 1 0 -1 2
 
 AddEntity #3: trigger zone move screen right 
 UseAttachedPosition 0 0.9 0 -0.9 0
-UseBasicCollision 0
+UseBasicCollision 0 0
 UseTriggerInteraction 1 1 -1 2
 
 AddEntity #4: trigger zone move screen down 
@@ -175,7 +175,7 @@ UseCharacterVisuals 1
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
 UseFullMovement 0.1 0.01 0.01 0.6 0
-UseBasicCollision 1
+UseBasicCollision 1 0
 UseInputControl 0 100 0
 UseNormalInteraction 16
 
@@ -186,6 +186,6 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 1
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 4
-UseBasicCollision 0
+UseBasicCollision 0 0
 UseTriggerInteraction 4 4 -1 -1 #builder tag
 
