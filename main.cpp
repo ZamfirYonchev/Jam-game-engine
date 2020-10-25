@@ -58,6 +58,7 @@
 #include "commands/modify_interaction_command.h"
 #include "commands/modify_health_command.h"
 #include "commands/modify_visuals_command.h"
+
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
 #include "components/build_position.h"
@@ -71,6 +72,7 @@
 #include "components/guide_control.h"
 #include "components/input_control.h"
 #include "components/input_select_control.h"
+#include "components/particle_control.h"
 #include "components/null_control.h"
 #include "components/full_movement.h"
 #include "components/instant_movement.h"
@@ -100,6 +102,7 @@
 #include <list>
 #include <utility>
 #include <string>
+#include <random>
 
 int main(int argc, char** argv)
 {
@@ -155,6 +158,9 @@ int main(int argc, char** argv)
 		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>,DamageSystem<ES>> all_systems {entity_system};
 		using AS = decltype(all_systems);
 		CommandSystem<ES, AS> command_system {entity_system, all_systems};
+
+		std::random_device rd;  //Will be used to obtain a seed for the random number engine
+		std::mt19937 gen {rd()}; //Standard mersenne_twister_engine seeded with rd()
 
 		command_system.register_command("DebugMessage",
 			[](std::istream& input){
@@ -489,6 +495,13 @@ int main(int argc, char** argv)
 				double target_id, range;
 				input >> target_id >> range;
 				return UseComponentCommand<GuideControl<decltype(entity_system)>>{AbsEntityID{}, EntityID(target_id), range, entity_system};
+			});
+
+		command_system.register_command("UseParticleControl",
+			[&](std::istream& input){
+				double random_factor, directed_factor, direction_angle;
+				input >> random_factor >> directed_factor >> direction_angle;
+				return UseComponentCommand<ParticleControl>{gen, random_factor, directed_factor, direction_angle};
 			});
 
 		command_system.register_command("UseNullMovement",
