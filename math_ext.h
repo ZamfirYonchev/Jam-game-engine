@@ -9,6 +9,7 @@
 #define MATH_EXT_H_
 
 #include <cmath>
+#include <algorithm>
 
 template <typename T>
 constexpr int sign(const T val)
@@ -48,7 +49,11 @@ constexpr T clip(const T val0, const T val1, const T val2)
 {
     T min_val = min(val1, val2);
     T max_val = min_val + abs(val1-val2);
-    return min(max(val0, min_val), max_val);
+
+	if constexpr(std::is_integral<T>::value)
+		return std::clamp(val0, min_val, max_val);
+	else
+		return min(max(val0, min_val), max_val);
 }
 
 constexpr double lines_cross(const double x0, const double y0, const double w0, const double h0, const double x1, const double y1, const double w1, const double h1)
