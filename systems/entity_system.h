@@ -153,7 +153,7 @@ public:
 
     void add_accessed_entity(const AbsEntityID id)
     {
-    	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities-1+m_last_accessed_entities.size())%m_last_accessed_entities.size();
+    	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities+m_last_accessed_entities.size()-1)%m_last_accessed_entities.size();
     	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
     }
 
