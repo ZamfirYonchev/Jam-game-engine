@@ -21,6 +21,7 @@
 #include "../commands/call_procedure_command.h"
 #include "../optional_ref.h"
 #include <utility>
+#include <optional>
 
 class ResourceSystem;
 class InputSystem;
@@ -32,6 +33,7 @@ class CommandSystem
 {
 public:
 	using CommandT = std::function<void(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystem& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals)>;
+	using OptionalCommandT = std::optional<CommandT>;
 
 	CommandSystem(EntitySystemT& entity_system, AllSystemsT& all_systems)
 	: m_entity_system(entity_system)
@@ -91,8 +93,8 @@ public:
             }
             else
             {
-            	const auto it = m_command_parser.find(hash(token.c_str()));
-            	if(it != cend(m_command_parser))
+            	const auto it = m_command_parsers.find(hash(token.c_str()));
+            	if(it != cend(m_command_parsers))
             	{
             		CommandT command = (it->second)(input);
                     if(input.fail())
@@ -104,7 +106,7 @@ public:
                     insert_before(next_cmd_it, command);
             	}
             	else
-            		std::cerr << "Trying to execute non-existing command " << token << std::endl;
+            		std::cerr << "Trying to parse a non-existing command " << token << std::endl;
             }
         }
     }
@@ -124,12 +126,16 @@ public:
     	m_commands.insert(it, cmd);
     }
 
-    CommandT pop_next()
+    OptionalCommandT pop_next()
     {
-        //TODO check m_commands not empty
-        CommandT cmd = std::move(m_commands.front());
-        m_commands.pop_front();
-        return cmd;
+    	if(m_commands.size() > 0)
+    	{
+    		const OptionalCommandT cmd {std::move(m_commands.front())};
+            m_commands.pop_front();
+            return cmd;
+    	}
+    	else
+    		return std::nullopt;
     }
 
     void clear()
@@ -137,7 +143,7 @@ public:
     	flush_commands();
         clear_procedures();
         m_commands.clear();
-        m_command_parser.clear();
+        m_command_parsers.clear();
     }
 
     void flush_commands()
@@ -149,23 +155,23 @@ public:
     void register_command(const std::string name, const std::function<CommandT(std::istream& input)>& function)
     {
     	const auto str_hash = hash(name.c_str());
-    	const auto it = m_command_parser.find(str_hash);
-    	if(it != cend(m_command_parser))
+    	const auto it = m_command_parsers.find(str_hash);
+    	if(it != cend(m_command_parsers))
     	{
     		std::cerr << "Command " << name << " already registered. Overwriting...\n";
     		it->second = function;
     	}
     	else
-    		m_command_parser[str_hash] = function;
+    		m_command_parsers[str_hash] = function;
     }
 
     void unregister_command(const std::string name)
     {
-    	const auto it = m_command_parser.find(hash(name.c_str()));
-    	if(it == cend(m_command_parser))
+    	const auto it = m_command_parsers.find(hash(name.c_str()));
+    	if(it == cend(m_command_parsers))
     		std::cerr << "Trying to remove non-existing command " << name << ".\n";
     	else
-    		m_command_parser.erase(it);
+    		m_command_parsers.erase(it);
     }
 
     AbsProcedureID addNewProcedure()
@@ -196,7 +202,7 @@ public:
 private:
 	std::list<std::pair<EntityID, AbsProcedureID>> m_procedure_calls;
     std::list<CommandT> m_commands;
-    std::unordered_map<unsigned long, std::function<CommandT(std::istream& input)>> m_command_parser;
+    std::unordered_map<unsigned long, std::function<CommandT(std::istream& input)>> m_command_parsers;
     std::vector<ProcedureCommand<CommandSystem>> m_procedures;
     EntitySystemT& m_entity_system;
     AllSystemsT& m_all_systems;

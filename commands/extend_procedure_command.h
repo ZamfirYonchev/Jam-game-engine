@@ -30,7 +30,11 @@ public:
         {
     		for(size_t i = 0; i < m_num_of_cmds; ++i)
     		{
-    			command_system.procedure(m_proc_id)->add_command(command_system.pop_next());
+    			const auto& cmd_optional = command_system.pop_next();
+    			if(cmd_optional)
+    				command_system.procedure(m_proc_id)->add_command(*cmd_optional);
+    			else
+    				std::cerr << "Trying to extend procedure " << m_proc_id << " from an empty queue." << '\n';
     		}
         }
         else
