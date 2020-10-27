@@ -159,8 +159,7 @@ int main(int argc, char** argv)
 		using AS = decltype(all_systems);
 		CommandSystem<ES, AS> command_system {entity_system, all_systems};
 
-		std::random_device rd;  //Will be used to obtain a seed for the random number engine
-		std::mt19937 gen {rd()}; //Standard mersenne_twister_engine seeded with rd()
+		std::mt19937 gen {std::random_device{}()};
 
 		command_system.register_command("DebugMessage",
 			[](std::istream& input){
