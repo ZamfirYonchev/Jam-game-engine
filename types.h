@@ -31,13 +31,4 @@ using SoundID = int32_t;
 using FontID = int32_t;
 using Time = int32_t;
 
-using AbsEntityID = std::size_t;
-using AbsSpritesheetID = std::size_t;
-using AbsTextureID = std::size_t;
-using AbsProcedureID = std::size_t;
-using AbsSoundID = std::size_t;
-using AbsFontID = std::size_t;
-using AbsTime = uint32_t;
-
-
 #endif /* TYPES_H_ */

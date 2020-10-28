@@ -20,7 +20,7 @@ struct Globals;
 class AddSpriteCommand
 {
 public:
-    AddSpriteCommand(AbsSpritesheetID spr_id, AbsTextureID tex_id, int x, int y, int w, int h)
+    AddSpriteCommand(SpritesheetID spr_id, TextureID tex_id, int x, int y, int w, int h)
     : m_spr_id(spr_id)
     , m_tex_id(tex_id)
     , m_x(x)
@@ -51,8 +51,8 @@ public:
     }
 
 private:
-    AbsSpritesheetID m_spr_id;
-    AbsTextureID m_tex_id;
+    SpritesheetID m_spr_id;
+    TextureID m_tex_id;
     int m_x, m_y, m_w, m_h;
 };
 

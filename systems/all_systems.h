@@ -27,13 +27,13 @@ struct AllSystems
 	}
 
 	template<typename ComponentT>
-	void component_updated(const ComponentT& component, const AbsEntityID id, const int8_t change)
+	void component_updated(const ComponentT& component, const EntityID id, const int8_t change)
 	{
 		((void)pack.access((Ts*)nullptr).component_updated(component, id, change), ...);
 	}
 
 	template<typename EntitySystemT>
-	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, AbsProcedureID>>& procedure_calls)
+	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
 		((void)pack.access((Ts*)nullptr).update(time_diff, entity_system, procedure_calls), ...);
 	}

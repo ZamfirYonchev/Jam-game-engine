@@ -29,13 +29,13 @@ public:
 	RenderingSystem(SDL_Renderer* renderer) : m_renderer(renderer) {}
 	RenderingSystem() : RenderingSystem(nullptr) {}
 
-	void add_id(const AbsEntityID entity, const Visuals::VisualLayer layer)
+	void add_id(const EntityID entity, const Visuals::VisualLayer layer)
 	{
 		entities[layer].insert(entity);
 		entity_layer[entity] = layer;
 	}
 
-	void remove_id(const AbsEntityID entity, const Visuals::VisualLayer layer)
+	void remove_id(const EntityID entity, const Visuals::VisualLayer layer)
 	{
 		entities[layer].erase(entity);
 		entity_layer.erase(entity);
@@ -47,7 +47,7 @@ public:
     		entities[layer].clear();
     }
 
-    void component_updated(const Visuals& visuals, const AbsEntityID id, const int8_t change)
+    void component_updated(const Visuals& visuals, const EntityID id, const int8_t change)
     {
     	//1 = find=end
     	//0 = find!=end layer=layer
@@ -67,13 +67,13 @@ public:
         SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
         SDL_RenderClear(m_renderer);
 
-        const auto& screen_zone_position = entity_system.entity_component(AbsEntityID{0}, (Position*)nullptr);
+        const auto& screen_zone_position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
 
         const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*globals.resolution_y/screen_zone_position.h() : 1.0;
 
         for(auto layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
         {
-    		for(const AbsEntityID id : entities[layer])
+    		for(const EntityID id : entities[layer])
     		{
     			auto& visuals = entity_system.entity_component(id, (Visuals*)nullptr);
     			if(visuals)
@@ -241,8 +241,8 @@ public:
 
 protected:
     SDL_Renderer* m_renderer;
-    std::set<AbsEntityID> entities[Visuals::NUM_OF_LAYERS];
-    std::unordered_map<AbsEntityID, Visuals::VisualLayer> entity_layer;
+    std::set<EntityID> entities[Visuals::NUM_OF_LAYERS];
+    std::unordered_map<EntityID, Visuals::VisualLayer> entity_layer;
 };
 
 #endif /* SYSTEMS_RENDERING_SYSTEM_H_ */

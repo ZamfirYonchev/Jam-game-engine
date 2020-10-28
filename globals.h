@@ -27,8 +27,8 @@ struct Globals
 
     bool app_running, app_needs_reload, app_paused, fullscreen, show_hitboxes;
     uint16_t resolution_x, resolution_y;
-    AbsSpritesheetID access_spritesheet_id;
-    AbsProcedureID access_procedure_id;
+    SpritesheetID access_spritesheet_id;
+    ProcedureID access_procedure_id;
     std::string level_name;
 };
 

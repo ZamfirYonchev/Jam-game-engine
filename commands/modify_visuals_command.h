@@ -50,9 +50,9 @@ public:
 				visuals.set_repeat_y(visuals.repeat_y()+int(m_repeat_y));
 
 			if(is_negative_zero(m_spr_id))
-				visuals.set_spritesheet_id(AbsSpritesheetID{0});
+				visuals.set_spritesheet_id(SpritesheetID{0});
 			else
-				visuals.set_spritesheet_id(AbsSpritesheetID{visuals.spritesheet_id()+int(m_spr_id)});
+				visuals.set_spritesheet_id(SpritesheetID{visuals.spritesheet_id()+int(m_spr_id)});
 
 			if(is_negative_zero(m_layer))
 			{

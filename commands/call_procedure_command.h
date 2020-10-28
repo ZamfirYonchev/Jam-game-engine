@@ -18,7 +18,7 @@ struct Globals;
 class CallProcedureCommand
 {
 public:
-    CallProcedureCommand(const AbsProcedureID proc_id) : m_proc_id(proc_id) {}
+    CallProcedureCommand(const ProcedureID proc_id) : m_proc_id(proc_id) {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
@@ -32,7 +32,7 @@ public:
     }
 
 private:
-    AbsProcedureID m_proc_id;
+    ProcedureID m_proc_id;
 };
 
 

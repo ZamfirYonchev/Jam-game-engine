@@ -17,7 +17,7 @@ class ChaseAIControl : public Control
 {
 public:
 	using Base = Control;
-	ChaseAIControl(AbsEntityID self_id, EntityID target_id, ProcedureID attack_proc_id, double attack_cooldown, double attack_range, EntitySystemT& entity_system)
+	ChaseAIControl(EntityID self_id, EntityID target_id, ProcedureID attack_proc_id, double attack_cooldown, double attack_range, EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
@@ -84,8 +84,7 @@ public:
         m_attack = 0.0;
     }
 
-    AbsEntityID m_self_id;
-    EntityID m_target_id;
+    EntityID m_self_id, m_target_id;
 
 private:
     int8_t m_walk_dir;

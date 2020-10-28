@@ -18,7 +18,7 @@ class BuildPosition : public Position
 {
 public:
 	using Base = Position;
-	BuildPosition(AbsEntityID self_id, EntityID attached_id, double origin_x, double origin_y, EntitySystemT& entity_system)
+	BuildPosition(EntityID self_id, EntityID attached_id, double origin_x, double origin_y, EntitySystemT& entity_system)
     : m_self_id(self_id)
 	, m_attached_id(attached_id)
     , m_origin_x(origin_x)
@@ -62,8 +62,7 @@ public:
     void mod_w(double val) {}
     void mod_h(double val) {}
 
-    AbsEntityID m_self_id;
-    EntityID m_attached_id;
+    EntityID m_self_id, m_attached_id;
     double m_origin_x, m_origin_y;
 
 private:

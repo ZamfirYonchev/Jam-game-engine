@@ -174,16 +174,16 @@ public:
     		m_command_parsers.erase(it);
     }
 
-    AbsProcedureID addNewProcedure()
+    ProcedureID addNewProcedure()
     {
-    	const AbsProcedureID proc_id = m_procedures.size();
+    	const ProcedureID proc_id = static_cast<ProcedureID>(m_procedures.size());
         m_procedures.emplace_back();
         return proc_id;
     }
 
-    optional_ref<ProcedureCommand<CommandSystem>> procedure(const AbsProcedureID id)
+    optional_ref<ProcedureCommand<CommandSystem>> procedure(const ProcedureID id)
     {
-        if(id < m_procedures.size())
+        if(0 <= id && id < static_cast<ProcedureID>(m_procedures.size()))
         	return optional_ref<ProcedureCommand<CommandSystem>>(m_procedures[id]);
 		else
 			return optional_ref<ProcedureCommand<CommandSystem>>();
@@ -194,13 +194,13 @@ public:
         m_procedures.clear();
     }
 
-    std::list<std::pair<EntityID, AbsProcedureID>>& procedure_calls()
+    std::list<std::pair<EntityID, ProcedureID>>& procedure_calls()
 	{
     	return m_procedure_calls;
 	}
 
 private:
-	std::list<std::pair<EntityID, AbsProcedureID>> m_procedure_calls;
+	std::list<std::pair<EntityID, ProcedureID>> m_procedure_calls;
     std::list<CommandT> m_commands;
     std::unordered_map<unsigned long, std::function<CommandT(std::istream& input)>> m_command_parsers;
     std::vector<ProcedureCommand<CommandSystem>> m_procedures;

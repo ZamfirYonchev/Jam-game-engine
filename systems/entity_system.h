@@ -66,9 +66,9 @@ public:
     	std::for_each(std::begin(m_entities), std::end(m_entities), std::forward<F>(func));
     }
 
-    AbsEntityID add_new_entity()
+    EntityID add_new_entity()
     {
-    	AbsEntityID id;
+    	EntityID id;
         if(m_free_entities.size() == 0)
         {
         	id = m_entities.size();
@@ -89,25 +89,11 @@ public:
     }
 
     template<typename T>
-    T& entity_component(const AbsEntityID id, const T* ptr)
-    {
-    	if(id < m_entities.size())
-    		return m_entities[id].component(ptr);
-    	else
-    		return *T::null;
-    }
-
-    template<typename T>
     T& entity_component(const EntityID id, const T* ptr)
     {
-    	return entity_component(resolved_id(id), ptr);
-    }
-
-    template<typename T>
-    const T& entity_component(const AbsEntityID id, const T* ptr) const
-    {
-    	if(id < int(m_entities.size()))
-    		return m_entities[id].component(ptr);
+    	const EntityID res_id = resolved_id(id);
+    	if(res_id < static_cast<EntityID>(m_entities.size()))
+    		return m_entities[res_id].component(ptr);
     	else
     		return *T::null;
     }
@@ -115,20 +101,19 @@ public:
     template<typename T>
     const T& entity_component(const EntityID id, const T* ptr) const
     {
-    	return entity_component(resolved_id(id), ptr);
-    }
-
-    template<typename T, typename AllSystemsT>
-	void set_entity_component(const AbsEntityID id, AllSystemsT& all_systems, RenderingSystem& rendering_system, const T& component)
-    {
-    	if(id < m_entities.size())
-    		m_entities[id].set_component(all_systems, rendering_system, component);
+    	const EntityID res_id = resolved_id(id);
+    	if(res_id < static_cast<EntityID>(m_entities.size()))
+    		return m_entities[res_id].component(ptr);
+    	else
+    		return *T::null;
     }
 
     template<typename T, typename AllSystemsT>
 	void set_entity_component(const EntityID id, AllSystemsT& all_systems, RenderingSystem& rendering_system, const T& component)
     {
-    	set_entity_component(resolved_id(id), all_systems, rendering_system, component);
+    	const EntityID res_id = resolved_id(id);
+    	if(res_id < static_cast<EntityID>(m_entities.size()))
+    		m_entities[res_id].set_component(all_systems, rendering_system, component);
     }
 
     void clear()
@@ -151,41 +136,37 @@ public:
     	m_entities_to_remove.clear();
     }
 
-    void add_accessed_entity(const AbsEntityID id)
-    {
-    	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities+m_last_accessed_entities.size()-1)%m_last_accessed_entities.size();
-    	m_last_accessed_entities[m_head_of_last_accessed_entities] = id;
-    }
-
     void add_accessed_entity(const EntityID id)
     {
-    	add_accessed_entity(resolved_id(id));
+    	const EntityID res_id = resolved_id(id);
+    	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities+m_last_accessed_entities.size()-1)%m_last_accessed_entities.size();
+    	m_last_accessed_entities[m_head_of_last_accessed_entities] = res_id;
     }
 
-    constexpr AbsEntityID previous_entity_id() const
+    constexpr EntityID previous_entity_id() const
     {
-    	return AbsEntityID{m_last_accessed_entities[m_head_of_last_accessed_entities]};
+    	return EntityID{m_last_accessed_entities[m_head_of_last_accessed_entities]};
     }
 
-    constexpr AbsEntityID previous_entity_id(const unsigned int n) const
+    constexpr EntityID previous_entity_id(const unsigned int n) const
     {
     	const unsigned int cycling_index = (m_head_of_last_accessed_entities+n)%m_last_accessed_entities.size();
-		return AbsEntityID{m_last_accessed_entities[cycling_index]};
+		return EntityID{m_last_accessed_entities[cycling_index]};
     }
 
-    AbsEntityID resolved_id(const EntityID in_entity_id)
+    EntityID resolved_id(const EntityID in_entity_id)
     {
     	if(in_entity_id >= 0)
-    		return AbsEntityID(in_entity_id);
+    		return in_entity_id;
     	else
     		return previous_entity_id(-1-in_entity_id);
     }
 
 private:
     std::vector<EntityT> m_entities;
-    std::unordered_set<AbsEntityID> m_entities_to_remove;
-    std::unordered_set<AbsEntityID> m_free_entities;
-    std::array<AbsEntityID, 10> m_last_accessed_entities;
+    std::unordered_set<EntityID> m_entities_to_remove;
+    std::unordered_set<EntityID> m_free_entities;
+    std::array<EntityID, 16> m_last_accessed_entities;
     unsigned int m_head_of_last_accessed_entities;
 };
 

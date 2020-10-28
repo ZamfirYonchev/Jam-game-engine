@@ -18,7 +18,7 @@ struct Globals;
 class ExtendProcedureCommand
 {
 public:
-    ExtendProcedureCommand(const AbsProcedureID proc_id, const size_t num_of_commands)
+    ExtendProcedureCommand(const ProcedureID proc_id, const int num_of_commands)
     : m_proc_id(proc_id)
     , m_num_of_cmds(num_of_commands)
     {}
@@ -28,7 +28,7 @@ public:
     {
         if(command_system.procedure(m_proc_id))
         {
-    		for(size_t i = 0; i < m_num_of_cmds; ++i)
+    		for(int i = 0; i < m_num_of_cmds; ++i)
     		{
     			const auto& cmd_optional = command_system.pop_next();
     			if(cmd_optional)
@@ -44,8 +44,8 @@ public:
     }
 
 private:
-    AbsProcedureID m_proc_id;
-    size_t m_num_of_cmds;
+    ProcedureID m_proc_id;
+    int m_num_of_cmds;
 };
 
 #endif /* COMMANDS_EXTEND_PROCEDURE_COMMAND_H_ */
