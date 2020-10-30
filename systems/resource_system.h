@@ -87,7 +87,7 @@ public:
 
     FontID addNewFont(const std::string& font_file, const int size)
     {
-    	const FontID font_id = FontID(m_fonts.size());
+    	const FontID font_id = m_fonts.size();
     	m_fonts.push_back(Font(font_file, size));
     	return font_id;
     }
