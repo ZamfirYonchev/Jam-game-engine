@@ -18,9 +18,8 @@ struct Globals;
 class ModifyControlCommand
 {
 public:
-	ModifyControlCommand(double decision_jump, double decision_duck, double decision_attack, double decision_walk, double look_dir)
-	: m_decision_jump(decision_jump)
-	, m_decision_duck(decision_duck)
+	ModifyControlCommand(double decision_vertical, double decision_attack, double decision_walk, double look_dir)
+	: m_decision_vertical(decision_vertical)
 	, m_decision_attack(decision_attack)
 	, m_decision_walk(decision_walk)
 	, m_look_dir(look_dir)
@@ -33,15 +32,10 @@ public:
 
 		if(control)
 		{
-			if(is_negative_zero(m_decision_jump))
-				control.set_decision_jump(0.0);
+			if(is_negative_zero(m_decision_vertical))
+				control.set_decision_vertical(0.0);
 			else
-				control.set_decision_jump(m_decision_jump + control.decision_jump());
-
-			if(is_negative_zero(m_decision_duck))
-				control.set_decision_duck(0.0);
-			else
-				control.set_decision_duck(m_decision_duck + control.decision_duck());
+				control.set_decision_vertical(m_decision_vertical + control.decision_vertical());
 
 			if(is_negative_zero(m_decision_attack))
 				control.set_decision_attack(false);
@@ -65,8 +59,7 @@ public:
 	}
 
 private:
-    double m_decision_jump;
-    double m_decision_duck;
+    double m_decision_vertical;
     double m_decision_attack;
     double m_decision_walk;
     double m_look_dir;

@@ -122,11 +122,11 @@ ExtendProcedure 19 6
 
 AddProcedure 0 #20: move left
 ExtendProcedure 20 1
-ModifyControl 0 0 0 -1 0
+ModifyControl 0 0 -1 0
 
 AddProcedure 0 #21: move right
 ExtendProcedure 21 1
-ModifyControl 0 0 0 1 0
+ModifyControl 0 0 1 0
 
 
 ### Textures
@@ -685,8 +685,8 @@ UseBasicCollision 2
 UseTiledVisuals 1 32 32
 UseNormalInteraction 16
 UseFullMovement 10 0.2 0.05 0 0
-UseConstantControl 1 0 0 0
-ModifyControl 0 0 0 1 0
+UseConstantControl 1 0 0
+ModifyControl 0 0 1 0
 
 AddEntity #24: switch
 UseAbsolutePosition 1009 314 18 64

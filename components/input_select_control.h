@@ -32,16 +32,14 @@ public:
     	   << m_proc_id << " ";
     }
 
-    double decision_jump() const { return m_select == m_curr_selection; }
-    double decision_duck() const { return 0.0; }
+    double decision_vertical() const { return m_select == m_curr_selection; }
     bool decision_attack() const;
 
     double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return m_proc_id; }
     LookDir look_dir() const { return LookDir::RIGHT; }
 
-    void set_decision_jump(double val) {}
-    void set_decision_duck(double val) {}
+    void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) {}
     void set_decision_walk(double val) {}
     void set_attack_proc_id(ProcedureID val) { m_proc_id = val; }

@@ -41,12 +41,12 @@ public:
     			{
     				movement.mod_force_y(GRAVITY_ACCEL*movement.mass());
 
-    				if(control.decision_jump() && collision.standing_on() == Collision::SurfaceType::GROUND)
+    				if((control.decision_vertical() > 0) && collision.standing_on() == Collision::SurfaceType::GROUND)
     					movement.mod_velocity_y(movement.jump_force()/movement.mass());
     			}
     			else
     			{
-    				movement.mod_force_y(movement.move_force()*(control.decision_jump() - control.decision_duck()));
+    				movement.mod_force_y(movement.move_force()*control.decision_vertical());
     			}
 
     			movement.mod_force_x(movement.move_force()*control.decision_walk());

@@ -22,15 +22,13 @@ public:
     virtual ~Control() {}
     virtual void print(std::ostream& to) const = 0;
 
-    virtual double decision_jump() const = 0;
-    virtual double decision_duck() const = 0;
+    virtual double decision_vertical() const = 0;
     virtual bool decision_attack() const = 0;
     virtual double decision_walk() const = 0;
     virtual ProcedureID attack_proc_id() const = 0;
     virtual LookDir look_dir() const = 0;
 
-    virtual void set_decision_jump(double val) = 0;
-    virtual void set_decision_duck(double val) = 0;
+    virtual void set_decision_vertical(double val) = 0;
     virtual void set_decision_attack(bool val) = 0;
     virtual void set_decision_walk(double val) = 0;
     virtual void set_attack_proc_id(ProcedureID val) = 0;

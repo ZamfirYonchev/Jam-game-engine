@@ -30,18 +30,18 @@ AddProcedure 1 #4: save entities
 
 AddProcedure 2 #5: move screen left
 SelectEntity 0
-UseConstantControl -1 0 0 0
+UseConstantControl -1 0 0
 
 AddProcedure 2 #6: move screen right
 SelectEntity 0
-UseConstantControl 1 0 0 0
+UseConstantControl 1 0 0
 
 AddProcedure 0 #7: move screen bottom
 AddProcedure 0 #8: move screen top
 
 AddProcedure 2 #9: stop moving screen
 SelectEntity 0
-UseConstantControl 0 0 0 0
+UseConstantControl 0 0 0
 
 AddTextureFromFile resources/bg_top.png #0: background top
 AddTextureFromFile resources/bg_middle.png #1: background middle

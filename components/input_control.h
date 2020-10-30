@@ -21,8 +21,7 @@ public:
     InputControl(ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id, bool stability_control, EntitySystemT& entity_system, InputSystem& input_system)
     : m_self_id(self_id)
 	, m_walk_dir(0)
-    , m_jump(false)
-	, m_duck(false)
+    , m_vertical_dir(0)
     , m_shoot(false)
     , m_shoot_proc_id(shoot_proc_id)
     , m_shoot_cooldown(shoot_cooldown)
@@ -41,15 +40,13 @@ public:
 		   << m_stability_control << " ";
     }
 
-    double decision_jump() const { return m_jump; }
-    double decision_duck() const { return m_duck; }
+    double decision_vertical() const { return m_vertical_dir; }
     bool decision_attack() const { return m_shoot; }
     double decision_walk() const { return m_walk_dir; }
     ProcedureID attack_proc_id() const { return m_shoot_proc_id; }
     LookDir look_dir() const { return m_look_dir; }
 
-    void set_decision_jump(double val) { m_jump = clip(val, 0.0, 1.0); }
-    void set_decision_duck(double val) { m_duck = clip(val, 0.0, 1.0); }
+    void set_decision_vertical(double val) { m_vertical_dir = clip(val, -1.0, 1.0); }
     void set_decision_attack(bool val) { m_shoot = val; }
     void set_decision_walk(double val) { m_walk_dir = clip(val, -1.0, 1.0); }
     void set_attack_proc_id(ProcedureID val) { m_shoot_proc_id = val; }
@@ -59,8 +56,7 @@ public:
     {
     	m_current_shoot_cooldown = max(m_current_shoot_cooldown-time_diff, 0);
 
-        m_jump = m_input_system.jumping() && !m_input_system.ducking();
-        m_duck = m_input_system.ducking();
+        m_vertical_dir = m_input_system.jumping() - m_input_system.ducking();
         m_walk_dir = m_input_system.going_right() - m_input_system.going_left();
 
     	m_look_dir = m_walk_dir > 0 ? LookDir::RIGHT : m_walk_dir < 0 ? LookDir::LEFT : m_look_dir;
@@ -80,8 +76,7 @@ public:
 
     void clear_decisions()
     {
-        m_jump = 0.0;
-        m_duck = 0.0;
+        m_vertical_dir = 0.0;
         m_shoot = false;
         m_walk_dir = 0.0;
     }
@@ -89,7 +84,7 @@ public:
     EntityID m_self_id;
 
 private:
-    double m_walk_dir, m_jump, m_duck;
+    double m_walk_dir, m_vertical_dir;
     bool m_shoot;
     ProcedureID m_shoot_proc_id;
     int m_shoot_cooldown;

@@ -21,8 +21,7 @@ public:
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
-	, m_jump(false)
-	, m_duck(false)
+	, m_vertical(0)
 	, m_look_dir(LookDir::RIGHT)
 	, m_range(range)
 	, m_entity_system(entity_system)
@@ -35,15 +34,13 @@ public:
     	   << m_range << " ";
     }
 
-    double decision_jump() const { return m_jump; }
-    double decision_duck() const { return m_duck; }
+    double decision_vertical() const { return m_vertical; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_walk_dir; }
     ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
     LookDir look_dir() const { return m_look_dir; }
 
-    void set_decision_jump(double val) { m_jump = clip(val, 0.0, 1.0); }
-    void set_decision_duck(double val) { m_duck = clip(val, 0.0, 1.0); }
+    void set_decision_vertical(double val) { m_vertical = clip(val, -1.0, 1.0); }
     void set_decision_attack(bool val) {}
     void set_decision_walk(double val) { m_walk_dir = clip(val, -1.0, 1.0); }
     void set_attack_proc_id(ProcedureID val) {}
@@ -62,7 +59,7 @@ public:
     		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_range);
     		m_look_dir = distance_x > 0 ? LookDir::RIGHT : distance_x < 0 ? LookDir::LEFT : m_look_dir;
 
-    		m_jump = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
+    		m_vertical = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
     	}
     	else
     	{
@@ -73,14 +70,13 @@ public:
     void clear_decisions()
     {
         m_walk_dir = 0.0;
-        m_jump = 0.0;
-        m_duck = 0.0;
+        m_vertical = 0.0;
     }
 
     EntityID m_self_id, m_target_id;
 
 private:
-    double m_walk_dir, m_jump, m_duck;
+    double m_walk_dir, m_vertical;
     LookDir m_look_dir;
     double m_range;
     EntitySystemT& m_entity_system;

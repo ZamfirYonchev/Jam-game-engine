@@ -35,15 +35,13 @@ public:
     	   << std::atan2(m_directed_y, m_directed_x) << " ";
     }
 
-    double decision_jump() const { return (m_decision_y >= 0.0) * m_decision_y; }
-    double decision_duck() const { return (m_decision_y < 0.0) * -1.0 * m_decision_y; }
+    double decision_vertical() const { return m_decision_y; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_decision_x; }
     ProcedureID attack_proc_id() const { return -1; }
     LookDir look_dir() const { return m_decision_x < 0.0 ? LookDir::LEFT : LookDir::RIGHT; }
 
-    void set_decision_jump(double val) {}
-    void set_decision_duck(double val) {}
+    void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) {}
     void set_decision_walk(double val) {}
     void set_attack_proc_id(ProcedureID val) {}

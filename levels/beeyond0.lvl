@@ -4,7 +4,7 @@ SetLevel levels/level2.txt
 AddProcedure 0 #0: move screen left
 ExtendProcedure 0 2
 SelectEntity 0
-UseConstantControl -1 0 0 0
+UseConstantControl -1 0 0
 
 #ModifyPosition -5 0 0 0
 #SelectEntity 1
@@ -13,7 +13,7 @@ UseConstantControl -1 0 0 0
 AddProcedure 0 #1: move screen right
 ExtendProcedure 1 2
 SelectEntity 0
-UseConstantControl 1 0 0 0
+UseConstantControl 1 0 0
 
 #ModifyPosition 5 0 0 0
 #SelectEntity 1
@@ -22,7 +22,7 @@ UseConstantControl 1 0 0 0
 AddProcedure 0 #2: stop moving screen
 ExtendProcedure 2 2
 SelectEntity 0
-UseConstantControl 0 0 0 0
+UseConstantControl 0 0 0
 
 #ModifyPosition 0 10 0 0
 
@@ -127,24 +127,24 @@ AddProcedure 10 #29: reset bee at hive
 	UseTimedHealth 10000 36
 
 AddProcedure 2 #30: move down
-	ModifyControl -0 -0 0 0 0
-	ModifyControl 0 1 0 0 0
+	ModifyControl -0 0 0 0
+	ModifyControl -1 0 0 0
 
 AddProcedure 2 #31: move up
-	ModifyControl -0 -0 0 0 0
-	ModifyControl 1 0 0 0 0
+	ModifyControl -0 0 0 0
+	ModifyControl 1 0 0 0
 	
 AddProcedure 2 #32: move right
-	ModifyControl 0 0 0 -0 -0
-	ModifyControl 0 0 0 1 1
+	ModifyControl 0 0 -0 -0
+	ModifyControl 0 0 1 1
 
 AddProcedure 2 #33: move left
-	ModifyControl 0 0 0 -0 -0
-	ModifyControl 0 0 0 -1 0
+	ModifyControl 0 0 -0 -0
+	ModifyControl 0 0 -1 0
 	
 AddProcedure 2 #34: frog0 start attack
 	SelectEntity 26
-	UseConstantControl -1 1 0 0
+	UseConstantControl -1 1 0
 	
 AddProcedure 2 #35: frog0 stop attack
 	SelectEntity 26
@@ -328,7 +328,7 @@ AddSprite 11 25 0 0 30 30
 AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
 UseInstantMovement 1 0.01 0.05
-UseConstantControl 0 0 0 0
+UseConstantControl 0 0 0
 FixViewWidth
 
 AddEntity #1: background
@@ -460,7 +460,7 @@ UseStaticVisuals 7 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 2
 UseInstantMovement 1 0.01 0.02
-UseConstantControl 1 1 0 0
+UseConstantControl 1 1 0
 UseNormalInteraction 0
 ModifyInteraction 3 1 0 0 0 0
 
@@ -637,7 +637,7 @@ UseStaticVisuals 7 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 2
 UseInstantMovement 1 0.01 0.02
-UseConstantControl 1 1 0 0
+UseConstantControl 1 1 0
 UseNormalInteraction 0
 ModifyInteraction 3 1 0 0 0 0
 
@@ -675,7 +675,7 @@ UseStaticVisuals 7 0
 ModifyVisuals 0 0 0 0 -0
 ModifyVisuals 0 0 0 0 2
 UseInstantMovement 1 0.01 0.014
-UseConstantControl 1 1 0 0
+UseConstantControl 1 1 0
 UseNormalInteraction 0
 ModifyInteraction 3 1 0 0 0 0
 

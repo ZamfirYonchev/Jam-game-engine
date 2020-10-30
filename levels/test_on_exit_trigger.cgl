@@ -122,11 +122,11 @@ ExtendProcedure 19 6
 
 AddProcedure 0 #20: move left
 ExtendProcedure 20 1
-ModifyControl 0 0 0 -1 0
+ModifyControl 0 0 -1 0
 
 AddProcedure 0 #21: move right
 ExtendProcedure 21 1
-ModifyControl 0 0 0 1 0
+ModifyControl 0 0 1 0
 
 AddProcedure 3 #22: change tiling
 	ModifyVisuals 0 0 0 -0 0

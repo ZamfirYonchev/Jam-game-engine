@@ -399,9 +399,9 @@ int main(int argc, char** argv)
 
 		command_system.register_command("ModifyControl",
 			[](std::istream& input){
-				double jump, duck, attack, walk, look_dir;
-				input >> jump >> duck >> attack >> walk >> look_dir;
-				return ModifyControlCommand{jump, duck, attack, walk, look_dir};
+				double vertical, attack, walk, look_dir;
+				input >> vertical >> attack >> walk >> look_dir;
+				return ModifyControlCommand{vertical, attack, walk, look_dir};
 			});
 
 		command_system.register_command("ModifyMovement",
@@ -472,9 +472,9 @@ int main(int argc, char** argv)
 
 		command_system.register_command("UseConstantControl",
 			[](std::istream& input){
-				double move_decision, jump_decision, duck_decision, look_dir;
-				input >> move_decision >> jump_decision >> duck_decision >> look_dir;
-				return UseComponentCommand<ConstantControl>{move_decision, jump_decision, duck_decision, Control::LookDir(look_dir)};
+				double move_decision, vertical_decision, look_dir;
+				input >> move_decision >> vertical_decision >> look_dir;
+				return UseComponentCommand<ConstantControl>{move_decision, vertical_decision, Control::LookDir(look_dir)};
 			});
 
 		command_system.register_command("UseInputControl",

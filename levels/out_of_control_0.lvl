@@ -323,7 +323,7 @@ UseBasicCollision 2
 CallProcedure 5 #spawn wooden tile
 UseAbsolutePosition 199 67 34 34
 UseFullMovement 1 0.05 0.01 0.6 0
-UseConstantControl -0.2 0 0 0
+UseConstantControl -0.2 0 0
 #UseBasicCollision 1
 
 CallProcedure 5 #spawn wooden tile

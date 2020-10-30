@@ -36,8 +36,7 @@ public:
 					if(health.stunned())
 					{
 						control.set_decision_walk(0.5*control.decision_walk());
-						control.set_decision_jump(0.5*control.decision_jump());
-						control.set_decision_duck(0.5*control.decision_duck());
+						control.set_decision_vertical(0.5*control.decision_vertical());
 					}
 				}
 				else

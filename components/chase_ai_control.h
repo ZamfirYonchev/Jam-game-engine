@@ -39,15 +39,13 @@ public:
     	   << m_attack_range << " ";
     }
 
-    double decision_jump() const { return 0; }
-    double decision_duck() const { return 0; }
+    double decision_vertical() const { return 0; }
     bool decision_attack() const { return m_attack; }
     double decision_walk() const { return m_walk_dir; }
     ProcedureID attack_proc_id() const { return m_attack_proc_id; }
     LookDir look_dir() const { return m_look_dir; }
 
-    void set_decision_jump(double val) {}
-    void set_decision_duck(double val) {}
+    void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) { m_attack = val; }
     void set_decision_walk(double val) { m_walk_dir = val; }
     void set_attack_proc_id(ProcedureID val) { m_attack_proc_id = val; }

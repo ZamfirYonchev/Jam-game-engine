@@ -19,15 +19,13 @@ public:
     	to << "UseNullControl ";
     }
 
-    double decision_jump() const { return 0.0; }
-    double decision_duck() const { return 0.0; }
+    double decision_vertical() const { return 0.0; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
     LookDir look_dir() const { return LookDir::RIGHT; }
 
-    void set_decision_jump(double val) {}
-    void set_decision_duck(double val) {}
+    void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) {}
     void set_decision_walk(double val) {}
     void set_attack_proc_id(ProcedureID val) {}
