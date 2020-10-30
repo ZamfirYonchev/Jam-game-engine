@@ -34,6 +34,7 @@ class CommandSystem
 public:
 	using CommandT = std::function<void(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystem& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals)>;
 	using OptionalCommandT = std::optional<CommandT>;
+	using ParserT = std::function<CommandT(std::istream&)>;
 
 	CommandSystem(EntitySystemT& entity_system, AllSystemsT& all_systems)
 	: m_entity_system(entity_system)
@@ -152,7 +153,7 @@ public:
         	cmd = NullCommand{};
     }
 
-    void register_command(const std::string name, const std::function<CommandT(std::istream& input)>& function)
+    void register_command(const std::string name, const ParserT& function)
     {
     	const auto str_hash = hash(name.c_str());
     	const auto it = m_command_parsers.find(str_hash);
@@ -202,7 +203,7 @@ public:
 private:
 	std::list<std::pair<EntityID, ProcedureID>> m_procedure_calls;
     std::list<CommandT> m_commands;
-    std::unordered_map<unsigned long, std::function<CommandT(std::istream& input)>> m_command_parsers;
+    std::unordered_map<unsigned long, ParserT> m_command_parsers;
     std::vector<ProcedureCommand<CommandSystem>> m_procedures;
     EntitySystemT& m_entity_system;
     AllSystemsT& m_all_systems;
