@@ -192,36 +192,36 @@ int main(int argc, char** argv)
 			});
 
 		command_system.register_command("ExtendProcedure",
-			[](std::istream& input) -> CS::CommandT
+			[](std::istream& input)
 			{
 				double id, num_of_cmds;
 				input >> id >> num_of_cmds;
 				if(id < 0)
 				{
 					std::cerr << "ExtendProcedure: procedure id must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else if(num_of_cmds < 0)
 				{
 					std::cerr << "ExtendProcedure: number of commands must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return ExtendProcedureCommand{ProcedureID(id), int(num_of_cmds)};
+					return CS::CommandT{ExtendProcedureCommand{ProcedureID(id), int(num_of_cmds)}};
 			});
 
 		command_system.register_command("ClearProcedure",
-			[](std::istream& input) -> CS::CommandT
+			[](std::istream& input)
 			{
 				double id;
 				input >> id;
 				if(id < 0)
 				{
 					std::cerr << "ClearProcedure: procedure id must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return ClearProcedureCommand{ProcedureID(id)};
+					return CS::CommandT{ClearProcedureCommand{ProcedureID(id)}};
 			});
 
 		command_system.register_command("Pause",
@@ -271,17 +271,17 @@ int main(int argc, char** argv)
 			});
 
 		command_system.register_command("CallProcedure",
-			[](std::istream& input) -> CS::CommandT
+			[](std::istream& input)
 			{
 				double id;
 				input >> id;
 				if(id < 0)
 				{
 					std::cerr << "CallProcedure: procedure id must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return CallProcedureCommand{ProcedureID(id)};
+					return CS::CommandT{CallProcedureCommand{ProcedureID(id)}};
 			});
 
 		command_system.register_command("AddFont",
@@ -300,7 +300,7 @@ int main(int argc, char** argv)
 			});
 
 		command_system.register_command("AddTextureFromString",
-			[](std::istream& input) -> CS::CommandT
+			[](std::istream& input)
 			{
 				double id, r, g, b;
 				std::string str;
@@ -309,10 +309,10 @@ int main(int argc, char** argv)
 				if(id < 0)
 				{
 					std::cerr << "AddTextureFromString: font id must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return AddTextureFromStringCommand{str, FontID(id), uint8_t(r), uint8_t(g), uint8_t(b)};
+					return CS::CommandT{AddTextureFromStringCommand{str, FontID(id), uint8_t(r), uint8_t(g), uint8_t(b)}};
 			});
 
 		command_system.register_command("AddSpritesheet",
@@ -348,36 +348,36 @@ int main(int argc, char** argv)
 			});
 
 		command_system.register_command("AddSprite",
-			[](std::istream& input) -> CS::CommandT
+			[](std::istream& input)
 			{
 				double spr_id, tex_id, x, y, w, h;
 				input >> spr_id >> tex_id >> x >> y >> w >> h;
 				if(spr_id < 0)
 				{
 					std::cerr << "AddSprite: spritesheet id must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else if(tex_id < 0)
 				{
 					std::cerr << "AddSprite: texture id must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return AddSpriteCommand{SpritesheetID(spr_id), TextureID(tex_id), int(x), int(y), int(w), int(h)};
+					return CS::CommandT{AddSpriteCommand{SpritesheetID(spr_id), TextureID(tex_id), int(x), int(y), int(w), int(h)}};
 			});
 
 		command_system.register_command("AddProcedure",
-			[](std::istream& input) -> CS::CommandT
+			[](std::istream& input)
 			{
 				double num_of_cmds;
 				input >> num_of_cmds;
 				if(num_of_cmds < 0)
 				{
 					std::cerr << "AddProcedure: number of commands must be >= 0\n";
-					return NullCommand{};
+					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return AddProcedureCommand{size_t(num_of_cmds)};
+					return CS::CommandT{AddProcedureCommand{size_t(num_of_cmds)}};
 			});
 
 		command_system.register_command("AddEntity",
