@@ -28,7 +28,7 @@ public:
     	   << m_spr_id << " ";
     }
 
-    RenderStates state() const { return IDLE; }
+    RenderStates state() const { return RenderStates::IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
 
@@ -45,7 +45,7 @@ public:
     uint16_t repeat_y() const { return 1; }
     void set_repeat_x(uint16_t val) {}
     void set_repeat_y(uint16_t val) {}
-    VisualLayer layer() const { return FOREGROUND; }
+    VisualLayer layer() const { return VisualLayer::FOREGROUND; }
     void set_layer(VisualLayer val) {}
 
     EntityID m_self_id;

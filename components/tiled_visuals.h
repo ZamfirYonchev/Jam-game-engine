@@ -23,7 +23,7 @@ public:
     , m_spritesheet_id(spr_id)
     , m_tile_w(tile_w)
     , m_tile_h(tile_h)
-	, m_layer(ACTION)
+	, m_layer(VisualLayer::ACTION)
 	, m_entity_system(entity_system)
     {}
 
@@ -35,7 +35,7 @@ public:
     	   << m_tile_h << " ";
     }
 
-    RenderStates state() const { return IDLE; }
+    RenderStates state() const { return RenderStates::IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
     bool animation_count_max() const { return 0; }

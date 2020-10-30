@@ -35,9 +35,9 @@ public:
 		if(visuals)
 		{
 			if(is_negative_zero(m_render_state))
-				visuals.set_new_state(Visuals::IDLE);
+				visuals.set_new_state(Visuals::RenderStates::IDLE);
 			else
-				visuals.set_new_state(Visuals::RenderStates((visuals.state() + int(m_render_state))%6));
+				visuals.set_new_state(Visuals::RenderStates((int(visuals.state()) + int(m_render_state))%6));
 
 			if(is_negative_zero(m_repeat_x))
 				visuals.set_repeat_x(0);
@@ -56,7 +56,7 @@ public:
 
 			if(is_negative_zero(m_layer))
 			{
-				if(visuals.layer() != 0)
+				if(visuals.layer() != Visuals::VisualLayer::FAR_BACKGROUND)
 				{
 					visuals.set_layer(Visuals::VisualLayer(0));
 					rendering_system.component_updated(visuals, entity_system.previous_entity_id(), false);
@@ -66,7 +66,7 @@ public:
 			{
 				if(m_layer != 0)
 				{
-					visuals.set_layer(Visuals::VisualLayer(visuals.layer()+int(m_layer)));
+					visuals.set_layer(Visuals::VisualLayer(int(visuals.layer())+int(m_layer)));
 					rendering_system.component_updated(visuals, entity_system.previous_entity_id(), false);
 				}
 			}

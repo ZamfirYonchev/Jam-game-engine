@@ -25,7 +25,7 @@ public:
 	, m_attack_proc_id(attack_proc_id)
 	, m_attack_cooldown(attack_cooldown)
 	, m_current_attack_cooldown(0)
-	, m_look_dir(RIGHT)
+	, m_look_dir(LookDir::RIGHT)
 	, m_attack_range(attack_range)
 	, m_entity_system(entity_system)
 	{}
@@ -66,7 +66,7 @@ public:
     		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
 
     		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_attack_range);
-    		m_look_dir = distance_x > 0 ? RIGHT : distance_x < 0 ? LEFT : m_look_dir;
+    		m_look_dir = distance_x > 0 ? LookDir::RIGHT : distance_x < 0 ? LookDir::LEFT : m_look_dir;
     		m_attack = (m_attack_proc_id >= 0) && (abs(distance_x) <= m_attack_range) && (abs(distance_y) <= 30) && (m_current_attack_cooldown == 0);
 
     		if(m_attack)

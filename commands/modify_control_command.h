@@ -54,7 +54,7 @@ public:
 				control.set_decision_walk(m_decision_walk + control.decision_walk());
 
 			if(is_negative_zero(m_look_dir))
-				control.set_look_dir(Control::RIGHT);
+				control.set_look_dir(Control::LookDir::RIGHT);
 			else
 				control.set_look_dir(Control::LookDir(bool(m_look_dir) ^ bool(control.look_dir())));
 		}

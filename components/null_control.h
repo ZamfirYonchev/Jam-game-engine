@@ -24,7 +24,7 @@ public:
     bool decision_attack() const { return false; }
     double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
-    LookDir look_dir() const { return RIGHT; }
+    LookDir look_dir() const { return LookDir::RIGHT; }
 
     void set_decision_jump(double val) {}
     void set_decision_duck(double val) {}

@@ -35,12 +35,12 @@ public:
 			if(is_negative_zero(m_state))
 				collision.set_state(Collision::CollisionState(0));
 			else
-				collision.set_state(Collision::CollisionState((int(m_state) + collision.state())%3));
+				collision.set_state(Collision::CollisionState((int(m_state) + int(collision.state()))%3));
 
 			if(is_negative_zero(m_standing_on))
-				collision.set_standing_on(Collision::AIR);
+				collision.set_standing_on(Collision::SurfaceType::AIR);
 			else
-				collision.set_standing_on(Collision::SurfaceType((collision.standing_on()+1)%4));
+				collision.set_standing_on(Collision::SurfaceType((int(collision.standing_on())+1)%4));
 
 			if(is_negative_zero(m_on_collision_damage))
 				collision.set_collision_damage(0);

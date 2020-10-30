@@ -17,7 +17,7 @@ public:
 	StaticVisuals(const SpritesheetID spr_id, const int sprite)
 	: m_spr_id(spr_id)
 	, m_sprite(sprite)
-	, m_layer(FAR_BACKGROUND)
+	, m_layer(VisualLayer::FAR_BACKGROUND)
 	{}
 
     void print(std::ostream& to) const
@@ -27,7 +27,7 @@ public:
     	   << m_sprite << " ";
     }
 
-    RenderStates state() const { return IDLE; }
+    RenderStates state() const { return RenderStates::IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const { return m_sprite; }

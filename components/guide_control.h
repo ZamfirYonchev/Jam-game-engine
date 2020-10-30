@@ -23,7 +23,7 @@ public:
 	, m_walk_dir(0)
 	, m_jump(false)
 	, m_duck(false)
-	, m_look_dir(RIGHT)
+	, m_look_dir(LookDir::RIGHT)
 	, m_range(range)
 	, m_entity_system(entity_system)
 	{}
@@ -60,7 +60,7 @@ public:
     		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
 
     		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_range);
-    		m_look_dir = distance_x > 0 ? RIGHT : distance_x < 0 ? LEFT : m_look_dir;
+    		m_look_dir = distance_x > 0 ? LookDir::RIGHT : distance_x < 0 ? LookDir::LEFT : m_look_dir;
 
     		m_jump = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
     	}

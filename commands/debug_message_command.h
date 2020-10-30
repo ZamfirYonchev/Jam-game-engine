@@ -19,7 +19,7 @@ struct Globals;
 class DebugMessageCommand
 {
 public:
-	enum Severity {DEBUG = 0, NOTE = 1, ERROR = 2};
+	enum class Severity {DEBUG = 0, NOTE = 1, ERROR = 2};
     DebugMessageCommand(const std::string& debug_text, Severity sev)
 	: m_text(debug_text)
 	, m_severity(sev)
@@ -28,7 +28,7 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	if(m_severity != ERROR)
+    	if(m_severity != Severity::ERROR)
     		std::cout << m_text << std::endl;
     	else
     		std::cerr << m_text << std::endl;

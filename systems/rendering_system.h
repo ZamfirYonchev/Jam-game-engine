@@ -31,13 +31,13 @@ public:
 
 	void add_id(const EntityID entity, const Visuals::VisualLayer layer)
 	{
-		entities[layer].insert(entity);
+		entities[int(layer)].insert(entity);
 		entity_layer[entity] = layer;
 	}
 
 	void remove_id(const EntityID entity, const Visuals::VisualLayer layer)
 	{
-		entities[layer].erase(entity);
+		entities[int(layer)].erase(entity);
 		entity_layer.erase(entity);
 	}
 
@@ -89,66 +89,66 @@ public:
 
     					switch(visuals.state())
     					{
-    						case Visuals::IDLE:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::ATTACK);
-    							else if(collision.standing_on()!=Collision::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::JUMP);
-    							else if(collision.standing_on()==Collision::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::WALK);
-    							else if(collision.standing_on()==Collision::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::FALL);
+    						case Visuals::RenderStates::IDLE:
+    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
+    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
+    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
+    							else if(collision.standing_on()!=Collision::SurfaceType::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::RenderStates::JUMP);
+    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
+    							else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
     							else visuals.advance_animation(time_diff);
     						break;
 
-    						case Visuals::WALK:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::ATTACK);
-    							else if(collision.standing_on()!=Collision::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::JUMP);
-    							else if(collision.standing_on()==Collision::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::IDLE);
-    							else if(collision.standing_on()==Collision::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::FALL);
+    						case Visuals::RenderStates::WALK:
+    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
+    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
+    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
+    							else if(collision.standing_on()!=Collision::SurfaceType::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::RenderStates::JUMP);
+    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::RenderStates::IDLE);
+    							else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
     							else visuals.advance_animation(time_diff);
     						break;
 
-    						case Visuals::JUMP:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::ATTACK);
-    							else if(collision.standing_on()==Collision::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::WALK);
-    							else if(collision.standing_on()==Collision::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::IDLE);
-    							else if(collision.standing_on()==Collision::AIR && movement.vy() < -1 && visuals.animation_count_max()) visuals.set_new_state(Visuals::FALL);
+    						case Visuals::RenderStates::JUMP:
+    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
+    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
+    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
+    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
+    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::RenderStates::IDLE);
+    							else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1 && visuals.animation_count_max()) visuals.set_new_state(Visuals::RenderStates::FALL);
     							else visuals.advance_animation(time_diff);
     						break;
 
-    						case Visuals::FALL:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::ATTACK);
-    							else if(collision.standing_on()==Collision::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::WALK);
-    							else if(collision.standing_on()==Collision::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::IDLE);
+    						case Visuals::RenderStates::FALL:
+    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
+    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
+    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
+    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
+    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::RenderStates::IDLE);
     							else visuals.advance_animation(time_diff);
     						break;
 
-    						case Visuals::ATTACK:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::HIT);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::FALL);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::JUMP);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::WALK);
-    							else if(visuals.animation_count_max()) visuals.set_new_state(Visuals::IDLE);
+    						case Visuals::RenderStates::ATTACK:
+    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
+    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::RenderStates::JUMP);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
+    							else if(visuals.animation_count_max()) visuals.set_new_state(Visuals::RenderStates::IDLE);
     							else visuals.advance_animation(time_diff);
     						break;
 
-    						case Visuals::HIT:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::DEAD);
-    							else if(visuals.animation_count_max() && control.decision_attack()) visuals.set_new_state(Visuals::ATTACK);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::FALL);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::JUMP);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::WALK);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::IDLE);
+    						case Visuals::RenderStates::HIT:
+    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
+    							else if(visuals.animation_count_max() && control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_jump()) visuals.set_new_state(Visuals::RenderStates::JUMP);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
+    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::RenderStates::IDLE);
     							else visuals.advance_animation(time_diff);
     						break;
 
-    						case Visuals::DEAD:
+    						case Visuals::RenderStates::DEAD:
     							if(visuals.animation_count_max() == false)
     								visuals.advance_animation(time_diff);
     							//else do nothing
@@ -164,7 +164,7 @@ public:
     				if(spritesheet)
     				{
     					double scale_factor = spritesheet->scale_factor();
-    					const SDL_RendererFlip flip = (control.look_dir()==Control::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
+    					const SDL_RendererFlip flip = (control.look_dir()==Control::LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
     					AbsolutePosition screen_pos;
     					SDL_Rect dest;
     					const double pos_x = position.x() + position.w()/visuals.repeat_x()/2.0 - screen_zone_position.x();

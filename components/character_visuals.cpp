@@ -12,19 +12,19 @@ uint8_t CharacterVisuals::animation_state_size() const
 {
     switch(m_current_state)
     {
-        case IDLE:
+        case RenderStates::IDLE:
         	return m_resource_system.spritesheet(m_spritesheet_id)->idle_sprite_size();
-        case WALK:
+        case RenderStates::WALK:
         	return m_resource_system.spritesheet(m_spritesheet_id)->walk_sprite_size();
-        case JUMP:
+        case RenderStates::JUMP:
         	return m_resource_system.spritesheet(m_spritesheet_id)->jump_sprite_size();
-        case FALL:
+        case RenderStates::FALL:
         	return m_resource_system.spritesheet(m_spritesheet_id)->fall_sprite_size();
-        case ATTACK:
+        case RenderStates::ATTACK:
         	return m_resource_system.spritesheet(m_spritesheet_id)->attack_sprite_size();
-        case HIT:
+        case RenderStates::HIT:
         	return m_resource_system.spritesheet(m_spritesheet_id)->hit_sprite_size();
-        case DEAD:
+        case RenderStates::DEAD:
         	return m_resource_system.spritesheet(m_spritesheet_id)->dead_sprite_size();
         default:
         	return 0;
@@ -35,19 +35,19 @@ uint8_t CharacterVisuals::animation_state_offset() const
 {
     switch(m_current_state)
     {
-        case IDLE:
+        case RenderStates::IDLE:
             return m_resource_system.spritesheet(m_spritesheet_id)->idle_sprite_start();
-        case WALK:
+        case RenderStates::WALK:
             return m_resource_system.spritesheet(m_spritesheet_id)->walk_sprite_start();
-        case JUMP:
+        case RenderStates::JUMP:
             return m_resource_system.spritesheet(m_spritesheet_id)->jump_sprite_start();
-        case FALL:
+        case RenderStates::FALL:
             return m_resource_system.spritesheet(m_spritesheet_id)->fall_sprite_start();
-        case ATTACK:
+        case RenderStates::ATTACK:
             return m_resource_system.spritesheet(m_spritesheet_id)->attack_sprite_start();
-        case HIT:
+        case RenderStates::HIT:
             return m_resource_system.spritesheet(m_spritesheet_id)->hit_sprite_start();
-        case DEAD:
+        case RenderStates::DEAD:
             return m_resource_system.spritesheet(m_spritesheet_id)->dead_sprite_start();
         default:
             return 0;

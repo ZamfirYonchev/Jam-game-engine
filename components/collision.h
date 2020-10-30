@@ -34,8 +34,8 @@ public:
 		bool is_null() const { return (x==x_end) || (y==y_end); }
 	};
 
-	enum SurfaceType {AIR = 0, GROUND = 1};
-    enum CollisionState {TRANSPARENT = 0, MOVEABLE = 1, SOLID = 2};
+	enum class SurfaceType {AIR = 0, GROUND = 1};
+    enum class CollisionState {TRANSPARENT = 0, MOVEABLE = 1, SOLID = 2};
     virtual ~Collision() {}
     virtual void print(std::ostream& to) const = 0;
 

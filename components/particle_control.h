@@ -40,7 +40,7 @@ public:
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_decision_x; }
     ProcedureID attack_proc_id() const { return -1; }
-    LookDir look_dir() const { return m_decision_x < 0.0 ? LEFT : RIGHT; }
+    LookDir look_dir() const { return m_decision_x < 0.0 ? LookDir::LEFT : LookDir::RIGHT; }
 
     void set_decision_jump(double val) {}
     void set_decision_duck(double val) {}

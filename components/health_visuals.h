@@ -30,7 +30,7 @@ public:
 		   << m_repeat_x << " ";
     }
 
-	RenderStates state() const { return IDLE; }
+	RenderStates state() const { return RenderStates::IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
 
@@ -47,7 +47,7 @@ public:
     virtual uint16_t repeat_y() const { return 1; }
     virtual void set_repeat_x(uint16_t val) { m_repeat_x = val; }
     virtual void set_repeat_y(uint16_t val) {}
-    VisualLayer layer() const { return CLOSE_BACKGROUND; }
+    VisualLayer layer() const { return VisualLayer::CLOSE_BACKGROUND; }
     void set_layer(VisualLayer val) {}
 
     EntityID m_self_id;

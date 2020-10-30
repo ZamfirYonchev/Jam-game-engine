@@ -27,7 +27,7 @@ public:
     , m_shoot_proc_id(shoot_proc_id)
     , m_shoot_cooldown(shoot_cooldown)
 	, m_current_shoot_cooldown(shoot_cooldown)
-	, m_look_dir(RIGHT)
+	, m_look_dir(LookDir::RIGHT)
 	, m_stability_control(stability_control)
 	, m_entity_system(entity_system)
 	, m_input_system(input_system)
@@ -63,7 +63,7 @@ public:
         m_duck = m_input_system.ducking();
         m_walk_dir = m_input_system.going_right() - m_input_system.going_left();
 
-    	m_look_dir = m_walk_dir > 0 ? RIGHT : m_walk_dir < 0 ? LEFT : m_look_dir;
+    	m_look_dir = m_walk_dir > 0 ? LookDir::RIGHT : m_walk_dir < 0 ? LookDir::LEFT : m_look_dir;
 
     	const auto& self_movement = m_entity_system.entity_component(m_self_id, (Movement*)nullptr);
 

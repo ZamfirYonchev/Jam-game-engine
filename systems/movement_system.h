@@ -41,7 +41,7 @@ public:
     			{
     				movement.mod_force_y(GRAVITY_ACCEL*movement.mass());
 
-    				if(control.decision_jump() && collision.standing_on() == Collision::GROUND)
+    				if(control.decision_jump() && collision.standing_on() == Collision::SurfaceType::GROUND)
     					movement.mod_velocity_y(movement.jump_force()/movement.mass());
     			}
     			else

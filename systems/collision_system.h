@@ -86,7 +86,7 @@ public:
 				auto& interaction0 = entity_system.entity_component(id0, (Interaction*)nullptr);
 				const auto& position0 = entity_system.entity_component(id0, (Position*)nullptr);
 
-				collision0.set_standing_on(Collision::AIR);
+				collision0.set_standing_on(Collision::SurfaceType::AIR);
 				const Collision::RegionLocation& location0 = regions_per_entity[id0];
 
 				std::unordered_set<EntityID> near_entities;
@@ -132,8 +132,8 @@ public:
 
 							entity_system.entity_component(id0, (Health*)nullptr).mod_hp_change(-collision1.on_collision_damage()*time_diff);
 
-							const bool entity0_correctable = (collision0.state() == Collision::MOVEABLE)
-														  && (collision1.state() >= Collision::MOVEABLE);
+							const bool entity0_correctable = (collision0.state() == Collision::CollisionState::MOVEABLE)
+														  && (collision1.state() >= Collision::CollisionState::MOVEABLE);
 
 							if(entity0_correctable)
 							{
@@ -157,7 +157,7 @@ public:
 									{
 										collision_correction[id0].y = t*((collision1.state()==Collision::CollisionState::SOLID)*movement1.dy() - movement0.dy());
 										collision_correction[id0].vy += dvy;
-										collision0.set_standing_on(Collision::GROUND);
+										collision0.set_standing_on(Collision::SurfaceType::GROUND);
 									}
 								}
 								else if(dy < 0)

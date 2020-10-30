@@ -18,7 +18,7 @@ class Control
 {
 public:
 	using Null = NullControl;
-    enum LookDir {RIGHT = 0, LEFT = 1};
+    enum class LookDir {RIGHT = 0, LEFT = 1};
     virtual ~Control() {}
     virtual void print(std::ostream& to) const = 0;
 

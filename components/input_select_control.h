@@ -38,7 +38,7 @@ public:
 
     double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return m_proc_id; }
-    LookDir look_dir() const { return RIGHT; }
+    LookDir look_dir() const { return LookDir::RIGHT; }
 
     void set_decision_jump(double val) {}
     void set_decision_duck(double val) {}

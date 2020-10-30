@@ -16,16 +16,16 @@ public:
 	using Base = Collision;
     BasicCollision(CollisionState state, const double elasticity)
     : m_state(state)
-    , m_standing_on(AIR)
+    , m_standing_on(SurfaceType::AIR)
 	, m_elasticity(elasticity)
     {}
 
-    BasicCollision() : BasicCollision(TRANSPARENT, 1) {}
+    BasicCollision() : BasicCollision(CollisionState::TRANSPARENT, 1) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseBasicCollision "
-    	   << m_state << " ";
+    	   << int(m_state) << " ";
     }
 
     CollisionState state() const { return m_state; }

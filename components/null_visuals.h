@@ -19,7 +19,7 @@ public:
     	to << "UseNullVisuals ";
     }
 
-    RenderStates state() const { return IDLE; }
+    RenderStates state() const { return RenderStates::IDLE; }
     void set_new_state(RenderStates new_state) {}
     void advance_animation(Time time_diff) {}
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const { return 0; }
@@ -30,7 +30,7 @@ public:
     uint16_t repeat_y() const { return 0; }
     void set_repeat_x(uint16_t val) {}
     void set_repeat_y(uint16_t val) {}
-    VisualLayer layer() const { return FAR_BACKGROUND; }
+    VisualLayer layer() const { return VisualLayer::FAR_BACKGROUND; }
     void set_layer(VisualLayer val) {}
 };
 

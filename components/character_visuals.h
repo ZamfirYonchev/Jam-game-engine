@@ -19,11 +19,11 @@ public:
     static const unsigned int ANIMATION_DELAY_MS = 50;
 
     CharacterVisuals(SpritesheetID spr_id, ResourceSystem& resource_system)
-    : m_current_state(IDLE)
+    : m_current_state(RenderStates::IDLE)
     , m_animation_count(0)
     , m_animation_time(0)
     , m_spritesheet_id(spr_id)
-    , m_layer(ACTION)
+    , m_layer(VisualLayer::ACTION)
     , m_resource_system(resource_system)
     {}
 

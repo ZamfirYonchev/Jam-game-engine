@@ -48,7 +48,7 @@ public:
 				{
 					//const auto& position = entity_system.entity_component(id, (Position*)nullptr);
 					procedure_calls.emplace_back(id, control.attack_proc_id());
-					if(control.look_dir() == Control::LEFT)
+					/*if(control.look_dir() == Control::LookDir::LEFT)
 					{
 						//command_system.push(ModifyPositionCommand{position.x(), position.y(), 0, 0});
 						//command_system.push(ModifyControlCommand{0, 0, 0, -0.0, -0.0});
@@ -61,7 +61,7 @@ public:
 						//command_system.push(ModifyPositionCommand{position.x(), position.y(), 0, 0});
 						//command_system.push(ModifyControlCommand{0, 0, 0, -0.0, -0.0});
 						//command_system.push(ModifyControlCommand{0, 0, 0, 1, double(control.look_dir())});
-					}
+					}*/
 				}
 	    	}
 	    	else

@@ -28,7 +28,7 @@ public:
     	   << m_move_decision << " "
     	   << m_jump_decision << " "
     	   << m_duck_decision << " "
-    	   << m_look_dir << " ";
+    	   << int(m_look_dir) << " ";
     }
 
     double decision_jump() const { return m_jump_decision; }

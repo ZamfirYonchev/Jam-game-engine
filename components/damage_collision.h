@@ -18,18 +18,18 @@ public:
 	: m_state(state)
 	, m_damage(damage)
 	{}
-    DamageCollision() : DamageCollision(TRANSPARENT, 0) {}
+    DamageCollision() : DamageCollision(CollisionState::TRANSPARENT, 0) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseDamageCollision "
-    	   << m_state << " "
+    	   << int(m_state) << " "
     	   << m_damage << " ";
     }
 
     CollisionState state() const { return m_state; }
     void set_state(CollisionState val) { m_state = val; }
-    SurfaceType standing_on() const { return AIR; }
+    SurfaceType standing_on() const { return SurfaceType::AIR; }
     void set_standing_on(SurfaceType surface) {}
     double on_collision_damage() const { return m_damage; }
     void set_collision_damage(double damage) { m_damage = damage; }
