@@ -706,11 +706,10 @@ int main(int argc, char** argv)
 
 		command_system.push(ExecuteFileCleanCommand{globals.level_name});
 
-		const Time start_frame_time = Time(SDL_GetTicks());
-		Time last_frame_time = start_frame_time;
-		Time frame_diff {10}; //TODO: first frame difference
+		const double update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;
-		std::array<Time, 4> frame_diffs {frame_diff};
+		const Time start_frame_time = Time(SDL_GetTicks());
+		Time last_update_time = start_frame_time;
 
 		do
 		{
@@ -718,17 +717,15 @@ int main(int argc, char** argv)
 			command_system.process(resource_system, rendering_system, input_system, globals);
 			entity_system.clean_removed_entites(all_systems);
 
-			if(globals.app_paused == false)
-				all_systems.update(frame_diff, entity_system, command_system.procedure_calls());
+			if((SDL_GetTicks()-last_update_time) >= update_time_delta)
+			{
+				last_update_time += update_time_delta;
+				if(globals.app_paused == false)
+					all_systems.update(update_time_delta, entity_system, command_system.procedure_calls());
+			}
 
-			rendering_system.render_entities(frame_diff, entity_system, resource_system, globals);
+			rendering_system.render_entities(update_time_delta, entity_system, resource_system, globals);
 
-			SDL_Delay(max(10-Time(frame_diff), 0));
-
-			frame_diffs[number_of_frames%4] = clip(Time(SDL_GetTicks()-last_frame_time), 1, 100);
-			frame_diff = (frame_diffs[0]+frame_diffs[1]+frame_diffs[2]+frame_diffs[3])/4;
-
-			last_frame_time = Time(SDL_GetTicks());
 			++number_of_frames;
 
 		} while(globals.app_running == true && globals.app_needs_reload == false);
