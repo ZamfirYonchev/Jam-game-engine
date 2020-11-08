@@ -10,10 +10,6 @@
 
 void InputSystem::process_input(Globals& globals)
 {
-	m_up_pressed = false;
-	m_down_pressed = false;
-	m_select_pressed = false;
-
     while(SDL_PollEvent(&m_event) != 0)
     {
         switch(m_event.type)
@@ -67,3 +63,9 @@ void InputSystem::process_input(Globals& globals)
     }
 }
 
+void InputSystem::clear_toggle_inputs()
+{
+	m_up_pressed = false;
+	m_down_pressed = false;
+	m_select_pressed = false;
+}

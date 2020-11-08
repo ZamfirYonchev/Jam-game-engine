@@ -722,6 +722,8 @@ int main(int argc, char** argv)
 				last_update_time += update_time_delta;
 				if(globals.app_paused == false)
 					all_systems.update(update_time_delta, entity_system, command_system.procedure_calls());
+
+				input_system.clear_toggle_inputs();
 			}
 
 			rendering_system.render_entities(update_time_delta, entity_system, resource_system, globals);

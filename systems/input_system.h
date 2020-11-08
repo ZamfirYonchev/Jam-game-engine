@@ -35,6 +35,7 @@ public:
 	{}
 
     void process_input(Globals& globals);
+    void clear_toggle_inputs();
     bool jumping() const { return m_jump_pressed; }
     bool ducking() const { return m_duck_pressed; }
     bool shooting() const { return m_shoot_pressed; }
