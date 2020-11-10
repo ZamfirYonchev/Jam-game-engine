@@ -40,9 +40,11 @@ public:
     ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
     LookDir look_dir() const { return m_look_dir; }
 
-    void set_decision_vertical(double val) { m_vertical = clip(val, -1.0, 1.0); }
+    void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) {}
-    void set_decision_walk(double val) { m_walk_dir = clip(val, -1.0, 1.0); }
+    void set_decision_walk(double val) {}
+    void mod_decision_vertical(double val) {}
+    void mod_decision_walk(double val) {}
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) { m_look_dir = val; }
 

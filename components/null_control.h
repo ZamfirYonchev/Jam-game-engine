@@ -28,6 +28,8 @@ public:
     void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) {}
     void set_decision_walk(double val) {}
+    void mod_decision_vertical(double val) {}
+    void mod_decision_walk(double val) {}
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) {}
 

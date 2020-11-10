@@ -49,6 +49,8 @@ public:
     void set_decision_vertical(double val) { m_vertical_dir = clip(val, -1.0, 1.0); }
     void set_decision_attack(bool val) { m_shoot = val; }
     void set_decision_walk(double val) { m_walk_dir = clip(val, -1.0, 1.0); }
+    void mod_decision_vertical(double val) { set_decision_vertical(m_vertical_dir+val); }
+    void mod_decision_walk(double val) { set_decision_walk(m_walk_dir+val); }
     void set_attack_proc_id(ProcedureID val) { m_shoot_proc_id = val; }
     void set_look_dir(LookDir val) { m_look_dir = val; }
 

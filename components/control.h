@@ -31,6 +31,8 @@ public:
     virtual void set_decision_vertical(double val) = 0;
     virtual void set_decision_attack(bool val) = 0;
     virtual void set_decision_walk(double val) = 0;
+    virtual void mod_decision_vertical(double val) = 0;
+    virtual void mod_decision_walk(double val) = 0;
     virtual void set_attack_proc_id(ProcedureID val) = 0;
     virtual void set_look_dir(LookDir val) = 0;
 

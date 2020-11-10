@@ -35,8 +35,8 @@ public:
 					control.update_decisions(time_diff);
 					if(health.stunned())
 					{
-						control.set_decision_walk(0.5*control.decision_walk());
-						control.set_decision_vertical(0.5*control.decision_vertical());
+						control.mod_decision_walk(-0.5*control.decision_walk());
+						control.mod_decision_vertical(-0.5*control.decision_vertical());
 					}
 				}
 				else

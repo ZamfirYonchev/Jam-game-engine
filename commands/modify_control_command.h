@@ -33,9 +33,9 @@ public:
 		if(control)
 		{
 			if(is_negative_zero(m_decision_vertical))
-				control.set_decision_vertical(0.0);
+				control.set_decision_vertical(0);
 			else
-				control.set_decision_vertical(m_decision_vertical + control.decision_vertical());
+				control.mod_decision_vertical(m_decision_vertical);
 
 			if(is_negative_zero(m_decision_attack))
 				control.set_decision_attack(false);
@@ -45,7 +45,7 @@ public:
 			if(is_negative_zero(m_decision_walk))
 				control.set_decision_walk(0);
 			else
-				control.set_decision_walk(m_decision_walk + control.decision_walk());
+				control.mod_decision_walk(m_decision_walk );
 
 			if(is_negative_zero(m_look_dir))
 				control.set_look_dir(Control::LookDir::RIGHT);

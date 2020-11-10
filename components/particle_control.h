@@ -25,6 +25,8 @@ public:
 	, m_directed_y(directed_factor*std::sin(direction_angle))
 	, m_decision_x(0)
 	, m_decision_y(0)
+	, m_offset_x(0)
+	, m_offset_y(0)
 	{}
 
     void print(std::ostream& to) const
@@ -41,19 +43,22 @@ public:
     ProcedureID attack_proc_id() const { return -1; }
     LookDir look_dir() const { return m_decision_x < 0.0 ? LookDir::LEFT : LookDir::RIGHT; }
 
-    void set_decision_vertical(double val) {}
+    void set_decision_vertical(double val) { m_offset_y = clip(val, -1.0, 1.0); }
     void set_decision_attack(bool val) {}
-    void set_decision_walk(double val) {}
+    void set_decision_walk(double val) { m_offset_x = clip(val, -1.0, 1.0); }
+    void mod_decision_vertical(double val) { m_offset_y = val; }
+    void mod_decision_walk(double val) { m_offset_x = val; std::cout << "Offset_x = " << m_offset_x << '\n'; }
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) {}
 
     void update_decisions(const Time time_diff)
     {
     	const double angle = m_dist(m_gen);
-    	const double vx = m_directed_x + m_random_factor*std::cos(angle);
-    	const double vy = m_directed_y + m_random_factor*std::sin(angle);
+    	const double vx = m_offset_x + m_directed_x + m_random_factor*std::cos(angle);
+    	const double vy = m_offset_y + m_directed_y + m_random_factor*std::sin(angle);
     	const double v_len = std::sqrt(vx*vx + vy*vy);
-       	m_decision_x = v_len != 0 ? vx / v_len : 0.0; //normalize
+
+    	m_decision_x = v_len != 0 ? vx / v_len : 0.0; //normalize
     	m_decision_y = v_len != 0 ? vy / v_len : 0.0; //normalize
     }
 
@@ -69,6 +74,7 @@ private:
     double m_random_factor;
     double m_directed_x, m_directed_y;
     double m_decision_x, m_decision_y;
+    double m_offset_x, m_offset_y;
 };
 
 #endif /* COMPONENTS_PARTICLE_CONTROL_H_ */
