@@ -47,7 +47,7 @@ public:
     void set_decision_attack(bool val) {}
     void set_decision_walk(double val) { m_offset_x = clip(val, -1.0, 1.0); }
     void mod_decision_vertical(double val) { m_offset_y = val; }
-    void mod_decision_walk(double val) { m_offset_x = val; std::cout << "Offset_x = " << m_offset_x << '\n'; }
+    void mod_decision_walk(double val) { m_offset_x = val; }
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) {}
 
