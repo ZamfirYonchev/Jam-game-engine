@@ -44,6 +44,8 @@
 #include "commands/clear_all_procedures_command.h"
 #include "commands/call_procedure_command.h"
 #include "commands/add_font_command.h"
+#include "commands/add_sound_command.h"
+#include "commands/add_music_command.h"
 #include "commands/add_texture_from_file_command.h"
 #include "commands/add_texture_from_string_command.h"
 #include "commands/add_spritesheet_command.h"
@@ -98,12 +100,17 @@
 #include "commands/reuse_component_command.h"
 #include "commands/export_entities_command.h"
 #include "commands/finalize_build_command.h"
+#include "commands/play_sound_command.h"
+#include "commands/play_music_command.h"
 
 #include <list>
 #include <utility>
 #include <string>
 #include <random>
 #include <array>
+
+#include "sound.h"
+#include "music.h"
 
 int main(int argc, char** argv)
 {
@@ -133,6 +140,11 @@ int main(int argc, char** argv)
 				file >> globals.fullscreen;
 				std::cout << "Set Fullscreen to " << globals.fullscreen << std::endl;
 			}
+			else if(token == "EnableAudio")
+			{
+				file >> globals.audio;
+				std::cout << "Set Audio to " << globals.audio << std::endl;
+			}
 			else if(token == "Level")
 			{
 				file >> globals.level_name;
@@ -149,7 +161,9 @@ int main(int argc, char** argv)
 		sdl.init_video(globals.resolution_x
 					 , globals.resolution_y
 					 , globals.fullscreen
-					 , true);
+					 , true
+					 , globals.audio);
+
 
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals> entity_system;
 		using ES = decltype(entity_system);
@@ -163,7 +177,9 @@ int main(int argc, char** argv)
 
 		std::mt19937 gen {std::random_device{}()};
 
-		command_system.register_command("DebugMessage",
+	    //Mix_PlayChannel(0, resource_system.sound(0)->sound(), 0);
+
+	    command_system.register_command("DebugMessage",
 			[](std::istream& input){
 				double severity;
 				std::string line;
@@ -701,6 +717,48 @@ int main(int argc, char** argv)
 		command_system.register_command("FinalizeBuild",
 			[](std::istream& input){
 				return FinalizeBuildCommand{};
+			});
+
+		command_system.register_command("AddSound",
+			[](std::istream& input){
+				std::string file;
+				input >> file;
+				return AddSoundCommand{file};
+			});
+
+		command_system.register_command("PlaySound",
+			[](std::istream& input){
+				double sound_id, loops, channel;
+				input >> sound_id >> loops >> channel;
+
+				if(sound_id < 0)
+				{
+					std::cerr << "PlaySound: sound id must be >= 0\n";
+					return CS::CommandT{NullCommand{}};
+				}
+				else
+					return CS::CommandT{PlaySoundCommand{SoundID(sound_id), int(loops), int(channel)}};
+			});
+
+		command_system.register_command("AddMusic",
+			[](std::istream& input){
+				std::string file;
+				input >> file;
+				return AddMusicCommand{file};
+			});
+
+		command_system.register_command("PlayMusic",
+			[](std::istream& input){
+				double id, loops;
+				input >> id >> loops;
+
+				if(id < 0)
+				{
+					std::cerr << "PlayMusic: music id must be >= 0\n";
+					return CS::CommandT{NullCommand{}};
+				}
+				else
+					return CS::CommandT{PlayMusicCommand{MusicID(id), int(loops)}};
 			});
 
 

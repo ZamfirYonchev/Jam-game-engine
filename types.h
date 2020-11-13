@@ -28,6 +28,7 @@ using SpritesheetID = int32_t;
 using TextureID = int32_t;
 using ProcedureID = int32_t;
 using SoundID = int32_t;
+using MusicID = int32_t;
 using FontID = int32_t;
 using Time = int32_t;
 

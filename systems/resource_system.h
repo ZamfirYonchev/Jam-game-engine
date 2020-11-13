@@ -13,30 +13,13 @@
 #include "../texture.h"
 #include "../font.h"
 #include "../spritesheet.h"
+#include "../sound.h"
+#include "../music.h"
 
 class ResourceSystem
 {
 public:
-    ResourceSystem() {}
-
-    ~ResourceSystem()
-    {
-        clear();
-    }
-
-    ResourceSystem(const ResourceSystem&) = delete;
-    ResourceSystem(ResourceSystem&& rhs) noexcept = default;
-
-    ResourceSystem& operator=(const ResourceSystem&) = delete;
-    ResourceSystem& operator=(ResourceSystem&& rhs) noexcept
-    {
-    	clear();
-    	m_fonts = std::move(rhs.m_fonts);
-    	m_spritesheets = std::move(rhs.m_spritesheets);
-    	m_textures = std::move(rhs.m_textures);
-
-    	return *this;
-    }
+    ResourceSystem() = default;
 
     void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
     {
@@ -92,9 +75,18 @@ public:
     	return font_id;
     }
 
-    const std::vector<Texture>& textures() const
+    SoundID addNewSound(const std::string& sound_file)
     {
-        return m_textures;
+    	const SoundID sound_id = m_sounds.size();
+    	m_sounds.push_back(Sound(sound_file));
+    	return sound_id;
+    }
+
+    MusicID addNewMusic(const std::string& file)
+    {
+    	const MusicID music_id = m_music.size();
+    	m_music.push_back(Music(file));
+    	return music_id;
     }
 
     optional_ref<Texture> texture(const TextureID tex_id)
@@ -126,6 +118,22 @@ public:
     		return optional_ref<Font>();
     }
 
+    optional_ref<Sound> sound(const SoundID id)
+    {
+    	if(0 <= id && id < static_cast<SoundID>(m_sounds.size()))
+    		return optional_ref<Sound>(m_sounds[id]);
+    	else
+    		return optional_ref<Sound>();
+    }
+
+    optional_ref<Music> music(const MusicID id)
+    {
+    	if(0 <= id && id < static_cast<MusicID>(m_music.size()))
+    		return optional_ref<Music>(m_music[id]);
+    	else
+    		return optional_ref<Music>();
+    }
+
     void clear_textures()
     {
         m_textures.clear();
@@ -141,21 +149,26 @@ public:
         m_fonts.clear();
     }
 
+    void clear_sounds()
+    {
+        m_sounds.clear();
+        m_music.clear();
+    }
+
     void clear()
     {
         clear_textures();
         clear_spritesheets();
         clear_fonts();
+        clear_sounds();
     }
 
 private:
     std::vector<Texture> m_textures;
     std::vector<Spritesheet> m_spritesheets;
     std::vector<Font> m_fonts;
+    std::vector<Sound> m_sounds;
+    std::vector<Music> m_music;
 };
-
-
-
-
 
 #endif /* SYSTEMS_RESOURCE_SYSTEM_H_ */

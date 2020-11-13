@@ -9,6 +9,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <limits>
 #include "math_ext.h"
@@ -20,10 +21,11 @@ SdlWindow::~SdlWindow()
 	SDL_Quit();
 }
 
-void SdlWindow::init_video(uint16_t& res_width
-						  ,uint16_t& res_height
+void SdlWindow::init_video( int& res_width
+						  , int& res_height
 						  , const bool fullscreen
 						  , const bool double_buffer
+						  , const bool enable_audio
 					)
 {
 	if(m_window)
@@ -32,13 +34,16 @@ void SdlWindow::init_video(uint16_t& res_width
 		SDL_DestroyRenderer(m_renderer);
 		IMG_Quit();
 		TTF_Quit();
+		if(enable_audio) Mix_Quit();
 		SDL_Quit();
 
 		m_window = nullptr;
 		m_renderer = nullptr;
 	}
 
-	if(SDL_Init(SDL_INIT_VIDEO) < 0)
+	const uint32_t sdl_init_flags = SDL_INIT_VIDEO | (enable_audio & SDL_INIT_AUDIO);
+
+	if(SDL_Init(sdl_init_flags) < 0)
 	{
 		std::cerr << "Unable to init SDL " << SDL_GetError() << std::endl;
 		return;
@@ -54,6 +59,15 @@ void SdlWindow::init_video(uint16_t& res_width
     {
         std::cerr << "Unable to initialize SDL_ttf" << TTF_GetError() << std::endl;
         return;
+    }
+
+    if(enable_audio)
+    {
+		if(Mix_OpenAudio(44100, AUDIO_F32SYS, 2, 2048) < 0)
+		{
+			std::cerr << "Unable to initialize SDL_mixer" << Mix_GetError() << std::endl;
+			return;
+		}
     }
 
 	atexit(SDL_Quit);

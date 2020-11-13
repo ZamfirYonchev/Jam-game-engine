@@ -17,6 +17,7 @@ struct Globals
     		  , app_needs_reload(false)
     		  , app_paused(false)
     		  , fullscreen(false)
+			  , audio(false)
 			  , show_hitboxes(false)
     		  , resolution_x(640)
     		  , resolution_y(480)
@@ -25,8 +26,8 @@ struct Globals
 			  , level_name("levels/menu.txt")
 			  {}
 
-    bool app_running, app_needs_reload, app_paused, fullscreen, show_hitboxes;
-    uint16_t resolution_x, resolution_y;
+    bool app_running, app_needs_reload, app_paused, fullscreen, audio, show_hitboxes;
+    int resolution_x, resolution_y;
     SpritesheetID access_spritesheet_id;
     ProcedureID access_procedure_id;
     std::string level_name;

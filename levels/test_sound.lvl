@@ -1,0 +1,11 @@
+AddProcedure 2 #0: play music
+DebugMessage 1 Playing music
+PlayMusic 0 -1
+
+AddMusic Happy_Prescriptions_-_03_-_Intact.mp3 #0: music
+
+AddSound beat.wav
+PlaySound 0 1 -1
+
+AddEntity #0: delay
+UseTimedHealth 5000 0

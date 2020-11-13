@@ -9,6 +9,7 @@
 #define SDL_WINDOW_H_
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 class SdlWindow
 {
@@ -16,10 +17,11 @@ public:
 	SdlWindow() : m_window(nullptr), m_renderer(nullptr)
 	{}
 
-	void init_video(uint16_t& res_width
-				  , uint16_t& res_height
+	void init_video(int& res_width
+				  , int& res_height
 				  , const bool fullscreen
 				  , const bool double_buffer
+				  , const bool enable_audio
 			);
 
 	~SdlWindow();
