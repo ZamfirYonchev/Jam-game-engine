@@ -1,5 +1,5 @@
 AddProcedure 9 #0: reset generator and spawn particle
-	ModifyHealth 0 100 0
+	ModifyHealth 0 20 0
 	AddEntity #particle
 	ReusePosition -2
 	UseCharacterVisuals 1
