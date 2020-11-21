@@ -4,7 +4,7 @@ SetLevel levels/level2.txt
 AddProcedure 0 #0: move screen left
 ExtendProcedure 0 2
 SelectEntity 0
-UseConstantControl -1 0 0
+ModifyControl 0 0 -1 0
 
 #ModifyPosition -5 0 0 0
 #SelectEntity 1
@@ -13,7 +13,7 @@ UseConstantControl -1 0 0
 AddProcedure 0 #1: move screen right
 ExtendProcedure 1 2
 SelectEntity 0
-UseConstantControl 1 0 0
+ModifyControl 0 0 1 0
 
 #ModifyPosition 5 0 0 0
 #SelectEntity 1
@@ -22,7 +22,7 @@ UseConstantControl 1 0 0
 AddProcedure 0 #2: stop moving screen
 ExtendProcedure 2 2
 SelectEntity 0
-UseConstantControl 0 0 0
+ModifyControl -0 0 -0 0
 
 #ModifyPosition 0 10 0 0
 
@@ -329,6 +329,7 @@ AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
 UseInstantMovement 1 0.01 0.05
 UseConstantControl 0 0 0
+#UseParticleControl 1 0 0
 FixViewWidth
 
 AddEntity #1: background
