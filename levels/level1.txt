@@ -293,7 +293,7 @@ UseAbsolutePosition 0 0 800 600
 AddEntity #1: background
 UseAbsolutePosition -120 0 1440 600
 UseTiledVisuals 0 120 120
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: trigger zone move screen left 
 UseAttachedPosition 0 0 0 -600 0
@@ -319,14 +319,14 @@ UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
 UseGuideControl 6 100
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 3
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 3
 
 AddEntity #6: guide
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 10
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 UseFullMovement 1 0.01 0.009 0.6 0
 UseBasicCollision 0
 UseInputControl -1 100 0

@@ -58,8 +58,8 @@ ExtendProcedure 9 11
 	UseCharacterHealth 5 5
 	UseNormalInteraction 0
 	ModifyInteraction 3 1 0 0 0 0
-	ModifyVisuals 0 0 0 0 -0
-	ModifyVisuals 0 0 0 0 2
+	ModifyVisuals 0 0 0 -0
+	ModifyVisuals 0 0 0 2
 	UseAbsolutePosition 0 0 49 100
 
 AddProcedure 0 #10: remove entity
@@ -129,13 +129,13 @@ ExtendProcedure 21 1
 ModifyControl 0 0 1 0
 
 AddProcedure 3 #22: change tiling
-	ModifyVisuals 0 0 0 -0 0
-	ModifyVisuals 0 0 0 5 0
+	ModifyVisuals 0 0 -0 0
+	ModifyVisuals 0 0 5 0
 	DebugMessage 0 change tiling
 
 AddProcedure 3 #23: restore tiling
-	ModifyVisuals 0 0 0 -0 0
-	ModifyVisuals 0 0 0 2 0
+	ModifyVisuals 0 0 -0 0
+	ModifyVisuals 0 0 2 0
 	DebugMessage 0 restore tiling
 
 
@@ -572,7 +572,7 @@ UseAbsolutePosition 0 0 800 600
 AddEntity #1: background
 UseTiledVisuals 0 20 5
 UseAbsolutePosition 0 0 120 600
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: trigger zone move screen left 
 UseAttachedPosition 0 0 0 -600 0
@@ -599,14 +599,14 @@ UseCharacterHealth 10 10
 UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0 0
 UseGuideControl 6 100
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 3
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 3
 
 AddEntity #6: wisp
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 10
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 UseInstantMovement 1 0.1 0.5
 UseBasicCollision 0
 UseInputControl 19 300

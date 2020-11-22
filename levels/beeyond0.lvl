@@ -117,8 +117,8 @@ AddProcedure 2 #28: fresh-to-dead flower
 AddProcedure 10 #29: reset bee at hive
 	UseAbsolutePosition 140 335 60 37
 	UseCharacterVisuals 1
-	ModifyVisuals 0 0 0 0 -0
-	ModifyVisuals 0 0 0 0 3
+	ModifyVisuals 0 0 0 -0
+	ModifyVisuals 0 0 0 3
 	UseFullMovement 1 0.01 0.006 0.6 0
 	UseBasicCollision 1 0.5
 	UseInputControl -1 300 0
@@ -335,7 +335,7 @@ FixViewWidth
 AddEntity #1: background
 UseAbsolutePosition -300 0 4098 768
 UseTiledVisuals 0 1366 768
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: bee
 CallProcedure 29 #spawn bee
@@ -377,22 +377,22 @@ AddEntity #10: grass
 UseAbsolutePosition 0 -30 3000 200
 UseBasicCollision 0 1
 UseTiledVisuals 2 200 200
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 
 AddEntity #11: grass
 UseAbsolutePosition -100 -30 3000 200
 UseBasicCollision 0 1
 UseTiledVisuals 2 200 200
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 
 AddEntity #12: flower
 UseAbsolutePosition 300 200 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseFullInteraction 0 1 24 -1 28
 ModifyInteraction 2 1 0 0 0 0
 
@@ -418,8 +418,8 @@ AddEntity #17: flower
 UseAbsolutePosition 600 250 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseFullInteraction 0 1 24 -1 28
 ModifyInteraction 2 1 0 0 0 0
 
@@ -431,8 +431,8 @@ AddEntity #19: cobweb
 UseAbsolutePosition 600 200 370 339
 UseBasicCollision 0 1
 UseStaticVisuals 7 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 
 AddEntity #20: cobweb top
 UseAbsolutePosition 600 509 370 1
@@ -458,8 +458,8 @@ AddEntity #24: spider
 UseAbsolutePosition 736 334 59 51
 UseDamageCollision 0 10
 UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseInstantMovement 1 0.01 0.02
 UseConstantControl 1 1 0
 UseNormalInteraction 0
@@ -474,8 +474,8 @@ AddEntity #26: frog
 UseAbsolutePosition 1002 0 91 59
 UseBasicCollision 1 0.5
 UseCharacterVisuals 8
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 3
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 3
 UseFullMovement 2 0.01 0.003 3 1
 UseFullInteraction 0 11 44 -1 45
 ModifyInteraction 4 1 0 0 0 0
@@ -517,8 +517,8 @@ AddEntity #34: bee health
 	UseAttachedPosition 0 20 668 -440 -668
 	UseAttachedHealth 2 0 0
  	UseHealthVisuals 10 10
-	ModifyVisuals 0 0 0 0 -0
-	ModifyVisuals 0 0 0 0 4
+	ModifyVisuals 0 0 0 -0
+	ModifyVisuals 0 0 0 4
  	
 CallProcedure 43 #entity 35: healing site
 	UseAttachedPosition 16 0 5 0 0
@@ -529,8 +529,8 @@ AddEntity #37: flowers collected tooltip
 	UseAttachedPosition 0 -25 568 -440 -568
 	UseCharacterHealth 0 5
  	UseHealthVisuals 11 5
-	ModifyVisuals 0 0 0 0 -0
-	ModifyVisuals 0 0 0 0 4
+	ModifyVisuals 0 0 0 -0
+	ModifyVisuals 0 0 0 4
 
 AddEntity #38: flowers collected counter
 	UseAbsolutePosition 0 0 1 1
@@ -578,8 +578,8 @@ AddEntity #47: flower
 UseAbsolutePosition 1380 150 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseFullInteraction 0 1 24 -1 28
 ModifyInteraction 2 1 0 0 0 0
 
@@ -608,8 +608,8 @@ AddEntity #53: cobweb
 UseAbsolutePosition 1400 350 370 339
 UseBasicCollision 0 1
 UseStaticVisuals 7 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 
 AddEntity #54: cobweb top
 UseAbsolutePosition 1400 659 370 1
@@ -635,8 +635,8 @@ AddEntity #58: spider
 UseAbsolutePosition 1436 450 59 51
 UseDamageCollision 0 10
 UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseInstantMovement 1 0.01 0.02
 UseConstantControl 1 1 0
 UseNormalInteraction 0
@@ -646,8 +646,8 @@ AddEntity #59: cobweb
 UseAbsolutePosition 1400 50 370 339
 UseBasicCollision 0 1
 UseStaticVisuals 7 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 
 AddEntity #60: cobweb top
 UseAbsolutePosition 1400 359 370 1
@@ -673,8 +673,8 @@ AddEntity #64: spider
 UseAbsolutePosition 1456 250 59 51
 UseDamageCollision 0 10
 UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseInstantMovement 1 0.01 0.014
 UseConstantControl 1 1 0
 UseNormalInteraction 0
@@ -684,8 +684,8 @@ AddEntity #65: flower
 UseAbsolutePosition 1780 250 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseFullInteraction 0 1 24 -1 28
 ModifyInteraction 2 1 0 0 0 0
 
@@ -701,8 +701,8 @@ AddEntity #68: flower
 UseAbsolutePosition 1980 200 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseFullInteraction 0 1 24 -1 28
 ModifyInteraction 2 1 0 0 0 0
 

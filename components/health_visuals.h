@@ -30,9 +30,7 @@ public:
 		   << m_repeat_x << " ";
     }
 
-	RenderStates state() const { return RenderStates::IDLE; }
-    void set_new_state(RenderStates new_state) {}
-    void advance_animation(Time time_diff) {}
+    void update_animation(const Time time_diff) {}
 
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const
     {
@@ -40,7 +38,6 @@ public:
     	return (m_repeat_x != 0) && (health.max_hp() != 0) && (1.0*rx/m_repeat_x) < (1.0*health.hp()/health.max_hp());
     }
 
-    bool animation_count_max() const { return true; }
     SpritesheetID spritesheet_id() { return m_spr_id; }
     void set_spritesheet_id(SpritesheetID spr_id) { m_spr_id = spr_id; }
     uint16_t repeat_x() const { return m_repeat_x; }

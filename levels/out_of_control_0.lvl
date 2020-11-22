@@ -1,7 +1,7 @@
 AddProcedure 4 #0: change to full bucket guy
 	SelectEntity 3 #player
-	ModifyVisuals 0 0 0 -0 0
-	ModifyVisuals 0 0 0 2 0
+	ModifyVisuals 0 0 -0 0
+	ModifyVisuals 0 0 2 0
 	SelectEntity 4 #dummy
 	
 AddProcedure 3 #1: spawn fire
@@ -225,13 +225,13 @@ FixViewWidth
 AddEntity #1: background
 UseStaticVisuals 1 0
 UseAbsolutePosition 0 0 1366 768
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: floor
 UseTiledVisuals 0 32 32
 UseAbsolutePosition 0 0 640 640
-ModifyVisuals 0 0 0 0 -0
-#ModifyVisuals 0 0 0 0 1
+ModifyVisuals 0 0 0 -0
+#ModifyVisuals 0 0 0 1
 
 AddEntity #3: priest
 UseCharacterVisuals 3
@@ -281,7 +281,7 @@ AddEntity #7: back wall
 UseAbsolutePosition 36 300 320 32
 UseBasicCollision 0
 UseTiledVisuals 5 32 32
-ModifyVisuals 0 0 0 0 -1
+ModifyVisuals 0 0 0 -1
 
 AddEntity #7: physical back wall
 UseAbsolutePosition 36 332 320 5
@@ -309,7 +309,7 @@ AddEntity #7: front wall
 UseAbsolutePosition 100 204 256 32
 UseBasicCollision 0
 UseTiledVisuals 5 32 32
-ModifyVisuals 0 0 0 0 1
+ModifyVisuals 0 0 0 1
 
 AddEntity #7: physical front wall
 UseAbsolutePosition 100 199 256 5

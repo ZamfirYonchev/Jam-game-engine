@@ -80,6 +80,8 @@ public:
         	m_free_entities.erase(id);
         }
 
+        std::cout << (m_entities.size() - m_free_entities.size()) << " entities.\n";
+
         return id;
     }
 
@@ -101,7 +103,7 @@ public:
     template<typename T>
     const T& entity_component(const EntityID id, const T* ptr) const
     {
-    	const EntityID res_id = resolved_id(id);
+    	const EntityID res_id = resolved_id(id); // @suppress("Invalid arguments")
     	if(res_id < static_cast<EntityID>(m_entities.size()))
     		return m_entities[res_id].component(ptr);
     	else

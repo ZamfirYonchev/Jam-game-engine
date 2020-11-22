@@ -450,9 +450,9 @@ int main(int argc, char** argv)
 
 		command_system.register_command("ModifyVisuals",
 			[](std::istream& input){
-				double render_state, repeat_x, repeat_y, spr_id, layer;
-				input >> render_state >> repeat_x >> repeat_y >> spr_id >> layer;
-				return ModifyVisualsCommand{render_state, repeat_x, repeat_y, spr_id, layer};
+				double repeat_x, repeat_y, spr_id, layer;
+				input >> repeat_x >> repeat_y >> spr_id >> layer;
+				return ModifyVisualsCommand{repeat_x, repeat_y, spr_id, layer};
 			});
 
 		command_system.register_command("UseNullPosition",
@@ -627,7 +627,7 @@ int main(int argc, char** argv)
 			[&](std::istream& input){
 				double spr_id;
 				input >> spr_id;
-				return UseComponentCommand<CharacterVisuals>{spr_id, resource_system};
+				return UseComponentCommand<CharacterVisuals<ES>>{spr_id, EntityID{}, resource_system, entity_system};
 			});
 
 		command_system.register_command("UseTiledVisuals",

@@ -35,10 +35,7 @@ public:
     	   << m_tile_h << " ";
     }
 
-    RenderStates state() const { return RenderStates::IDLE; }
-    void set_new_state(RenderStates new_state) {}
-    void advance_animation(Time time_diff) {}
-    bool animation_count_max() const { return 0; }
+    void update_animation(const Time time_diff) {}
 
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const
     {

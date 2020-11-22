@@ -19,9 +19,8 @@ struct Globals;
 class ModifyVisualsCommand
 {
 public:
-	ModifyVisualsCommand(double render_state, double repeat_x, double repeat_y, double spr_id, double layer)
-	: m_render_state(render_state)
-	, m_repeat_x(repeat_x)
+	ModifyVisualsCommand(double repeat_x, double repeat_y, double spr_id, double layer)
+	: m_repeat_x(repeat_x)
 	, m_repeat_y(repeat_y)
 	, m_spr_id(spr_id)
 	, m_layer(layer)
@@ -34,11 +33,6 @@ public:
 
 		if(visuals)
 		{
-			if(is_negative_zero(m_render_state))
-				visuals.set_new_state(Visuals::RenderStates::IDLE);
-			else
-				visuals.set_new_state(Visuals::RenderStates((int(visuals.state()) + int(m_render_state))%6));
-
 			if(is_negative_zero(m_repeat_x))
 				visuals.set_repeat_x(0);
 			else
@@ -78,7 +72,7 @@ public:
 	}
 
 private:
-	double m_render_state, m_repeat_x, m_repeat_y, m_spr_id, m_layer;
+	double m_repeat_x, m_repeat_y, m_spr_id, m_layer;
 };
 
 

@@ -341,7 +341,7 @@ UseAbsolutePosition 0 0 800 600
 AddEntity #1: background
 UseTiledVisuals 6 20 5
 UseAbsolutePosition 0 0 120 600
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: player character
 UseAbsolutePosition 100 100 58 100
@@ -354,8 +354,8 @@ UseNormalInteraction 0
 ModifyInteraction 0 1 0 0 0
 #UseChaseAIControl 6 -1 0 100
 UseGuideControl 6 -1 0 100
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 3
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 3
 
 AddEntity #3: ground platform
 UseAbsolutePosition 10 -22 1440 96
@@ -376,8 +376,8 @@ UseTriggerInteraction 0 -1 1
 AddEntity #6: guide
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 5
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 UseInstantMovement 0.5
 UseBasicCollision 0
 UseInputControl 7 100
@@ -406,16 +406,16 @@ ModifyInteraction 1 1 0 0 0
 AddEntity #10: switch
 UseAbsolutePosition 650 478 18 64
 UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 2
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 2
 UseBasicCollision 0
 UseTriggerInteraction 2 8 -1
 
 AddEntity #11: door bottom
 UseAbsolutePosition 450 74 17 64
 UseStaticVisuals 8 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 1
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 1
 UseBasicCollision 2
 UseFullMovement 0 1 0 0 0
 UseFullInteraction 8 3 12 -1
@@ -423,8 +423,8 @@ UseFullInteraction 8 3 12 -1
 AddEntity #12: door top
 UseAbsolutePosition 450 138 17 64
 UseStaticVisuals 8 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 1
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 1
 UseBasicCollision 2
 UseFullMovement 0 1 0 0 0
 UseFullInteraction 8 3 12 -1

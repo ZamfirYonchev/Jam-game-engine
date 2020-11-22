@@ -78,87 +78,11 @@ public:
     			auto& visuals = entity_system.entity_component(id, (Visuals*)nullptr);
     			if(visuals)
     			{
-    				const auto& movement = entity_system.entity_component(id, (Movement*)nullptr);
     				const auto& position = entity_system.entity_component(id, (Position*)nullptr);
     				const auto& control = entity_system.entity_component(id, (Control*)nullptr);
 
     				if(globals.app_paused == false)
-    				{
-    					const auto& collision = entity_system.entity_component(id, (Collision*)nullptr);
-    					const auto& health = entity_system.entity_component(id, (Health*)nullptr);
-
-    					switch(visuals.state())
-    					{
-    						case Visuals::RenderStates::IDLE:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
-    							else if(collision.standing_on()!=Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) visuals.set_new_state(Visuals::RenderStates::JUMP);
-    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) visuals.set_new_state(Visuals::RenderStates::WALK);
-    							else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
-    							else visuals.advance_animation(time_diff);
-    						break;
-
-    						case Visuals::RenderStates::WALK:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
-    							else if(collision.standing_on()!=Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) visuals.set_new_state(Visuals::RenderStates::JUMP);
-    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) visuals.set_new_state(Visuals::RenderStates::IDLE);
-    							else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
-    							else visuals.advance_animation(time_diff);
-    						break;
-
-    						case Visuals::RenderStates::JUMP:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
-    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
-    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::RenderStates::IDLE);
-    							else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1 && visuals.animation_count_max()) visuals.set_new_state(Visuals::RenderStates::FALL);
-    							else visuals.advance_animation(time_diff);
-    						break;
-
-    						case Visuals::RenderStates::FALL:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
-    							else if(control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
-    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) visuals.set_new_state(Visuals::RenderStates::WALK);
-    							else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) visuals.set_new_state(Visuals::RenderStates::IDLE);
-    							else visuals.advance_animation(time_diff);
-    						break;
-
-    						case Visuals::RenderStates::ATTACK:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
-    							else if(health.stunned()) visuals.set_new_state(Visuals::RenderStates::HIT);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) visuals.set_new_state(Visuals::RenderStates::JUMP);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) visuals.set_new_state(Visuals::RenderStates::WALK);
-    							else if(visuals.animation_count_max()) visuals.set_new_state(Visuals::RenderStates::IDLE);
-    							else visuals.advance_animation(time_diff);
-    						break;
-
-    						case Visuals::RenderStates::HIT:
-    							if(health.alive() == false) visuals.set_new_state(Visuals::RenderStates::DEAD);
-    							else if(visuals.animation_count_max() && control.decision_attack()) visuals.set_new_state(Visuals::RenderStates::ATTACK);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) visuals.set_new_state(Visuals::RenderStates::FALL);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) visuals.set_new_state(Visuals::RenderStates::JUMP);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) visuals.set_new_state(Visuals::RenderStates::WALK);
-    							else if(visuals.animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) visuals.set_new_state(Visuals::RenderStates::IDLE);
-    							else visuals.advance_animation(time_diff);
-    						break;
-
-    						case Visuals::RenderStates::DEAD:
-    							if(visuals.animation_count_max() == false)
-    								visuals.advance_animation(time_diff);
-    							//else do nothing
-    						break;
-
-    						default:
-    							visuals.advance_animation(time_diff);
-    						break;
-    					}
-    				}
+    					visuals.update_animation(time_diff);
 
     				const optional_ref<Spritesheet> spritesheet = resource_system.spritesheet(visuals.spritesheet_id());
     				if(spritesheet)

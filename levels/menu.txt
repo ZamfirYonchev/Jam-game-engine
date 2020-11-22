@@ -51,7 +51,7 @@ UseAbsolutePosition 0 0 800 600
 AddEntity #1: background
 UseTiledVisuals 0 120 120
 UseAbsolutePosition 0 0 1080 600
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: button new game
 UseAbsolutePosition 310 356 181 89
@@ -66,14 +66,14 @@ UseMenuItemVisuals 1
 AddEntity #4: new game text
 UseAbsolutePosition 395 401 0 0
 UseStaticVisuals 2 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 
 AddEntity #5: quit text
 UseAbsolutePosition 395 201 0 0
 UseStaticVisuals 2 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 
 ### Procedures ###
 

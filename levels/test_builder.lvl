@@ -154,7 +154,7 @@ UseAbsolutePosition 0 0 1366 768
 AddEntity #1: background
 UseTiledVisuals 3 120 120
 UseAbsolutePosition 0 0 1366 768
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: trigger zone move screen left 
 UseAttachedPosition 0 0 0 -0.9 0
@@ -172,8 +172,8 @@ AddEntity #5: trigger zone move screen up
 AddEntity #6: builder
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 UseFullMovement 0.1 0.01 0.01 0.6 0
 UseBasicCollision 1 0
 UseInputControl 0 100 0
@@ -184,7 +184,7 @@ AddEntity #7: dummy object
 AddEntity #8: save zone
 UseAbsolutePosition 100 100 20 20 
 UseCharacterVisuals 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 UseBasicCollision 0 0
 UseTriggerInteraction 4 4 -1 -1 #builder tag
