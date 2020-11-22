@@ -30,6 +30,8 @@ public:
     , m_animation_time(0)
     , m_spritesheet_id(spr_id)
     , m_layer(VisualLayer::ACTION)
+    , m_animation_state_size(1)
+	, m_animation_state_offset(0)
     , m_resource_system(resource_system)
     , m_entity_system(entity_system)
     {}
@@ -120,32 +122,9 @@ public:
 		}
     }
 
-    RenderStates state() const { return m_current_state; }
-    void set_new_state(RenderStates new_state)
-    {
-        m_current_state = new_state;
-        m_animation_count = 0;
-        m_animation_time = 0;
-    }
-
-    void advance_animation(Time time_diff)
-    {
-        m_animation_time += time_diff;
-        if(m_animation_time >= ANIMATION_DELAY_MS)
-        {
-            m_animation_time -= ANIMATION_DELAY_MS;
-    		m_animation_count = (m_animation_count+1)%animation_state_size();
-        }
-    }
-
-    bool animation_count_max() const
-    {
-        return (m_animation_count == animation_state_size()-1);
-    }
-
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const
     {
-        return m_animation_count + animation_state_offset();
+        return m_animation_state_offset + m_animation_count;
     }
 
     SpritesheetID spritesheet_id() { return m_spritesheet_id; }
@@ -161,6 +140,39 @@ public:
     EntityID m_self_id;
 
 private:
+    RenderStates m_current_state;
+    uint8_t m_animation_count;
+    double m_animation_time;
+    SpritesheetID m_spritesheet_id;
+    VisualLayer m_layer;
+    int m_animation_state_size, m_animation_state_offset;
+    ResourceSystem& m_resource_system;
+    EntitySystemT& m_entity_system;
+
+    void set_new_state(RenderStates new_state)
+    {
+        m_current_state = new_state;
+        m_animation_count = 0;
+        m_animation_time = 0;
+        m_animation_state_size = animation_state_size();
+        m_animation_state_offset = animation_state_offset();
+    }
+
+    void advance_animation(Time time_diff)
+    {
+        m_animation_time += time_diff;
+        if(m_animation_time >= ANIMATION_DELAY_MS)
+        {
+            m_animation_time -= ANIMATION_DELAY_MS;
+    		m_animation_count = (m_animation_count+1)%m_animation_state_size;
+        }
+    }
+
+    bool animation_count_max() const
+    {
+        return (m_animation_count == m_animation_state_size-1);
+    }
+
     uint8_t animation_state_offset() const
     {
         switch(m_current_state)
@@ -206,14 +218,6 @@ private:
             	return 0;
         }
     }
-
-    RenderStates m_current_state;
-    uint8_t m_animation_count;
-    double m_animation_time;
-    SpritesheetID m_spritesheet_id;
-    VisualLayer m_layer;
-    ResourceSystem& m_resource_system;
-    EntitySystemT& m_entity_system;
 };
 
 #endif /* COMPONENTS_CHARACTER_VISUALS_H_ */
