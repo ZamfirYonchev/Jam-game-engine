@@ -13,8 +13,8 @@
 #include "../texture.h"
 #include "../font.h"
 #include "../spritesheet.h"
-#include "../sound.h"
 #include "../music.h"
+#include "../sound_chunk.h"
 
 class ResourceSystem
 {
@@ -75,10 +75,10 @@ public:
     	return font_id;
     }
 
-    SoundID addNewSound(const std::string& sound_file)
+    SoundID addNewSound(const std::string& sound_file, const int repeat)
     {
     	const SoundID sound_id = m_sounds.size();
-    	m_sounds.push_back(Sound(sound_file));
+    	m_sounds.push_back(SoundChunk(sound_file, repeat));
     	return sound_id;
     }
 
@@ -118,12 +118,12 @@ public:
     		return optional_ref<Font>();
     }
 
-    optional_ref<Sound> sound(const SoundID id)
+    optional_ref<SoundChunk> sound(const SoundID id)
     {
     	if(0 <= id && id < static_cast<SoundID>(m_sounds.size()))
-    		return optional_ref<Sound>(m_sounds[id]);
+    		return optional_ref<SoundChunk>(m_sounds[id]);
     	else
-    		return optional_ref<Sound>();
+    		return optional_ref<SoundChunk>();
     }
 
     optional_ref<Music> music(const MusicID id)
@@ -167,7 +167,7 @@ private:
     std::vector<Texture> m_textures;
     std::vector<Spritesheet> m_spritesheets;
     std::vector<Font> m_fonts;
-    std::vector<Sound> m_sounds;
+    std::vector<SoundChunk> m_sounds;
     std::vector<Music> m_music;
 };
 

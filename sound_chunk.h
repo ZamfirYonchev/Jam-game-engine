@@ -1,41 +1,45 @@
 /*
- * sound.h
+ * sound_chunk.h
  *
  *  Created on: Nov 12, 2020
  *      Author: zamfi
  */
 
-#ifndef SOUND_H_
-#define SOUND_H_
+#ifndef SOUND_CHUNK_H_
+#define SOUND_CHUNK_H_
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
 
-class Sound
+class SoundChunk
 {
 public:
-	Sound(const std::string& file) : m_sound(nullptr)
+	SoundChunk(const std::string& file, const int repeat) : m_sound(nullptr), m_repeat(repeat)
 	{
 		load_from_wav_file(file);
 	}
 
-	Sound() : m_sound(nullptr) {}
+	SoundChunk(const std::string& file) : SoundChunk(file, 1) {}
 
-    ~Sound()
+	SoundChunk() : m_sound(nullptr), m_repeat(0) {}
+
+    ~SoundChunk()
     {
         unload();
     }
 
-    Sound(const Sound&) = delete;
-    Sound(Sound&& rhs) noexcept : m_sound(rhs.m_sound)
+    SoundChunk(const SoundChunk&) = delete;
+    SoundChunk(SoundChunk&& rhs) noexcept
+    : m_sound(std::move(rhs.m_sound))
+    , m_repeat(std::move(rhs.m_repeat))
     {
     	rhs.m_sound = nullptr;
     }
 
-    Sound& operator=(const Sound&) = delete;
-    Sound& operator=(Sound&& rhs) noexcept
+    SoundChunk& operator=(const SoundChunk&) = delete;
+    SoundChunk& operator=(SoundChunk&& rhs) noexcept
     {
     	unload();
     	m_sound = rhs.m_sound;
@@ -44,7 +48,7 @@ public:
     	return *this;
     }
 
-    Sound& load_from_wav_file(const std::string& file)
+    SoundChunk& load_from_wav_file(const std::string& file)
     {
         unload();
         m_sound = Mix_LoadWAV(file.c_str());
@@ -71,8 +75,14 @@ public:
         return m_sound;
     }
 
+    int repeat() const
+    {
+    	return m_repeat;
+    }
+
 private:
     Mix_Chunk* m_sound;
+    int m_repeat;
 };
 
-#endif /* SOUND_H_ */
+#endif /* SOUND_CHUNK_H_ */
