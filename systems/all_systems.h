@@ -8,7 +8,7 @@
 #ifndef SYSTEMS_ALL_SYSTEMS_H_
 #define SYSTEMS_ALL_SYSTEMS_H_
 
-#include "../type_pack.h"
+#include "../ref_pack.h"
 #include "../types.h"
 #include <list>
 #include <utility>
@@ -16,10 +16,9 @@
 template<typename... Ts>
 struct AllSystems
 {
-	TypePack<Ts...> pack;
+	RefPack<Ts...> pack;
 
-	template<typename EntitySystemT>
-	AllSystems(EntitySystemT& entity_system) : pack{entity_system} {}
+	AllSystems(Ts&... ts) : pack{ts...} {}
 
 	void clear()
 	{
@@ -32,10 +31,9 @@ struct AllSystems
 		((void)pack.access((Ts*)nullptr).component_updated(component, id, change), ...);
 	}
 
-	template<typename EntitySystemT>
-	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
-		((void)pack.access((Ts*)nullptr).update(time_diff, entity_system, procedure_calls), ...);
+		((void)pack.access((Ts*)nullptr).update(time_diff, procedure_calls), ...);
 	}
 
 	void remove_id(const EntityID id)

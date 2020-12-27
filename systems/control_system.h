@@ -21,14 +21,14 @@ class ControlSystem : public SystemBase
 public:
 	ControlSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
 		for(const auto id : entities)
 		{
-			auto& control = entity_system.entity_component(id, (Control*)nullptr);
+			auto& control = m_entity_system.entity_component(id, (Control*)nullptr);
 	    	if(control)
 	    	{
-				const auto& health = entity_system.entity_component(id, (Health*)nullptr);
+				const auto& health = m_entity_system.entity_component(id, (Health*)nullptr);
 
 				if(health.alive())
 				{

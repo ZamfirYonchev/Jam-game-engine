@@ -20,11 +20,11 @@ class DamageSystem : public SystemBase
 public:
 	DamageSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_diff, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
 		for(const auto id : entities)
 		{
-			auto& health = entity_system.entity_component(id, (Health*)nullptr);
+			auto& health = m_entity_system.entity_component(id, (Health*)nullptr);
 	    	if(health)
 	    	{
 				const bool was_alive = health.alive();

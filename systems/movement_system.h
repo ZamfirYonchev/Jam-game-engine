@@ -26,16 +26,16 @@ public:
 
     MovementSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_delta, EntitySystemT& entity_system, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_delta, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
     {
     	for(const auto id : entities)
     	{
-    		auto& movement = entity_system.entity_component(id, (Movement*)nullptr);
+    		auto& movement = m_entity_system.entity_component(id, (Movement*)nullptr);
         	if(movement)
         	{
-    			const auto& control = entity_system.entity_component(id, (Control*)nullptr);
-    			const auto& collision = entity_system.entity_component(id, (Collision*)nullptr);
-    			auto& position  = entity_system.entity_component(id, (Position*)nullptr);
+    			const auto& control = m_entity_system.entity_component(id, (Control*)nullptr);
+    			const auto& collision = m_entity_system.entity_component(id, (Collision*)nullptr);
+    			auto& position  = m_entity_system.entity_component(id, (Position*)nullptr);
 
     			if(movement.gravity_affected())
     			{
