@@ -25,6 +25,7 @@
 #include "systems/movement_system.h"
 #include "systems/collision_system.h"
 #include "systems/damage_system.h"
+#include "systems/sound_system.h"
 #include "systems/all_systems.h"
 
 #include "commands/null_command.h"
@@ -60,6 +61,12 @@
 #include "commands/modify_interaction_command.h"
 #include "commands/modify_health_command.h"
 #include "commands/modify_visuals_command.h"
+#include "commands/use_component_command.h"
+#include "commands/reuse_component_command.h"
+#include "commands/export_entities_command.h"
+#include "commands/finalize_build_command.h"
+#include "commands/play_sound_command.h"
+#include "commands/play_music_command.h"
 
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
@@ -96,21 +103,14 @@
 #include "components/static_visuals.h"
 #include "components/tiled_visuals.h"
 #include "components/null_visuals.h"
-#include "commands/use_component_command.h"
-#include "commands/reuse_component_command.h"
-#include "commands/export_entities_command.h"
-#include "commands/finalize_build_command.h"
-#include "commands/play_sound_command.h"
-#include "commands/play_music_command.h"
+#include "components/character_sounds.h"
+#include "components/null_sounds.h"
 
 #include <list>
 #include <utility>
 #include <string>
 #include <random>
 #include <array>
-
-#include "sound.h"
-#include "music.h"
 
 int main(int argc, char** argv)
 {
@@ -162,22 +162,35 @@ int main(int argc, char** argv)
 					 , globals.resolution_y
 					 , globals.fullscreen
 					 , true
-					 , globals.audio);
+					 , globals.audio
+					 , globals.sound_channels);
 
 
-		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals> entity_system;
+		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
 		InputSystem input_system;
 		RenderingSystem rendering_system {sdl.renderer()};
-		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>,DamageSystem<ES>> all_systems {entity_system};
+
+		ControlSystem<ES> control_system {entity_system};
+		MovementSystem<ES> movement_system {entity_system};
+		CollisionSystem<ES> collision_system {entity_system};
+		DamageSystem<ES> damage_system {entity_system};
+		SoundSystem<ES> sound_system {entity_system, resource_system};
+
+		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>,DamageSystem<ES>, SoundSystem<ES>> all_systems
+		{ control_system
+		, movement_system
+		, collision_system
+		, damage_system
+		, sound_system
+		};
+
 		using AS = decltype(all_systems);
 		CommandSystem<ES, AS> command_system {entity_system, all_systems};
 		using CS = decltype(command_system);
 
 		std::mt19937 gen {std::random_device{}()};
-
-	    //Mix_PlayChannel(0, resource_system.sound(0)->sound(), 0);
 
 	    command_system.register_command("DebugMessage",
 			[](std::istream& input){
@@ -394,6 +407,21 @@ int main(int argc, char** argv)
 				}
 				else
 					return CS::CommandT{AddProcedureCommand{size_t(num_of_cmds)}};
+			});
+
+		command_system.register_command("AddSound",
+			[](std::istream& input){
+				std::string file;
+				double repeat;
+				input >> file >> repeat;
+				return AddSoundCommand{file, int(repeat)};
+			});
+
+		command_system.register_command("AddMusic",
+			[](std::istream& input){
+				std::string file;
+				input >> file;
+				return AddMusicCommand{file};
 			});
 
 		command_system.register_command("AddEntity",
@@ -658,6 +686,18 @@ int main(int argc, char** argv)
 				return UseComponentCommand<MenuItemVisuals<decltype(entity_system)>>{spr_id, EntityID{}, entity_system};
 			});
 
+		command_system.register_command("UseNullSounds",
+			[&](std::istream& input){
+				return UseComponentCommand<NullSounds>{};
+			});
+
+		command_system.register_command("UseCharacterSounds",
+			[&](std::istream& input){
+				double idle_id, walk_id, jump_id, fall_id, land_id, attack_id, hit_id, dead_id, volume;
+				input >> idle_id >> walk_id >> jump_id >> fall_id >> land_id >> attack_id >> hit_id >> dead_id >> volume;
+				return UseComponentCommand<CharacterSounds<ES>>{SoundID(idle_id), SoundID(walk_id), SoundID(jump_id), SoundID(fall_id), SoundID(land_id), SoundID(attack_id), SoundID(hit_id), SoundID(dead_id), volume, EntityID{}, entity_system};
+			});
+
 		command_system.register_command("ReusePosition",
 			[](std::istream& input){
 				double id;
@@ -719,17 +759,10 @@ int main(int argc, char** argv)
 				return FinalizeBuildCommand{};
 			});
 
-		command_system.register_command("AddSound",
-			[](std::istream& input){
-				std::string file;
-				input >> file;
-				return AddSoundCommand{file};
-			});
-
 		command_system.register_command("PlaySound",
 			[](std::istream& input){
-				double sound_id, loops, channel;
-				input >> sound_id >> loops >> channel;
+				double sound_id, channel;
+				input >> sound_id >> channel;
 
 				if(sound_id < 0)
 				{
@@ -737,14 +770,7 @@ int main(int argc, char** argv)
 					return CS::CommandT{NullCommand{}};
 				}
 				else
-					return CS::CommandT{PlaySoundCommand{SoundID(sound_id), int(loops), int(channel)}};
-			});
-
-		command_system.register_command("AddMusic",
-			[](std::istream& input){
-				std::string file;
-				input >> file;
-				return AddMusicCommand{file};
+					return CS::CommandT{PlaySoundCommand{SoundID(sound_id), int(channel)}};
 			});
 
 		command_system.register_command("PlayMusic",
@@ -779,7 +805,7 @@ int main(int argc, char** argv)
 			{
 				last_update_time += update_time_delta;
 				if(globals.app_paused == false)
-					all_systems.update(update_time_delta, entity_system, command_system.procedure_calls());
+					all_systems.update(update_time_delta, command_system.procedure_calls());
 
 				input_system.clear_toggle_inputs();
 			}
