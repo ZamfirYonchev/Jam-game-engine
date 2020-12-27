@@ -89,8 +89,10 @@ AddProcedure 4 #22: bee touched ground
 	SelectEntity 3
 	UseNullHealth
 
-AddProcedure 3 #23: bee lifted off
+AddProcedure 5 #23: bee lifted off
 	ModifyMovement 0 0 0 0 0 0 -0
+	ModifyCollision 0 -0 0 0
+	ModifyCollision 0 1 0 0
 	SelectEntity 3
 	UseTimedHealth 300 20
 
@@ -114,7 +116,7 @@ AddProcedure 2 #28: fresh-to-dead flower
 	UseStaticVisuals 5 3
 	UseNullHealth
 	
-AddProcedure 10 #29: reset bee at hive
+AddProcedure 11 #29: reset bee at hive
 	UseAbsolutePosition 140 335 60 37
 	UseCharacterVisuals 1
 	ModifyVisuals 0 0 0 -0
@@ -125,6 +127,7 @@ AddProcedure 10 #29: reset bee at hive
 	UseFullInteraction 0 2 22 -1 23
 	ModifyInteraction 1 1 0 0 0 0
 	UseTimedHealth 10000 36
+	UseCharacterSounds -1 -1 0 -1 -1 -1 -1 -1 -1
 
 AddProcedure 2 #30: move down
 	ModifyControl -0 0 0 0
@@ -324,6 +327,10 @@ AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #11 flower icon visuals
 AddSprite 11 24 0 0 30 30
 AddSprite 11 25 0 0 30 30
 
+AddSound assets/sounds/Bee-noise.wav -1 #0
+
+AddMusic Birds_and_Wind-Ambient.ogg
+
 ### Entities
 AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
@@ -331,6 +338,8 @@ UseInstantMovement 1 0.01 0.05
 UseConstantControl 0 0 0
 #UseParticleControl 1 0 0
 FixViewWidth
+
+PlayMusic 0 -1
 
 AddEntity #1: background
 UseAbsolutePosition -300 0 4098 768
