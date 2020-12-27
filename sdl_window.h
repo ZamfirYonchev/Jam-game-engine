@@ -22,6 +22,7 @@ public:
 				  , const bool fullscreen
 				  , const bool double_buffer
 				  , const bool enable_audio
+				  , const int sound_channels
 			);
 
 	~SdlWindow();

@@ -26,6 +26,7 @@ void SdlWindow::init_video( int& res_width
 						  , const bool fullscreen
 						  , const bool double_buffer
 						  , const bool enable_audio
+						  , const int sound_channels
 					)
 {
 	if(m_window)
@@ -63,7 +64,7 @@ void SdlWindow::init_video( int& res_width
 
     if(enable_audio)
     {
-		if(Mix_OpenAudio(44100, AUDIO_F32SYS, 2, 2048) < 0)
+		if(Mix_OpenAudio(44100, AUDIO_F32SYS, sound_channels, 2048) < 0)
 		{
 			std::cerr << "Unable to initialize SDL_mixer" << Mix_GetError() << std::endl;
 			return;
