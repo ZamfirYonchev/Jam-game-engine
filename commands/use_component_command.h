@@ -25,6 +25,8 @@
 #include "../components/menu_item_visuals.h"
 #include "../components/tiled_visuals.h"
 
+#include "../components/character_sounds.h"
+
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
@@ -285,6 +287,29 @@ public:
 
 private:
     mutable CharacterVisuals<EntitySystemT> m_component;
+};
+
+template<typename EntitySystemT>
+class UseComponentCommand<CharacterSounds<EntitySystemT>>
+{
+public:
+	template<typename... Args>
+	UseComponentCommand(Args&&... args)
+	: m_component(std::forward<Args>(args)...) {}
+
+	UseComponentCommand(const UseComponentCommand& val) = default;
+	UseComponentCommand(UseComponentCommand&& val) noexcept = default;
+	UseComponentCommand(UseComponentCommand& val) = default;
+
+    template<typename CommandSystemT, typename AllSystemsT>
+    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+		m_component.m_self_id = entity_system.previous_entity_id();
+		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, m_component);
+	}
+
+private:
+    mutable CharacterSounds<EntitySystemT> m_component;
 };
 
 #endif /* COMMANDS_USE_COMPONENT_COMMAND_H_ */
