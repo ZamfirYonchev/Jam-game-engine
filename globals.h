@@ -24,6 +24,7 @@ struct Globals
     		  , access_spritesheet_id(-1)
     		  , access_procedure_id(-1)
 			  , level_name("levels/menu.txt")
+			  , sound_channels(4)
 			  {}
 
     bool app_running, app_needs_reload, app_paused, fullscreen, audio, show_hitboxes;
@@ -31,6 +32,7 @@ struct Globals
     SpritesheetID access_spritesheet_id;
     ProcedureID access_procedure_id;
     std::string level_name;
+    int sound_channels;
 };
 
 #endif /* GLOBALS_H_ */
