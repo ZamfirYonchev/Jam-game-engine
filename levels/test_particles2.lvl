@@ -5,7 +5,7 @@ AddProcedure 9 #0: reset generator and spawn particle
 	UseCharacterVisuals 1
 	ModifyVisuals 0 0 0 -0
 	ModifyVisuals 0 0 0 4
-	UseFullMovement 0.1 0.01 0.01 0.6 0
+	UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
 	UseParticleControl 2 1 1.57
 	UseTimedHealth 4000 1
 	
@@ -130,7 +130,7 @@ UseAbsolutePosition 100 100 20 20
 UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
-UseFullMovement 0.1 0.01 0.01 0.6 0
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
 UseInputControl 0 100 0
 UseTimedHealth 500 0
 
@@ -219,7 +219,7 @@ UseAbsolutePosition 150 150 20 20
 UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
-UseFullMovement 0.1 0.01 0.01 0.6 0
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
 UseInputControl 0 100 0
 UseTimedHealth 500 0
 

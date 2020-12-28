@@ -27,7 +27,8 @@ public:
     virtual double dx() const = 0;
     virtual double dy() const = 0;
     virtual double mass() const = 0;
-    virtual double friction() const = 0;
+    virtual double friction_x() const = 0;
+    virtual double friction_y() const = 0;
     virtual double move_force() const = 0;
     virtual double jump_force() const = 0;
     virtual bool gravity_affected() const = 0;
@@ -38,7 +39,8 @@ public:
     virtual void set_velocity_x(double val) = 0;
     virtual void set_velocity_y(double val) = 0;
     virtual void set_mass(double val) = 0;
-    virtual void set_friction(double val) = 0;
+    virtual void set_friction_x(double val) = 0;
+    virtual void set_friction_y(double val) = 0;
     virtual void set_move_force(double val) = 0;
     virtual void set_jump_force(double val) = 0;
     virtual void set_gravity_affected(bool val) = 0;

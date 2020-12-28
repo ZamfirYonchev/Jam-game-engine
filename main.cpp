@@ -450,9 +450,9 @@ int main(int argc, char** argv)
 
 		command_system.register_command("ModifyMovement",
 			[](std::istream& input){
-				double mass, friction, vx, vy, fx, fy, gravity_affected;
-				input >> mass >> friction >> vx >> vy >> fx >> fy >> gravity_affected;
-				return ModifyMovementCommand{mass, friction, vx, vy, fx, fy, gravity_affected};
+				double mass, friction_x, friction_y, vx, vy, fx, fy, gravity_affected;
+				input >> mass >> friction_x >> friction_y >> vx >> vy >> fx >> fy >> gravity_affected;
+				return ModifyMovementCommand{mass, friction_x, friction_y, vx, vy, fx, fy, gravity_affected};
 			});
 
 		command_system.register_command("ModifyCollision",
@@ -563,16 +563,16 @@ int main(int argc, char** argv)
 
 		command_system.register_command("UseFullMovement",
 			[](std::istream& input){
-				double mass, friction, move_force, jump_force, gravity_affected;
-				input >> mass >> friction >> move_force >> jump_force >> gravity_affected;
-				return UseComponentCommand<FullMovement>{mass, friction, move_force, jump_force, bool(gravity_affected)};
+				double mass, friction_x, friction_y, move_force, jump_force, gravity_affected;
+				input >> mass >> friction_x >> friction_y >> move_force >> jump_force >> gravity_affected;
+				return UseComponentCommand<FullMovement>{mass, friction_x, friction_y, move_force, jump_force, bool(gravity_affected)};
 			});
 
 		command_system.register_command("UseInstantMovement",
 			[](std::istream& input){
-				double mass, friction, move_force;
-				input >> mass >> friction >> move_force;
-				return UseComponentCommand<InstantMovement>{mass, friction, move_force};
+				double mass, friction_x, friction_y, move_force;
+				input >> mass >> friction_x >> friction_y >> move_force;
+				return UseComponentCommand<InstantMovement>{mass, friction_x, friction_y, move_force};
 			});
 
 		command_system.register_command("UseNullCollision",

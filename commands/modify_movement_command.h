@@ -18,9 +18,10 @@ struct Globals;
 class ModifyMovementCommand
 {
 public:
-	ModifyMovementCommand(double mass, double friction, double vx, double vy, double fx, double fy, double gravity_affected)
+	ModifyMovementCommand(double mass, double friction_x, double friction_y, double vx, double vy, double fx, double fy, double gravity_affected)
 	: m_mass(mass)
-	, m_friction(friction)
+	, m_friction_x(friction_x)
+	, m_friction_y(friction_y)
 	, m_vx(vx)
 	, m_vy(vy)
 	, m_fx(fx)
@@ -40,10 +41,15 @@ public:
 			else
 				movement.set_mass(movement.mass() + m_mass);
 
-			if(is_negative_zero(m_friction))
-				movement.set_friction(m_friction);
+			if(is_negative_zero(m_friction_x))
+				movement.set_friction_x(m_friction_x);
 			else
-				movement.set_friction(movement.friction() + m_friction);
+				movement.set_friction_x(movement.friction_x() + m_friction_x);
+
+			if(is_negative_zero(m_friction_y))
+				movement.set_friction_y(m_friction_y);
+			else
+				movement.set_friction_y(movement.friction_y() + m_friction_y);
 
 			if(is_negative_zero(m_fx))
 				movement.set_force_x(m_fx);
@@ -77,7 +83,7 @@ public:
 	}
 
 private:
-    double m_mass, m_friction, m_vx, m_vy, m_fx, m_fy, m_gravity_affected;
+    double m_mass, m_friction_x, m_friction_y, m_vx, m_vy, m_fx, m_fy, m_gravity_affected;
 };
 
 

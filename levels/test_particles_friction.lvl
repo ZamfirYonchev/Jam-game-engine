@@ -1,17 +1,46 @@
 AddProcedure 9 #0: reset generator and spawn particle
-	ModifyHealth 0 20 0
+	ModifyHealth 0 100 0
 	AddEntity #particle
 	ReusePosition -2
-	UseCharacterVisuals 1
+	#UseCharacterVisuals 1
+	UseStaticVisuals 4 0
 	ModifyVisuals 0 0 0 -0
 	ModifyVisuals 0 0 0 4
-	UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
-	UseParticleControl 2 1 1.57
-	UseTimedHealth 5000 1
+	UseFullMovement 0.5 0.0003 0.02 0.02 3 1
+	UseParticleControl 1 1.001 1.57
+	UseTimedHealth 10 1
 	
-AddProcedure 1 #1: remove entity
-	RemoveEntity
+AddProcedure 2 #1: remove entity
+	UseNullControl
+	UseTimedHealth 5000 2
 
+AddProcedure 1 #2: remove entity
+	RemoveEntity
+	
+AddProcedure 9 #3: reset generator and spawn particle
+	ModifyHealth 0 100 3
+	AddEntity #particle
+	ReusePosition -2
+	#UseCharacterVisuals 1
+	UseStaticVisuals 5 0
+	ModifyVisuals 0 0 0 -0
+	ModifyVisuals 0 0 0 4
+	UseFullMovement 0.5 0.0003 0.02 0.02 3 1
+	UseParticleControl 1 1.001 1.57
+	UseTimedHealth 10 1
+	
+AddProcedure 9 #4: reset generator and spawn particle
+	ModifyHealth 0 100 4
+	AddEntity #particle
+	ReusePosition -2
+	#UseCharacterVisuals 1
+	UseStaticVisuals 6 0
+	ModifyVisuals 0 0 0 -0
+	ModifyVisuals 0 0 0 4
+	UseFullMovement 0.5 0.0003 0.02 0.02 3 1
+	UseParticleControl 1 1.001 1.57
+	UseTimedHealth 10 1
+	
 AddTextureFromFile resources/bg_top.png #0: background top
 AddTextureFromFile resources/bg_middle.png #1: background middle
 AddTextureFromFile resources/bg_bottom.png #2: background bottom
@@ -46,6 +75,10 @@ AddTextureFromFile resources/14.png #27: player wisp Idle
 AddTextureFromFile resources/15.png #28: player wisp Idle
 AddTextureFromFile resources/16.png #29: player wisp Idle
 AddTextureFromFile resources/light-red-1.png #30: player wisp attack
+
+AddTextureFromFile resources/snowflake.png #31: snowflake
+
+AddTextureFromFile resources/merry-christmas.jpg #32: merry christmas background
 
 AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.125 #0: platform complete
 AddSprite 0 3 0 0 256 256
@@ -116,18 +149,31 @@ AddSprite 3 0 0 0 512 512
 AddSprite 3 0 0 0 512 512
 AddSprite 3 0 0 0 512 512
 
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.5 #4: snowflake
+AddSprite 4 31 0 0 64 64
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.375 #5: snowflake
+AddSprite 5 31 0 0 64 64
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.25 #6: snowflake
+AddSprite 6 31 0 0 64 64
+
+AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #7: snowflake
+AddSprite 7 32 0 0 1366 768
+
 ### Entities
 AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
 
 AddEntity #1: background
-UseTiledVisuals 3 120 120
+#UseTiledVisuals 3 120 120
+UseStaticVisuals 7 0
 UseAbsolutePosition 0 0 1366 768
 ModifyVisuals 0 0 0 -0
 
 AddEntity #2: particle generator
-UseAbsolutePosition 100 100 20 20
-UseCharacterVisuals 1
+UseAbsolutePosition 900 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
 UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
@@ -135,88 +181,27 @@ UseInputControl 0 100 0
 UseTimedHealth 100 0
 
 AddEntity #3: particle generator
-UseAbsolutePosition 200 100 20 20
-UseCharacterVisuals 1
+UseAbsolutePosition 900 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
+UseTimedHealth 100 3
 
-AddEntity #3: particle generator
-UseAbsolutePosition 300 100 20 20
-UseCharacterVisuals 1
+AddEntity #4: particle generator
+UseAbsolutePosition 900 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 400 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 500 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 600 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 700 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 800 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 900 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 1000 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 1100 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 1200 100 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
+UseTimedHealth 100 4
 
 
 AddEntity #2: particle generator
-UseAbsolutePosition 150 150 20 20
-UseCharacterVisuals 1
+UseAbsolutePosition 500 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
 UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
@@ -224,81 +209,47 @@ UseInputControl 0 100 0
 UseTimedHealth 100 0
 
 AddEntity #3: particle generator
-UseAbsolutePosition 250 150 20 20
-UseCharacterVisuals 1
+UseAbsolutePosition 500 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
+UseTimedHealth 100 3
+
+AddEntity #4: particle generator
+UseAbsolutePosition 500 500 20 20
+#UseCharacterVisuals 1
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
+UseTimedHealth 100 4
+
+
+AddEntity #2: particle generator
+UseAbsolutePosition 100 500 20 20
+#UseCharacterVisuals 1
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
 UseTimedHealth 100 0
 
 AddEntity #3: particle generator
-UseAbsolutePosition 350 150 20 20
-UseCharacterVisuals 1
+UseAbsolutePosition 100 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
+UseTimedHealth 100 3
 
-AddEntity #3: particle generator
-UseAbsolutePosition 450 150 20 20
-UseCharacterVisuals 1
+AddEntity #4: particle generator
+UseAbsolutePosition 100 500 20 20
+#UseCharacterVisuals 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 550 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 650 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 750 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 850 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 950 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 1050 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 1150 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-AddEntity #3: particle generator
-UseAbsolutePosition 1250 150 20 20
-UseCharacterVisuals 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
-UseTimedHealth 100 0
-
-
-
+UseFullMovement 0.1 0.01 0.01 0.01 0.6 0
+UseInputControl 0 100 0
+UseTimedHealth 100 4

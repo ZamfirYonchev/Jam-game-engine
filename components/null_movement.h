@@ -29,7 +29,8 @@ public:
     void mod_velocity_x(double val) {}
     void mod_velocity_y(double val) {}
     void set_mass(double val) {}
-    void set_friction(double val) {}
+    void set_friction_x(double val) {}
+    void set_friction_y(double val) {}
     void set_move_force(double val) {}
     void set_jump_force(double val) {}
     double fx() const { return 0; }
@@ -39,7 +40,8 @@ public:
     double dx() const { return 0; }
     double dy() const { return 0; }
     double mass() const { return 1; }
-    double friction() const { return 0; }
+    double friction_x() const { return 0; }
+    double friction_y() const { return 0; }
     double move_force() const { return 0; }
     double jump_force() const { return 0; }
     bool gravity_affected() const { return false; }

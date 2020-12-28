@@ -15,9 +15,10 @@ class FullMovement : public Movement
 {
 public:
 	using Base = Movement;
-    FullMovement(double mass, double friction, double move_force, double jump_force, bool gravity_affected)
+    FullMovement(double mass, double friction_x, double friction_y, double move_force, double jump_force, bool gravity_affected)
     : m_mass(mass)
-    , m_friction(friction)
+    , m_friction_x(friction_x)
+    , m_friction_y(friction_y)
     , m_move_force(move_force)
     , m_jump_force(jump_force)
     , m_vx(0)
@@ -29,14 +30,15 @@ public:
     , m_gravity_affected(gravity_affected)
     {}
 
-    FullMovement(bool gravity_affected) : FullMovement(0, 0, 0, 0, gravity_affected) {}
+    FullMovement(bool gravity_affected) : FullMovement(1, 0, 0, 0, 0, gravity_affected) {}
     FullMovement() : FullMovement(false) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseFullMovement "
     	   << m_mass << " "
-    	   << m_friction << " "
+    	   << m_friction_x << " "
+    	   << m_friction_y << " "
     	   << m_move_force << " "
     	   << m_jump_force << " "
     	   << m_gravity_affected << " ";
@@ -47,8 +49,9 @@ public:
 		const double vx_avg = m_vx + m_fx*time_diff/m_mass/2.0;
 		const double vy_avg = m_vy + m_fy*time_diff/m_mass/2.0;
 
-		m_fx -= vx_avg * m_friction; //account for air friction
-		m_fy -= vy_avg * m_friction; //account for air friction
+		//account for air friction
+		m_fx -= vx_avg * m_friction_x;
+		m_fy -= vy_avg * m_friction_y;
 
 		m_dx = (m_vx + m_fx*time_diff/m_mass/2.0)*time_diff;
 		m_dy = (m_vy + m_fy*time_diff/m_mass/2.0)*time_diff;
@@ -79,7 +82,8 @@ public:
     void mod_velocity_x(double vx) { m_vx = m_vx+vx; }
     void mod_velocity_y(double vy) { m_vy = m_vy+vy; }
     void set_mass(double val) { m_mass = val; }
-    void set_friction(double val) { m_friction = val; }
+    void set_friction_x(double val) { m_friction_x = val; }
+    void set_friction_y(double val) { m_friction_y = val; }
     void set_move_force(double val) { m_move_force = val; }
     void set_jump_force(double val) { m_jump_force = val; }
     void mod_dx(double dx) { m_dx += dx; }
@@ -92,7 +96,8 @@ public:
     double dx() const { return m_dx; }
     double dy() const { return m_dy; }
     double mass() const { return m_mass; }
-    double friction() const { return m_friction; }
+    double friction_x() const { return m_friction_x; }
+    double friction_y() const { return m_friction_y; }
     double move_force() const { return m_move_force; }
     double jump_force() const { return m_jump_force; }
 
@@ -100,7 +105,7 @@ public:
     void set_gravity_affected(bool val) { m_gravity_affected = val; }
 
 private:
-    double m_mass, m_friction, m_move_force, m_jump_force;
+    double m_mass, m_friction_x, m_friction_y, m_move_force, m_jump_force;
     double m_vx, m_vy, m_fx, m_fy, m_dx, m_dy;
     bool m_gravity_affected;
 };
