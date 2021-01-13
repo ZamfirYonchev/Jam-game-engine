@@ -30,11 +30,9 @@ public:
 				const bool was_alive = health.alive();
 
 				health.update_health(time_diff);
-				if(was_alive && health.alive() == false && health.on_death_exec() >= 0)
+				if(was_alive && health.alive() == false && health.on_death_exec() > 0)
 				{
 					procedure_calls.emplace_back(id, health.on_death_exec());
-					//command_system.push(SelectEntityCommand{id});
-					//command_system.push(CallProcedureCommand{health.on_death_exec()});
 				}
 	    	}
 	    	else
