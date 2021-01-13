@@ -16,12 +16,12 @@
 class SoundChunk
 {
 public:
-	SoundChunk(const std::string& file, const int repeat) : m_sound(nullptr), m_repeat(repeat)
+	SoundChunk(std::string_view file, const int repeat) : m_sound(nullptr), m_repeat(repeat)
 	{
 		load_from_wav_file(file);
 	}
 
-	SoundChunk(const std::string& file) : SoundChunk(file, 1) {}
+	SoundChunk(std::string_view file) : SoundChunk(file, 1) {}
 
 	SoundChunk() : m_sound(nullptr), m_repeat(0) {}
 
@@ -48,10 +48,10 @@ public:
     	return *this;
     }
 
-    SoundChunk& load_from_wav_file(const std::string& file)
+    SoundChunk& load_from_wav_file(std::string_view file)
     {
         unload();
-        m_sound = Mix_LoadWAV(file.c_str());
+        m_sound = Mix_LoadWAV(file.data());
 
         if(m_sound == nullptr)
         {
