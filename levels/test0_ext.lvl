@@ -1,0 +1,11 @@
+@proc0
+{
+	DebugMessage 0 "proc0"
+}
+
+@proc1
+{
+	DebugMessage 0 "proc1"
+}
+
+ExecuteFile "levels/test0_ext2.lvl"

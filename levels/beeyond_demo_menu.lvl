@@ -1,19 +1,29 @@
-SetLevel levels/menu.txt
+SetLevel "levels/menu.txt"
+
+### Procedures ###
+
+@proc_new_game {
+	ExecuteFileClean "levels/beeyond0.lvl"
+}
+
+@proc_quit {
+	Quit
+}
 
 ### Fonts ###
 
-AddFont 25 fonts/pcsenior.ttf #0: text font
+AddFont "fonts/pcsenior.ttf" 25 #0: text font
 
 ### Textures ###
 
-AddTextureFromFile beeyond_assets/cover.png #0: background top
-AddTextureFromFile menus_png/Button.png #1
+AddTextureFromFile "beeyond_assets/cover.png" #0: background top
+AddTextureFromFile "menus_png/Button.png" #1
 
 #2
-AddTextureFromString 0 0 0 0 New game
+AddTextureFromString 0 0 0 0 "New game"
 
 #3
-AddTextureFromString 0 0 0 0 Quit
+AddTextureFromString 0 0 0 0 "Quit"
 
 ### Spritesheets ###
 
@@ -40,36 +50,27 @@ UseAbsolutePosition 0 0 1366 768
 AddEntity #1: background
 UseStaticVisuals 0 0
 UseAbsolutePosition 0 0 1366 768
-ModifyVisuals 0 0 0 0 -0
+ModifyVisuals 0 0 0 -0
 
 AddEntity #2: button new game
 UseAbsolutePosition 910 406 181 89
-UseInputSelectControl 0 2 0
+UseInputSelectControl 0 2 *proc_new_game
 UseMenuItemVisuals 1
 
 AddEntity #3: button quit
 UseAbsolutePosition 910 206 181 89
-UseInputSelectControl 1 2 1
+UseInputSelectControl 1 2 *proc_quit
 UseMenuItemVisuals 1
 
 AddEntity #4: new game text
 UseAbsolutePosition 995 451 0 0
 UseStaticVisuals 2 0
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 
 AddEntity #5: quit text
 UseAbsolutePosition 995 251 0 0
 UseStaticVisuals 2 1
-ModifyVisuals 0 0 0 0 -0
-ModifyVisuals 0 0 0 0 4
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
 
-### Procedures ###
-
-AddProcedure 1 #0: new game
-#ExtendProcedure 0 1
-ExecuteFileClean levels/beeyond0.lvl
-
-AddProcedure 1 #1: quit
-#ExtendProcedure 1 1
-Quit

@@ -1,0 +1,59 @@
+Set "var" 10
+@var2 20
+DebugMessage 0 *var
+DebugMessage 0 *var2
+DebugMessage 0 AddEntity
+DebugMessage 0 AddEntity
+DebugMessage 0 *var
+
+@test
+{
+	DebugMessage 0 "inside test proc 1"
+	DebugMessage 0 "inside test proc 2"
+	DebugMessage 0 "inside test proc 3"
+	DebugMessage 0 "inside test proc 4"
+	DebugMessage 0 "inside test proc 5"
+	DebugMessage 0 "inside test proc 6"
+	ExecuteFile "levels/test0_ext2.lvl"
+}	
+
+@test2 {
+	DebugMessage 0 "inside test2 proc"
+}
+
+#ClearProcedure *test2
+
+CallProcedure *test
+CallProcedure *test2
+
+
+CallProcedure *proc0
+ExecuteFile "levels/test0_ext.lvl"
+CallProcedure *proc1
+
+@proc_trigger {
+	DebugMessage 0 "HERE!"
+}
+
+AddEntity
+UseAbsolutePosition 0 0 1 1
+UseBasicCollision 0 0
+UseNormalInteraction 1 #member of group 0
+
+AddEntity
+UseAbsolutePosition 0 0 1 1
+UseBasicCollision 0 0
+UseTriggerInteraction 0 *proc_trigger 0 0 #trigger on group 0
+
+@add_entity {
+	@entity AddEntity
+	SelectEntity *entity
+	DebugMessage 0 "Selecting entity"
+	DebugMessage 0 *entity
+}
+
+CallProcedure *add_entity
+CallProcedure *add_entity
+CallProcedure *add_entity
+
+Quit

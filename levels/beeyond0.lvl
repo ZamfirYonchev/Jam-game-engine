@@ -1,122 +1,121 @@
-SetLevel levels/level2.txt
+SetLevel "levels/level2.txt"
+
+@severity_debug 0
+
+
+
+@group_bee 1
+@group_flower 2
+@group_spider 3
+@group_frog 4
+@group_bottom 10
+@group_counter_collected 20
+
+@procedure_null 0
 
 ### Procedures
-AddProcedure 0 #0: move screen left
-ExtendProcedure 0 2
-SelectEntity 0
-ModifyControl 0 0 -1 0
+@procedure_move_screen_left
+{
+	SelectEntity *entity_screen
+	ModifyControl 0 0 -1 0
+}
 
-#ModifyPosition -5 0 0 0
-#SelectEntity 1
-#ModifyPosition -4.8 0 0 0
+@procedure_move_screen_right
+{
+	SelectEntity *entity_screen
+	ModifyControl 0 0 1 0
+}
 
-AddProcedure 0 #1: move screen right
-ExtendProcedure 1 2
-SelectEntity 0
-ModifyControl 0 0 1 0
+@procedure_stop_moving_screen
+{
+	SelectEntity *entity_screen
+	ModifyControl -0 0 -0 0
+}
 
-#ModifyPosition 5 0 0 0
-#SelectEntity 1
-#ModifyPosition 4.8 0 0 0
+@procedure_translate_up
+{
+	ModifyPosition 0 10 0 0
+}
 
-AddProcedure 0 #2: stop moving screen
-ExtendProcedure 2 2
-SelectEntity 0
-ModifyControl -0 0 -0 0
+@procedure_translate_down
+{
+	ModifyPosition 0 -10 0 0
+}
 
-#ModifyPosition 0 10 0 0
+@procedure_translate_right
+{
+	ModifyPosition 10 0 0 0
+}
 
-AddProcedure 0 #3: translate down
-ExtendProcedure 3 1
-ModifyPosition 0 -10 0 0
+@procedure_translate_left
+{
+	ModifyPosition -10 0 0 0
+}
 
-AddProcedure 0 #4: translate right
-ExtendProcedure 4 1
-ModifyPosition 10 0 0 0
-
-AddProcedure 0 #5: translate left
-ExtendProcedure 5 1
-ModifyPosition -10 0 0 0
-
-AddProcedure 0 #6: unused
-
-AddProcedure 0 #7: unused
-
-AddProcedure 0 #8: unused
-
-AddProcedure 0 #9: unused
-
-AddProcedure 1 #10: remove entity
-	RemoveEntity
-	
-AddProcedure 0 #11: unused
-
-AddProcedure 0 #12: unused
-
-AddProcedure 0 #13: unused
-
-AddProcedure 0 #14: stop movement
-ExtendProcedure 14 1
-	ModifyMovement 0 0 0 -0 -0 0 0 0
-
-AddProcedure 0 #15: move down
-ExtendProcedure 15 1
-	ModifyMovement 0 0 0 0 0 0 -0.009 0
-
-AddProcedure 0 #16: move up
-ExtendProcedure 16 1
-ModifyMovement 0 0 0 0 0 0 0.009 0
-
-AddProcedure 0 #17: unused
-
-AddProcedure 0 #18: unused
-
-AddProcedure 0 #19: unused
-	
-AddProcedure 3 #20: fly up
-	UseTimedHealth 300 21
-	SelectEntity 2
+@procedure_fly_up
+{
+	UseTimedHealth 300 *procedure_fly_down
+	SelectEntity *entity_bee
 	ModifyMovement 0 0 0 0 0 0 0.02 0
+}
 
-AddProcedure 3 #21: fly down
-	UseTimedHealth 300 20
-	SelectEntity 2
+@procedure_fly_down
+{
+	UseTimedHealth 300 *procedure_fly_up
+	SelectEntity *entity_bee
 	ModifyMovement 0 0 0 0 0 0 -0.02 0
+}
 
-AddProcedure 4 #22: bee touched ground
+@procedure_bee_touched_ground
+{
 	ModifyMovement 0 0 0 0 0 0 0 -0
 	ModifyMovement 0 0 0 0 0 0 0 1
-	SelectEntity 3
+	SelectEntity *entity_bee_movement_timer
 	UseNullHealth
+}
 
-AddProcedure 5 #23: bee lifted off
+@procedure_bee_lifted_off
+{
 	ModifyMovement 0 0 0 0 0 0 0 -0
 	ModifyCollision 0 -0 0 0
 	ModifyCollision 0 1 0 0
-	SelectEntity 3
-	UseTimedHealth 300 20
+	SelectEntity *entity_bee_movement_timer
+	UseTimedHealth 300 *procedure_fly_up
+}
 
-AddProcedure 1 #24: dead-to-halfdead timer
-	UseTimedHealth 300 25
+@procedure_dead_to_halfdead_timer
+{
+	UseTimedHealth 300 *procedure_halfdead_to_dying_timer
+}
 
-AddProcedure 2 #25: halfdead-to-dying timer
-	UseTimedHealth 300 26
+@procedure_halfdead_to_dying_timer
+{
+	UseTimedHealth 300 *procedure_dying_to_fresh_timer
 	UseStaticVisuals 5 2
+}
 
-AddProcedure 2 #26: dying-to-fresh timer
-	UseTimedHealth 300 27
+@procedure_dying_to_fresh_timer
+{
+	UseTimedHealth 300 *procedure_fresh_flower
 	UseStaticVisuals 5 1
+}
 
-AddProcedure 3 #27: fresh flower
+@procedure_fresh_flower
+{
 	UseStaticVisuals 5 0
-	UseNormalInteraction 4
-	CallProcedure 42
+	UseNormalInteraction 0
+	ModifyInteraction *group_flower 1 0 0 0 0
+	CallProcedure *procedure_incremenet_goal_count
+}
 
-AddProcedure 2 #28: fresh-to-dead flower
+@procedure_fresh_to_dead_flower
+{
 	UseStaticVisuals 5 3
 	UseNullHealth
-	
-AddProcedure 11 #29: reset bee at hive
+}
+
+@procedure_spawn_bee_at_hive
+{
 	UseAbsolutePosition 140 335 60 37
 	UseCharacterVisuals 1
 	ModifyVisuals 0 0 0 -0
@@ -124,215 +123,246 @@ AddProcedure 11 #29: reset bee at hive
 	UseFullMovement 1 0.01 0.01 0.006 0.6 0
 	UseBasicCollision 1 0.5
 	UseInputControl -1 300 0
-	UseFullInteraction 0 2 22 -1 23
-	ModifyInteraction 1 1 0 0 0 0
-	UseTimedHealth 10000 36
+	UseFullInteraction 0 *group_flower *procedure_bee_touched_ground *procedure_null *procedure_bee_lifted_off
+	ModifyInteraction *group_bee 1 0 0 0 0
+	UseTimedHealth 10000 *procedure_bee_dead
 	UseCharacterSounds -1 -1 0 -1 -1 -1 -1 -1 -1
+}
 
-AddProcedure 2 #30: move down
+@procedure_move_down
+{
 	ModifyControl -0 0 0 0
 	ModifyControl -1 0 0 0
+}
 
-AddProcedure 2 #31: move up
+@procedure_move_up
+{
 	ModifyControl -0 0 0 0
 	ModifyControl 1 0 0 0
-	
-AddProcedure 2 #32: move right
+}
+
+@procedure_move_right
+{
 	ModifyControl 0 0 -0 -0
 	ModifyControl 0 0 1 1
+}
 
-AddProcedure 2 #33: move left
+@procedure_move_left
+{
 	ModifyControl 0 0 -0 -0
 	ModifyControl 0 0 -1 0
+}
 	
-AddProcedure 2 #34: frog0 start attack
+@procedure_frog0_start_attack
+{
 	SelectEntity 26
 	UseConstantControl -1 1 0
+}
 	
-AddProcedure 2 #35: frog0 stop attack
+@procedure_frog0_stop_attack
+{
 	SelectEntity 26
 	UseNullControl
-	
-AddProcedure 5 #36: bee dead
+}
+
+@procedure_bee_dead
+{
 	ModifyMovement 0 0 0 0 0 0 0 1
 	UseNullControl
 	UseNullHealth
 	UseBasicCollision 0 1
-	UseTriggerInteraction 10 29 -1 -1
+	UseTriggerInteraction *group_bottom *procedure_spawn_bee_at_hive *procedure_null *procedure_null
+}
 
-AddProcedure 1 #37: 1 flower collected event
-	DebugMessage 0 one flower collected
+@procedure_flowers_collected_event_1
+{
+	DebugMessage *severity_debug "one flower collected"
+}
 
-AddProcedure 1 #38: 2 flowers collected event
-	DebugMessage 0 two flowers collected
+@procedure_flowers_collected_event_2
+{
+	DebugMessage 0 "two flowers collected"
+}
 
-AddProcedure 1 #39: 3 flowers collected event
-	DebugMessage 0 three flowers collected
+@procedure_flowers_collected_event_3
+{
+	DebugMessage 0 "three flowers collected"
+}
 	
-AddProcedure 1 #40: 4 flowers collected event
-	DebugMessage 0 four flowers collected
+@procedure_flowers_collected_event_4
+{
+	DebugMessage 0 "four flowers collected"
+}
 
-AddProcedure 2 #41: 5 flowers collected event
-	DebugMessage 0 five flowers collected
-	ExecuteFileClean levels/beeyond_demo_end.lvl
+@procedure_flowers_collected_event_5
+{
+	DebugMessage 0 "five flowers collected"
+	ExecuteFileClean "levels/beeyond_demo_end.lvl"
+}
 
-AddProcedure 4 #42: increment goal count
+@procedure_incremenet_goal_count
+{
 	SelectEntity 38
 	ModifyPosition 1 0 0 0
 	SelectEntity 37
 	ModifyHealth 0 1 0
+}
 	
-AddProcedure 2 #43: spawn healing site
+@procedure_spawn_healing_site
+{
 	AddEntity
 	UseDamageCollision 0 -2
+}
 	
-AddProcedure 3 #44: make frog moveable
+@procedure_make_frog_moveable
+{
 	ModifyCollision -0 0 0 0 
 	ModifyCollision 1 0 0 0 
-	DebugMessage 0 here1
+}
 
-AddProcedure 2 #45: make frog transparent
+@procedure_make_frog_transparent
+{
 	ModifyCollision -0 0 0 0 
-	DebugMessage 0 here2
+}
 
 ### Textures
-AddTextureFromFile beeyond_assets/background-3.png #0: background
+@tex_background AddTextureFromFile "beeyond_assets/background-3.png" #0: background
 
-AddTextureFromFile beeyond_assets/bee-1.png #1: bee flying
-AddTextureFromFile beeyond_assets/bee-2.png #2: bee flying
-AddTextureFromFile beeyond_assets/bee-3.png #3: bee flying
-AddTextureFromFile beeyond_assets/bee-4.png #4: bee flying
+@tex_bee_flying_1 AddTextureFromFile "beeyond_assets/bee-1.png" #1: bee flying
+@tex_bee_flying_2 AddTextureFromFile "beeyond_assets/bee-2.png" #2: bee flying
+@tex_bee_flying_3 AddTextureFromFile "beeyond_assets/bee-3.png" #3: bee flying
+@tex_bee_flying_4 AddTextureFromFile "beeyond_assets/bee-4.png" #4: bee flying
 
-AddTextureFromFile beeyond_assets/grass-1.png #5: grass fresh
-AddTextureFromFile beeyond_assets/grass-2.png #6: grass bad
-AddTextureFromFile beeyond_assets/grass-3.png #7: grass worse
+@tex_grass_1 AddTextureFromFile "beeyond_assets/grass-1.png" #5: grass fresh
+@tex_grass_2 AddTextureFromFile "beeyond_assets/grass-2.png" #6: grass bad
+@tex_grass_3 AddTextureFromFile "beeyond_assets/grass-3.png" #7: grass worse
 
-AddTextureFromFile beeyond_assets/flower-1.png #8: flower fresh
-AddTextureFromFile beeyond_assets/flower-2.png #9: flower dying
-AddTextureFromFile beeyond_assets/flower-3.png #10: flower rotting
-AddTextureFromFile beeyond_assets/flower-4.png #11: flower dead
+@tex_flower_1 AddTextureFromFile "beeyond_assets/flower-1.png" #8: flower fresh
+@tex_flower_2 AddTextureFromFile "beeyond_assets/flower-2.png" #9: flower dying
+@tex_flower_3 AddTextureFromFile "beeyond_assets/flower-3.png" #10: flower rotting
+@tex_flower_4 AddTextureFromFile "beeyond_assets/flower-4.png" #11: flower dead
 
-AddTextureFromFile beeyond_assets/bee-5.png #12: bee idle
+@tex_bee_idle AddTextureFromFile "beeyond_assets/bee-5.png" #12: bee idle
 
-AddTextureFromFile beeyond_assets/hive.png #13: bee hive
+@tex_hive AddTextureFromFile "beeyond_assets/hive.png" #13: bee hive
 
-AddTextureFromFile beeyond_assets/spider.png #14: spider
-AddTextureFromFile beeyond_assets/cobweb.png #15: cobweb
+@tex_spider AddTextureFromFile "beeyond_assets/spider.png" #14: spider
+@tex_cobweb AddTextureFromFile "beeyond_assets/cobweb.png" #15: cobweb
 
-AddTextureFromFile beeyond_assets/frog-1.png #16: frog idle
-AddTextureFromFile beeyond_assets/frog-2.png #17: frog jumping
-AddTextureFromFile beeyond_assets/frog-3.png #18: frog eating
+@tex_frog_idle AddTextureFromFile "beeyond_assets/frog-1.png" #16: frog idle
+@tex_frog_jump AddTextureFromFile "beeyond_assets/frog-2.png" #17: frog jumping
+@tex_frog_eat AddTextureFromFile "beeyond_assets/frog-3.png" #18: frog eating
 
-AddTextureFromFile beeyond_assets/tree-1.png #19: tree&half
-AddTextureFromFile beeyond_assets/tree-2.png #20: tall tree
-AddTextureFromFile beeyond_assets/tree-3.png #21: wide tree
+@tex_tree_with_bush AddTextureFromFile "beeyond_assets/tree-1.png" #19: tree&half
+@tex_tree_normal AddTextureFromFile "beeyond_assets/tree-2.png" #20: tall tree
+@tex_tree_wide AddTextureFromFile "beeyond_assets/tree-3.png" #21: wide tree
 
-AddTextureFromFile beeyond_assets/honeycomb-2.png #22
-AddTextureFromFile beeyond_assets/honeycomb-1.png #23
+@tex_honeycomb_empty AddTextureFromFile "beeyond_assets/honeycomb-2.png" #22
+@tex_honeycomb_full AddTextureFromFile "beeyond_assets/honeycomb-1.png" #23
 
-AddTextureFromFile beeyond_assets/flower-icon-2.png #24
-AddTextureFromFile beeyond_assets/flower-icon-1.png #25
+@tex_flower_icon_empty AddTextureFromFile "beeyond_assets/flower-icon-2.png" #24
+@tex_flower_icon_full AddTextureFromFile "beeyond_assets/flower-icon-1.png" #25
 
-AddTextureFromFile beeyond_assets/bee-6.png #26: bee dead
+@tex_bee_dead AddTextureFromFile "beeyond_assets/bee-6.png" #26: bee dead
 
 ### Spritesheets
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #0: background
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
-AddSprite 0 0 0 0 1234 768
+@spr_background AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #0: background
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
+AddSprite *spr_background 0 0 0 1234 768
 
-AddSpritesheet 6 1 0 6 0 6 0 6 0 6 0 6 7 1 1 #1: bee
-AddSprite 1 1 0 0 99 71
-AddSprite 1 2 0 0 99 71
-AddSprite 1 3 0 0 99 71
-AddSprite 1 4 0 0 99 71
-AddSprite 1 3 0 0 99 71
-AddSprite 1 2 0 0 99 71
-AddSprite 1 12 0 0 99 71
-AddSprite 1 26 0 0 99 71
+@spr_bee AddSpritesheet 6 1 0 6 0 6 0 6 0 6 0 6 7 1 1 #1: bee
+AddSprite *spr_bee *tex_bee_flying_1 0 0 99 71
+AddSprite *spr_bee *tex_bee_flying_2 0 0 99 71
+AddSprite *spr_bee *tex_bee_flying_3 0 0 99 71
+AddSprite *spr_bee *tex_bee_flying_4 0 0 99 71
+AddSprite *spr_bee *tex_bee_flying_3 0 0 99 71
+AddSprite *spr_bee *tex_bee_flying_2 0 0 99 71
+AddSprite *spr_bee *tex_bee_idle 0 0 99 71
+AddSprite *spr_bee *tex_bee_dead 0 0 99 71
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #2: grass fresh
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
-AddSprite 2 5 0 0 200 200
+@spr_grass_fresh AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #2: grass fresh
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #3: grass half-dead
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
-AddSprite 3 6 0 0 200 200
+@spr_grass_halfdead AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #3: grass half-dead
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #4: grass dead
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
-AddSprite 4 7 0 0 200 200
+@spr_grass_dead AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #4: grass dead
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #5: flower
-AddSprite 5 8 0 0 115 301
-AddSprite 5 9 0 0 115 301
-AddSprite 5 10 0 0 115 301
-AddSprite 5 11 0 0 115 301
+@spr_flower AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #5: flower
+AddSprite *spr_flower *tex_flower_1 0 0 115 301
+AddSprite *spr_flower *tex_flower_2 0 0 115 301
+AddSprite *spr_flower *tex_flower_3 0 0 115 301
+AddSprite *spr_flower *tex_flower_4 0 0 115 301
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #6: hive
-AddSprite 6 13 0 0 289 243
+@spr_hive AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #6: hive
+AddSprite *spr_hive *tex_hive 0 0 289 243
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #7: spider
-AddSprite 7 14 0 0 99 71
-AddSprite 7 15 0 0 370 339
+@spr_spider AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #7: spider
+AddSprite *spr_spider *tex_spider 0 0 99 71
+AddSprite *spr_spider *tex_cobweb 0 0 370 339
 
-AddSpritesheet 0 3 0 3 0 9 0 1 0 1 0 1 0 1 1 #8: frog
-AddSprite 8 16 0 0 141 149
-AddSprite 8 16 0 0 141 149
-AddSprite 8 16 0 0 141 149
-AddSprite 8 17 0 0 141 149
-AddSprite 8 17 0 0 141 149
-AddSprite 8 17 0 0 141 149
-AddSprite 8 18 0 0 141 149
-AddSprite 8 18 0 0 141 149
-AddSprite 8 18 0 0 141 149
+@spr_frog AddSpritesheet 0 3 0 3 0 9 0 1 0 1 0 1 0 1 1 #8: frog
+AddSprite *spr_frog *tex_frog_idle 0 0 141 149
+AddSprite *spr_frog *tex_frog_idle 0 0 141 149
+AddSprite *spr_frog *tex_frog_idle 0 0 141 149
+AddSprite *spr_frog *tex_frog_jump 0 0 141 149
+AddSprite *spr_frog *tex_frog_jump 0 0 141 149
+AddSprite *spr_frog *tex_frog_jump 0 0 141 149
+AddSprite *spr_frog *tex_frog_eat 0 0 141 149
+AddSprite *spr_frog *tex_frog_eat 0 0 141 149
+AddSprite *spr_frog *tex_frog_eat 0 0 141 149
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.8 #9: wide tree
-AddSprite 9 19 0 0 740 880
-AddSprite 9 20 0 0 740 880
-AddSprite 9 21 0 0 740 880
+@spr_tree AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.8 #9: tree
+AddSprite *spr_tree *tex_tree_with_bush 0 0 740 880
+AddSprite *spr_tree *tex_tree_normal 0 0 740 880
+AddSprite *spr_tree *tex_tree_wide 0 0 740 880
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #10 health visuals
-AddSprite 10 22 0 0 28 32
-AddSprite 10 23 0 0 28 32
+@spr_health AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #10 health visuals
+AddSprite *spr_health *tex_honeycomb_empty 0 0 28 32
+AddSprite *spr_health *tex_honeycomb_full 0 0 28 32
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #11 flower icon visuals
-AddSprite 11 24 0 0 30 30
-AddSprite 11 25 0 0 30 30
+@spr_flower_icon AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #11 flower icon visuals
+AddSprite *spr_flower_icon *tex_flower_icon_empty 0 0 30 30
+AddSprite *spr_flower_icon *tex_flower_icon_full 0 0 30 30
 
-AddSound assets/sounds/Bee-noise.wav -1 #0
+@sound_bee_buzz AddSound "assets/sounds/Bee-noise.wav" -1 #0
 
-AddMusic Birds_and_Wind-Ambient.ogg
+@music_background AddMusic "Birds_and_Wind-Ambient.ogg"
 
 ### Entities
-AddEntity #0: screen
+@entity_screen AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
 UseInstantMovement 1 0.01 0.01 0.05
 UseConstantControl 0 0 0
@@ -341,129 +371,128 @@ FixViewWidth
 
 PlayMusic 0 -1
 
-AddEntity #1: background
+@entity_background AddEntity #1: background
 UseAbsolutePosition -300 0 4098 768
-UseTiledVisuals 0 1366 768
+UseTiledVisuals *spr_background 1366 768
 ModifyVisuals 0 0 0 -0
 
-AddEntity #2: bee
-CallProcedure 29 #spawn bee
+@entity_bee AddEntity #2: bee
+CallProcedure *procedure_spawn_bee_at_hive #spawn bee
 
-AddEntity #3: bee movement timer
-CallProcedure 20
+@entity_bee_movement_timer AddEntity #3: bee movement timer
 
-AddEntity #4: bottom limit zone
+@entity_bottom_limit_zone AddEntity #4: bottom limit zone
 UseBasicCollision 0 1
-UseTriggerInteraction 1 -1 2 -1
-UseAttachedPosition 0 -10 -10 20 -758
+UseTriggerInteraction *group_bee *procedure_null *procedure_translate_up *procedure_null
+UseAttachedPosition *entity_screen -10 -10 20 -758
 
-AddEntity #5: top limit zone
+@entity_top_limit_zone AddEntity #5: top limit zone
 UseBasicCollision 0 1
-UseTriggerInteraction 1 -1 3 -1
-UseAttachedPosition 0 -10 768 20 -758
+UseTriggerInteraction *group_bee *procedure_null *procedure_translate_down *procedure_null
+UseAttachedPosition *entity_screen -10 768 20 -758
 
-AddEntity #6: left limit zone
+@entity_left_limit_zone AddEntity #6: left limit zone
 UseBasicCollision 0 1
-UseTriggerInteraction 1 -1 4 -1
-UseAttachedPosition 0 -10 -10 -1356 20
+UseTriggerInteraction *group_bee *procedure_null *procedure_translate_right *procedure_null
+UseAttachedPosition *entity_screen -10 -10 -1356 20
 
-AddEntity #7: right limit zone
+@entity_right_limit_zone AddEntity #7: right limit zone
 UseBasicCollision 0 1
-UseTriggerInteraction 1 -1 5 -1
-UseAttachedPosition 0 1366 -10 -1356 20
+UseTriggerInteraction *group_bee *procedure_null *procedure_translate_left *procedure_null
+UseAttachedPosition *entity_screen 1366 -10 -1356 20
 
-AddEntity #8: grass
+@entity_grass_0 AddEntity #8: grass
 UseAbsolutePosition 0 0 3000 200
 UseBasicCollision 0 1
 UseTiledVisuals 2 200 200
 
-AddEntity #9: grass
+@entity_grass_1 AddEntity #9: grass
 UseAbsolutePosition -100 0 3000 200
 UseBasicCollision 0 1
 UseTiledVisuals 2 200 200
 
-AddEntity #10: grass
+@entity_grass_2 AddEntity #10: grass
 UseAbsolutePosition 0 -30 3000 200
 UseBasicCollision 0 1
 UseTiledVisuals 2 200 200
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
 
-AddEntity #11: grass
+@entity_grass_3 AddEntity #11: grass
 UseAbsolutePosition -100 -30 3000 200
 UseBasicCollision 0 1
 UseTiledVisuals 2 200 200
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 4
 
-AddEntity #12: flower
+@entity_flower_0 AddEntity #12: flower
 UseAbsolutePosition 300 200 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
-UseFullInteraction 0 1 24 -1 28
-ModifyInteraction 2 1 0 0 0 0
+UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
+ModifyInteraction *group_flower 1 0 0 0 0
 
-AddEntity #13: flower landing site trigger
-UseAttachedPosition 12 0 -1 0 0
+@entity_flower_0_land_site AddEntity #13: flower landing site trigger
+UseAttachedPosition *entity_flower_0 0 -1 0 0
 UseBasicCollision 2 1
 
-AddEntity #14: hive
+@entity_hive AddEntity #14: hive
 UseStaticVisuals 6 0
 UseAbsolutePosition 0 300 289 243
 
-AddEntity #15: hive landing zone
+@entity_hive_land_site AddEntity #15: hive landing zone
 UseAbsolutePosition 140 330 30 5
 UseBasicCollision 2 1
 
-AddEntity #16: hive landing zone trigger
+@entity_hive_land_site_trigger AddEntity #16: hive landing zone trigger
 UseAbsolutePosition 150 331 10 5
 UseBasicCollision 0 1
 UseNormalInteraction 0
-ModifyInteraction 2 1 0 0 0 0
+ModifyInteraction *group_flower 1 0 0 0 0
 
-AddEntity #17: flower
+@entity_flower_1 AddEntity #17: flower
 UseAbsolutePosition 600 250 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
-UseFullInteraction 0 1 24 -1 28
-ModifyInteraction 2 1 0 0 0 0
+UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
+ModifyInteraction *group_flower 1 0 0 0 0
 
-AddEntity #18: flower landing site trigger
+@entity_flower_1_land_site AddEntity #18: flower landing site trigger
 UseAttachedPosition 17 0 -1 0 0
 UseBasicCollision 2 1
 
-AddEntity #19: cobweb
+@entity_cobweb_0 AddEntity #19: cobweb
 UseAbsolutePosition 600 200 370 339
 UseBasicCollision 0 1
 UseStaticVisuals 7 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
 
-AddEntity #20: cobweb top
+@entity_cobweb_0_top AddEntity #20: cobweb top
 UseAbsolutePosition 600 509 370 1
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 30 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_down *procedure_null
 
-AddEntity #21: cobweb bottom
+@entity_cobweb_0_bottom AddEntity #21: cobweb bottom
 UseAbsolutePosition 600 230 370 1
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 31 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_up *procedure_null
 
-AddEntity #22: cobweb left
+@entity_cobweb_0_left AddEntity #22: cobweb left
 UseAbsolutePosition 620 200 1 339
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 32 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_right *procedure_null
 
-AddEntity #23: cobweb right
+@entity_cobweb_0_right AddEntity #23: cobweb right
 UseAbsolutePosition 950 200 1 339
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 33 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_left *procedure_null
 
-AddEntity #24: spider
+@entity_spider_0 AddEntity #24: spider
 UseAbsolutePosition 736 334 59 51
 UseDamageCollision 0 10
 UseStaticVisuals 7 0
@@ -472,175 +501,176 @@ ModifyVisuals 0 0 0 2
 UseInstantMovement 1 0.01 0.01 0.02
 UseConstantControl 1 1 0
 UseNormalInteraction 0
-ModifyInteraction 3 1 0 0 0 0
+ModifyInteraction *group_spider 1 0 0 0 0
 
-AddEntity #25: level bottom
-UseAbsolutePosition 0 -20 3000 20
+@entity_level_bottom AddEntity #25: level bottom
+UseAbsolutePosition 0 -200 3000 200
 UseBasicCollision 2 1
-UseNormalInteraction 1024
+UseNormalInteraction 0
+ModifyInteraction *group_bottom 1 0 0 0 0
 
-AddEntity #26: frog
+@entity_frog_0 AddEntity #26: frog
 UseAbsolutePosition 1002 0 91 59
 UseBasicCollision 1 0.5
 UseCharacterVisuals 8
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 3
 UseFullMovement 2 0.01 0.01 0.003 3 1
-UseFullInteraction 0 11 44 -1 45
-ModifyInteraction 4 1 0 0 0 0
+UseFullInteraction 0 *group_bottom *procedure_make_frog_moveable *procedure_null *procedure_make_frog_transparent
+ModifyInteraction *group_frog 1 0 0 0 0
 
-AddEntity #27: frog damage zone
-UseAttachedPosition 26 0 0 0 0
+@entity_frog_0_zone AddEntity #27: frog damage zone
+UseAttachedPosition *entity_frog_0 0 0 0 0
 UseDamageCollision 0 10
 
-AddEntity #28: frog left
+@entity_frog_0_bumper_left AddEntity #28: frog left
 UseAbsolutePosition 1000 0 1 1490
 UseBasicCollision 0 1
-UseTriggerInteraction 4 -1 32 -1
+UseTriggerInteraction *group_frog *procedure_null *procedure_move_right *procedure_null
 
-AddEntity #29: frog right
+@entity_frog_0_bumper_right AddEntity #29: frog right
 UseAbsolutePosition 1341 0 1 1490
 UseBasicCollision 0 1
-UseTriggerInteraction 4 -1 33 -1
+UseTriggerInteraction *group_frog *procedure_null *procedure_move_left *procedure_null
 
-AddEntity #30: frog jump trigger
+@entity_frog_0_jump_trigger AddEntity #30: frog jump trigger
 UseAbsolutePosition 1000 100 341 100
 UseBasicCollision 0 1
-UseTriggerInteraction 1 34 -1 35
+UseTriggerInteraction *group_bee *procedure_frog0_start_attack *procedure_null *procedure_frog0_stop_attack
 
-AddEntity #31: tree
+@entity_tree_0 AddEntity #31: tree
 UseAbsolutePosition 600 80 540 680
 UseStaticVisuals 9 2
 
-AddEntity #32: trigger zone move screen left 
-UseAttachedPosition 0 0 0 -0.9 0
+@entity_screen_move_left_trigger AddEntity #32: trigger zone move screen left 
+UseAttachedPosition *entity_screen 0 0 -0.9 0
 UseBasicCollision 0 1
-UseTriggerInteraction 1 0 -1 2
+UseTriggerInteraction *group_bee *procedure_move_screen_left *procedure_null *procedure_stop_moving_screen
 
-AddEntity #33: trigger zone move screen right 
+@entity_screen_move_right_trigger AddEntity #33: trigger zone move screen right 
 UseAttachedPosition 0 0.9 0 -0.9 0
 UseBasicCollision 0 1
-UseTriggerInteraction 1 1 -1 2
+UseTriggerInteraction *group_bee *procedure_move_screen_right *procedure_null *procedure_stop_moving_screen
 
-AddEntity #34: bee health
+@entity_bee_health AddEntity #34: bee health
 	UseAttachedPosition 0 20 668 -440 -668
 	UseAttachedHealth 2 0 0
  	UseHealthVisuals 10 10
 	ModifyVisuals 0 0 0 -0
 	ModifyVisuals 0 0 0 4
  	
-CallProcedure 43 #entity 35: healing site
+@entity_hive_healing_site CallProcedure *procedure_spawn_healing_site #entity 35: healing site
 	UseAttachedPosition 16 0 5 0 0
 	
 AddEntity #36: unused
 	
-AddEntity #37: flowers collected tooltip
+@entity_flowers_collected AddEntity #37: flowers collected tooltip
 	UseAttachedPosition 0 -25 568 -440 -568
 	UseCharacterHealth 0 5
  	UseHealthVisuals 11 5
 	ModifyVisuals 0 0 0 -0
 	ModifyVisuals 0 0 0 4
 
-AddEntity #38: flowers collected counter
+@entity_flowers_collected_counter AddEntity #38: flowers collected counter
 	UseAbsolutePosition 0 0 1 1
 	UseBasicCollision 0 1
 	UseNormalInteraction 0
-	ModifyInteraction 20 1 0 0 0 0
+	ModifyInteraction *group_counter_collected 1 0 0 0 0
 
-AddEntity #39: 1 flower collected zone
+@entity_flowers_collected_zone_0 AddEntity #39: 1 flower collected zone
 	UseAbsolutePosition 1 0 1 1
 	UseBasicCollision 0 1
-	UseTriggerInteraction 20 37 -1 -1
+	UseTriggerInteraction *group_counter_collected *procedure_flowers_collected_event_1 *procedure_null *procedure_null
 	
-AddEntity #40: 2 flowers collected zone
+@entity_flowers_collected_zone_1 AddEntity #40: 2 flowers collected zone
 	UseAbsolutePosition 2 0 1 1
 	UseBasicCollision 0 1
-	UseTriggerInteraction 20 38 -1 -1
+	UseTriggerInteraction *group_counter_collected *procedure_flowers_collected_event_2 *procedure_null *procedure_null
 
-AddEntity #41: 3 flowers collected zone
+@entity_flowers_collected_zone_2 AddEntity #41: 3 flowers collected zone
 	UseAbsolutePosition 3 0 1 1
 	UseBasicCollision 0 1
-	UseTriggerInteraction 20 39 -1 -1
+	UseTriggerInteraction *group_counter_collected *procedure_flowers_collected_event_3 *procedure_null *procedure_null
 
-AddEntity #42: 4 flowers collected zone
+@entity_flowers_collected_zone_3 AddEntity #42: 4 flowers collected zone
 	UseAbsolutePosition 4 0 1 1
 	UseBasicCollision 0 1
-	UseTriggerInteraction 20 40 -1 -1
+	UseTriggerInteraction *group_counter_collected *procedure_flowers_collected_event_4 *procedure_null *procedure_null
 
-AddEntity #43: 5 flowers collected zone
+@entity_flowers_collected_zone_4 AddEntity #43: 5 flowers collected zone
 	UseAbsolutePosition 5 0 1 1
 	UseBasicCollision 0 1
-	UseTriggerInteraction 20 41 -1 -1
+	UseTriggerInteraction *group_counter_collected *procedure_flowers_collected_event_5 *procedure_null *procedure_null
 
-CallProcedure 43 #entity 44: healing site
+@entity_flower_0_healing_site CallProcedure *procedure_spawn_healing_site #entity 44: healing site
 	UseAttachedPosition 13 0 30 0 0
 
-CallProcedure 43 #entity 45: healing site
+@entity_flower_1_healing_site CallProcedure *procedure_spawn_healing_site #entity 45: healing site
 	UseAttachedPosition 18 0 30 0 0
 
-AddEntity #46: grass
+@entity_grass_4 AddEntity #46: grass
 UseAbsolutePosition 1000 30 400 200
 UseBasicCollision 0 1
 UseTiledVisuals 3 200 200
 
-AddEntity #47: flower
+@entity_flower_2 AddEntity #47: flower
 UseAbsolutePosition 1380 150 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
-UseFullInteraction 0 1 24 -1 28
-ModifyInteraction 2 1 0 0 0 0
+UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
+ModifyInteraction *group_flower 1 0 0 0 0
 
-AddEntity #48: flower landing site trigger
+@entity_flower_2_land_site AddEntity #48: flower landing site trigger
 UseAttachedPosition 47 0 -1 0 0
 UseBasicCollision 2 1
 
-CallProcedure 43 #entity 49: healing site
+@entity_flower_2_healing_site CallProcedure *procedure_spawn_healing_site #entity 49: healing site
 	UseAttachedPosition 48 0 30 0 0
 
-AddEntity #50: tree
+@entity_tree_1 AddEntity #50: tree
 UseAbsolutePosition 1350 80 540 680
 UseStaticVisuals 9 0
 
-AddEntity #51: grass
+@entity_grass_5 AddEntity #51: grass
 UseAbsolutePosition 0 30 600 200
 UseBasicCollision 0 1
 UseTiledVisuals 3 200 200
 	
-AddEntity #52: grass
+@entity_grass_6 AddEntity #52: grass
 UseAbsolutePosition 0 1400 600 200
 UseBasicCollision 0 1
 UseTiledVisuals 3 200 200
 
-AddEntity #53: cobweb
+@entity_cobweb_1 AddEntity #53: cobweb
 UseAbsolutePosition 1400 350 370 339
 UseBasicCollision 0 1
 UseStaticVisuals 7 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
 
-AddEntity #54: cobweb top
+@entity_cobweb_1_top AddEntity #54: cobweb top
 UseAbsolutePosition 1400 659 370 1
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 30 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_down *procedure_null
 
-AddEntity #55: cobweb bottom
+@entity_cobweb_1_bottom AddEntity #55: cobweb bottom
 UseAbsolutePosition 1400 380 370 1
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 31 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_up *procedure_null
 
-AddEntity #56: cobweb left
+@entity_cobweb_1_left AddEntity #56: cobweb left
 UseAbsolutePosition 1420 350 1 339
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 32 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_right *procedure_null
 
-AddEntity #57: cobweb right
+@entity_cobweb_1_right AddEntity #57: cobweb right
 UseAbsolutePosition 1750 350 1 339
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 33 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_left *procedure_null
 
-AddEntity #58: spider
+@entity_spider_1 AddEntity #58: spider
 UseAbsolutePosition 1436 450 59 51
 UseDamageCollision 0 10
 UseStaticVisuals 7 0
@@ -649,36 +679,36 @@ ModifyVisuals 0 0 0 2
 UseInstantMovement 1 0.01 0.01 0.02
 UseConstantControl 1 1 0
 UseNormalInteraction 0
-ModifyInteraction 3 1 0 0 0 0
+ModifyInteraction *group_spider 1 0 0 0 0
 
-AddEntity #59: cobweb
+@entity_cobweb_2 AddEntity #59: cobweb
 UseAbsolutePosition 1400 50 370 339
 UseBasicCollision 0 1
 UseStaticVisuals 7 1
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
 
-AddEntity #60: cobweb top
+@entity_cobweb_2_top AddEntity #60: cobweb top
 UseAbsolutePosition 1400 359 370 1
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 30 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_down *procedure_null
 
-AddEntity #61: cobweb bottom
+@entity_cobweb_2_bottom AddEntity #61: cobweb bottom
 UseAbsolutePosition 1400 80 370 1
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 31 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_up *procedure_null
 
-AddEntity #62: cobweb left
+@entity_cobweb_2_left AddEntity #62: cobweb left
 UseAbsolutePosition 1420 50 1 339
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 32 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_right *procedure_null
 
-AddEntity #63: cobweb right
+@entity_cobweb_2_right AddEntity #63: cobweb right
 UseAbsolutePosition 1750 50 1 339
 UseBasicCollision 0 1
-UseTriggerInteraction 3 -1 33 -1
+UseTriggerInteraction *group_spider *procedure_null *procedure_move_left *procedure_null
 
-AddEntity #64: spider
+@entity_spider_2 AddEntity #64: spider
 UseAbsolutePosition 1456 250 59 51
 UseDamageCollision 0 10
 UseStaticVisuals 7 0
@@ -687,39 +717,39 @@ ModifyVisuals 0 0 0 2
 UseInstantMovement 1 0.01 0.01 0.014
 UseConstantControl 1 1 0
 UseNormalInteraction 0
-ModifyInteraction 3 1 0 0 0 0
+ModifyInteraction *group_spider 1 0 0 0 0
 
-AddEntity #65: flower
+@entity_flower_3 AddEntity #65: flower
 UseAbsolutePosition 1780 250 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
-UseFullInteraction 0 1 24 -1 28
-ModifyInteraction 2 1 0 0 0 0
+UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
+ModifyInteraction *group_flower 1 0 0 0 0
 
-AddEntity #66: flower landing site trigger
+@entity_flower_3_land_site AddEntity #66: flower landing site trigger
 UseAttachedPosition 65 0 -1 0 0
 UseBasicCollision 2 1
 
-CallProcedure 43 #entity 67: healing site
+@entity_flower_3_healing_site CallProcedure *procedure_spawn_healing_site #entity 67: healing site
 	UseAttachedPosition 66 0 30 0 0
 
 
-AddEntity #68: flower
+@entity_flower_4 AddEntity #68: flower
 UseAbsolutePosition 1980 200 30 5
 UseBasicCollision 0 1
 UseStaticVisuals 5 3
 ModifyVisuals 0 0 0 -0
 ModifyVisuals 0 0 0 2
-UseFullInteraction 0 1 24 -1 28
-ModifyInteraction 2 1 0 0 0 0
+UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
+ModifyInteraction *group_flower 1 0 0 0 0
 
-AddEntity #69: flower landing site trigger
+@entity_flower_4_land_site AddEntity #69: flower landing site trigger
 UseAttachedPosition 68 0 -1 0 0
 UseBasicCollision 2 1
 
-CallProcedure 43 #entity 70: healing site
+@entity_flower_4_healing_site CallProcedure *procedure_spawn_healing_site #entity 70: healing site
 	UseAttachedPosition 69 0 30 0 0
 
 
