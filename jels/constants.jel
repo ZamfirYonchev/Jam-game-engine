@@ -1,0 +1,52 @@
+# This file provides a list of constants and enums for integration
+# of the high-level Jelly code with the low-level numeric nature of the engine.
+# 
+# In order to keep things sane, please do not modify those constants (hence the name)
+# in your level code as it will break the assumption about the effects of the values.
+
+### Position component constants ###
+
+### Control component constants ###
+@CONTROL_LOOK_DIRECTION_RIGHT 0
+@CONTROL_LOOK_DIRECTION_LEFT 1
+
+### Movement component constants ###
+
+### Collision component constants ###
+@COLLISION_STATE_TRANSPARENT 0
+@COLLISION_STATE_MOVEABLE 1
+@COLLISION_STATE_SOLID 2
+@COLLISION_SURFACE_TYPE_AIR 0
+@COLLISION_SURFACE_TYPE_GROUND 1
+
+### Interaction component constants ###
+@INTERACTION_NUMBER_OF_GROUPS 32
+
+### Health component constants ###
+@HEALTH_STUN_TIME 100
+
+### Sound component constants ###
+
+### Visuals component constants ###
+@VISUALS_ANIMATION_FRAME_DELAY 50
+@VISUALS_CHARACTER_RENDER_STATE_IDLE 0
+@VISUALS_CHARACTER_RENDER_STATE_WALK 1
+@VISUALS_CHARACTER_RENDER_STATE_JUMP 2
+@VISUALS_CHARACTER_RENDER_STATE_FALL 3
+@VISUALS_CHARACTER_RENDER_STATE_ATTACK 4
+@VISUALS_CHARACTER_RENDER_STATE_HIT 5
+@VISUALS_CHARACTER_RENDER_STATE_DEAD 6
+@VISUALS_LAYER_FAR_BACKGROUND 0
+@VISUALS_LAYER_CLOSE_BACKGROUND 1
+@VISUALS_LAYER_ACTION 2
+@VISUALS_LAYER_ACTION_FRONT 3
+@VISUALS_LAYER_FOREGROUND 4
+@VISUALS_LAYER_COUNT 5
+
+### Global entity constants ###
+@ENTITY_SCREEN 0 #screen is always entity 0
+
+### Global procedures ###
+@None 0 # meant to be used as a procedure id because procedure 0 is always an empty procedure which does nothing
+@RemoveEntity { RemoveEntity }
+@Debug { DebugMessage 0 }
