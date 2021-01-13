@@ -15,7 +15,7 @@
 class Music
 {
 public:
-	Music(const std::string& filename) : m_music(nullptr)
+	Music(std::string_view filename) : m_music(nullptr)
 	{
 		load_from_file(filename);
 	}
@@ -43,10 +43,10 @@ public:
     	return *this;
     }
 
-    Music& load_from_file(const std::string& file)
+    Music& load_from_file(std::string_view file)
     {
         unload();
-        m_music = Mix_LoadMUS(file.c_str());
+        m_music = Mix_LoadMUS(file.data());
 
         if(m_music == nullptr)
         {
