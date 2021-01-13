@@ -35,9 +35,9 @@ public:
 	void clear_groups() { m_group_vec = 0; }
 
 	int8_t trigger_group() const { return 0; }
-	ProcedureID proc_id_self() const { return ProcedureID{-1}; }
-	ProcedureID proc_id_other() const { return ProcedureID{-1}; }
-	ProcedureID on_exit_proc_id_self() const { return ProcedureID{-1}; }
+	ProcedureID proc_id_self() const { return ProcedureID(0); }
+	ProcedureID proc_id_other() const { return ProcedureID(0); }
+	ProcedureID on_exit_proc_id_self() const { return ProcedureID(0); }
 	bool triggered() const { return false; }
 
 	void set_trigger_group(int8_t group) {}

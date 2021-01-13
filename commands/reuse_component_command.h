@@ -8,6 +8,7 @@
 #ifndef COMMANDS_REUSE_COMPONENT_COMMAND_H_
 #define COMMANDS_REUSE_COMPONENT_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../types.h"
 #include <sstream>
 
@@ -20,21 +21,18 @@ template<typename T>
 class ReuseComponentCommand
 {
 public:
-	ReuseComponentCommand(const EntityID& source_id)
-	: m_source_id(source_id)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-		const T& component = entity_system.entity_component(m_source_id, (T*)nullptr);
+    	const auto source_id = command_system.exec_next();
+
+    	const T& component = entity_system.entity_component(source_id.integer(), (T*)nullptr);
 		std::stringstream ss;
 		ss << component;
 		command_system.process_stream(ss);
-	}
 
-private:
-    EntityID m_source_id;
+		return 0.0;
+	}
 };
 
 #endif /* COMMANDS_REUSE_COMPONENT_COMMAND_H_ */

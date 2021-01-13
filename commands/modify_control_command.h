@@ -8,6 +8,7 @@
 #ifndef COMMANDS_MODIFY_CONTROL_COMMAND_H_
 #define COMMANDS_MODIFY_CONTROL_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../math_ext.h"
 
 class ResourceSystem;
@@ -18,51 +19,46 @@ struct Globals;
 class ModifyControlCommand
 {
 public:
-	ModifyControlCommand(double decision_vertical, double decision_attack, double decision_walk, double look_dir)
-	: m_decision_vertical(decision_vertical)
-	, m_decision_attack(decision_attack)
-	, m_decision_walk(decision_walk)
-	, m_look_dir(look_dir)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	const auto decision_vertical = command_system.exec_next();
+    	const auto decision_attack = command_system.exec_next();
+    	const auto decision_walk = command_system.exec_next();
+    	const auto look_dir = command_system.exec_next();
+
     	Control& control = entity_system.entity_component(entity_system.previous_entity_id(), (Control*)nullptr);
 
 		if(control)
 		{
-			if(is_negative_zero(m_decision_vertical))
+			if(is_negative_zero(decision_vertical.real()))
 				control.set_decision_vertical(0);
 			else
-				control.mod_decision_vertical(m_decision_vertical);
+				control.mod_decision_vertical(decision_vertical.real());
 
-			if(is_negative_zero(m_decision_attack))
+			if(is_negative_zero(decision_attack.real()))
 				control.set_decision_attack(false);
 			else
-				control.set_decision_attack(bool(m_decision_attack) ^ control.decision_attack());
+				control.set_decision_attack(decision_attack.boolean() ^ control.decision_attack());
 
-			if(is_negative_zero(m_decision_walk))
+			if(is_negative_zero(decision_walk.real()))
 				control.set_decision_walk(0);
 			else
-				control.mod_decision_walk(m_decision_walk );
+				control.mod_decision_walk(decision_walk.real());
 
-			if(is_negative_zero(m_look_dir))
+			if(is_negative_zero(look_dir.real()))
 				control.set_look_dir(Control::LookDir::RIGHT);
 			else
-				control.set_look_dir(Control::LookDir(bool(m_look_dir) ^ bool(control.look_dir())));
+				control.set_look_dir(Control::LookDir(look_dir.boolean() ^ bool(control.look_dir())));
+
+			return 0.0;
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
+			return -1.0;
 		}
 	}
-
-private:
-    double m_decision_vertical;
-    double m_decision_attack;
-    double m_decision_walk;
-    double m_look_dir;
 };
 
 

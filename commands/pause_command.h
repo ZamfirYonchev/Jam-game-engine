@@ -8,6 +8,7 @@
 #ifndef COMMANDS_PAUSE_COMMAND_H_
 #define COMMANDS_PAUSE_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../globals.h"
 
 class ResourceSystem;
@@ -18,16 +19,13 @@ struct Globals;
 class PauseCommand
 {
 public:
-    PauseCommand(bool paused) : m_paused(paused) {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-        globals.app_paused = m_paused;
+    	const auto paused = command_system.exec_next();
+        globals.app_paused = paused.boolean();
+		return 0.0;
     }
-
-private:
-    bool m_paused;
 };
 
 

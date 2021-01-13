@@ -8,6 +8,7 @@
 #ifndef COMMANDS_MODIFY_POSITION_COMMAND_H_
 #define COMMANDS_MODIFY_POSITION_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../math_ext.h"
 #include "../components/position.h"
 
@@ -19,48 +20,46 @@ struct Globals;
 class ModifyPositionCommand
 {
 public:
-	ModifyPositionCommand(double x, double y, double w, double h)
-	: m_x(x)
-	, m_y(y)
-	, m_w(w)
-	, m_h(h)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	const auto x = command_system.exec_next();
+    	const auto y = command_system.exec_next();
+    	const auto w = command_system.exec_next();
+    	const auto h = command_system.exec_next();
+
     	Position& position = entity_system.entity_component(entity_system.previous_entity_id(), (Position*)nullptr);
 
 		if(position)
 		{
-			if(is_negative_zero(m_x))
-				position.set_x(m_x);
+			if(is_negative_zero(x.real()))
+				position.set_x(0.0);
 			else
-				position.mod_x(m_x);
+				position.mod_x(x.real());
 
-			if(is_negative_zero(m_y))
-				position.set_y(m_y);
+			if(is_negative_zero(y.real()))
+				position.set_y(0.0);
 			else
-				position.mod_y(m_y);
+				position.mod_y(y.real());
 
-			if(is_negative_zero(m_w))
-				position.set_w(m_w);
+			if(is_negative_zero(w.real()))
+				position.set_w(0.0);
 			else
-				position.mod_w(m_w);
+				position.mod_w(w.real());
 
-			if(is_negative_zero(m_h))
-				position.set_h(m_h);
+			if(is_negative_zero(h.real()))
+				position.set_h(0.0);
 			else
-				position.mod_h(m_h);
+				position.mod_h(h.real());
+
+			return 0.0;
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
+			return -1.0;
 		}
 	}
-
-private:
-    double m_x, m_y, m_w, m_h;
 };
 
 

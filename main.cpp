@@ -51,7 +51,6 @@
 #include "commands/add_texture_from_string_command.h"
 #include "commands/add_spritesheet_command.h"
 #include "commands/add_sprite_command.h"
-#include "commands/add_procedure_command.h"
 #include "commands/add_entity_command.h"
 #include "commands/remove_entity_command.h"
 #include "commands/modify_position_command.h"
@@ -106,11 +105,15 @@
 #include "components/character_sounds.h"
 #include "components/null_sounds.h"
 
+#include "commands/set_variable_command.h"
+#include "commands/get_variable_command.h"
+
 #include <list>
 #include <utility>
 #include <string>
 #include <random>
 #include <array>
+#include "commands/literal_value_command.h"
 
 int main(int argc, char** argv)
 {
@@ -187,608 +190,92 @@ int main(int argc, char** argv)
 		};
 
 		using AS = decltype(all_systems);
-		CommandSystem<ES, AS> command_system {entity_system, all_systems};
-		using CS = decltype(command_system);
+		CommandSystem<ES, AS> command_system {entity_system, resource_system, input_system, rendering_system, all_systems, globals};
+		//using CS = decltype(command_system);
 
 		std::mt19937 gen {std::random_device{}()};
 
-	    command_system.register_command("DebugMessage",
-			[](std::istream& input){
-				double severity;
-				std::string line;
-				input >> severity;
-				std::getline(input, line);
-				return DebugMessageCommand{line, DebugMessageCommand::Severity(severity)};
-			});
-
-		command_system.register_command("SetLevel",
-			[](std::istream& input){
-				std::string str;
-				input >> str;
-				return SetLevelCommand{str};
-			});
-
-		command_system.register_command("FixViewWidth",
-			[](std::istream& input){
-				return FixViewWidthCommand{};
-			});
-
-		command_system.register_command("SelectEntity",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return SelectEntityCommand{EntityID(id)};
-			});
-
-		command_system.register_command("ExtendProcedure",
-			[](std::istream& input)
-			{
-				double id, num_of_cmds;
-				input >> id >> num_of_cmds;
-				if(id < 0)
-				{
-					std::cerr << "ExtendProcedure: procedure id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else if(num_of_cmds < 0)
-				{
-					std::cerr << "ExtendProcedure: number of commands must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{ExtendProcedureCommand{ProcedureID(id), int(num_of_cmds)}};
-			});
-
-		command_system.register_command("ClearProcedure",
-			[](std::istream& input)
-			{
-				double id;
-				input >> id;
-				if(id < 0)
-				{
-					std::cerr << "ClearProcedure: procedure id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{ClearProcedureCommand{ProcedureID(id)}};
-			});
-
-		command_system.register_command("Pause",
-			[](std::istream& input){
-				double pause;
-				input >> pause;
-				return PauseCommand{bool(pause)};
-			});
-
-		command_system.register_command("Quit",
-			[](std::istream& input){
-				return QuitCommand{};
-			});
-
-		command_system.register_command("ClearAllEntities",
-			[](std::istream& input){
-				return ClearAllEntitiesCommand{};
-			});
-
-		command_system.register_command("ClearAllTextures",
-			[](std::istream& input){
-				return ClearAllTexturesCommand{};
-			});
-
-		command_system.register_command("ClearAllSpritesheets",
-			[](std::istream& input){
-				return ClearAllSpritesheetsCommand{};
-			});
-
-		command_system.register_command("ClearAllProcedures",
-			[](std::istream& input){
-				return ClearAllProceduresCommand{};
-			});
-
-		command_system.register_command("ExecuteFile",
-			[](std::istream& input){
-				std::string str;
-				input >> str;
-				return ExecuteFileCommand{str};
-			});
-
-		command_system.register_command("ExecuteFileClean",
-			[](std::istream& input){
-				std::string str;
-				input >> str;
-				return ExecuteFileCleanCommand{str};
-			});
-
-		command_system.register_command("CallProcedure",
-			[](std::istream& input)
-			{
-				double id;
-				input >> id;
-				if(id < 0)
-				{
-					std::cerr << "CallProcedure: procedure id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{CallProcedureCommand{ProcedureID(id)}};
-			});
-
-		command_system.register_command("AddFont",
-			[](std::istream& input){
-				double font_size;
-				std::string str;
-				input >> font_size >> str;
-				return AddFontCommand{str, int(font_size)};
-			});
-
-		command_system.register_command("AddTextureFromFile",
-			[](std::istream& input){
-				std::string str;
-				input >> str;
-				return AddTextureFromFileCommand{str};
-			});
-
-		command_system.register_command("AddTextureFromString",
-			[](std::istream& input)
-			{
-				double id, r, g, b;
-				std::string str;
-				input >> id >> r >> g >> b;
-				std::getline(input, str);
-				if(id < 0)
-				{
-					std::cerr << "AddTextureFromString: font id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{AddTextureFromStringCommand{str, FontID(id), uint8_t(r), uint8_t(g), uint8_t(b)}};
-			});
-
-		command_system.register_command("AddSpritesheet",
-			[](std::istream& input){
-				double idle_start, idle_size
-					 , walk_start, walk_size
-					 , jump_start, jump_size
-					 , fall_start, fall_size
-					 , attack_start, attack_size
-					 , hit_start, hit_size
-					 , dead_start, dead_size
-					 , scale_factor;
-				input >> idle_start >> idle_size
-					  >> walk_start >> walk_size
-					  >> jump_start >> jump_size
-					  >> fall_start >> fall_size
-					  >> attack_start >> attack_size
-					  >> hit_start >> hit_size
-				  	  >> dead_start >> dead_size
-					  >> scale_factor;
-				return AddSpritesheetCommand{
-												Spritesheet
-													{ uint8_t(idle_start), uint8_t(idle_size)
-													, uint8_t(walk_start), uint8_t(walk_size)
-													, uint8_t(jump_start), uint8_t(jump_size)
-													, uint8_t(fall_start), uint8_t(fall_size)
-													, uint8_t(attack_start), uint8_t(attack_size)
-													, uint8_t(hit_start), uint8_t(hit_size)
-													, uint8_t(dead_start), uint8_t(dead_size)
-													, scale_factor
-													}
-											};
-			});
-
-		command_system.register_command("AddSprite",
-			[](std::istream& input)
-			{
-				double spr_id, tex_id, x, y, w, h;
-				input >> spr_id >> tex_id >> x >> y >> w >> h;
-				if(spr_id < 0)
-				{
-					std::cerr << "AddSprite: spritesheet id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else if(tex_id < 0)
-				{
-					std::cerr << "AddSprite: texture id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{AddSpriteCommand{SpritesheetID(spr_id), TextureID(tex_id), int(x), int(y), int(w), int(h)}};
-			});
-
-		command_system.register_command("AddProcedure",
-			[](std::istream& input)
-			{
-				double num_of_cmds;
-				input >> num_of_cmds;
-				if(num_of_cmds < 0)
-				{
-					std::cerr << "AddProcedure: number of commands must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{AddProcedureCommand{size_t(num_of_cmds)}};
-			});
-
-		command_system.register_command("AddSound",
-			[](std::istream& input){
-				std::string file;
-				double repeat;
-				input >> file >> repeat;
-				return AddSoundCommand{file, int(repeat)};
-			});
-
-		command_system.register_command("AddMusic",
-			[](std::istream& input){
-				std::string file;
-				input >> file;
-				return AddMusicCommand{file};
-			});
-
-		command_system.register_command("AddEntity",
-			[](std::istream& input){
-				return AddEntityCommand{};
-			});
-
-		command_system.register_command("RemoveEntity",
-			[](std::istream& input){
-				return RemoveEntityCommand{};
-			});
-
-		command_system.register_command("ModifyPosition",
-			[](std::istream& input){
-				double x, y, w, h;
-				input >> x >> y >> w >> h;
-				return ModifyPositionCommand{x, y, w, h};
-			});
-
-		command_system.register_command("ModifyControl",
-			[](std::istream& input){
-				double vertical, attack, walk, look_dir;
-				input >> vertical >> attack >> walk >> look_dir;
-				return ModifyControlCommand{vertical, attack, walk, look_dir};
-			});
-
-		command_system.register_command("ModifyMovement",
-			[](std::istream& input){
-				double mass, friction_x, friction_y, vx, vy, fx, fy, gravity_affected;
-				input >> mass >> friction_x >> friction_y >> vx >> vy >> fx >> fy >> gravity_affected;
-				return ModifyMovementCommand{mass, friction_x, friction_y, vx, vy, fx, fy, gravity_affected};
-			});
-
-		command_system.register_command("ModifyCollision",
-			[](std::istream& input){
-				double state, standing_on, on_collision_damage, elasticity;
-				input >> state >> standing_on >> on_collision_damage >> elasticity;
-				return ModifyCollisionCommand{state, standing_on, on_collision_damage, elasticity};
-			});
-
-		command_system.register_command("ModifyInteraction",
-			[](std::istream& input){
-				double group, value, trigger_group, proc_id_self, on_exit_proc_id_self, proc_id_other;
-				input >> group >> value >> trigger_group >> proc_id_self >> on_exit_proc_id_self >> proc_id_other;
-				return ModifyInteractionCommand{group, value, trigger_group, proc_id_self, on_exit_proc_id_self, proc_id_other};
-			});
-
-		command_system.register_command("ModifyHealth",
-			[](std::istream& input){
-				double max_hp, hp, hp_change;
-				input >> max_hp >> hp >> hp_change;
-				return ModifyHealthCommand{max_hp, hp, hp_change};
-			});
-
-		command_system.register_command("ModifyVisuals",
-			[](std::istream& input){
-				double repeat_x, repeat_y, spr_id, layer;
-				input >> repeat_x >> repeat_y >> spr_id >> layer;
-				return ModifyVisualsCommand{repeat_x, repeat_y, spr_id, layer};
-			});
-
-		command_system.register_command("UseNullPosition",
-			[](std::istream& input){
-				return UseComponentCommand<NullPosition>{};
-			});
-
-		command_system.register_command("UseAbsolutePosition",
-			[](std::istream& input){
-				double x, y, w, h;
-				input >> x >> y >> w >> h;
-				return UseComponentCommand<AbsolutePosition>{x, y, w, h};
-			});
-
-		command_system.register_command("UseAttachedPosition",
-			[&](std::istream& input){
-				double id, x, y, w, h;
-				input >> id >> x >> y >> w >> h;
-				return UseComponentCommand<AttachedPosition<decltype(entity_system)>>{id, x, y, w, h, entity_system};
-			});
-
-		command_system.register_command("UseBuildPosition",
-			[&](std::istream& input){
-				double id;
-				input >> id;
-				return UseComponentCommand<BuildPosition<decltype(entity_system)>>{EntityID{}, EntityID(id), 0.0, 0.0, entity_system};
-			});
-
-		command_system.register_command("UseNullControl",
-			[](std::istream& input){
-				return UseComponentCommand<NullControl>{};
-			});
-
-		command_system.register_command("UseConstantControl",
-			[](std::istream& input){
-				double move_decision, vertical_decision, look_dir;
-				input >> move_decision >> vertical_decision >> look_dir;
-				return UseComponentCommand<ConstantControl>{move_decision, vertical_decision, Control::LookDir(look_dir)};
-			});
-
-		command_system.register_command("UseInputControl",
-			[&](std::istream& input){
-				double proc_id, cooldown, stability_control;
-				input >> proc_id >> cooldown >> stability_control;
-				return UseComponentCommand<InputControl<decltype(entity_system)>>{ProcedureID(proc_id), cooldown, EntityID{}, bool(stability_control), entity_system, input_system};
-			});
-
-		command_system.register_command("UseInputSelectControl",
-			[&](std::istream& input){
-				double select, max, proc_id;
-				input >> select >> max >> proc_id;
-				return UseComponentCommand<InputSelectControl>{int(select), int(max), ProcedureID(proc_id), input_system};
-			});
-
-		command_system.register_command("UseChaseAIControl",
-			[&](std::istream& input){
-				double target_id, proc_id, cooldown, range;
-				input >> target_id >> proc_id >> cooldown >> range;
-				return UseComponentCommand<ChaseAIControl<decltype(entity_system)>>{EntityID{}, EntityID(target_id), ProcedureID(proc_id), cooldown, range, entity_system};
-			});
-
-		command_system.register_command("UseGuideControl",
-			[&](std::istream& input){
-				double target_id, range;
-				input >> target_id >> range;
-				return UseComponentCommand<GuideControl<decltype(entity_system)>>{EntityID{}, EntityID(target_id), range, entity_system};
-			});
-
-		command_system.register_command("UseParticleControl",
-			[&](std::istream& input){
-				double random_factor, directed_factor, direction_angle;
-				input >> random_factor >> directed_factor >> direction_angle;
-				return UseComponentCommand<ParticleControl>{gen, random_factor, directed_factor, direction_angle};
-			});
-
-		command_system.register_command("UseNullMovement",
-			[](std::istream& input){
-				return UseComponentCommand<NullMovement>{};
-			});
-
-		command_system.register_command("UseFullMovement",
-			[](std::istream& input){
-				double mass, friction_x, friction_y, move_force, jump_force, gravity_affected;
-				input >> mass >> friction_x >> friction_y >> move_force >> jump_force >> gravity_affected;
-				return UseComponentCommand<FullMovement>{mass, friction_x, friction_y, move_force, jump_force, bool(gravity_affected)};
-			});
-
-		command_system.register_command("UseInstantMovement",
-			[](std::istream& input){
-				double mass, friction_x, friction_y, move_force;
-				input >> mass >> friction_x >> friction_y >> move_force;
-				return UseComponentCommand<InstantMovement>{mass, friction_x, friction_y, move_force};
-			});
-
-		command_system.register_command("UseNullCollision",
-			[](std::istream& input){
-				return UseComponentCommand<NullCollision>{};
-			});
-
-		command_system.register_command("UseBasicCollision",
-			[](std::istream& input){
-				double state, elasticity;
-				input >> state >> elasticity;
-				return UseComponentCommand<BasicCollision>{Collision::CollisionState(state), elasticity};
-			});
-
-		command_system.register_command("UseDamageCollision",
-			[](std::istream& input){
-				double state, damage;
-				input >> state >> damage;
-				return UseComponentCommand<DamageCollision>{Collision::CollisionState(state), damage};
-			});
-
-		command_system.register_command("UseNullInteraction",
-			[](std::istream& input){
-				return UseComponentCommand<NullInteraction>{};
-			});
-
-		command_system.register_command("UseNormalInteraction",
-			[](std::istream& input){
-				double groups;
-				input >> groups;
-				return UseComponentCommand<NormalInteraction>{int32_t(groups)};
-			});
-
-		command_system.register_command("UseTriggerInteraction",
-			[](std::istream& input){
-				double group, proc_id_self, proc_id_other, proc_id_self_exit;
-				input >> group >> proc_id_self >> proc_id_other >> proc_id_self_exit;
-				return UseComponentCommand<TriggerInteraction>{int8_t(group), ProcedureID(proc_id_self), ProcedureID(proc_id_other), ProcedureID(proc_id_self_exit)};
-			});
-
-		command_system.register_command("UseFullInteraction",
-			[](std::istream& input){
-				double groups, trigger_group, proc_id_self, proc_id_other, proc_id_self_exit;
-				input >> groups >> trigger_group >> proc_id_self >> proc_id_other >> proc_id_self_exit;
-				return UseComponentCommand<FullInteraction>{int32_t(groups), int8_t(trigger_group), ProcedureID(proc_id_self), ProcedureID(proc_id_other), ProcedureID(proc_id_self_exit)};
-			});
-
-		command_system.register_command("UseNullHealth",
-			[](std::istream& input){
-				return UseComponentCommand<NullHealth>{};
-			});
-
-		command_system.register_command("UseAttachedHealth",
-			[&](std::istream& input){
-				double attached_id, offset_hp, offset_max_hp;
-				input >> attached_id >> offset_hp >> offset_max_hp;
-				return UseComponentCommand<AttachedHealth<decltype(entity_system)>>{ProcedureID(attached_id), offset_hp, offset_max_hp, entity_system};
-			});
-
-		command_system.register_command("UseCharacterHealth",
-			[](std::istream& input){
-				double hp, max_hp;
-				input >> hp >> max_hp;
-				return UseComponentCommand<CharacterHealth>{hp, max_hp};
-			});
-
-		command_system.register_command("UseTimedHealth",
-			[](std::istream& input){
-				double ttl, proc_id;
-				input >> ttl >> proc_id;
-				return UseComponentCommand<TimedHealth>{ttl, ProcedureID(proc_id)};
-			});
-
-		command_system.register_command("UseNullVisuals",
-			[](std::istream& input){
-				return UseComponentCommand<NullVisuals>{};
-			});
-
-		command_system.register_command("UseCharacterVisuals",
-			[&](std::istream& input){
-				double spr_id;
-				input >> spr_id;
-				return UseComponentCommand<CharacterVisuals<ES>>{spr_id, EntityID{}, resource_system, entity_system};
-			});
-
-		command_system.register_command("UseTiledVisuals",
-			[&](std::istream& input){
-				double spr_id, w, h;
-				input >> spr_id >> w >> h;
-				return UseComponentCommand<TiledVisuals<decltype(entity_system)>>{spr_id, w, h, EntityID{}, entity_system};
-			});
-
-		command_system.register_command("UseStaticVisuals",
-			[](std::istream& input){
-				double spr_id, sprite;
-				input >> spr_id >> sprite;
-				return UseComponentCommand<StaticVisuals>{spr_id, sprite};
-			});
-
-		command_system.register_command("UseHealthVisuals",
-			[&](std::istream& input){
-				double spr_id, repeat_x;
-				input >> spr_id >> repeat_x;
-				return UseComponentCommand<HealthVisuals<decltype(entity_system)>>{EntityID{}, spr_id, repeat_x, entity_system};
-			});
-
-		command_system.register_command("UseMenuItemVisuals",
-			[&](std::istream& input){
-				double spr_id;
-				input >> spr_id;
-				return UseComponentCommand<MenuItemVisuals<decltype(entity_system)>>{spr_id, EntityID{}, entity_system};
-			});
-
-		command_system.register_command("UseNullSounds",
-			[&](std::istream& input){
-				return UseComponentCommand<NullSounds>{};
-			});
-
-		command_system.register_command("UseCharacterSounds",
-			[&](std::istream& input){
-				double idle_id, walk_id, jump_id, fall_id, land_id, attack_id, hit_id, dead_id, volume;
-				input >> idle_id >> walk_id >> jump_id >> fall_id >> land_id >> attack_id >> hit_id >> dead_id >> volume;
-				return UseComponentCommand<CharacterSounds<ES>>{SoundID(idle_id), SoundID(walk_id), SoundID(jump_id), SoundID(fall_id), SoundID(land_id), SoundID(attack_id), SoundID(hit_id), SoundID(dead_id), volume, EntityID{}, entity_system};
-			});
-
-		command_system.register_command("ReusePosition",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Position>{EntityID(id)};
-			});
-
-		command_system.register_command("ReuseControl",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Control>{EntityID(id)};
-			});
-
-		command_system.register_command("ReuseMovement",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Movement>{EntityID(id)};
-			});
-
-		command_system.register_command("ReuseCollision",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Collision>{EntityID(id)};
-			});
-
-		command_system.register_command("ReuseInteraction",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Interaction>{EntityID(id)};
-			});
-
-		command_system.register_command("ReuseHealth",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Health>{EntityID(id)};
-			});
-
-		command_system.register_command("ReuseVisuals",
-			[](std::istream& input){
-				double id;
-				input >> id;
-				return ReuseComponentCommand<Visuals>{EntityID(id)};
-			});
-
-		command_system.register_command("ExportEntities",
-			[](std::istream& input){
-				std::string file;
-				input >> file;
-				return ExportEntitiesCommand{file};
-			});
-
-		command_system.register_command("FinalizeBuild",
-			[](std::istream& input){
-				return FinalizeBuildCommand{};
-			});
-
-		command_system.register_command("PlaySound",
-			[](std::istream& input){
-				double sound_id, channel;
-				input >> sound_id >> channel;
-
-				if(sound_id < 0)
-				{
-					std::cerr << "PlaySound: sound id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{PlaySoundCommand{SoundID(sound_id), int(channel)}};
-			});
-
-		command_system.register_command("PlayMusic",
-			[](std::istream& input){
-				double id, loops;
-				input >> id >> loops;
-
-				if(id < 0)
-				{
-					std::cerr << "PlayMusic: music id must be >= 0\n";
-					return CS::CommandT{NullCommand{}};
-				}
-				else
-					return CS::CommandT{PlayMusicCommand{MusicID(id), int(loops)}};
-			});
-
-
-		command_system.push(ExecuteFileCleanCommand{globals.level_name});
+	    command_system.register_command("Set", SetVariableCommand{});
+	    command_system.register_command("Val", GetVariableCommand{});
+	    command_system.register_command("DebugMessage", DebugMessageCommand{});
+		command_system.register_command("SetLevel", SetLevelCommand{});
+		command_system.register_command("FixViewWidth", FixViewWidthCommand{});
+		command_system.register_command("SelectEntity", SelectEntityCommand{});
+		command_system.register_command("Select", SelectEntityCommand{});
+		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{});
+		command_system.register_command("ClearProcedure", ClearProcedureCommand{});
+		command_system.register_command("Pause", PauseCommand{});
+		command_system.register_command("Quit", QuitCommand{});
+		command_system.register_command("ClearAllEntities", ClearAllTexturesCommand{});
+		command_system.register_command("ClearAllSpritesheets", ClearAllSpritesheetsCommand{});
+		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{});
+		command_system.register_command("ExecuteFile", ExecuteFileCommand{});
+		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{});
+		command_system.register_command("CallProcedure", CallProcedureCommand{});
+		command_system.register_command("Call", CallProcedureCommand{});
+		command_system.register_command("AddFont", AddFontCommand{});
+		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{});
+		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{});
+		command_system.register_command("AddSpritesheet", AddSpritesheetCommand{});
+		command_system.register_command("AddSprite", AddSpriteCommand{});
+		command_system.register_command("AddSound", AddSoundCommand{});
+		command_system.register_command("AddMusic", AddMusicCommand{});
+		command_system.register_command("AddEntity", AddEntityCommand{});
+		command_system.register_command("RemoveEntity", RemoveEntityCommand{});
+		command_system.register_command("ModifyPosition", ModifyPositionCommand{});
+		command_system.register_command("ModifyControl", ModifyControlCommand{});
+		command_system.register_command("ModifyMovement", ModifyMovementCommand{});
+		command_system.register_command("ModifyCollision", ModifyCollisionCommand{});
+		command_system.register_command("ModifyInteraction", ModifyInteractionCommand{});
+		command_system.register_command("ModifyHealth", ModifyHealthCommand{});
+		command_system.register_command("ModifyVisuals", ModifyVisualsCommand{});
+		command_system.register_command("UseNullPosition", UseComponentCommand<NullPosition>{});
+		command_system.register_command("UseAbsolutePosition", UseComponentCommand<AbsolutePosition>{});
+		command_system.register_command("UseAttachedPosition", UseComponentCommand<AttachedPosition<ES>>{});
+		command_system.register_command("UseBuildPosition", UseBuildPositionCommand{});
+		command_system.register_command("UseNullControl", UseComponentCommand<NullControl>{});
+		command_system.register_command("UseConstantControl",UseComponentCommand<ConstantControl>{});
+		command_system.register_command("UseInputControl", UseInputControlCommand{});
+		command_system.register_command("UseInputSelectControl", UseComponentCommand<InputSelectControl>{});
+		command_system.register_command("UseChaseAIControl", UseChaseAIControlCommand{});
+		command_system.register_command("UseGuideControl", UseGuideControlCommand{});
+		command_system.register_command("UseParticleControl", UseParticleControlCommand{gen});
+		command_system.register_command("UseNullMovement", UseComponentCommand<NullMovement>{});
+		command_system.register_command("UseFullMovement", UseComponentCommand<FullMovement>{});
+		command_system.register_command("UseInstantMovement", UseComponentCommand<InstantMovement>{});
+		command_system.register_command("UseNullCollision", UseComponentCommand<NullCollision>{});
+		command_system.register_command("UseBasicCollision", UseComponentCommand<BasicCollision>{});
+		command_system.register_command("UseDamageCollision", UseComponentCommand<DamageCollision>{});
+		command_system.register_command("UseNullInteraction", UseComponentCommand<NullInteraction>{});
+		command_system.register_command("UseNormalInteraction", UseComponentCommand<NormalInteraction>{});
+		command_system.register_command("UseTriggerInteraction", UseComponentCommand<TriggerInteraction>{});
+		command_system.register_command("UseFullInteraction", UseComponentCommand<FullInteraction>{});
+		command_system.register_command("UseNullHealth", UseComponentCommand<NullHealth>{});
+		command_system.register_command("UseAttachedHealth", UseAttachedHealthCommand{});
+		command_system.register_command("UseCharacterHealth", UseComponentCommand<CharacterHealth>{});
+		command_system.register_command("UseTimedHealth", UseComponentCommand<TimedHealth>{});
+		command_system.register_command("UseNullVisuals", UseComponentCommand<NullVisuals>{});
+		command_system.register_command("UseCharacterVisuals", UseCharacterVisualsCommand{});
+		command_system.register_command("UseTiledVisuals", UseTiledVisualsCommand{});
+		command_system.register_command("UseStaticVisuals", UseComponentCommand<StaticVisuals>{});
+		command_system.register_command("UseHealthVisuals", UseHealthVisualsCommand{});
+		command_system.register_command("UseMenuItemVisuals", UseMenuItemVisualsCommand{});
+		command_system.register_command("UseNullSounds", UseComponentCommand<NullSounds>{});
+		command_system.register_command("UseCharacterSounds", UseCharacterSoundsCommand{});
+		command_system.register_command("ReusePosition", ReuseComponentCommand<Position>{});
+		command_system.register_command("ReuseControl", ReuseComponentCommand<Control>{});
+		command_system.register_command("ReuseMovement", ReuseComponentCommand<Movement>{});
+		command_system.register_command("ReuseCollision", ReuseComponentCommand<Collision>{});
+		command_system.register_command("ReuseInteraction", ReuseComponentCommand<Interaction>{});
+		command_system.register_command("ReuseHealth", ReuseComponentCommand<Health>{});
+		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals>{});
+		command_system.register_command("ExportEntities", ExportEntitiesCommand{});
+		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{});
+		command_system.register_command("PlaySound", PlaySoundCommand{});
+		command_system.register_command("PlayMusic", PlayMusicCommand{});
+
+		command_system.push(ExecuteFileCleanCommand{});
+		command_system.push(LiteralValueCommand{globals.level_name});
 
 		const double update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;

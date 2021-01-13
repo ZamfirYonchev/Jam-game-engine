@@ -8,7 +8,7 @@
 #ifndef COMMANDS_SET_LEVEL_COMMAND_H_
 #define COMMANDS_SET_LEVEL_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include "../globals.h"
 
 class ResourceSystem;
@@ -19,18 +19,16 @@ struct Globals;
 class SetLevelCommand
 {
 public:
-	SetLevelCommand(const std::string& level)
-	: m_level(level)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-		globals.level_name = m_level;
+    	const auto level_name = command_system.exec_next();
+		globals.level_name = level_name.string();
+
+		return 0.0;
 	}
 
 private:
-    std::string m_level;
 };
 
 

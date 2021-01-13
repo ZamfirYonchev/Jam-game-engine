@@ -40,7 +40,7 @@ public:
     double decision_vertical() const { return m_decision_y; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_decision_x; }
-    ProcedureID attack_proc_id() const { return -1; }
+    ProcedureID attack_proc_id() const { return ProcedureID{0}; }
     LookDir look_dir() const { return m_decision_x < 0.0 ? LookDir::LEFT : LookDir::RIGHT; }
 
     void set_decision_vertical(double val) { m_offset_y = clip(val, -1.0, 1.0); }

@@ -8,7 +8,9 @@
 #ifndef COMMANDS_CALL_PROCEDURE_COMMAND_H_
 #define COMMANDS_CALL_PROCEDURE_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../types.h"
+#include "../utilities.h"
 
 class ResourceSystem;
 class InputSystem;
@@ -18,21 +20,31 @@ struct Globals;
 class CallProcedureCommand
 {
 public:
-    CallProcedureCommand(const ProcedureID proc_id) : m_proc_id(proc_id) {}
+	CallProcedureCommand(std::string_view proc_name) : m_procedure{std::string{proc_name}} {}
+	CallProcedureCommand(const ProcedureID proc_id) : m_procedure{static_cast<int64_t>(proc_id)} {}
+	CallProcedureCommand() : m_procedure{static_cast<int64_t>(0)} {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	if(command_system.procedure(m_proc_id))
-    		(*command_system.procedure(m_proc_id))(entity_system, resource_system, input_system, command_system, rendering_system, all_systems, globals);
+    	const auto proc_id = m_procedure.holds_string() ? command_system.variable(hash(m_procedure.string().c_str())) :
+							(m_procedure.integer() >= 0) ? m_procedure
+														 : command_system.exec_next();
+
+    	if(proc_id.integer() < 0)
+    	{
+			std::cerr << "CallProcedure: procedure id " << proc_id.integer() << " must be >= 0\n";
+			return -1.0;
+    	}
     	else
     	{
-    		//error m_id
+    		command_system.procedure(ProcedureID(proc_id.integer())).insert_to(command_system);
+			return command_system.exec_next(); //return the result from the first command
     	}
     }
 
 private:
-    ProcedureID m_proc_id;
+    const CommandReturnValue m_procedure;
 };
 
 

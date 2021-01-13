@@ -8,7 +8,7 @@
 #ifndef COMMANDS_DEBUG_MESSAGE_COMMAND_H_
 #define COMMANDS_DEBUG_MESSAGE_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include <iostream>
 
 class ResourceSystem;
@@ -19,24 +19,30 @@ struct Globals;
 class DebugMessageCommand
 {
 public:
-	enum class Severity {DEBUG = 0, NOTE = 1, ERROR = 2};
-    DebugMessageCommand(const std::string& debug_text, Severity sev)
-	: m_text(debug_text)
-	, m_severity(sev)
-	{}
+	enum class Severity {DEBUG = 0, NOTE = 1, ERROR = 2, FATAL = 3};
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	if(m_severity != Severity::ERROR)
-    		std::cout << m_text << std::endl;
-    	else
-    		std::cerr << m_text << std::endl;
-    }
+    	const auto severity = command_system.exec_next();
+    	const auto text = command_system.exec_next();
 
-private:
-    std::string m_text;
-    Severity m_severity;
+    	if(severity.integer() == int(Severity::FATAL))
+    	{
+    		std::cerr << "FATAL: " << text.string() << std::endl;
+    		command_system.flush_commands();
+    	}
+    	else if(severity.integer() == int(Severity::ERROR))
+    	{
+    		std::cerr << "ERROR: " << text.string() << std::endl;
+    	}
+    	else
+    	{
+    		std::cout << text.string() << std::endl;
+    	}
+
+		return 0.0;
+    }
 };
 
 

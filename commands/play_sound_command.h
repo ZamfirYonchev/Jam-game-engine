@@ -8,6 +8,7 @@
 #ifndef COMMANDS_PLAY_SOUND_COMMAND_H_
 #define COMMANDS_PLAY_SOUND_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../types.h"
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
@@ -20,33 +21,29 @@ struct Globals;
 class PlaySoundCommand
 {
 public:
-	PlaySoundCommand(const SoundID sound_id, const int channel)
-	: m_sound_id(sound_id)
-	, m_channel(channel)
-	{}
-
-	PlaySoundCommand(const SoundID sound_id) : PlaySoundCommand(sound_id, -1) {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	const auto sound_optional = resource_system.sound(m_sound_id);
+    	const auto sound_id = command_system.exec_next();
+    	const auto channel = command_system.exec_next();
+
+    	const auto sound_optional = resource_system.sound(SoundID(sound_id.integer()));
+
     	if(sound_optional)
     	{
-    		if(Mix_PlayChannel(m_channel, sound_optional->sound(), sound_optional->repeat()) < 0)
+    		if(Mix_PlayChannel(channel.integer(), sound_optional->sound(), sound_optional->repeat()) < 0)
     		{
-    			std::cerr << "Cannot play sound " << m_sound_id << ": " << Mix_GetError() << '\n';
+    			std::cerr << "Cannot play sound " << sound_id.integer() << "on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
     		}
+
+			return 0.0;
     	}
     	else
     	{
     		//error m_sound_id
+			return -1.0;
     	}
     }
-
-private:
-    SoundID m_sound_id;
-    int m_channel;
 };
 
 #endif /* COMMANDS_PLAY_SOUND_COMMAND_H_ */

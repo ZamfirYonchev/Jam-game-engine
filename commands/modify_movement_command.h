@@ -8,6 +8,7 @@
 #ifndef COMMANDS_MODIFY_MOVEMENT_COMMAND_H_
 #define COMMANDS_MODIFY_MOVEMENT_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../math_ext.h"
 
 class ResourceSystem;
@@ -18,72 +19,70 @@ struct Globals;
 class ModifyMovementCommand
 {
 public:
-	ModifyMovementCommand(double mass, double friction_x, double friction_y, double vx, double vy, double fx, double fy, double gravity_affected)
-	: m_mass(mass)
-	, m_friction_x(friction_x)
-	, m_friction_y(friction_y)
-	, m_vx(vx)
-	, m_vy(vy)
-	, m_fx(fx)
-	, m_fy(fy)
-	, m_gravity_affected(gravity_affected)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	const auto mass = command_system.exec_next();
+    	const auto friction_x = command_system.exec_next();
+    	const auto friction_y = command_system.exec_next();
+    	const auto vx = command_system.exec_next();
+    	const auto vy = command_system.exec_next();
+    	const auto fx = command_system.exec_next();
+    	const auto fy = command_system.exec_next();
+    	const auto gravity_affected = command_system.exec_next();
+
     	Movement& movement = entity_system.entity_component(entity_system.previous_entity_id(), (Movement*)nullptr);
 
 		if(movement)
 		{
-			if(is_negative_zero(m_mass))
-				movement.set_mass(m_mass);
+			if(is_negative_zero(mass.real()))
+				movement.set_mass(mass.real());
 			else
-				movement.set_mass(movement.mass() + m_mass);
+				movement.set_mass(movement.mass() + mass.real());
 
-			if(is_negative_zero(m_friction_x))
-				movement.set_friction_x(m_friction_x);
+			if(is_negative_zero(friction_x.real()))
+				movement.set_friction_x(0.0);
 			else
-				movement.set_friction_x(movement.friction_x() + m_friction_x);
+				movement.set_friction_x(movement.friction_x() + friction_x.real());
 
-			if(is_negative_zero(m_friction_y))
-				movement.set_friction_y(m_friction_y);
+			if(is_negative_zero(friction_y.real()))
+				movement.set_friction_y(0.0);
 			else
-				movement.set_friction_y(movement.friction_y() + m_friction_y);
+				movement.set_friction_y(movement.friction_y() + friction_y.real());
 
-			if(is_negative_zero(m_fx))
-				movement.set_force_x(m_fx);
+			if(is_negative_zero(fx.real()))
+				movement.set_force_x(0.0);
 			else
-				movement.mod_force_x(m_fx);
+				movement.mod_force_x(fx.real());
 
-			if(is_negative_zero(m_fy))
-				movement.set_force_y(m_fy);
+			if(is_negative_zero(fy.real()))
+				movement.set_force_y(0.0);
 			else
-				movement.mod_force_y(m_fy);
+				movement.mod_force_y(fy.real());
 
-			if(is_negative_zero(m_vx))
-				movement.set_velocity_x(m_vx);
+			if(is_negative_zero(vx.real()))
+				movement.set_velocity_x(0.0);
 			else
-				movement.mod_velocity_x(m_vx);
+				movement.mod_velocity_x(vx.real());
 
-			if(is_negative_zero(m_vy))
-				movement.set_velocity_y(m_vy);
+			if(is_negative_zero(vy.real()))
+				movement.set_velocity_y(0.0);
 			else
-				movement.mod_velocity_y(m_vy);
+				movement.mod_velocity_y(vy.real());
 
-			if(is_negative_zero(m_gravity_affected))
-				movement.set_gravity_affected(bool(m_gravity_affected));
+			if(is_negative_zero(gravity_affected.real()))
+				movement.set_gravity_affected(false);
 			else
-				movement.set_gravity_affected(bool(m_gravity_affected) ^ movement.gravity_affected());
+				movement.set_gravity_affected(gravity_affected.boolean() ^ movement.gravity_affected());
+
+			return 0.0;
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
+			return -1.0;
 		}
 	}
-
-private:
-    double m_mass, m_friction_x, m_friction_y, m_vx, m_vy, m_fx, m_fy, m_gravity_affected;
 };
 
 

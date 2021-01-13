@@ -8,6 +8,7 @@
 #ifndef COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 #define COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../types.h"
 
 class ResourceSystem;
@@ -18,23 +19,13 @@ struct Globals;
 class ClearProcedureCommand
 {
 public:
-    ClearProcedureCommand(const ProcedureID proc_id) : m_proc_id(proc_id) {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	if(command_system.procedure(m_proc_id))
-    	{
-    		command_system.procedure(m_proc_id)->clear();
-    	}
-    	else
-    	{
-    		//error m_id
-    	}
+    	const auto proc_id = command_system.exec_next();
+    	command_system.procedure(ProcedureID(proc_id.integer())).clear();
+		return 0.0;
     }
-
-private:
-    ProcedureID m_proc_id;
 };
 
 

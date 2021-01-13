@@ -37,7 +37,7 @@ public:
     double decision_vertical() const { return m_vertical; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_walk_dir; }
-    ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
+    ProcedureID attack_proc_id() const { return ProcedureID(0); }
     LookDir look_dir() const { return m_look_dir; }
 
     void set_decision_vertical(double val) {}

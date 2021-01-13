@@ -8,7 +8,7 @@
 #ifndef COMMANDS_FIX_VIEW_WIDTH_COMMAND_H_
 #define COMMANDS_FIX_VIEW_WIDTH_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include "../globals.h"
 
 class ResourceSystem;
@@ -19,16 +19,14 @@ struct Globals;
 class FixViewWidthCommand
 {
 public:
-	FixViewWidthCommand() = default;
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
 		Position& position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
 		position.set_w(int(position.h()*globals.resolution_x/globals.resolution_y));
-	}
 
-private:
+		return 0.0;
+	}
 };
 
 

@@ -32,7 +32,7 @@ public:
     double decision_vertical() const { return m_vertical_decision; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_move_decision; }
-    ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
+    ProcedureID attack_proc_id() const { return ProcedureID(0); }
     LookDir look_dir() const { return m_look_dir; }
 
     void set_decision_vertical(double val) { m_vertical_decision = clip(val, -1.0, 1.0); }

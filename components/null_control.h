@@ -22,7 +22,7 @@ public:
     double decision_vertical() const { return 0.0; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return 0.0; }
-    ProcedureID attack_proc_id() const { return ProcedureID{-1}; }
+    ProcedureID attack_proc_id() const { return ProcedureID(0); }
     LookDir look_dir() const { return LookDir::RIGHT; }
 
     void set_decision_vertical(double val) {}

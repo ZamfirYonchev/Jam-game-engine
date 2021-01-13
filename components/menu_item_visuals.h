@@ -16,7 +16,7 @@ class MenuItemVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-	MenuItemVisuals(SpritesheetID spr_id, EntityID self_id, EntitySystemT& entity_system)
+	MenuItemVisuals(EntityID self_id, SpritesheetID spr_id, EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_spr_id(spr_id)
 	, m_entity_system(entity_system)

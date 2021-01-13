@@ -9,6 +9,7 @@
 #define COMMANDS_ADD_FONT_COMMAND_H_
 
 #include <string>
+#include "command_return_value.h"
 #include "../systems/resource_system.h"
 
 class ResourceSystem;
@@ -19,20 +20,13 @@ struct Globals;
 class AddFontCommand
 {
 public:
-	AddFontCommand(const std::string& file, int size)
-	: m_file(file)
-	, m_size(size)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	resource_system.addNewFont(m_file, m_size);
+    	const auto file_name = command_system.exec_next();
+    	const auto font_size = command_system.exec_next();
+    	return static_cast<int64_t>(resource_system.addNewFont(file_name.string(), font_size.integer()));
     }
-
-private:
-    std::string m_file;
-    int m_size;
 };
 
 

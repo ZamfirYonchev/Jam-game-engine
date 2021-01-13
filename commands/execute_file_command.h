@@ -8,7 +8,7 @@
 #ifndef COMMANDS_EXECUTE_FILE_COMMAND_H_
 #define COMMANDS_EXECUTE_FILE_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include <fstream>
 #include <iostream>
 
@@ -20,25 +20,23 @@ struct Globals;
 class ExecuteFileCommand
 {
 public:
-    ExecuteFileCommand(const std::string& filename)
-    : m_filename(filename)
-    {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	std::ifstream file {m_filename};
+    	const auto file_name = command_system.exec_next();
+    	std::ifstream file {file_name.string()};
     	if (file)
     	{
-    		std::cout << "Parsing file " << m_filename << std::endl;
+    		std::cout << "Parsing file " << file_name.string() << std::endl;
     		command_system.process_stream(file);
+        	return 0.0;
     	}
     	else
-    		std::cerr << "File \"" << m_filename << "\" cannot be opened!" << std::endl;
+    	{
+    		std::cerr << "File \"" << file_name.string() << "\" cannot be opened!" << std::endl;
+        	return -1.0;
+    	}
     }
-
-private:
-    std::string m_filename;
 };
 
 

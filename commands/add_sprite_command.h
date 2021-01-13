@@ -8,6 +8,7 @@
 #ifndef COMMANDS_ADD_SPRITE_COMMAND_H_
 #define COMMANDS_ADD_SPRITE_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../types.h"
 #include <SDL2/SDL.h>
 #include "../systems/resource_system.h"
@@ -20,40 +21,48 @@ struct Globals;
 class AddSpriteCommand
 {
 public:
-    AddSpriteCommand(SpritesheetID spr_id, TextureID tex_id, int x, int y, int w, int h)
-    : m_spr_id(spr_id)
-    , m_tex_id(tex_id)
-    , m_x(x)
-    , m_y(y)
-    , m_w(w)
-    , m_h(h)
-    {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	int width, height;
-    	if(m_w == 0 || m_h == 0)
+    	const auto spr_id = command_system.exec_next();
+    	const auto tex_id = command_system.exec_next();
+    	const auto x = command_system.exec_next();
+    	const auto y = command_system.exec_next();
+    	const auto w = command_system.exec_next();
+    	const auto h = command_system.exec_next();
+
+    	if(spr_id.integer() < 0)
     	{
-    		if(resource_system.texture(m_tex_id))
-    			SDL_QueryTexture(resource_system.texture(m_tex_id)->texture(), nullptr, nullptr, &width, &height);
+			std::cerr << "AddSprite: spritesheet id " << spr_id.integer() << " must be >= 0\n";
+			return -1.0;
+    	}
+
+    	if(tex_id.integer() < 0)
+    	{
+			std::cerr << "AddSprite: texture id " << tex_id.integer() << " must be >= 0\n";
+			return -1.0;
+    	}
+
+    	int width, height;
+    	if(w.integer() == 0 || h.integer() == 0)
+    	{
+    		if(resource_system.texture(tex_id.integer()))
+    			SDL_QueryTexture(resource_system.texture(tex_id.integer())->texture(), nullptr, nullptr, &width, &height);
     		else
     		{
     			//todo add error message
-    			return;
+    			return -1.0;
     		}
     	}
 
-    	width = (m_w == 0) ? width  : m_w;
-    	height = (m_h == 0) ? height : m_h;
+    	width = (w.integer() == 0) ? width  : w.integer();
+    	height = (h.integer() == 0) ? height : h.integer();
 
-    	resource_system.spritesheet(m_spr_id)->add_sprite(m_tex_id, m_x, m_y, width, height);
+    	const int sprite_id = resource_system.spritesheet(spr_id.integer())->add_sprite(tex_id.integer(), x.integer(), y.integer(), width, height);
+
+		return static_cast<int64_t>(sprite_id);
     }
-
-private:
-    SpritesheetID m_spr_id;
-    TextureID m_tex_id;
-    int m_x, m_y, m_w, m_h;
 };
 
 

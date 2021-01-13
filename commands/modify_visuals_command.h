@@ -8,6 +8,7 @@
 #ifndef COMMANDS_MODIFY_VISUALS_COMMAND_H_
 #define COMMANDS_MODIFY_VISUALS_COMMAND_H_
 
+#include "command_return_value.h"
 #include "../math_ext.h"
 #include "../systems/rendering_system.h"
 
@@ -19,36 +20,34 @@ struct Globals;
 class ModifyVisualsCommand
 {
 public:
-	ModifyVisualsCommand(double repeat_x, double repeat_y, double spr_id, double layer)
-	: m_repeat_x(repeat_x)
-	, m_repeat_y(repeat_y)
-	, m_spr_id(spr_id)
-	, m_layer(layer)
-	{}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	const auto repeat_x = command_system.exec_next();
+    	const auto repeat_y = command_system.exec_next();
+    	const auto spr_id = command_system.exec_next();
+    	const auto layer = command_system.exec_next();
+
     	Visuals& visuals = entity_system.entity_component(entity_system.previous_entity_id(), (Visuals*)nullptr);
 
 		if(visuals)
 		{
-			if(is_negative_zero(m_repeat_x))
+			if(is_negative_zero(repeat_x.real()))
 				visuals.set_repeat_x(0);
 			else
-				visuals.set_repeat_x(visuals.repeat_x()+int(m_repeat_x));
+				visuals.set_repeat_x(visuals.repeat_x()+repeat_x.integer());
 
-			if(is_negative_zero(m_repeat_y))
+			if(is_negative_zero(repeat_y.real()))
 				visuals.set_repeat_y(0);
 			else
-				visuals.set_repeat_y(visuals.repeat_y()+int(m_repeat_y));
+				visuals.set_repeat_y(visuals.repeat_y()+repeat_y.integer());
 
-			if(is_negative_zero(m_spr_id))
+			if(is_negative_zero(spr_id.real()))
 				visuals.set_spritesheet_id(SpritesheetID{0});
 			else
-				visuals.set_spritesheet_id(SpritesheetID{visuals.spritesheet_id()+int(m_spr_id)});
+				visuals.set_spritesheet_id(SpritesheetID(visuals.spritesheet_id()+ spr_id.integer()));
 
-			if(is_negative_zero(m_layer))
+			if(is_negative_zero(layer.real()))
 			{
 				if(visuals.layer() != Visuals::VisualLayer::FAR_BACKGROUND)
 				{
@@ -58,21 +57,21 @@ public:
 			}
 			else
 			{
-				if(m_layer != 0)
+				if(layer.integer() != 0)
 				{
-					visuals.set_layer(Visuals::VisualLayer(int(visuals.layer())+int(m_layer)));
+					visuals.set_layer(Visuals::VisualLayer(int(visuals.layer())+layer.integer()));
 					rendering_system.component_updated(visuals, entity_system.previous_entity_id(), false);
 				}
 			}
+
+			return 0.0;
 		}
 		else
 		{
 			//error entity_system.previous_entity()
+			return -1.0;
 		}
 	}
-
-private:
-	double m_repeat_x, m_repeat_y, m_spr_id, m_layer;
 };
 
 

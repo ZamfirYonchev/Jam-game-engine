@@ -8,7 +8,7 @@
 #ifndef COMMANDS_ADD_TEXTURE_FROM_FILE_COMMAND_H_
 #define COMMANDS_ADD_TEXTURE_FROM_FILE_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include "../systems/resource_system.h"
 #include "../systems/rendering_system.h"
 
@@ -20,16 +20,13 @@ struct Globals;
 class AddTextureFromFileCommand
 {
 public:
-    AddTextureFromFileCommand(const std::string& file) : m_file(file) {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	resource_system.addNewTextureFromFile(m_file, rendering_system.renderer());
+    	const auto file_name = command_system.exec_next();
+    	const auto tex_id = resource_system.addNewTextureFromFile(file_name.string(), rendering_system.renderer());
+    	return static_cast<int64_t>(tex_id);
     }
-
-private:
-    std::string m_file;
 };
 
 

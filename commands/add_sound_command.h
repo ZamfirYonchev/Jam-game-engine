@@ -8,7 +8,7 @@
 #ifndef COMMANDS_ADD_SOUND_COMMAND_H_
 #define COMMANDS_ADD_SOUND_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include "../systems/resource_system.h"
 
 class ResourceSystem;
@@ -19,20 +19,14 @@ struct Globals;
 class AddSoundCommand
 {
 public:
-	AddSoundCommand(const std::string& file, const int repeat)
-	: m_file(file)
-	, m_repeat(repeat)
-	{}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	resource_system.addNewSound(m_file, m_repeat);
+    	const auto file_name = command_system.exec_next();
+    	const auto loops = command_system.exec_next();
+    	return static_cast<int64_t>(resource_system.addNewSound(file_name.string(), loops.integer()));
     }
-
-private:
-    std::string m_file;
-    int m_repeat;
 };
 
 

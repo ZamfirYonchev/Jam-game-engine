@@ -8,7 +8,7 @@
 #ifndef COMMANDS_EXPORT_ENTITIES_COMMAND_H_
 #define COMMANDS_EXPORT_ENTITIES_COMMAND_H_
 
-#include <string>
+#include "command_return_value.h"
 #include <fstream>
 #include <iostream>
 
@@ -20,23 +20,23 @@ struct Globals;
 class ExportEntitiesCommand
 {
 public:
-	ExportEntitiesCommand(const std::string& filename)
-    : m_filename(filename)
-    {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    void operator()(EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, CommandSystemT& command_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-		std::ofstream file {m_filename};
+    	const auto file_name = command_system.exec_next();
+		std::ofstream file {file_name.string()};
 
 		if(file)
+		{
 			entity_system.for_each([&](const auto& entity){ file << entity << std::endl; });
+        	return 0.0;
+		}
 		else
-			std::cerr << "Could not open file " << m_filename << " for write." << std::endl;
+		{
+			std::cerr << "Could not open file \"" << file_name.string() << "\" for write." << std::endl;
+        	return -1.0;
+		}
 	}
-
-private:
-    std::string m_filename;
 };
 
 #endif /* COMMANDS_EXPORT_ENTITIES_COMMAND_H_ */

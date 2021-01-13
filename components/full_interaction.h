@@ -28,8 +28,6 @@ public:
 	: FullInteraction(0, trigger_group, proc_id_self, on_exit_proc_id_self, proc_id_other)
 	{}
 
-	FullInteraction() : FullInteraction(0, ProcedureID{-1}, ProcedureID{-1}, ProcedureID{-1}) {}
-
     void print(std::ostream& to) const
     {
     	to << "UseFullInteraction "

@@ -23,8 +23,6 @@ public:
 	, m_last_triggered_groups(0)
 	{}
 
-	TriggerInteraction() : TriggerInteraction(0, ProcedureID{-1}, ProcedureID{-1}, ProcedureID{-1}) {}
-
     void print(std::ostream& to) const
     {
     	to << "UseTriggerInteraction "
