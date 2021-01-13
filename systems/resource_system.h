@@ -21,15 +21,16 @@ class ResourceSystem
 public:
     ResourceSystem() = default;
 
-    void addNewTextureFromFile(const std::string& file, SDL_Renderer* renderer)
+    TextureID addNewTextureFromFile(std::string_view file, SDL_Renderer* renderer)
     {
         m_textures.emplace_back();
         m_textures.back().load_from_file(file, renderer);
+        return m_textures.size()-1;
     }
 
-    void addNewTextureFromString
+    TextureID addNewTextureFromString
 	(
-		const std::string& text
+		std::string_view text
 	  , const FontID font_id
 	  , const uint8_t r
 	  , const uint8_t g
@@ -41,10 +42,12 @@ public:
     	{
     		m_textures.emplace_back();
     		m_textures.back().load_from_string(text, m_fonts[font_id], r, g, b, renderer);
+            return m_textures.size()-1;
     	}
     	else
     	{
     		//error font_id
+    		return -1;
     	}
     }
 
@@ -68,21 +71,21 @@ public:
         }
     }
 
-    FontID addNewFont(const std::string& font_file, const int size)
+    FontID addNewFont(std::string_view font_file, const int size)
     {
     	const FontID font_id = m_fonts.size();
     	m_fonts.push_back(Font(font_file, size));
     	return font_id;
     }
 
-    SoundID addNewSound(const std::string& sound_file, const int repeat)
+    SoundID addNewSound(std::string_view sound_file, const int repeat)
     {
     	const SoundID sound_id = m_sounds.size();
     	m_sounds.push_back(SoundChunk(sound_file, repeat));
     	return sound_id;
     }
 
-    MusicID addNewMusic(const std::string& file)
+    MusicID addNewMusic(std::string_view file)
     {
     	const MusicID music_id = m_music.size();
     	m_music.push_back(Music(file));
