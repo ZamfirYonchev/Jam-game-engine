@@ -10,6 +10,7 @@
 
 #include "globals.h"
 #include "math_ext.h"
+#include "types.h"
 #include <set>
 
 constexpr double absolute_or_scaled(double val, double scale)
@@ -17,9 +18,9 @@ constexpr double absolute_or_scaled(double val, double scale)
 	return val*(is_normalized(val)*(scale-1)+1);
 }
 
-constexpr unsigned long hash(const char* str)
+constexpr HashT hash(const char* str)
 {
-    unsigned long hash = 5381;
+	HashT hash = 5381;
 
     while (int c = *str++) {
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
