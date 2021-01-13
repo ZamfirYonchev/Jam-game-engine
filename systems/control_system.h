@@ -43,7 +43,7 @@ public:
 					control.clear_decisions();
 
 
-				if(control.decision_attack() && control.attack_proc_id() >= 0)
+				if(control.decision_attack() && control.attack_proc_id() > 0)
 				{
 					//const auto& position = entity_system.entity_component(id, (Position*)nullptr);
 					procedure_calls.emplace_back(id, control.attack_proc_id());
