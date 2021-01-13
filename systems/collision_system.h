@@ -120,13 +120,13 @@ public:
 
 							if(interaction1.is_in_group(interaction0.trigger_group()))
 							{
-								if(interaction0.proc_id_other() >= 0)
+								if(interaction0.proc_id_other() > 0)
 									procedure_calls.emplace_back(id1, interaction0.proc_id_other());
 							}
 
 							if(interaction0.is_in_group(interaction1.trigger_group()))
 							{
-								if(interaction1.proc_id_other() >= 0)
+								if(interaction1.proc_id_other() > 0)
 									procedure_calls.emplace_back(id0, interaction1.proc_id_other());
 							}
 
@@ -222,9 +222,9 @@ public:
 				const bool triggered      = (interaction.triggered_groups()      >> interaction.trigger_group())%2;
 				if(triggered != last_triggered)
 				{
-					if(triggered && interaction.proc_id_self() >= 0)
+					if(triggered && interaction.proc_id_self() > 0)
 						procedure_calls.emplace_back(id, interaction.proc_id_self());
-					else if(!triggered && interaction.on_exit_proc_id_self() >= 0)
+					else if(!triggered && interaction.on_exit_proc_id_self() > 0)
 						procedure_calls.emplace_back(id, interaction.on_exit_proc_id_self());
 				}
 			}
