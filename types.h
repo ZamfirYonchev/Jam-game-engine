@@ -23,6 +23,8 @@ class ExplicitAlias
     T m_value;
 };
 
+using HashT = int64_t;
+
 using EntityID = int32_t;
 using SpritesheetID = int32_t;
 using TextureID = int32_t;
