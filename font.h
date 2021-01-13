@@ -15,7 +15,7 @@
 class Font
 {
 public:
-	Font(const std::string& font_file, int size) : m_font(nullptr)
+	Font(std::string_view font_file, int size) : m_font(nullptr)
 	{
 		set_font(font_file, size);
 	}
@@ -43,12 +43,12 @@ public:
 		return *this;
 	}
 
-	void set_font(const std::string& font_file, int size)
+	void set_font(std::string_view font_file, int size)
 	{
 		if(m_font)
 			TTF_CloseFont(m_font);
 
-		m_font = TTF_OpenFont(font_file.c_str(), size);
+		m_font = TTF_OpenFont(font_file.data(), size);
 	    if(m_font == nullptr)
 	    {
 	    	std::cerr << "Failed to load " << font_file << " font: " << TTF_GetError() << std::endl;
