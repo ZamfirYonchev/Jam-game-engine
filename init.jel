@@ -1,0 +1,8 @@
+@resolution_x 1366
+@resolution_y 768
+@fullscreen 0
+@audio 1
+@sound_channels 2
+@current_level "levels/beeyond0.lvl"
+
+ExecuteFileClean *current_level
