@@ -1,4 +1,4 @@
-SetLevel "levels/level2.txt"
+@current_level "levels/beeyond0.txt"
 
 @severity_debug 0
 
