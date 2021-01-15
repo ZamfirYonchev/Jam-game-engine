@@ -30,7 +30,6 @@
 
 #include "commands/null_command.h"
 #include "commands/debug_message_command.h"
-#include "commands/set_level_command.h"
 #include "commands/fix_view_width_command.h"
 #include "commands/select_entity_command.h"
 #include "commands/extend_procedure_command.h"
@@ -123,44 +122,6 @@ int main(int argc, char** argv)
 
 	do
 	{
-		std::ifstream file;
-		file.open("settings.txt");
-
-		while(file.peek() != EOF)
-		{
-			const std::string token { [&](){ std::string result; file >> result; return result; }() }; // @suppress("Invalid arguments")
-
-			if(token == "ResolutionX")
-			{
-				file >> globals.resolution_x;
-				std::cout << "Set ResolutionX to " << globals.resolution_x << std::endl;
-			}
-			else if(token == "ResolutionY")
-			{
-				file >> globals.resolution_y;
-				std::cout << "Set ResolutionY to " << globals.resolution_y << std::endl;
-			}
-			else if(token == "Fullscreen")
-			{
-				file >> globals.fullscreen;
-				std::cout << "Set Fullscreen to " << globals.fullscreen << std::endl;
-			}
-			else if(token == "EnableAudio")
-			{
-				file >> globals.audio;
-				std::cout << "Set Audio to " << globals.audio << std::endl;
-			}
-			else if(token == "Level")
-			{
-				file >> globals.level_name;
-				std::cout << "Set level to " << globals.level_name << std::endl;
-			}
-			else
-				std::cout << "Unknown setting " << token << std::endl;
-		}
-
-		file.close();
-
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
@@ -185,26 +146,27 @@ int main(int argc, char** argv)
 		CommandSystem<ES, AS> command_system {entity_system, resource_system, input_system, rendering_system, all_systems, globals};
 		//using CS = decltype(command_system);
 
-		command_system.set_variable(hash("resolution_x"), static_cast<int64_t>(1366));
-		command_system.set_variable(hash("resolution_y"), static_cast<int64_t>(768));
-		command_system.set_variable(hash("fullscreen"), static_cast<int64_t>(1));
-		command_system.set_variable(hash("audio"), static_cast<int64_t>(1));
-		command_system.set_variable(hash("sound_channels"), static_cast<int64_t>(2));
+		command_system.set_variable(hash("resolution_x"), CommandReturnValue{1366l});
+		command_system.set_variable(hash("resolution_y"), CommandReturnValue{768l});
+		command_system.set_variable(hash("fullscreen"), CommandReturnValue{0l});
+		command_system.set_variable(hash("audio"), CommandReturnValue{1l});
+		command_system.set_variable(hash("sound_channels"), CommandReturnValue{2l});
+		command_system.set_variable(hash("current_level"), CommandReturnValue{"init.jel"});
 
 		int res_x = command_system.variable(hash("resolution_x")).integer();
 		int res_y = command_system.variable(hash("resolution_y")).integer();
 
 		SdlWindow sdl;
-		sdl.init_video(res_x//globals.resolution_x
-					 , res_y//globals.resolution_y
-					 , command_system.variable(hash("fullscreen")).boolean()//globals.fullscreen
+		sdl.init_video(res_x
+					 , res_y
+					 , command_system.variable(hash("fullscreen")).boolean()
 					 , true
-					 , command_system.variable(hash("audio")).boolean()//globals.audio
-					 , command_system.variable(hash("sound_channels")).integer()//globals.sound_channels
+					 , command_system.variable(hash("audio")).boolean()
+					 , command_system.variable(hash("sound_channels")).integer()
 					 );
 
-		command_system.set_variable(hash("resolution_x"), static_cast<int64_t>(res_x));
-		command_system.set_variable(hash("resolution_y"), static_cast<int64_t>(res_y));
+		command_system.set_variable(hash("resolution_x"), CommandReturnValue{static_cast<int64_t>(res_x)});
+		command_system.set_variable(hash("resolution_y"), CommandReturnValue{static_cast<int64_t>(res_y)});
 
 		rendering_system.set_renderer(sdl.renderer());
 		rendering_system.set_resolution_x(res_x);
@@ -215,7 +177,6 @@ int main(int argc, char** argv)
 	    command_system.register_command("Set", SetVariableCommand{});
 	    command_system.register_command("Val", GetVariableCommand{});
 	    command_system.register_command("DebugMessage", DebugMessageCommand{});
-		command_system.register_command("SetLevel", SetLevelCommand{});
 		command_system.register_command("FixViewWidth", FixViewWidthCommand{});
 		command_system.register_command("SelectEntity", SelectEntityCommand{});
 		command_system.register_command("Select", SelectEntityCommand{});
@@ -292,7 +253,7 @@ int main(int argc, char** argv)
 		command_system.register_command("PlayMusic", PlayMusicCommand{});
 
 		command_system.push(ExecuteFileCleanCommand{});
-		command_system.push(LiteralValueCommand{globals.level_name});
+		command_system.push(LiteralValueCommand{command_system.variable(hash("current_level"))});
 
 		const double update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;
