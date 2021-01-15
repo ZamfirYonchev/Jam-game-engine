@@ -26,7 +26,7 @@
 class RenderingSystem
 {
 public:
-	RenderingSystem(SDL_Renderer* renderer) : m_renderer(renderer) {}
+	RenderingSystem(SDL_Renderer* renderer) : m_renderer(renderer), m_resolution_x{800}, m_resolution_y{600} {}
 	RenderingSystem() : RenderingSystem(nullptr) {}
 
 	void add_id(const EntityID entity, const Visuals::VisualLayer layer)
@@ -69,7 +69,7 @@ public:
 
         const auto& screen_zone_position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
 
-        const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*globals.resolution_y/screen_zone_position.h() : 1.0;
+        const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*m_resolution_y/screen_zone_position.h() : 1.0;
 
         for(auto layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
         {
@@ -111,9 +111,9 @@ public:
     									dest.w = screen_pos.w()*m_screen_to_view_scale + 0.5;
     									dest.h = screen_pos.h()*m_screen_to_view_scale + 0.5;
     									dest.x = screen_pos.x()*m_screen_to_view_scale + 0.5;
-    									dest.y = globals.resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5;
+    									dest.y = m_resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5;
 
-    									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, globals.resolution_x, globals.resolution_y))
+    									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, m_resolution_x, m_resolution_y))
     									{
     										const int err = SDL_RenderCopyEx(m_renderer, texture, &sprite->clip, &dest, 0, nullptr, flip);
     										if(err)
@@ -137,7 +137,7 @@ public:
     					{
     						const SDL_Rect hitbox
     							{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)
-    							, int(globals.resolution_y + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
+    							, int(m_resolution_y + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
     							, int(position.w()*m_screen_to_view_scale)
     							, int(position.h()*m_screen_to_view_scale)
     							};
@@ -161,10 +161,14 @@ public:
 
     }
 
+    void set_renderer(SDL_Renderer* renderer) { m_renderer = renderer; }
     SDL_Renderer* renderer() { return m_renderer; }
+    void set_resolution_x(const int res_x) { m_resolution_x = res_x; }
+    void set_resolution_y(const int res_y) { m_resolution_y = res_y; }
 
 protected:
     SDL_Renderer* m_renderer;
+    int m_resolution_x, m_resolution_y;
     std::set<EntityID> entities[Visuals::NUM_OF_LAYERS];
     std::unordered_map<EntityID, Visuals::VisualLayer> entity_layer;
 };

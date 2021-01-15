@@ -107,13 +107,15 @@
 
 #include "commands/set_variable_command.h"
 #include "commands/get_variable_command.h"
+#include "commands/literal_value_command.h"
+
+#include "utilities.h"
 
 #include <list>
 #include <utility>
 #include <string>
 #include <random>
 #include <array>
-#include "commands/literal_value_command.h"
 
 int main(int argc, char** argv)
 {
@@ -159,21 +161,11 @@ int main(int argc, char** argv)
 
 		file.close();
 
-
-		SdlWindow sdl;
-		sdl.init_video(globals.resolution_x
-					 , globals.resolution_y
-					 , globals.fullscreen
-					 , true
-					 , globals.audio
-					 , globals.sound_channels);
-
-
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
 		InputSystem input_system;
-		RenderingSystem rendering_system {sdl.renderer()};
+		RenderingSystem rendering_system;
 
 		ControlSystem<ES> control_system {entity_system};
 		MovementSystem<ES> movement_system {entity_system};
@@ -192,6 +184,31 @@ int main(int argc, char** argv)
 		using AS = decltype(all_systems);
 		CommandSystem<ES, AS> command_system {entity_system, resource_system, input_system, rendering_system, all_systems, globals};
 		//using CS = decltype(command_system);
+
+		command_system.set_variable(hash("resolution_x"), static_cast<int64_t>(1366));
+		command_system.set_variable(hash("resolution_y"), static_cast<int64_t>(768));
+		command_system.set_variable(hash("fullscreen"), static_cast<int64_t>(1));
+		command_system.set_variable(hash("audio"), static_cast<int64_t>(1));
+		command_system.set_variable(hash("sound_channels"), static_cast<int64_t>(2));
+
+		int res_x = command_system.variable(hash("resolution_x")).integer();
+		int res_y = command_system.variable(hash("resolution_y")).integer();
+
+		SdlWindow sdl;
+		sdl.init_video(res_x//globals.resolution_x
+					 , res_y//globals.resolution_y
+					 , command_system.variable(hash("fullscreen")).boolean()//globals.fullscreen
+					 , true
+					 , command_system.variable(hash("audio")).boolean()//globals.audio
+					 , command_system.variable(hash("sound_channels")).integer()//globals.sound_channels
+					 );
+
+		command_system.set_variable(hash("resolution_x"), static_cast<int64_t>(res_x));
+		command_system.set_variable(hash("resolution_y"), static_cast<int64_t>(res_y));
+
+		rendering_system.set_renderer(sdl.renderer());
+		rendering_system.set_resolution_x(res_x);
+		rendering_system.set_resolution_y(res_y);
 
 		std::mt19937 gen {std::random_device{}()};
 

@@ -10,6 +10,7 @@
 
 #include "command_return_value.h"
 #include "../globals.h"
+#include "../utilities.h"
 
 class ResourceSystem;
 class InputSystem;
@@ -23,7 +24,8 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
 		Position& position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
-		position.set_w(int(position.h()*globals.resolution_x/globals.resolution_y));
+		//position.set_w(int(position.h()*globals.resolution_x/globals.resolution_y));
+		position.set_w(int(position.h()*command_system.variable(hash("resolution_x")).real()/command_system.variable(hash("resolution_y")).real()/*globals.resolution_x/globals.resolution_y*/));
 
 		return 0.0;
 	}

@@ -38,7 +38,6 @@ class CommandSystem
 {
 public:
 	using CommandT = std::function<CommandReturnValue(CommandSystem& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals)>;
-	using ParserT = std::function<CommandT(std::istream&)>;
 
     CommandSystem(EntitySystemT& entity_system
     			, ResourceSystem& resource_system
@@ -74,6 +73,14 @@ public:
     int size() const { return m_commands.size(); }
 
     const CommandReturnValue& variable(const HashT name_hash) const
+    {
+    	if(m_variables.find(name_hash) == cend(m_variables))
+    		std::cerr << "Accessing an uninitialized variable at " << std::hex << name_hash << std::dec << std::endl;
+
+    	return m_variables[name_hash];
+    }
+
+    CommandReturnValue& variable(const HashT name_hash)
     {
     	if(m_variables.find(name_hash) == cend(m_variables))
     		std::cerr << "Accessing an uninitialized variable at " << std::hex << name_hash << std::dec << std::endl;
