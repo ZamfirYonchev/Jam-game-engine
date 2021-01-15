@@ -64,12 +64,12 @@ public:
 				}
 			}
 
-			return 0.0;
+			return CommandReturnValue{0.0};
 		}
 		else
 		{
 			//error entity_system.previous_entity()
-			return -1.0;
+			return CommandReturnValue{-1.0};
 		}
 	}
 };

@@ -75,12 +75,12 @@ public:
 			else
 				movement.set_gravity_affected(gravity_affected.boolean() ^ movement.gravity_affected());
 
-			return 0.0;
+			return CommandReturnValue{0.0};
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
-			return -1.0;
+			return CommandReturnValue{-1.0};
 		}
 	}
 };

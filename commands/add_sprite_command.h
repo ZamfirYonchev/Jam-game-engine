@@ -35,13 +35,13 @@ public:
     	if(spr_id.integer() < 0)
     	{
 			std::cerr << "AddSprite: spritesheet id " << spr_id.integer() << " must be >= 0\n";
-			return -1.0;
+			return CommandReturnValue{-1.0};
     	}
 
     	if(tex_id.integer() < 0)
     	{
 			std::cerr << "AddSprite: texture id " << tex_id.integer() << " must be >= 0\n";
-			return -1.0;
+			return CommandReturnValue{-1.0};
     	}
 
     	int width, height;
@@ -52,7 +52,7 @@ public:
     		else
     		{
     			//todo add error message
-    			return -1.0;
+    			return CommandReturnValue{-1.0};
     		}
     	}
 
@@ -61,7 +61,7 @@ public:
 
     	const int sprite_id = resource_system.spritesheet(spr_id.integer())->add_sprite(tex_id.integer(), x.integer(), y.integer(), width, height);
 
-		return static_cast<int64_t>(sprite_id);
+		return CommandReturnValue{static_cast<int64_t>(sprite_id)};
     }
 };
 

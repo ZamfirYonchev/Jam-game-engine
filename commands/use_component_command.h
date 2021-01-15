@@ -65,7 +65,7 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
     	set_component(entity_system, rendering_system, all_systems, T{});
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 
     template<typename EntitySystemT, typename AllSystemsT>
@@ -86,7 +86,7 @@ CommandReturnValue UseComponentCommand<AbsolutePosition>::operator()(CommandSyst
 
 	set_component(entity_system, rendering_system, all_systems, {x.real(), y.real(), w.real(), h.real()});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 
@@ -106,7 +106,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AttachedPosition<EntitySystemT>{EntityID(attached_id.integer()), offset_x.real(), offset_y.real(), offset_w.real(), offset_h.real(), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -124,7 +124,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AttachedPosition<EntitySystemT>{attached_id.integer(), offset_x.real(), offset_y.real(), offset_w.real(), offset_h.real(), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -141,7 +141,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, BuildPosition<EntitySystemT>{self_id, EntityID(attached_id.integer()), offset_x.real(), offset_y.real(), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -158,7 +158,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.real(), self_id, stability_control.real(), entity_system, input_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -172,7 +172,7 @@ CommandReturnValue UseComponentCommand<InputSelectControl>::operator()(CommandSy
 
 	set_component(entity_system, rendering_system, all_systems, {int(select.integer()), int(max.integer()), ProcedureID(proc_id.integer()), input_system});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -185,7 +185,7 @@ CommandReturnValue UseComponentCommand<ConstantControl>::operator()(CommandSyste
 
 	set_component(entity_system, rendering_system, all_systems, {move_decision.real(), vetical_decision.real(), Control::LookDir(look_dir.integer())});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 class UseGuideControlCommand
@@ -200,7 +200,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, GuideControl<EntitySystemT>{self_id, EntityID(target_id.integer()), range.real(), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -218,7 +218,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, ChaseAIControl<EntitySystemT>{self_id, EntityID(target_id.integer()), ProcedureID(attack_proc_id.integer()), attack_cooldown.real(), range.real(), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -236,7 +236,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, ParticleControl{m_gen, random_factor.real(), directed_factor.real(), direction_angle.real()});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 
 private:
@@ -256,7 +256,7 @@ CommandReturnValue UseComponentCommand<FullMovement>::operator()(CommandSystemT&
 
 	set_component(entity_system, rendering_system, all_systems, {mass.real(), friction_x.real(), friction_x.real(), move_force.real(), jump_force.real(), gravity_affected.boolean()});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -270,7 +270,7 @@ CommandReturnValue UseComponentCommand<InstantMovement>::operator()(CommandSyste
 
 	set_component(entity_system, rendering_system, all_systems, {mass.real(), friction_x.real(), friction_x.real(), move_force.real()});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -282,7 +282,7 @@ CommandReturnValue UseComponentCommand<BasicCollision>::operator()(CommandSystem
 
 	set_component(entity_system, rendering_system, all_systems, {Collision::CollisionState(state.integer()), elasticity.real()});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -294,7 +294,7 @@ CommandReturnValue UseComponentCommand<DamageCollision>::operator()(CommandSyste
 
 	set_component(entity_system, rendering_system, all_systems, {Collision::CollisionState(state.integer()), damage.real()});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -309,7 +309,7 @@ CommandReturnValue UseComponentCommand<FullInteraction>::operator()(CommandSyste
 
 	set_component(entity_system, rendering_system, all_systems, {int32_t(group_vec.integer()), int8_t(trigger_group.integer()), ProcedureID(proc_id_self.integer()), ProcedureID(proc_id_other.integer()), ProcedureID(proc_id_self_on_exit.integer())});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -320,7 +320,7 @@ CommandReturnValue UseComponentCommand<NormalInteraction>::operator()(CommandSys
 
 	set_component(entity_system, rendering_system, all_systems, {int32_t(group_vec.integer())});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -334,7 +334,7 @@ CommandReturnValue UseComponentCommand<TriggerInteraction>::operator()(CommandSy
 
 	set_component(entity_system, rendering_system, all_systems, {int8_t(trigger_group.integer()), ProcedureID(proc_id_self.integer()), ProcedureID(proc_id_other.integer()), ProcedureID(proc_id_self_on_exit.integer())});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 template<>
@@ -346,7 +346,7 @@ CommandReturnValue UseComponentCommand<CharacterHealth>::operator()(CommandSyste
 
 	set_component(entity_system, rendering_system, all_systems, {hp.real(), max_hp.real()});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 class UseAttachedHealthCommand
@@ -361,7 +361,7 @@ public:
 
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AttachedHealth<EntitySystemT>{EntityID(attached_id.integer()), offset_hp.real(), offset_max_hp.real(), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -374,7 +374,7 @@ CommandReturnValue UseComponentCommand<TimedHealth>::operator()(CommandSystemT& 
 
 	set_component(entity_system, rendering_system, all_systems, {ttl.real(), ProcedureID(proc_id.integer())});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 class UseCharacterSoundsCommand
@@ -408,7 +408,7 @@ public:
 											   , entity_system}
 		);
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -424,7 +424,7 @@ public:
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
 				, CharacterVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), self_id, resource_system, entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -441,7 +441,7 @@ public:
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
 				, HealthVisuals<EntitySystemT>{self_id, SpritesheetID(spr_id.integer()), uint16_t(repeat_x.integer()), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -457,7 +457,7 @@ public:
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
 				, MenuItemVisuals<EntitySystemT>{self_id, SpritesheetID(spr_id.integer()), entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 
@@ -470,7 +470,7 @@ CommandReturnValue UseComponentCommand<StaticVisuals>::operator()(CommandSystemT
 
 	set_component(entity_system, rendering_system, all_systems, {SpritesheetID(spr_id.integer()), int(sprite.integer())});
 
-	return 0.0;
+	return CommandReturnValue{0.0};
 }
 
 class UseTiledVisualsCommand
@@ -487,7 +487,7 @@ public:
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
 				, TiledVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), tile_w.real(), tile_h.real(), self_id, entity_system});
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 

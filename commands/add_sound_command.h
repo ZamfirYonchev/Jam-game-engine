@@ -25,7 +25,7 @@ public:
     {
     	const auto file_name = command_system.exec_next();
     	const auto loops = command_system.exec_next();
-    	return static_cast<int64_t>(resource_system.addNewSound(file_name.string(), loops.integer()));
+    	return CommandReturnValue{static_cast<int64_t>(resource_system.addNewSound(file_name.string(), loops.integer()))};
     }
 };
 

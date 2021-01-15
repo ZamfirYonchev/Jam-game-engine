@@ -57,7 +57,7 @@ public:
 																		 , uint8_t(dead_size.integer())
 																		 , scale_factor.real()
 																		 });
-    	return static_cast<int64_t>(globals.access_spritesheet_id);
+    	return CommandReturnValue{static_cast<int64_t>(globals.access_spritesheet_id)};
     }
 };
 

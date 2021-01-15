@@ -34,7 +34,7 @@ public:
     	else
         	globals.destination_variable_hash = m_hash;
 
-    	return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 
 private:

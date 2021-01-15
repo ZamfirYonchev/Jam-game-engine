@@ -29,12 +29,12 @@ public:
 		if(file)
 		{
 			entity_system.for_each([&](const auto& entity){ file << entity << std::endl; });
-        	return 0.0;
+	    	return CommandReturnValue{0.0};
 		}
 		else
 		{
 			std::cerr << "Could not open file \"" << file_name.string() << "\" for write." << std::endl;
-        	return -1.0;
+	    	return CommandReturnValue{-1.0};
 		}
 	}
 };

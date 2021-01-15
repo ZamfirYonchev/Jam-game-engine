@@ -25,7 +25,7 @@ public:
     {
     	const auto file_name = command_system.exec_next();
     	const auto tex_id = resource_system.addNewTextureFromFile(file_name.string(), rendering_system.renderer());
-    	return static_cast<int64_t>(tex_id);
+    	return CommandReturnValue{static_cast<int64_t>(tex_id)};
     }
 };
 

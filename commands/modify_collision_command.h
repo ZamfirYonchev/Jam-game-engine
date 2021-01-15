@@ -51,12 +51,12 @@ public:
 			else
 				collision.set_elasticity(clip(collision.elasticity() + elasticity.real(), 0.0, 1.0));
 
-			return 0.0;
+			return CommandReturnValue{0.0};
 		}
 		else
 		{
 			//error globals.access_entity_id
-			return -1.0;
+			return CommandReturnValue{-1.0};
 		}
 	}
 };

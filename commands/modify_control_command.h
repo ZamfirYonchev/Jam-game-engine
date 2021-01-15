@@ -51,12 +51,12 @@ public:
 			else
 				control.set_look_dir(Control::LookDir(look_dir.boolean() ^ bool(control.look_dir())));
 
-			return 0.0;
+			return CommandReturnValue{0.0};
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
-			return -1.0;
+			return CommandReturnValue{-1.0};
 		}
 	}
 };

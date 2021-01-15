@@ -35,7 +35,7 @@ public:
     	command_system.push(ExecuteFileCommand{});
     	command_system.push(LiteralValueCommand{file_name.string()});
 
-    	return 0.0;
+    	return CommandReturnValue{0.0};
     }
 };
 

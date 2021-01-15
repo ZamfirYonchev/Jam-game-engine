@@ -33,7 +33,7 @@ public:
     	if(font_id.integer() < 0)
     	{
 			std::cerr << "AddTextureFromStringCommand: font id " << font_id.integer() << " must be >= 0\n";
-			return -1.0;
+			return CommandReturnValue{-1.0};
     	}
     	else
     	{
@@ -43,7 +43,7 @@ public:
 														 , g.integer()
 														 , b.integer()
 														 , rendering_system.renderer());
-	    	return static_cast<int64_t>(tex_id);
+	    	return CommandReturnValue{static_cast<int64_t>(tex_id)};
     	}
     }
 };

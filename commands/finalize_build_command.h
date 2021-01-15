@@ -25,7 +25,7 @@ public:
 	{
 		const auto& position = entity_system.entity_component(entity_system.previous_entity_id(), (Position*)nullptr);
 		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AbsolutePosition{position.x(), position.y(), position.w(), position.h()});
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 

@@ -22,7 +22,7 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-		return 0.0;
+    	return CommandReturnValue{0.0};
     }
 };
 

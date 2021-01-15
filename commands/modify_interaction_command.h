@@ -61,12 +61,12 @@ public:
 			else
 				interaction.set_on_exit_proc_id_self(ProcedureID(interaction.on_exit_proc_id_self() + on_exit_proc_id_self.integer()));
 
-			return 0.0;
+			return CommandReturnValue{0.0};
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
-			return -1.0;
+			return CommandReturnValue{-1.0};
 		}
 	}
 };

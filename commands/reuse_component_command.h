@@ -31,7 +31,7 @@ public:
 		ss << component;
 		command_system.process_stream(ss);
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
 	}
 };
 

@@ -36,12 +36,12 @@ public:
     			std::cerr << "Cannot play sound " << sound_id.integer() << "on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
     		}
 
-			return 0.0;
+        	return CommandReturnValue{0.0};
     	}
     	else
     	{
     		//error m_sound_id
-			return -1.0;
+        	return CommandReturnValue{-1.0};
     	}
     }
 };

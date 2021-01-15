@@ -24,7 +24,7 @@ public:
     {
     	const auto paused = command_system.exec_next();
         globals.app_paused = paused.boolean();
-		return 0.0;
+    	return CommandReturnValue{0.0};
     }
 };
 

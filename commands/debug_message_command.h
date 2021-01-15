@@ -41,7 +41,7 @@ public:
     		std::cout << text.string() << std::endl;
     	}
 
-		return 0.0;
+    	return CommandReturnValue{0.0};
     }
 };
 

@@ -19,10 +19,10 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 struct CommandReturnValue
 {
-	CommandReturnValue() : value{0.0} {} // @suppress("Symbol is not resolved")
-	CommandReturnValue(const int64_t v) : value{v} {} // @suppress("Symbol is not resolved")
-	CommandReturnValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
-	CommandReturnValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
+	explicit CommandReturnValue() : value{0.0} {} // @suppress("Symbol is not resolved")
+	explicit CommandReturnValue(const int64_t v) : value{v} {} // @suppress("Symbol is not resolved")
+	explicit CommandReturnValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
+	explicit CommandReturnValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
 
     int64_t operator=(const int64_t v) { value = v; return v; }
     double operator=(const double v) { value = v; return v; }

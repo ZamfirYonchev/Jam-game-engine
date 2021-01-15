@@ -21,6 +21,7 @@ public:
 	LiteralValueCommand(const double value) : m_value{value} {}
 	LiteralValueCommand(const int64_t value) : m_value{value} {}
 	LiteralValueCommand(std::string_view value) : m_value{std::string{value}} {}
+	LiteralValueCommand(const CommandReturnValue& value) : m_value{value} {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
