@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 		command_system.set_variable(hash("resolution_x"), CommandReturnValue{1366l});
 		command_system.set_variable(hash("resolution_y"), CommandReturnValue{768l});
 		command_system.set_variable(hash("fullscreen"), CommandReturnValue{0l});
-		command_system.set_variable(hash("audio"), CommandReturnValue{1l});
+		command_system.set_variable(hash("enable_audio"), CommandReturnValue{1l});
 		command_system.set_variable(hash("sound_channels"), CommandReturnValue{2l});
 		command_system.set_variable(hash("current_level"), CommandReturnValue{"init.jel"});
 
@@ -161,7 +161,7 @@ int main(int argc, char** argv)
 					 , res_y
 					 , command_system.variable(hash("fullscreen")).boolean()
 					 , true
-					 , command_system.variable(hash("audio")).boolean()
+					 , command_system.variable(hash("enable_audio")).boolean()
 					 , command_system.variable(hash("sound_channels")).integer()
 					 );
 
