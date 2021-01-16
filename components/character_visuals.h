@@ -44,10 +44,10 @@ public:
 
     void update_animation(const Time time_diff)
     {
-    	const auto& control = m_entity_system.entity_component(m_self_id, (Control*)nullptr);
-    	const auto& movement = m_entity_system.entity_component(m_self_id, (Movement*)nullptr);
-    	const auto& collision = m_entity_system.entity_component(m_self_id, (Collision*)nullptr);
-    	const auto& health = m_entity_system.entity_component(m_self_id, (Health*)nullptr);
+    	const auto& control = m_entity_system.entity_component(m_self_id, Control::null);
+    	const auto& movement = m_entity_system.entity_component(m_self_id, Movement::null);
+    	const auto& collision = m_entity_system.entity_component(m_self_id, Collision::null);
+    	const auto& health = m_entity_system.entity_component(m_self_id, Health::null);
 
     	switch(m_current_state)
 		{

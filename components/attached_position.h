@@ -40,26 +40,26 @@ public:
 
     double x() const
     {
-    	return m_entity_system.entity_component(m_attached_id, (Position*)nullptr).x()
-    		+ absolute_or_scaled(m_offset_x, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).w());
+    	return m_entity_system.entity_component(m_attached_id, Position::null).x()
+    		+ absolute_or_scaled(m_offset_x, m_entity_system.entity_component(m_attached_id, Position::null).w());
     }
 
     double y() const
     {
-    	return m_entity_system.entity_component(m_attached_id, (Position*)nullptr).y()
-    		+ absolute_or_scaled(m_offset_y, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).h());
+    	return m_entity_system.entity_component(m_attached_id, Position::null).y()
+    		+ absolute_or_scaled(m_offset_y, m_entity_system.entity_component(m_attached_id, Position::null).h());
     }
 
     double w() const
     {
-    	return m_entity_system.entity_component(m_attached_id, (Position*)nullptr).w()
-    		 + absolute_or_scaled(m_offset_w, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).w());
+    	return m_entity_system.entity_component(m_attached_id, Position::null).w()
+    		 + absolute_or_scaled(m_offset_w, m_entity_system.entity_component(m_attached_id, Position::null).w());
     }
 
     double h() const
     {
-    	return m_entity_system.entity_component(m_attached_id, (Position*)nullptr).h()
-    		 + absolute_or_scaled(m_offset_h, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).h());
+    	return m_entity_system.entity_component(m_attached_id, Position::null).h()
+    		 + absolute_or_scaled(m_offset_h, m_entity_system.entity_component(m_attached_id, Position::null).h());
     }
 
     void set_x(double val) {}

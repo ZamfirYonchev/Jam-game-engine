@@ -62,13 +62,13 @@ public:
 	void set_component(AllSystemsT& all_systems, RenderingSystemT& rendering_system, const T& _component)
 	{
     	using BaseT = typename T::Base;
-		const int8_t change = is_null_component(component((BaseT*)nullptr)) - is_null_component(_component);
+		const int8_t change = is_null_component(component(BaseT::null)) - is_null_component(_component);
 
 		set_component_ptr<BaseT>(make_unique_component<T>(_component));
 
-		all_systems.component_updated(component((BaseT*)nullptr), m_id, change);
+		all_systems.component_updated(component(BaseT::null), m_id, change);
 		if constexpr(std::is_same<BaseT, Visuals>::value)
-			rendering_system.component_updated(component((BaseT*)nullptr), m_id, change);
+			rendering_system.component_updated(component(BaseT::null), m_id, change);
 	}
 
 	void set_id(const EntityID id) { m_id = id; }
@@ -83,7 +83,7 @@ public:
     friend std::ostream& operator<<(std::ostream& stream, const Entity& entity)
     {
 		stream << "AddEntity\n";
-    	((stream << entity.component((Ts*)nullptr)), ...);
+    	((stream << entity.component(Ts::null)), ...);
 		stream << std::endl;
 
     	return stream;

@@ -32,7 +32,7 @@ public:
 
     uint8_t animation_sprite(uint16_t rx, uint16_t ry) const
     {
-    	const auto& control = m_entity_system.entity_component(m_self_id, (Control*)nullptr);
+    	const auto& control = m_entity_system.entity_component(m_self_id, Control::null);
     	return control.decision_attack() ? 2 : (control.decision_vertical() != 0) ? 1 : 0;
     }
 

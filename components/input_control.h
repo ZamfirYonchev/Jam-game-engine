@@ -63,7 +63,7 @@ public:
 
     	m_look_dir = m_walk_dir > 0 ? LookDir::RIGHT : m_walk_dir < 0 ? LookDir::LEFT : m_look_dir;
 
-    	const auto& self_movement = m_entity_system.entity_component(m_self_id, (Movement*)nullptr);
+    	const auto& self_movement = m_entity_system.entity_component(m_self_id, Movement::null);
 
     	if(m_stability_control && m_walk_dir == 0 && abs(self_movement.vx()) > self_movement.move_force()/self_movement.mass())
         {

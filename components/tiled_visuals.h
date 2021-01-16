@@ -47,22 +47,22 @@ public:
 
     uint16_t repeat_x() const
     {
-    	return std::ceil(m_entity_system.entity_component(m_self_id, (Position*)nullptr).w()/m_tile_w);
+    	return std::ceil(m_entity_system.entity_component(m_self_id, Position::null).w()/m_tile_w);
     }
 
     uint16_t repeat_y() const
     {
-    	return std::ceil(m_entity_system.entity_component(m_self_id, (Position*)nullptr).h()/m_tile_h);
+    	return std::ceil(m_entity_system.entity_component(m_self_id, Position::null).h()/m_tile_h);
     }
 
     void set_repeat_x(uint16_t val)
     {
-    	m_tile_w = m_entity_system.entity_component(m_self_id, (Position*)nullptr).w()/val;
+    	m_tile_w = m_entity_system.entity_component(m_self_id, Position::null).w()/val;
     }
 
     void set_repeat_y(uint16_t val)
     {
-    	m_tile_h = m_entity_system.entity_component(m_self_id, (Position*)nullptr).h()/val;
+    	m_tile_h = m_entity_system.entity_component(m_self_id, Position::null).h()/val;
     }
 
     VisualLayer layer() const { return m_layer; }

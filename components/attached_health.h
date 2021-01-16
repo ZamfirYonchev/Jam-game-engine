@@ -37,12 +37,12 @@ public:
     void update_health(double time_diff) {}
     double hp() const
     {
-    	return m_entity_system.entity_component(m_attached_id, (Health*)nullptr).hp() + m_offset_hp;
+    	return m_entity_system.entity_component(m_attached_id, Health::null).hp() + m_offset_hp;
     }
 
     double max_hp() const
     {
-    	return m_entity_system.entity_component(m_attached_id, (Health*)nullptr).max_hp() + m_offset_max_hp;
+    	return m_entity_system.entity_component(m_attached_id, Health::null).max_hp() + m_offset_max_hp;
     }
     bool alive() const { return hp() > 0; }
     ProcedureID on_death_exec() const { return ProcedureID(0); }

@@ -18,9 +18,8 @@ class BuildPosition : public Position
 {
 public:
 	using Base = Position;
-	BuildPosition(EntityID self_id, EntityID attached_id, double origin_x, double origin_y, EntitySystemT& entity_system)
-    : m_self_id(self_id)
-	, m_attached_id(attached_id)
+	BuildPosition(EntityID attached_id, double origin_x, double origin_y, EntitySystemT& entity_system)
+	: m_attached_id(attached_id)
     , m_origin_x(origin_x)
     , m_origin_y(origin_y)
 	, m_entity_system(entity_system)
@@ -34,22 +33,22 @@ public:
 
     double x() const
     {
-    	return min(m_origin_x, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).x());
+    	return min(m_origin_x, m_entity_system.entity_component(m_attached_id, Position::null).x());
     }
 
     double y() const
     {
-    	return min(m_origin_y, m_entity_system.entity_component(m_attached_id, (Position*)nullptr).y());
+    	return min(m_origin_y, m_entity_system.entity_component(m_attached_id, Position::null).y());
     }
 
     double w() const
     {
-    	return abs(m_origin_x - m_entity_system.entity_component(m_attached_id, (Position*)nullptr).x());
+    	return abs(m_origin_x - m_entity_system.entity_component(m_attached_id, Position::null).x());
     }
 
     double h() const
     {
-    	return abs(m_origin_y - m_entity_system.entity_component(m_attached_id, (Position*)nullptr).y());
+    	return abs(m_origin_y - m_entity_system.entity_component(m_attached_id, Position::null).y());
     }
 
     void set_x(double val) {}
@@ -62,7 +61,7 @@ public:
     void mod_w(double val) {}
     void mod_h(double val) {}
 
-    EntityID m_self_id, m_attached_id;
+    EntityID m_attached_id;
     double m_origin_x, m_origin_y;
 
 private:

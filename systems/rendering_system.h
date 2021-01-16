@@ -66,7 +66,7 @@ public:
         SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
         SDL_RenderClear(m_renderer);
 
-        const auto& screen_zone_position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
+        const auto& screen_zone_position = entity_system.entity_component(EntityID{0}, Position::null);
 
         const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*m_resolution_y/screen_zone_position.h() : 1.0;
 
@@ -74,11 +74,11 @@ public:
         {
     		for(const EntityID id : entities[layer])
     		{
-    			auto& visuals = entity_system.entity_component(id, (Visuals*)nullptr);
+    			auto& visuals = entity_system.entity_component(id, Visuals::null);
     			if(visuals)
     			{
-    				const auto& position = entity_system.entity_component(id, (Position*)nullptr);
-    				const auto& control = entity_system.entity_component(id, (Control*)nullptr);
+    				const auto& position = entity_system.entity_component(id, Position::null);
+    				const auto& control = entity_system.entity_component(id, Control::null);
 
 					if(app_paused == false)
     					visuals.update_animation(time_diff);

@@ -32,12 +32,12 @@ public:
 
 		for(const auto id : entities)
     	{
-    		auto& movement = m_entity_system.entity_component(id, (Movement*)nullptr);
+    		auto& movement = m_entity_system.entity_component(id, Movement::null);
         	if(movement)
         	{
-    			const auto& control = m_entity_system.entity_component(id, (Control*)nullptr);
-    			const auto& collision = m_entity_system.entity_component(id, (Collision*)nullptr);
-    			auto& position  = m_entity_system.entity_component(id, (Position*)nullptr);
+    			const auto& control = m_entity_system.entity_component(id, Control::null);
+    			const auto& collision = m_entity_system.entity_component(id, Collision::null);
+    			auto& position  = m_entity_system.entity_component(id, Position::null);
 
     			if(movement.gravity_affected())
     			{

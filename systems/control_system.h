@@ -27,10 +27,10 @@ public:
 
 		for(const auto id : entities)
 		{
-			auto& control = m_entity_system.entity_component(id, (Control*)nullptr);
+			auto& control = m_entity_system.entity_component(id, Control::null);
 	    	if(control)
 	    	{
-				const auto& health = m_entity_system.entity_component(id, (Health*)nullptr);
+				const auto& health = m_entity_system.entity_component(id, Health::null);
 
 				if(health.alive())
 				{
@@ -47,7 +47,7 @@ public:
 
 				if(control.decision_attack() && control.attack_proc_id() > 0)
 				{
-					//const auto& position = entity_system.entity_component(id, (Position*)nullptr);
+					//const auto& position = entity_system.entity_component(id, Position::null);
 					procedure_calls.emplace_back(id, control.attack_proc_id());
 					/*if(control.look_dir() == Control::LookDir::LEFT)
 					{

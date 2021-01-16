@@ -33,14 +33,14 @@ public:
 
 		for(const auto entity_id : entities)
 		{
-			Interaction& interaction = m_entity_system.entity_component(entity_id, (Interaction*)nullptr);
+			Interaction& interaction = m_entity_system.entity_component(entity_id, Interaction::null);
 			interaction.update_last_triggered_groups();
 		}
 
 		//register+unregister entities from regions
 		for(const auto entity_id : entities)
 		{
-			const Position& position = m_entity_system.entity_component(entity_id, (Position*)nullptr);
+			const Position& position = m_entity_system.entity_component(entity_id, Position::null);
 			if(position)
 			{
 				const Collision::RegionLocation& old_location = regions_per_entity[entity_id];
@@ -75,18 +75,18 @@ public:
 
 		for(const auto entity_id : entities)
 		{
-			const auto& collision = m_entity_system.entity_component(entity_id, (Collision*)nullptr);
+			const auto& collision = m_entity_system.entity_component(entity_id, Collision::null);
 			if(collision.state() == Collision::CollisionState::MOVEABLE)
 				collision_correction.insert(std::make_pair(entity_id, CorrectionValues{}));
 		}
 
 		for(const auto id0 : entities)
 		{
-			auto& collision0 = m_entity_system.entity_component(id0, (Collision*)nullptr);
+			auto& collision0 = m_entity_system.entity_component(id0, Collision::null);
 			if(collision0)
 			{
-				auto& interaction0 = m_entity_system.entity_component(id0, (Interaction*)nullptr);
-				const auto& position0 = m_entity_system.entity_component(id0, (Position*)nullptr);
+				auto& interaction0 = m_entity_system.entity_component(id0, Interaction::null);
+				const auto& position0 = m_entity_system.entity_component(id0, Position::null);
 
 				collision0.set_standing_on(Collision::SurfaceType::AIR);
 				const Collision::RegionLocation& location0 = regions_per_entity[id0];
@@ -105,10 +105,10 @@ public:
 
 				for(const auto id1 : near_entities)
 				{
-					const auto& collision1 = m_entity_system.entity_component(id1, (Collision*)nullptr);
+					const auto& collision1 = m_entity_system.entity_component(id1, Collision::null);
 					if(collision1 && id1 != id0)
 					{
-						const auto& position1 = m_entity_system.entity_component(id1, (Position*)nullptr);
+						const auto& position1 = m_entity_system.entity_component(id1, Position::null);
 
 						if(objects_collide(position0.x(), position0.y(), position0.w(), position0.h()
 										 , position1.x(), position1.y(), position1.w(), position1.h()
@@ -116,7 +116,7 @@ public:
 						  )
 						{
 							//entities collide
-							const auto& interaction1 = m_entity_system.entity_component(id1, (Interaction*)nullptr);
+							const auto& interaction1 = m_entity_system.entity_component(id1, Interaction::null);
 
 							interaction0.set_triggered_groups(interaction1.group_vector());
 
@@ -132,15 +132,15 @@ public:
 									procedure_calls.emplace_back(id0, interaction1.proc_id_other());
 							}
 
-							m_entity_system.entity_component(id0, (Health*)nullptr).mod_hp_change(-collision1.on_collision_damage()*time_diff);
+							m_entity_system.entity_component(id0, Health::null).mod_hp_change(-collision1.on_collision_damage()*time_diff);
 
 							const bool entity0_correctable = (collision0.state() == Collision::CollisionState::MOVEABLE)
 														  && (collision1.state() >= Collision::CollisionState::MOVEABLE);
 
 							if(entity0_correctable)
 							{
-								const auto& movement0 = m_entity_system.entity_component(id0, (Movement*)nullptr);
-								const auto& movement1 = m_entity_system.entity_component(id1, (Movement*)nullptr);
+								const auto& movement0 = m_entity_system.entity_component(id0, Movement::null);
+								const auto& movement1 = m_entity_system.entity_component(id1, Movement::null);
 								const double dx = movement1.dx() - movement0.dx();
 								const double dy = movement1.dy() - movement0.dy();
 
@@ -205,8 +205,8 @@ public:
 
 		for(const auto entity_pair : collision_correction)
 		{
-			auto& position = m_entity_system.entity_component(entity_pair.first, (Position*)nullptr);
-			auto& movement = m_entity_system.entity_component(entity_pair.first, (Movement*)nullptr);
+			auto& position = m_entity_system.entity_component(entity_pair.first, Position::null);
+			auto& movement = m_entity_system.entity_component(entity_pair.first, Movement::null);
 			position.mod_x(entity_pair.second.x);
 			position.mod_y(entity_pair.second.y);
 			movement.mod_dx(entity_pair.second.x);
@@ -217,7 +217,7 @@ public:
 
 		for(const auto id : entities)
 		{
-			const Interaction& interaction = m_entity_system.entity_component(id, (Interaction*)nullptr);
+			const Interaction& interaction = m_entity_system.entity_component(id, Interaction::null);
 			if(interaction)
 			{
 				const bool last_triggered = (interaction.last_triggered_groups() >> interaction.trigger_group())%2;
