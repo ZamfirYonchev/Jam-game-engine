@@ -48,7 +48,7 @@ public:
     	if(w.integer() == 0 || h.integer() == 0)
     	{
     		if(resource_system.texture(tex_id.integer()))
-    			SDL_QueryTexture(resource_system.texture(tex_id.integer())->texture(), nullptr, nullptr, &width, &height);
+    			SDL_QueryTexture(resource_system.texture(tex_id.integer())->get().texture(), nullptr, nullptr, &width, &height);
     		else
     		{
     			//todo add error message
@@ -59,7 +59,7 @@ public:
     	width = (w.integer() == 0) ? width  : w.integer();
     	height = (h.integer() == 0) ? height : h.integer();
 
-    	const int sprite_id = resource_system.spritesheet(spr_id.integer())->add_sprite(tex_id.integer(), x.integer(), y.integer(), width, height);
+    	const int sprite_id = resource_system.spritesheet(spr_id.integer())->get().add_sprite(tex_id.integer(), x.integer(), y.integer(), width, height);
 
 		return CommandReturnValue{static_cast<int64_t>(sprite_id)};
     }

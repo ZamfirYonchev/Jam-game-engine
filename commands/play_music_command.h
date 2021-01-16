@@ -31,7 +31,7 @@ public:
 
     	if(music_optional)
     	{
-    		if(Mix_PlayMusic(music_optional->music(), loops.integer()) < 0)
+    		if(Mix_PlayMusic(music_optional->get().music(), loops.integer()) < 0)
     		{
     			std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
     		}

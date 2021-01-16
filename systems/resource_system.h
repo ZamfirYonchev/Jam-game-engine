@@ -95,9 +95,9 @@ public:
     optional_ref<Texture> texture(const TextureID tex_id)
     {
         if(0 <= tex_id && tex_id < static_cast<TextureID>(m_textures.size()))
-            return optional_ref<Texture>(m_textures[tex_id]);
+            return optional_ref<Texture>{m_textures[tex_id]};
         else
-        	return optional_ref<Texture>();
+        	return {};
     }
 
     const std::vector<Spritesheet>& spritesheets() const
@@ -108,33 +108,33 @@ public:
     optional_ref<Spritesheet> spritesheet(const SpritesheetID spr_id)
     {
         if(0 <= spr_id && spr_id < static_cast<SpritesheetID>(m_spritesheets.size()))
-        	return optional_ref<Spritesheet>(m_spritesheets[spr_id]);
+        	return optional_ref<Spritesheet>{m_spritesheets[spr_id]};
         else
-        	return optional_ref<Spritesheet>();
+        	return {};
     }
 
     optional_ref<Font> font(const FontID id)
     {
     	if(0 <= id && id < static_cast<FontID>(m_fonts.size()))
-    		return optional_ref<Font>(m_fonts[id]);
+    		return optional_ref<Font>{m_fonts[id]};
     	else
-    		return optional_ref<Font>();
+    		return {};
     }
 
     optional_ref<SoundChunk> sound(const SoundID id)
     {
     	if(0 <= id && id < static_cast<SoundID>(m_sounds.size()))
-    		return optional_ref<SoundChunk>(m_sounds[id]);
+    		return optional_ref<SoundChunk>{m_sounds[id]};
     	else
-    		return optional_ref<SoundChunk>();
+    		return {};
     }
 
     optional_ref<Music> music(const MusicID id)
     {
     	if(0 <= id && id < static_cast<MusicID>(m_music.size()))
-    		return optional_ref<Music>(m_music[id]);
+    		return optional_ref<Music>{m_music[id]};
     	else
-    		return optional_ref<Music>();
+    		return {};
     }
 
     void clear_textures()

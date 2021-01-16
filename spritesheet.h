@@ -10,7 +10,7 @@
 
 #include "sprite.h"
 #include <vector>
-#include "optional_ref.h"
+#include "types.h"
 
 class ResourceSystem;
 
@@ -62,20 +62,12 @@ public:
     	return sprite_id;
     }
 
-    const optional_ref<const Sprite> sprite(const unsigned int index) const
-    {
-    	if(index < m_sprites.size())
-            return optional_ref<const Sprite>(m_sprites[index]);
-    	else
-    		return optional_ref<const Sprite>();
-    }
-
     optional_ref<Sprite> sprite(const unsigned int index)
     {
     	if(index < m_sprites.size())
-            return optional_ref<Sprite>(m_sprites[index]);
+            return optional_ref<Sprite>{m_sprites[index]};
     	else
-    		return optional_ref<Sprite>();
+    		return {};
     }
 
     void set_scale_factor(const double scale)

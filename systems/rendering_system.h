@@ -86,7 +86,7 @@ public:
     				const optional_ref<Spritesheet> spritesheet = resource_system.spritesheet(visuals.spritesheet_id());
     				if(spritesheet)
     				{
-    					double scale_factor = spritesheet->scale_factor();
+    					double scale_factor = spritesheet->get().scale_factor();
     					const SDL_RendererFlip flip = (control.look_dir()==Control::LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
     					AbsolutePosition screen_pos;
     					SDL_Rect dest;
@@ -96,15 +96,16 @@ public:
     					for(int16_t rx = 0; rx < visuals.repeat_x(); ++rx)
     						for(int16_t ry = 0; ry < visuals.repeat_y(); ++ry)
     						{
-    							const optional_ref<const Sprite> sprite = spritesheet->sprite(visuals.animation_sprite(rx, ry));
-    							if(sprite)
+    							const optional_ref<Sprite> sprite_opt = spritesheet->get().sprite(visuals.animation_sprite(rx, ry));
+    							if(sprite_opt)
     							{
-    								if(resource_system.texture(sprite->texture_id))
+    								const optional_ref<Texture> texture_opt = resource_system.texture(sprite_opt->get().texture_id);
+    								if(texture_opt)
     								{
     									//TODO: to optimize and add constness
-    									SDL_Texture* texture = resource_system.texture(sprite->texture_id)->texture();
-    									screen_pos.set_w(sprite->clip.w*scale_factor);
-    									screen_pos.set_h(sprite->clip.h*scale_factor);
+    									SDL_Texture* texture = texture_opt->get().texture();
+    									screen_pos.set_w(sprite_opt->get().clip.w*scale_factor);
+    									screen_pos.set_h(sprite_opt->get().clip.h*scale_factor);
     									screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
     									screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
     									dest.w = screen_pos.w()*m_screen_to_view_scale + 0.5;
@@ -114,7 +115,7 @@ public:
 
     									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, m_resolution_x, m_resolution_y))
     									{
-    										const int err = SDL_RenderCopyEx(m_renderer, texture, &sprite->clip, &dest, 0, nullptr, flip);
+    										const int err = SDL_RenderCopyEx(m_renderer, texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
     										if(err)
     										{
     											std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;

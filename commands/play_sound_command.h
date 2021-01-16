@@ -31,7 +31,7 @@ public:
 
     	if(sound_optional)
     	{
-    		if(Mix_PlayChannel(channel.integer(), sound_optional->sound(), sound_optional->repeat()) < 0)
+    		if(Mix_PlayChannel(channel.integer(), sound_optional->get().sound(), sound_optional->get().repeat()) < 0)
     		{
     			std::cerr << "Cannot play sound " << sound_id.integer() << "on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
     		}

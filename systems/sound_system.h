@@ -76,8 +76,8 @@ public:
 
 							if(sound_chunk_optional)
 							{
-								const int channel = Mix_PlayChannel(-1, sound_chunk_optional->sound(), sound_chunk_optional->repeat());
-								channel_activity = {channel, sound_chunk_optional->repeat()};
+								const int channel = Mix_PlayChannel(-1, sound_chunk_optional->get().sound(), sound_chunk_optional->get().repeat());
+								channel_activity = {channel, sound_chunk_optional->get().repeat()};
 							}
 							else
 							{
