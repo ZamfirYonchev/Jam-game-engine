@@ -8,7 +8,6 @@
 #ifndef UTILITIES_H_
 #define UTILITIES_H_
 
-#include "globals.h"
 #include "math_ext.h"
 #include "types.h"
 #include <set>
