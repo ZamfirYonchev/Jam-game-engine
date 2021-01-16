@@ -21,7 +21,8 @@
 @app_enable_audio 1
 @app_sound_channels 2
 @app_debug_level 0
-@app_current_level "levels/beeyond_demo_menu.lvl"
-#@app_current_level "levels/beeyond0.lvl"
+#@app_current_level "levels/beeyond_demo_menu.lvl"
+@app_current_level "levels/beeyond0.lvl"
 #@app_current_level "levels/beeyond_demo_end.lvl"
 #@app_current_level "levels/test0.lvl"
+#@app_current_level "levels/test_proc_two_entities.jel"
