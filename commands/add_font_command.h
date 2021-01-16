@@ -10,12 +10,12 @@
 
 #include <string>
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../systems/resource_system.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class AddFontCommand
 {

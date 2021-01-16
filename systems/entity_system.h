@@ -80,6 +80,7 @@ public:
         	m_free_entities.erase(id);
         }
 
+        //TODO add debug_level control
         std::cout << (m_entities.size() - m_free_entities.size()) << " entities.\n";
 
         return id;

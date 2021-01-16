@@ -9,6 +9,7 @@
 #define COMMANDS_ADD_TEXTURE_FROM_STRING_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 #include "../systems/resource_system.h"
 #include "../systems/rendering_system.h"
@@ -16,7 +17,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class AddTextureFromStringCommand
 {
@@ -33,7 +33,7 @@ public:
     	if(font_id.integer() < 0)
     	{
 			std::cerr << "AddTextureFromStringCommand: font id " << font_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1.0};
+			return CommandReturnValue{-1l};
     	}
     	else
     	{

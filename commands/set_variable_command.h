@@ -15,26 +15,27 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class SetVariableCommand
 {
 public:
-	SetVariableCommand(std::string_view name) : m_hash{hash(name.data())} {}
+	SetVariableCommand(const HashT name_hash) : m_hash{name_hash} {}
 	SetVariableCommand() : m_hash{0} {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	HashT name_hash = m_hash;
     	if(m_hash == 0)
     	{
     		const auto name = command_system.exec_next();
-    		globals.destination_variable_hash = hash(name.string().c_str());
+    		name_hash = hash(name.string().c_str());
     	}
-    	else
-        	globals.destination_variable_hash = m_hash;
 
-    	return CommandReturnValue{0.0};
+    	const CommandReturnValue result = command_system.exec_next();
+    	globals(name_hash) = result;
+
+    	return result;
 	}
 
 private:

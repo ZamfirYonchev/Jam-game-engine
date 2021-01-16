@@ -26,9 +26,11 @@ public:
 
     MovementSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_delta, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_delta, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
     {
-    	for(const auto id : entities)
+		if(globals(Globals::app_paused).boolean()) return;
+
+		for(const auto id : entities)
     	{
     		auto& movement = m_entity_system.entity_component(id, (Movement*)nullptr);
         	if(movement)

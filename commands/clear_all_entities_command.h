@@ -8,10 +8,12 @@
 #ifndef COMMANDS_CLEAR_ALL_ENTITIES_COMMAND_H_
 #define COMMANDS_CLEAR_ALL_ENTITIES_COMMAND_H_
 
+#include "command_return_value.h"
+#include "../globals.h"
+
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ClearAllEntitiesCommand
 {

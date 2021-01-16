@@ -14,7 +14,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class PauseCommand
 {
@@ -23,8 +22,8 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
     	const auto paused = command_system.exec_next();
-        globals.app_paused = paused.boolean();
-    	return CommandReturnValue{0.0};
+    	globals(Globals::app_paused) = paused;
+    	return paused;
     }
 };
 

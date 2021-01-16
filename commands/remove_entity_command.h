@@ -9,11 +9,11 @@
 #define COMMANDS_REMOVE_ENTITY_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class RemoveEntityCommand
 {
@@ -22,7 +22,7 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
     	entity_system.remove_entity(entity_system.previous_entity_id());
-		return CommandReturnValue{0.0};
+		return CommandReturnValue{0l};
     }
 };
 

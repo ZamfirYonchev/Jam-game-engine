@@ -9,12 +9,12 @@
 #define COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ClearProcedureCommand
 {
@@ -24,7 +24,7 @@ public:
     {
     	const auto proc_id = command_system.exec_next();
     	command_system.procedure(ProcedureID(proc_id.integer())).clear();
-    	return CommandReturnValue{0.0};
+    	return CommandReturnValue{0l};
     }
 };
 

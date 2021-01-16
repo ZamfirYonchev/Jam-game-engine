@@ -9,12 +9,12 @@
 #define COMMANDS_MODIFY_COLLISION_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../math_ext.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ModifyCollisionCommand
 {
@@ -51,12 +51,12 @@ public:
 			else
 				collision.set_elasticity(clip(collision.elasticity() + elasticity.real(), 0.0, 1.0));
 
-			return CommandReturnValue{0.0};
+			return CommandReturnValue{0l};
 		}
 		else
 		{
-			//error globals.access_entity_id
-			return CommandReturnValue{-1.0};
+			//error entity_system.previous_entity_id()
+			return CommandReturnValue{-1l};
 		}
 	}
 };

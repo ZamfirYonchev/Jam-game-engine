@@ -9,13 +9,13 @@
 #define COMMANDS_MODIFY_POSITION_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../math_ext.h"
 #include "../components/position.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ModifyPositionCommand
 {
@@ -52,12 +52,12 @@ public:
 			else
 				position.mod_h(h.real());
 
-			return CommandReturnValue{0.0};
+			return CommandReturnValue{0l};
 		}
 		else
 		{
 			//error entity_system.previous_entity_id()
-			return CommandReturnValue{-1.0};
+			return CommandReturnValue{-1l};
 		}
 	}
 };

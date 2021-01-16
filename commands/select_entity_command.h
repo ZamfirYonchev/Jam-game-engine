@@ -9,12 +9,12 @@
 #define COMMANDS_SELECT_ENTITY_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class SelectEntityCommand
 {
@@ -26,6 +26,7 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
     	const auto entity_id = (m_entity_id.integer() >= 0) ? m_entity_id : command_system.exec_next();
+    	globals(Globals::selected_entity) = entity_id;
 		entity_system.add_accessed_entity(entity_id.integer());
 
 		return entity_id;

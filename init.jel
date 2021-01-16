@@ -1,8 +1,5 @@
 #Level levels/menu.txt
 #Level levels/level3.txt
-#Level levels/beeyond_demo_menu.lvl
-#Level levels/beeyond0.lvl
-#Level levels/beeyond_demo_end.lvl
 #Level levels/test_mass_force.lvl
 #Level levels/test_on_exit_trigger.cgl
 #Level levels/test_builder.lvl
@@ -18,11 +15,13 @@
 #Level levels/test1.lvl
 
 
-@resolution_x 1366
-@resolution_y 768
-@fullscreen 0
-@enable_audio 1
-@sound_channels 2
-@current_level "levels/beeyond0.lvl"
-
-ExecuteFileClean *current_level
+@app_resolution_x 1366
+@app_resolution_y 768
+@app_fullscreen 0
+@app_enable_audio 1
+@app_sound_channels 2
+@app_debug_level 0
+@app_current_level "levels/beeyond_demo_menu.lvl"
+#@app_current_level "levels/beeyond0.lvl"
+#@app_current_level "levels/beeyond_demo_end.lvl"
+#@app_current_level "levels/test0.lvl"

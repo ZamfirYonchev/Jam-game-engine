@@ -10,7 +10,6 @@
 #include "sdl_window.h"
 #include <SDL2/SDL.h>
 #include <fstream>
-#include "globals.h"
 #include "math_ext.h"
 #include "commands/execute_file_clean_command.h"
 #include "systems/rendering_system.h"
@@ -37,6 +36,7 @@
 #include "commands/execute_file_clean_command.h"
 #include "commands/clear_procedure_command.h"
 #include "commands/pause_command.h"
+#include "commands/reload_command.h"
 #include "commands/quit_command.h"
 #include "commands/clear_all_entities_command.h"
 #include "commands/clear_all_textures_command.h"
@@ -107,7 +107,7 @@
 #include "commands/set_variable_command.h"
 #include "commands/get_variable_command.h"
 #include "commands/literal_value_command.h"
-
+#include "globals.h"
 #include "utilities.h"
 
 #include <list>
@@ -119,6 +119,18 @@
 int main(int argc, char** argv)
 {
 	Globals globals;
+	globals(Globals::app_resolution_x) = CommandReturnValue{800l};
+	globals(Globals::app_resolution_y) = CommandReturnValue{600l};
+	globals(Globals::app_fullscreen) = CommandReturnValue{0l};
+	globals(Globals::app_enable_audio) = CommandReturnValue{0l};
+	globals(Globals::app_sound_channels) = CommandReturnValue{2l};
+	globals(Globals::app_window_title) = CommandReturnValue{"Jam engine"};
+	globals(Globals::app_running) = CommandReturnValue{1l};
+	globals(Globals::app_paused) = CommandReturnValue{0l};
+	globals(Globals::app_needs_reload) = CommandReturnValue{0l};
+	globals(Globals::app_show_hitboxes) = CommandReturnValue{0l};
+	globals(Globals::app_current_level) = CommandReturnValue{"init.jel"};
+	globals(Globals::app_debug_level) = CommandReturnValue{0l};
 
 	do
 	{
@@ -132,7 +144,7 @@ int main(int argc, char** argv)
 		MovementSystem<ES> movement_system {entity_system};
 		CollisionSystem<ES> collision_system {entity_system};
 		DamageSystem<ES> damage_system {entity_system};
-		SoundSystem<ES> sound_system {entity_system, resource_system};
+		SoundSystem<ES> sound_system {entity_system, resource_system, globals};
 
 		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>,DamageSystem<ES>, SoundSystem<ES>> all_systems
 		{ control_system
@@ -146,32 +158,6 @@ int main(int argc, char** argv)
 		CommandSystem<ES, AS> command_system {entity_system, resource_system, input_system, rendering_system, all_systems, globals};
 		//using CS = decltype(command_system);
 
-		command_system.set_variable(hash("resolution_x"), CommandReturnValue{1366l});
-		command_system.set_variable(hash("resolution_y"), CommandReturnValue{768l});
-		command_system.set_variable(hash("fullscreen"), CommandReturnValue{0l});
-		command_system.set_variable(hash("enable_audio"), CommandReturnValue{1l});
-		command_system.set_variable(hash("sound_channels"), CommandReturnValue{2l});
-		command_system.set_variable(hash("current_level"), CommandReturnValue{"init.jel"});
-
-		int res_x = command_system.variable(hash("resolution_x")).integer();
-		int res_y = command_system.variable(hash("resolution_y")).integer();
-
-		SdlWindow sdl;
-		sdl.init_video(res_x
-					 , res_y
-					 , command_system.variable(hash("fullscreen")).boolean()
-					 , true
-					 , command_system.variable(hash("enable_audio")).boolean()
-					 , command_system.variable(hash("sound_channels")).integer()
-					 );
-
-		command_system.set_variable(hash("resolution_x"), CommandReturnValue{static_cast<int64_t>(res_x)});
-		command_system.set_variable(hash("resolution_y"), CommandReturnValue{static_cast<int64_t>(res_y)});
-
-		rendering_system.set_renderer(sdl.renderer());
-		rendering_system.set_resolution_x(res_x);
-		rendering_system.set_resolution_y(res_y);
-
 		std::mt19937 gen {std::random_device{}()};
 
 	    command_system.register_command("Set", SetVariableCommand{});
@@ -183,6 +169,7 @@ int main(int argc, char** argv)
 		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{});
 		command_system.register_command("ClearProcedure", ClearProcedureCommand{});
 		command_system.register_command("Pause", PauseCommand{});
+		command_system.register_command("Reload", ReloadCommand{});
 		command_system.register_command("Quit", QuitCommand{});
 		command_system.register_command("ClearAllEntities", ClearAllTexturesCommand{});
 		command_system.register_command("ClearAllSpritesheets", ClearAllSpritesheetsCommand{});
@@ -252,8 +239,35 @@ int main(int argc, char** argv)
 		command_system.register_command("PlaySound", PlaySoundCommand{});
 		command_system.register_command("PlayMusic", PlayMusicCommand{});
 
+		//this will load the data from the init.jel file and potentially give new values to the globals
 		command_system.push(ExecuteFileCleanCommand{});
-		command_system.push(LiteralValueCommand{command_system.variable(hash("current_level"))});
+		command_system.push(LiteralValueCommand{globals(Globals::app_current_level)});
+		command_system.process(resource_system, rendering_system, input_system);
+
+		//this will schedule the loading of the level which should be set in init.jel
+		command_system.push(ExecuteFileCleanCommand{});
+		command_system.push(LiteralValueCommand{globals(Globals::app_current_level)});
+
+		int res_x = globals(Globals::app_resolution_x).integer();
+		int res_y = globals(Globals::app_resolution_y).integer();
+		const std::string title = globals(Globals::app_window_title).string();
+		SdlWindow sdl;
+
+		sdl.init_video(res_x
+					 , res_y
+					 , globals(Globals::app_fullscreen).boolean()
+					 , true
+					 , globals(Globals::app_enable_audio).boolean()
+					 , globals(Globals::app_sound_channels).integer()
+					 , title.c_str()
+					 );
+
+		globals(Globals::app_resolution_x) = CommandReturnValue{static_cast<int64_t>(res_x)};
+		globals(Globals::app_resolution_y) = CommandReturnValue{static_cast<int64_t>(res_y)};
+
+		rendering_system.set_renderer(sdl.renderer());
+		rendering_system.set_resolution_x(res_x);
+		rendering_system.set_resolution_y(res_y);
 
 		const double update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;
@@ -262,29 +276,30 @@ int main(int argc, char** argv)
 
 		do
 		{
-			input_system.process_input(globals);
-			command_system.process(resource_system, rendering_system, input_system, globals);
+			input_system.process_input(globals, command_system.procedure_calls());
+			command_system.process(resource_system, rendering_system, input_system);
 			entity_system.clean_removed_entites(all_systems);
+
+			const bool app_paused = globals(Globals::app_paused).boolean();
+			const bool show_hitboxes = globals(Globals::app_show_hitboxes).boolean();
 
 			if((SDL_GetTicks()-last_update_time) >= update_time_delta)
 			{
 				last_update_time += update_time_delta;
-				if(globals.app_paused == false)
-					all_systems.update(update_time_delta, command_system.procedure_calls());
-
+				all_systems.update(update_time_delta, globals, command_system.procedure_calls());
 				input_system.clear_toggle_inputs();
 			}
 
-			rendering_system.render_entities(update_time_delta, entity_system, resource_system, globals);
+			rendering_system.render_entities(update_time_delta, entity_system, resource_system, app_paused, show_hitboxes);
 
 			++number_of_frames;
 
-		} while(globals.app_running == true && globals.app_needs_reload == false);
+		} while(globals(Globals::app_running).boolean() && globals(Globals::app_needs_reload).boolean() == false);
 
 		std::cout << "FPS = " << 1000.0*number_of_frames / (SDL_GetTicks()-start_frame_time) << std::endl;
-		globals.app_needs_reload = false;
+		globals(Globals::app_needs_reload) = CommandReturnValue{0l};
 
-	} while(globals.app_running);
+	} while(globals(Globals::app_running).boolean());
 
 	return 0;
 }

@@ -9,14 +9,13 @@
 #define COMMANDS_ADD_SPRITESHEET_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../spritesheet.h"
 #include "../systems/resource_system.h"
-#include "../globals.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 //TODO to remove
 class AddSpritesheetCommand
@@ -41,23 +40,24 @@ public:
     	const auto dead_size = command_system.exec_next();
     	const auto scale_factor = command_system.exec_next();
 
-		globals.access_spritesheet_id = resource_system.addNewSpritesheet({uint8_t(idle_start.integer())
-																		 , uint8_t(idle_size.integer())
-																		 , uint8_t(walk_start.integer())
-																		 , uint8_t(walk_size.integer())
-																		 , uint8_t(jump_start.integer())
-																		 , uint8_t(jump_size.integer())
-																		 , uint8_t(fall_start.integer())
-																		 , uint8_t(fall_size.integer())
-																		 , uint8_t(attack_start.integer())
-																		 , uint8_t(attack_size.integer())
-																		 , uint8_t(hit_start.integer())
-																		 , uint8_t(hit_size.integer())
-																		 , uint8_t(dead_start.integer())
-																		 , uint8_t(dead_size.integer())
-																		 , scale_factor.real()
-																		 });
-    	return CommandReturnValue{static_cast<int64_t>(globals.access_spritesheet_id)};
+		const SpritesheetID spr_id = resource_system.addNewSpritesheet(
+														{uint8_t(idle_start.integer())
+													   , uint8_t(idle_size.integer())
+													   , uint8_t(walk_start.integer())
+													   , uint8_t(walk_size.integer())
+													   , uint8_t(jump_start.integer())
+													   , uint8_t(jump_size.integer())
+													   , uint8_t(fall_start.integer())
+													   , uint8_t(fall_size.integer())
+													   , uint8_t(attack_start.integer())
+													   , uint8_t(attack_size.integer())
+													   , uint8_t(hit_start.integer())
+													   , uint8_t(hit_size.integer())
+													   , uint8_t(dead_start.integer())
+													   , uint8_t(dead_size.integer())
+													   , scale_factor.real()
+														});
+    	return CommandReturnValue{static_cast<int64_t>(spr_id)};
     }
 };
 

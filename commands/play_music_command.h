@@ -9,6 +9,7 @@
 #define COMMANDS_PLAY_MUSIC_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
@@ -16,7 +17,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class PlayMusicCommand
 {
@@ -36,12 +36,12 @@ public:
     			std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
     		}
 
-        	return CommandReturnValue{0.0};
+        	return CommandReturnValue{0l};
     	}
     	else
     	{
     		//error m_sound_id
-        	return CommandReturnValue{-1.0};
+        	return CommandReturnValue{-1l};
     	}
     }
 };

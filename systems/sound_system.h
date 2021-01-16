@@ -14,56 +14,83 @@
 #include "../types.h"
 #include "../components/sounds.h"
 #include <vector>
-#include "../globals.h"
 
 template<typename EntitySystemT>
 class SoundSystem : public SystemBase
 {
 public:
-	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system)
+	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system, Globals& globals)
 	: m_entity_system(entity_system)
 	, m_resource_system(resource_system)
+	, m_globals(globals)
+	, m_last_paused(false)
 	, m_channel_activity_per_entity()
 	{}
 
-	void update(const Time time_diff, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
-		for(const auto id : entities)
+		const int pause_change = m_globals(Globals::app_paused).boolean() - m_last_paused;
+		switch(pause_change)
 		{
-			auto& sounds = m_entity_system.entity_component(id, (Sounds*)nullptr);
-	    	if(sounds)
-	    	{
-	    		sounds.update(time_diff);
+			case -1 :
+			{
+				Mix_Resume(-1);
+				Mix_ResumeMusic();
+				m_last_paused = m_globals(Globals::app_paused).boolean();
+			}
+			break;
 
-	    		if(sounds.changed())
-	    		{
-	    			auto& channel_activity = m_channel_activity_per_entity[id];
-	    			if(channel_activity.second == -1)
+			case 1 :
+			{
+				Mix_Pause(-1);
+				Mix_PauseMusic();
+				m_last_paused = m_globals(Globals::app_paused).boolean();
+			}
+			break;
+
+			default:
+			break;
+		}
+
+		if(m_last_paused == false)
+		{
+			for(const auto id : entities)
+			{
+				auto& sounds = m_entity_system.entity_component(id, (Sounds*)nullptr);
+				if(sounds)
+				{
+					sounds.update(time_diff);
+
+					if(sounds.changed())
 					{
-	    				Mix_HaltChannel(channel_activity.first);
-	    				channel_activity.second = 0;
+						auto& channel_activity = m_channel_activity_per_entity[id];
+						if(channel_activity.second == -1)
+						{
+							Mix_HaltChannel(channel_activity.first);
+							channel_activity.second = 0;
+						}
+
+						if(sounds.id() >= 0)
+						{
+							const auto& sound_chunk_optional = m_resource_system.sound(sounds.id());
+
+							if(sound_chunk_optional)
+							{
+								const int channel = Mix_PlayChannel(-1, sound_chunk_optional->sound(), sound_chunk_optional->repeat());
+								channel_activity = {channel, sound_chunk_optional->repeat()};
+							}
+							else
+							{
+								//error sounds.sound_id()
+							}
+						}
 					}
-
-					if(sounds.id() >= 0)
-					{
-						const auto& sound_chunk_optional = m_resource_system.sound(sounds.id());
-
-						if(sound_chunk_optional)
-						{
-							const int channel = Mix_PlayChannel(-1, sound_chunk_optional->sound(), sound_chunk_optional->repeat());
-							channel_activity = {channel, sound_chunk_optional->repeat()};
-						}
-						else
-						{
-							//error sounds.sound_id()
-						}
-	    			}
-	    		}
-	    	}
-	    	else
-	    	{
-	    		//error *it
-	    	}
+				}
+				else
+				{
+					//error *it
+				}
+			}
 		}
 	}
 
@@ -82,6 +109,8 @@ public:
 private:
     EntitySystemT& m_entity_system;
     ResourceSystem& m_resource_system;
+    Globals& m_globals;
+    bool m_last_paused;
     std::unordered_map<EntityID, std::pair<int, int>> m_channel_activity_per_entity;
 };
 

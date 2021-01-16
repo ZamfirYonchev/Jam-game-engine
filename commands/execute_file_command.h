@@ -9,13 +9,13 @@
 #define COMMANDS_EXECUTE_FILE_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include <fstream>
 #include <iostream>
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ExecuteFileCommand
 {
@@ -29,12 +29,12 @@ public:
     	{
     		std::cout << "Parsing file " << file_name.string() << std::endl;
     		command_system.process_stream(file);
-    		return CommandReturnValue{0.0};
+    		return CommandReturnValue{0l};
     	}
     	else
     	{
     		std::cerr << "File \"" << file_name.string() << "\" cannot be opened!" << std::endl;
-    		return CommandReturnValue{-1.0};
+    		return CommandReturnValue{-1l};
     	}
     }
 };

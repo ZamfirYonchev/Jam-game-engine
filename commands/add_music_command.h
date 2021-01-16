@@ -9,12 +9,12 @@
 #define COMMANDS_ADD_MUSIC_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../systems/resource_system.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class AddMusicCommand
 {

@@ -1,43 +1,73 @@
 /*
  * globals.h
  *
- *  Created on: Nov 10, 2019
+ *  Created on: Jan 16, 2021
  *      Author: zamfi
  */
 
 #ifndef GLOBALS_H_
 #define GLOBALS_H_
 
-#include "types.h"
+#include <unordered_map>
+#include <iostream>
 #include <string>
-#include "utilities.h"
+#include "commands/command_return_value.h"
 #include "types.h"
-#include <optional>
+#include "utilities.h"
 
-struct Globals
+class Globals
 {
-	Globals() : app_running(true)
-    		  , app_needs_reload(false)
-    		  , app_paused(false)
-    		  , fullscreen(false)
-			  , audio(false)
-			  , show_hitboxes(false)
-    		  , resolution_x(640)
-    		  , resolution_y(480)
-			  , sound_channels(4)
-    		  , access_spritesheet_id(-1)
-    		  , access_procedure_id(-1)
-			  , level_name("levels/menu.txt")
-			  , destination_variable_hash(std::nullopt)
-			  {}
+public:
 
-    bool app_running, app_needs_reload, app_paused, fullscreen, audio, show_hitboxes;
-    int resolution_x, resolution_y;
-    int sound_channels;
-    SpritesheetID access_spritesheet_id;
-    ProcedureID access_procedure_id;
-    std::string level_name;
-    std::optional<HashT> destination_variable_hash;
+	enum AppGlobal : HashT
+	{
+		app_running = hash("app_running"),
+		app_needs_reload = hash("app_needs_reload"),
+		app_paused = hash("app_paused"),
+		app_show_hitboxes = hash("app_show_hitboxes"),
+		app_current_level = hash("app_current_level"),
+		app_debug_level = hash("app_debug_level"),
+		app_resolution_x = hash("app_resolution_x"),
+		app_resolution_y = hash("app_resolution_y"),
+		app_fullscreen = hash("app_fullscreen"),
+		app_enable_audio = hash("app_enable_audio"),
+		app_sound_channels = hash("app_sound_channels"),
+		app_window_title = hash("app_window_title"),
+		selected_entity = hash("selected_entity"),
+	};
+
+	const CommandReturnValue& operator()(HashT name_hash) const
+	{
+    	return m_variables[name_hash];
+	}
+
+	CommandReturnValue& operator()(HashT name_hash)
+	{
+    	return m_variables[name_hash];
+	}
+
+	const CommandReturnValue& operator()(std::string_view name) const
+	{
+    	const HashT name_hash = hash(name.data());
+    	if(m_variables.find(name_hash) == cend(m_variables))
+    		std::cerr << "Accessing an uninitialized variable " << name << std::endl;
+
+    	return m_variables[hash(name.data())];
+	}
+
+	CommandReturnValue& operator()(std::string_view name)
+	{
+    	const HashT name_hash = hash(name.data());
+    	if(m_variables.find(name_hash) == cend(m_variables))
+    		std::cerr << "Accessing an uninitialized variable " << name << std::endl;
+
+    	return m_variables[hash(name.data())];
+	}
+
+private:
+    mutable std::unordered_map<HashT, CommandReturnValue> m_variables;
 };
+
+
 
 #endif /* GLOBALS_H_ */

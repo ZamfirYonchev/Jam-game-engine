@@ -10,11 +10,12 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <string>
 
 class SdlWindow
 {
 public:
-	SdlWindow() : m_window(nullptr), m_renderer(nullptr)
+	SdlWindow() : m_window{nullptr}, m_renderer{nullptr}, m_audio_opened{false}
 	{}
 
 	void init_video(int& res_width
@@ -23,6 +24,7 @@ public:
 				  , const bool double_buffer
 				  , const bool enable_audio
 				  , const int sound_channels
+				  , std::string_view title
 			);
 
 	~SdlWindow();
@@ -57,6 +59,7 @@ public:
 private:
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
+	bool m_audio_opened;
 };
 
 

@@ -21,8 +21,10 @@ struct CommandReturnValue
 {
 	explicit CommandReturnValue() : value{0.0} {} // @suppress("Symbol is not resolved")
 	explicit CommandReturnValue(const int64_t v) : value{v} {} // @suppress("Symbol is not resolved")
+	explicit CommandReturnValue(const bool v) : value{int64_t(v)} {} // @suppress("Symbol is not resolved")
 	explicit CommandReturnValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
 	explicit CommandReturnValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
+	explicit CommandReturnValue(const char* v) : CommandReturnValue{std::string{v}} {} // @suppress("Symbol is not resolved")
 
     int64_t operator=(const int64_t v) { value = v; return v; }
     double operator=(const double v) { value = v; return v; }
@@ -70,6 +72,11 @@ struct CommandReturnValue
             [](const std::string& arg) { return static_cast<double>(arg.size()); },
             }, value);
     }
+
+    /*explicit operator bool() const
+	{
+    	return boolean();
+	}*/
 
     std::variant<int64_t, double, std::string> value;
 };

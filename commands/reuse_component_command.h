@@ -9,13 +9,13 @@
 #define COMMANDS_REUSE_COMPONENT_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 #include <sstream>
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 template<typename T>
 class ReuseComponentCommand
@@ -31,7 +31,7 @@ public:
 		ss << component;
 		command_system.process_stream(ss);
 
-    	return CommandReturnValue{0.0};
+    	return CommandReturnValue{0l};
 	}
 };
 

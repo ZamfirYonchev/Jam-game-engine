@@ -1,4 +1,4 @@
-@current_level "levels/beeyond0.txt"
+@app_current_level "levels/beeyond0.txt"
 
 @severity_debug 0
 
@@ -752,4 +752,4 @@ UseBasicCollision 2 1
 @entity_flower_4_healing_site CallProcedure *procedure_spawn_healing_site #entity 70: healing site
 	UseAttachedPosition 69 0 30 0 0
 
-
+DebugMessage 0 *selected_entity

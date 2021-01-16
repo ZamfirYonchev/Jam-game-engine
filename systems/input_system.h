@@ -9,8 +9,9 @@
 #define SYSTEMS_INPUT_SYSTEM_H_
 
 #include "SDL2/SDL.h"
-
-struct Globals;
+#include "../types.h"
+#include <list>
+#include "../globals.h"
 
 class InputSystem
 {
@@ -34,7 +35,7 @@ public:
 	, m_select_pressed(false)
 	{}
 
-    void process_input(Globals& globals);
+    void process_input(Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls);
     void clear_toggle_inputs();
     bool jumping() const { return m_jump_pressed; }
     bool ducking() const { return m_duck_pressed; }

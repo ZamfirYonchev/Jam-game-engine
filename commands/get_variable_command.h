@@ -15,7 +15,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class GetVariableCommand
 {
@@ -29,10 +28,10 @@ public:
     	if(m_hash == 0)
     	{
     		const auto name = command_system.exec_next();
-    		return command_system.variable(hash(name.string().c_str()));
+    		return globals(name.string());
     	}
     	else
-    		return command_system.variable(m_hash);
+    		return globals(m_hash);
 	}
 
 private:

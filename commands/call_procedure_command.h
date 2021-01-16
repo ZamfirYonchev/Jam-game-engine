@@ -9,13 +9,13 @@
 #define COMMANDS_CALL_PROCEDURE_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 #include "../utilities.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class CallProcedureCommand
 {
@@ -27,14 +27,14 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	const auto proc_id = m_procedure.holds_string() ? command_system.variable(hash(m_procedure.string().c_str())) :
+    	const auto proc_id = m_procedure.holds_string() ? globals(m_procedure.string()) :
 							(m_procedure.integer() > 0) ? m_procedure
-														 : command_system.exec_next();
+														: command_system.exec_next();
 
     	if(proc_id.integer() < 0)
     	{
 			std::cerr << "CallProcedure: procedure id " << proc_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1.0};
+			return CommandReturnValue{-1l};
     	}
     	else
     	{

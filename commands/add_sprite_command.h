@@ -9,6 +9,7 @@
 #define COMMANDS_ADD_SPRITE_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 #include <SDL2/SDL.h>
 #include "../systems/resource_system.h"
@@ -16,7 +17,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class AddSpriteCommand
 {
@@ -35,13 +35,13 @@ public:
     	if(spr_id.integer() < 0)
     	{
 			std::cerr << "AddSprite: spritesheet id " << spr_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1.0};
+			return CommandReturnValue{-1l};
     	}
 
     	if(tex_id.integer() < 0)
     	{
 			std::cerr << "AddSprite: texture id " << tex_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1.0};
+			return CommandReturnValue{-1l};
     	}
 
     	int width, height;
@@ -52,7 +52,7 @@ public:
     		else
     		{
     			//todo add error message
-    			return CommandReturnValue{-1.0};
+    			return CommandReturnValue{-1l};
     		}
     	}
 

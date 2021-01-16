@@ -9,13 +9,13 @@
 #define COMMANDS_ADD_TEXTURE_FROM_FILE_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../systems/resource_system.h"
 #include "../systems/rendering_system.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class AddTextureFromFileCommand
 {

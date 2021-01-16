@@ -27,11 +27,16 @@
 #include "../commands/get_variable_command.h"
 #include "../commands/literal_value_command.h"
 #include "../commands/extend_procedure_command.h"
+#include "../commands/quit_command.h"
+#include "../commands/reload_command.h"
+#include "../commands/pause_command.h"
+#include "../commands/pause_all_sounds_command.h"
+#include "../commands/debug_message_command.h"
+#include "../globals.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 template<typename EntitySystemT, typename AllSystemsT>
 class CommandSystem
@@ -55,7 +60,7 @@ public:
 	, m_all_systems{all_systems}
 	, m_globals{globals}
 	{
-		m_procedures.emplace_back(); //insert one empty procedure with id 0
+		initialize_default_procedures();
 	}
 
     CommandSystem(const CommandSystem& ) = delete;
@@ -72,28 +77,7 @@ public:
 
     int size() const { return m_commands.size(); }
 
-    const CommandReturnValue& variable(const HashT name_hash) const
-    {
-    	if(m_variables.find(name_hash) == cend(m_variables))
-    		std::cerr << "Accessing an uninitialized variable at " << std::hex << name_hash << std::dec << std::endl;
-
-    	return m_variables[name_hash];
-    }
-
-    CommandReturnValue& variable(const HashT name_hash)
-    {
-    	if(m_variables.find(name_hash) == cend(m_variables))
-    		std::cerr << "Accessing an uninitialized variable at " << std::hex << name_hash << std::dec << std::endl;
-
-    	return m_variables[name_hash];
-    }
-
-    CommandReturnValue set_variable(const HashT name_hash, const CommandReturnValue& value)
-    {
-    	return std::exchange(m_variables[name_hash], value);
-    }
-
-    void process(ResourceSystem& resource_system, RenderingSystem& rendering_system, InputSystem& input_system, Globals& globals)
+    void process(ResourceSystem& resource_system, RenderingSystem& rendering_system, InputSystem& input_system)
     {
     	while(m_procedure_calls.size() > 0)
     	{
@@ -103,17 +87,7 @@ public:
     		m_procedure_calls.pop_front();
     	}
 
-        while(m_commands.size() > 0)
-        {
-            const bool update_variable = globals.destination_variable_hash.has_value();
-            const CommandReturnValue result = exec_next();
-            if(update_variable)
-            {
-            	std::cout << "PARSER: Updating variable to " << result.real() << '\n';
-            	m_variables[*globals.destination_variable_hash] = result;
-            	globals.destination_variable_hash = std::nullopt;
-            }
-        }
+        while(m_commands.size() > 0) exec_next();
     }
 
     void process_stream(std::istream& input)
@@ -131,7 +105,8 @@ public:
         		{
                 	std::string line;
                     std::getline(input, line);
-                    std::cout << "PARSER: Reading comment: " << line << '\n';
+                    if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    	std::cout << "PARSER: Reading comment: " << line << '\n';
         		}
 				break;
 
@@ -140,8 +115,10 @@ public:
                 	std::string var_name;
                 	input.get(); //extract the @ char
                 	input >> var_name;
-                	commands.push_back(SetVariableCommand{var_name});
-                    std::cout << "PARSER: Setting variable \"" << var_name << "\"\n";
+                	commands.push_back(SetVariableCommand{hash(var_name.c_str())});
+
+                    if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    	std::cout << "PARSER: Setting variable \"" << var_name << "\"\n";
         		}
 				break;
 
@@ -150,8 +127,10 @@ public:
                 	std::string var_name;
                 	input.get(); //extract the * char
                 	input >> var_name;
-                    std::cout << "PARSER: Reading variable \"" << var_name << "\"\n";
                 	commands.push_back(GetVariableCommand{var_name});
+
+                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    	std::cout << "PARSER: Reading variable \"" << var_name << "\"\n";
         		}
 				break;
 
@@ -160,8 +139,10 @@ public:
                 	std::string str;
                 	input.get(); //extract the " char
                 	std::getline(input, str, '"');
-                    std::cout << "PARSER: Reading string \"" << str << "\"\n";
                 	commands.push_back(LiteralValueCommand{str});
+
+                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                		std::cout << "PARSER: Reading string \"" << str << "\"\n";
         		}
 				break;
 
@@ -170,8 +151,10 @@ public:
                 	std::string str;
                 	input.get(); //extract the ( char
                 	std::getline(input, str, ')');
-                    std::cout << "PARSER: Calling command \"" << str << "\"\n";
                 	commands.push_back(CallProcedureCommand{str});
+
+                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                		std::cout << "PARSER: Calling command \"" << str << "\"\n";
         		}
 				break;
 
@@ -185,7 +168,8 @@ public:
                 		std::cerr << "Error trying to read scalar value beginning with " << next_char << std::endl;
                 	else
                 	{
-    					std::cout << "PARSER: Reading scalar " << value << '\n';
+                    	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    		std::cout << "PARSER: Reading scalar " << value << '\n';
                     	commands.push_back(LiteralValueCommand{value});
                 	}
         		}
@@ -194,7 +178,6 @@ public:
         		case '{':
         		{
                 	input.get(); //extract the { char
-                    std::cout << "PARSER: Declaring new procedure\n";
                 	commands.push_back(ExtendProcedureCommand{});
                 	commands.push_back(LiteralValueCommand{int64_t(m_procedures.size())});
                 	commands.push_back(NullCommand{}); //reserve space for procedure size
@@ -202,6 +185,9 @@ public:
                     procedure_size_insert_it = std::prev(commands.end());
 
                 	m_procedures.emplace_back();
+
+                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                		std::cout << "PARSER: Declaring new procedure\n";
         		}
 				break;
 
@@ -214,7 +200,9 @@ public:
                 		const auto proc_size = std::distance(procedure_size_insert_it, end(commands)) - 1;
 						*procedure_size_insert_it = LiteralValueCommand{proc_size};
 						procedure_size_insert_it = end(m_commands);
-	                    std::cout << "PARSER: Closing procedure\n";
+
+	                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+	                		std::cout << "PARSER: Closing procedure\n";
                 	}
                 	else
                 	{
@@ -227,7 +215,9 @@ public:
         		{
                 	std::string token;
                 	input >> token;
-                	std::cout << "PARSER: Reading command " << token << '\n';
+
+                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                		std::cout << "PARSER: Reading command " << token << '\n';
 
                 	const auto it = m_command_prototypes.find(hash(token.c_str()));
                 	if(it != cend(m_command_prototypes))
@@ -316,7 +306,7 @@ public:
     void clear_procedures()
     {
         m_procedures.clear();
-        m_procedures.emplace_back(); //insert an empty procedure at id 0
+        initialize_default_procedures();
     }
 
     std::list<std::pair<EntityID, ProcedureID>>& procedure_calls()
@@ -325,12 +315,15 @@ public:
 	}
 
 private:
+    void initialize_default_procedures()
+    {
+        m_procedures.emplace_back(); //insert an empty procedure at id 0
+    }
+
 	std::list<std::pair<EntityID, ProcedureID>> m_procedure_calls;
     std::list<CommandT> m_commands;
     std::unordered_map<HashT, CommandT> m_command_prototypes;
     std::vector<ProcedureCommand<CommandSystem>> m_procedures;
-
-    mutable std::unordered_map<HashT, CommandReturnValue> m_variables;
 
 	EntitySystemT& m_entity_system;
 	ResourceSystem& m_resource_system;

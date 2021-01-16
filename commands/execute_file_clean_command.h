@@ -9,6 +9,7 @@
 #define COMMANDS_EXECUTE_FILE_CLEAN_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "execute_file_command.h"
 #include "../systems/resource_system.h"
 #include "../systems/rendering_system.h"
@@ -17,7 +18,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ExecuteFileCleanCommand
 {
@@ -35,7 +35,7 @@ public:
     	command_system.push(ExecuteFileCommand{});
     	command_system.push(LiteralValueCommand{file_name.string()});
 
-    	return CommandReturnValue{0.0};
+    	return CommandReturnValue{0l};
     }
 };
 

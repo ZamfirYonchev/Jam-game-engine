@@ -21,7 +21,6 @@
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
 #include "resource_system.h"
-#include "../globals.h"
 
 class RenderingSystem
 {
@@ -61,7 +60,7 @@ public:
     }
 
     template<typename EntitySystemT>
-    void render_entities(const Time time_diff, EntitySystemT& entity_system, ResourceSystem& resource_system, Globals& globals)
+    void render_entities(const Time time_diff, EntitySystemT& entity_system, ResourceSystem& resource_system, const bool app_paused, const bool show_hitboxes)
     {
         //SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
         SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
@@ -81,7 +80,7 @@ public:
     				const auto& position = entity_system.entity_component(id, (Position*)nullptr);
     				const auto& control = entity_system.entity_component(id, (Control*)nullptr);
 
-    				if(globals.app_paused == false)
+					if(app_paused == false)
     					visuals.update_animation(time_diff);
 
     				const optional_ref<Spritesheet> spritesheet = resource_system.spritesheet(visuals.spritesheet_id());
@@ -133,7 +132,7 @@ public:
     								//error visuals->animation_sprite(rx, ry)
     							}
     						}
-    					if(globals.show_hitboxes)
+    					if(show_hitboxes)
     					{
     						const SDL_Rect hitbox
     							{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)

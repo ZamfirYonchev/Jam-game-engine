@@ -9,12 +9,12 @@
 #define COMMANDS_EXTEND_PROCEDURE_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include "../types.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ExtendProcedureCommand
 {

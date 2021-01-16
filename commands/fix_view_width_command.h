@@ -15,7 +15,6 @@
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class FixViewWidthCommand
 {
@@ -24,9 +23,9 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
 		Position& position = entity_system.entity_component(EntityID{0}, (Position*)nullptr);
-		position.set_w(int(position.h()*command_system.variable(hash("resolution_x")).real()/command_system.variable(hash("resolution_y")).real()/*globals.resolution_x/globals.resolution_y*/));
+		position.set_w(int(position.h()*globals(Globals::app_resolution_x).real()/globals(Globals::app_resolution_y).real()));
 
-    	return CommandReturnValue{0.0};
+    	return CommandReturnValue{0l};
 	}
 };
 

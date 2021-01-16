@@ -18,6 +18,10 @@ SdlWindow::~SdlWindow()
 {
 	SDL_DestroyWindow(m_window);
 	SDL_DestroyRenderer(m_renderer);
+	if(m_audio_opened) Mix_CloseAudio();
+	IMG_Quit();
+	TTF_Quit();
+	Mix_Quit();
 	SDL_Quit();
 }
 
@@ -27,22 +31,24 @@ void SdlWindow::init_video( int& res_width
 						  , const bool double_buffer
 						  , const bool enable_audio
 						  , const int sound_channels
+						  , std::string_view title
 					)
 {
 	if(m_window)
 	{
 		SDL_DestroyWindow(m_window);
 		SDL_DestroyRenderer(m_renderer);
+		if(m_audio_opened) Mix_CloseAudio();
 		IMG_Quit();
 		TTF_Quit();
-		if(enable_audio) Mix_Quit();
+		Mix_Quit();
 		SDL_Quit();
 
 		m_window = nullptr;
 		m_renderer = nullptr;
 	}
 
-	const uint32_t sdl_init_flags = SDL_INIT_VIDEO | (enable_audio & SDL_INIT_AUDIO);
+	const uint32_t sdl_init_flags = SDL_INIT_VIDEO | (enable_audio ? SDL_INIT_AUDIO : 0u);
 
 	if(SDL_Init(sdl_init_flags) < 0)
 	{
@@ -64,11 +70,12 @@ void SdlWindow::init_video( int& res_width
 
     if(enable_audio)
     {
-		if(Mix_OpenAudio(44100, AUDIO_F32SYS, sound_channels, 2048) < 0)
+		if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, AUDIO_F32SYS, sound_channels, 2048) < 0)
 		{
 			std::cerr << "Unable to initialize SDL_mixer" << Mix_GetError() << std::endl;
 			return;
 		}
+		m_audio_opened = true;
     }
 
 	atexit(SDL_Quit);
@@ -113,7 +120,7 @@ void SdlWindow::init_video( int& res_width
 
 	SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
 	SDL_SetRenderDrawBlendMode(m_renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetWindowTitle(m_window, "Game");
+	SDL_SetWindowTitle(m_window, title.data());
 
 	std::cout << "Video initialized" << std::endl;
 }

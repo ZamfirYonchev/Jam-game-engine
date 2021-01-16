@@ -9,13 +9,13 @@
 #define COMMANDS_EXPORT_ENTITIES_COMMAND_H_
 
 #include "command_return_value.h"
+#include "../globals.h"
 #include <fstream>
 #include <iostream>
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 class ExportEntitiesCommand
 {
@@ -29,12 +29,12 @@ public:
 		if(file)
 		{
 			entity_system.for_each([&](const auto& entity){ file << entity << std::endl; });
-	    	return CommandReturnValue{0.0};
+	    	return CommandReturnValue{0l};
 		}
 		else
 		{
 			std::cerr << "Could not open file \"" << file_name.string() << "\" for write." << std::endl;
-	    	return CommandReturnValue{-1.0};
+	    	return CommandReturnValue{-1l};
 		}
 	}
 };

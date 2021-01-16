@@ -10,6 +10,7 @@
 
 #include "../ref_pack.h"
 #include "../types.h"
+#include "../globals.h"
 #include <list>
 #include <utility>
 
@@ -31,9 +32,9 @@ struct AllSystems
 		((void)pack.access((Ts*)nullptr).component_updated(component, id, change), ...);
 	}
 
-	void update(const Time time_diff, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
-		((void)pack.access((Ts*)nullptr).update(time_diff, procedure_calls), ...);
+		((void)pack.access((Ts*)nullptr).update(time_diff, globals, procedure_calls), ...);
 	}
 
 	void remove_id(const EntityID id)

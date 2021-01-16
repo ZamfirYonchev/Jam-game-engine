@@ -21,8 +21,10 @@ class ControlSystem : public SystemBase
 public:
 	ControlSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
 
-	void update(const Time time_diff, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
+		if(globals(Globals::app_paused).boolean()) return;
+
 		for(const auto id : entities)
 		{
 			auto& control = m_entity_system.entity_component(id, (Control*)nullptr);

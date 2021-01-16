@@ -8,13 +8,11 @@
 #ifndef COMMANDS_PROCEDURE_COMMAND_H_
 #define COMMANDS_PROCEDURE_COMMAND_H_
 
-#include "command_return_value.h"
 #include <list>
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
-struct Globals;
 
 template<typename CommandSystemT>
 class ProcedureCommand
@@ -41,13 +39,6 @@ public:
         for(auto it = m_commands.rbegin(); it != m_commands.rend(); ++it)
         	command_system.insert_front(*it);
     }
-
-    /*template<typename EntitySystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
-    {
-    	insert_to(command_system);
-        return command_system.exec_next();
-    }*/
 
 private:
     std::list<CommandT> m_commands;
