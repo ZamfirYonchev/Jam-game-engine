@@ -28,7 +28,8 @@ public:
     	const auto w = command_system.exec_next();
     	const auto h = command_system.exec_next();
 
-    	Position& position = entity_system.entity_component(entity_system.previous_entity_id(), (Position*)nullptr);
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	Position& position = entity_system.entity_component(selected_entity, Position::null);
 
 		if(position)
 		{
@@ -56,7 +57,7 @@ public:
 		}
 		else
 		{
-			//error entity_system.previous_entity_id()
+			//error selected_entity
 			return CommandReturnValue{-1l};
 		}
 	}

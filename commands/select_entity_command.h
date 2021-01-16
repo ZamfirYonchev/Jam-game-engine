@@ -27,8 +27,6 @@ public:
 	{
     	const auto entity_id = (m_entity_id.integer() >= 0) ? m_entity_id : command_system.exec_next();
     	globals(Globals::selected_entity) = entity_id;
-		entity_system.add_accessed_entity(entity_id.integer());
-
 		return entity_id;
 	}
 

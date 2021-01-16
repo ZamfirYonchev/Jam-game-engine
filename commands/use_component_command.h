@@ -66,14 +66,15 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	set_component(entity_system, rendering_system, all_systems, T{});
+    	set_component(entity_system, rendering_system, all_systems, globals, T{});
     	return CommandReturnValue{0l};
 	}
 
     template<typename EntitySystemT, typename AllSystemsT>
-    void set_component(EntitySystemT& entity_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, const T& component) const
+    void set_component(EntitySystemT& entity_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals, const T& component) const
     {
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, component);
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, component);
     }
 };
 
@@ -86,7 +87,7 @@ CommandReturnValue UseComponentCommand<AbsolutePosition>::operator()(CommandSyst
 	const auto w = command_system.exec_next();
 	const auto h = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {x.real(), y.real(), w.real(), h.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {x.real(), y.real(), w.real(), h.real()});
 
 	return CommandReturnValue{0l};
 }
@@ -106,7 +107,8 @@ public:
     	const auto offset_w = command_system.exec_next();
     	const auto offset_h = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AttachedPosition<EntitySystemT>{EntityID(attached_id.integer()), offset_x.real(), offset_y.real(), offset_w.real(), offset_h.real(), entity_system});
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, AttachedPosition<EntitySystemT>{EntityID(attached_id.integer()), offset_x.real(), offset_y.real(), offset_w.real(), offset_h.real(), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -124,7 +126,8 @@ public:
     	const auto offset_w = command_system.exec_next();
     	const auto offset_h = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AttachedPosition<EntitySystemT>{attached_id.integer(), offset_x.real(), offset_y.real(), offset_w.real(), offset_h.real(), entity_system});
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, AttachedPosition<EntitySystemT>{attached_id.integer(), offset_x.real(), offset_y.real(), offset_w.real(), offset_h.real(), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -136,12 +139,12 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	const auto attached_id = command_system.exec_next();
     	const auto offset_x = command_system.exec_next();
     	const auto offset_y = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, BuildPosition<EntitySystemT>{self_id, EntityID(attached_id.integer()), offset_x.real(), offset_y.real(), entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, BuildPosition<EntitySystemT>{EntityID(attached_id.integer()), offset_x.real(), offset_y.real(), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -153,12 +156,12 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	const auto shoot_proc_id = command_system.exec_next();
     	const auto cooldown = command_system.exec_next();
     	const auto stability_control = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.real(), self_id, stability_control.real(), entity_system, input_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.real(), selected_entity, stability_control.real(), entity_system, input_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -172,7 +175,7 @@ CommandReturnValue UseComponentCommand<InputSelectControl>::operator()(CommandSy
 	const auto max = command_system.exec_next();
 	const auto proc_id = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {int(select.integer()), int(max.integer()), ProcedureID(proc_id.integer()), input_system});
+	set_component(entity_system, rendering_system, all_systems, globals, {int(select.integer()), int(max.integer()), ProcedureID(proc_id.integer()), input_system});
 
 	return CommandReturnValue{0l};
 }
@@ -185,7 +188,7 @@ CommandReturnValue UseComponentCommand<ConstantControl>::operator()(CommandSyste
 	const auto vetical_decision = command_system.exec_next();
 	const auto look_dir = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {move_decision.real(), vetical_decision.real(), Control::LookDir(look_dir.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals, {move_decision.real(), vetical_decision.real(), Control::LookDir(look_dir.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -196,11 +199,11 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	const auto target_id = command_system.exec_next();
     	const auto range = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, GuideControl<EntitySystemT>{self_id, EntityID(target_id.integer()), range.real(), entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, GuideControl<EntitySystemT>{selected_entity, EntityID(target_id.integer()), range.real(), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -212,13 +215,13 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	const auto target_id = command_system.exec_next();
     	const auto attack_proc_id = command_system.exec_next();
     	const auto attack_cooldown = command_system.exec_next();
     	const auto range = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, ChaseAIControl<EntitySystemT>{self_id, EntityID(target_id.integer()), ProcedureID(attack_proc_id.integer()), attack_cooldown.real(), range.real(), entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, ChaseAIControl<EntitySystemT>{selected_entity, EntityID(target_id.integer()), ProcedureID(attack_proc_id.integer()), attack_cooldown.real(), range.real(), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -236,7 +239,8 @@ public:
     	const auto directed_factor = command_system.exec_next();
     	const auto direction_angle = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, ParticleControl{m_gen, random_factor.real(), directed_factor.real(), direction_angle.real()});
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, ParticleControl{m_gen, random_factor.real(), directed_factor.real(), direction_angle.real()});
 
     	return CommandReturnValue{0l};
 	}
@@ -256,7 +260,7 @@ CommandReturnValue UseComponentCommand<FullMovement>::operator()(CommandSystemT&
 	const auto jump_force = command_system.exec_next();
 	const auto gravity_affected = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {mass.real(), friction_x.real(), friction_x.real(), move_force.real(), jump_force.real(), gravity_affected.boolean()});
+	set_component(entity_system, rendering_system, all_systems, globals, {mass.real(), friction_x.real(), friction_x.real(), move_force.real(), jump_force.real(), gravity_affected.boolean()});
 
 	return CommandReturnValue{0l};
 }
@@ -270,7 +274,7 @@ CommandReturnValue UseComponentCommand<InstantMovement>::operator()(CommandSyste
 	const auto friction_y = command_system.exec_next();
 	const auto move_force = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {mass.real(), friction_x.real(), friction_x.real(), move_force.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {mass.real(), friction_x.real(), friction_x.real(), move_force.real()});
 
 	return CommandReturnValue{0l};
 }
@@ -282,7 +286,7 @@ CommandReturnValue UseComponentCommand<BasicCollision>::operator()(CommandSystem
 	const auto state = command_system.exec_next();
 	const auto elasticity = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {Collision::CollisionState(state.integer()), elasticity.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {Collision::CollisionState(state.integer()), elasticity.real()});
 
 	return CommandReturnValue{0l};
 }
@@ -294,7 +298,7 @@ CommandReturnValue UseComponentCommand<DamageCollision>::operator()(CommandSyste
 	const auto state = command_system.exec_next();
 	const auto damage = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {Collision::CollisionState(state.integer()), damage.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {Collision::CollisionState(state.integer()), damage.real()});
 
 	return CommandReturnValue{0l};
 }
@@ -309,7 +313,7 @@ CommandReturnValue UseComponentCommand<FullInteraction>::operator()(CommandSyste
 	const auto proc_id_other = command_system.exec_next();
 	const auto proc_id_self_on_exit = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {int32_t(group_vec.integer()), int8_t(trigger_group.integer()), ProcedureID(proc_id_self.integer()), ProcedureID(proc_id_other.integer()), ProcedureID(proc_id_self_on_exit.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals, {int32_t(group_vec.integer()), int8_t(trigger_group.integer()), ProcedureID(proc_id_self.integer()), ProcedureID(proc_id_other.integer()), ProcedureID(proc_id_self_on_exit.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -320,7 +324,7 @@ CommandReturnValue UseComponentCommand<NormalInteraction>::operator()(CommandSys
 {
 	const auto group_vec = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {int32_t(group_vec.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals, {int32_t(group_vec.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -334,7 +338,7 @@ CommandReturnValue UseComponentCommand<TriggerInteraction>::operator()(CommandSy
 	const auto proc_id_other = command_system.exec_next();
 	const auto proc_id_self_on_exit = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {int8_t(trigger_group.integer()), ProcedureID(proc_id_self.integer()), ProcedureID(proc_id_other.integer()), ProcedureID(proc_id_self_on_exit.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals, {int8_t(trigger_group.integer()), ProcedureID(proc_id_self.integer()), ProcedureID(proc_id_other.integer()), ProcedureID(proc_id_self_on_exit.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -346,7 +350,7 @@ CommandReturnValue UseComponentCommand<CharacterHealth>::operator()(CommandSyste
 	const auto hp = command_system.exec_next();
 	const auto max_hp = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {hp.real(), max_hp.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {hp.real(), max_hp.real()});
 
 	return CommandReturnValue{0l};
 }
@@ -361,7 +365,8 @@ public:
     	const auto offset_hp = command_system.exec_next();
     	const auto offset_max_hp = command_system.exec_next();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system, AttachedHealth<EntitySystemT>{EntityID(attached_id.integer()), offset_hp.real(), offset_max_hp.real(), entity_system});
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, AttachedHealth<EntitySystemT>{EntityID(attached_id.integer()), offset_hp.real(), offset_max_hp.real(), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -374,7 +379,7 @@ CommandReturnValue UseComponentCommand<TimedHealth>::operator()(CommandSystemT& 
 	const auto ttl = command_system.exec_next();
 	const auto proc_id = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {ttl.real(), ProcedureID(proc_id.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals, {ttl.real(), ProcedureID(proc_id.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -394,9 +399,9 @@ public:
     	const auto hit_id = command_system.exec_next();
     	const auto dead_id = command_system.exec_next();
     	const auto volume = command_system.exec_next();
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
 				, CharacterSounds<EntitySystemT>{SoundID(idle_id.integer())
 											   , SoundID(walk_id.integer())
 											   , SoundID(jump_id.integer())
@@ -406,7 +411,7 @@ public:
 											   , SoundID(hit_id.integer())
 											   , SoundID(dead_id.integer())
 											   , volume.real()
-											   , self_id
+											   , selected_entity
 											   , entity_system}
 		);
 
@@ -420,11 +425,11 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	const auto spr_id = command_system.exec_next();
-    	const auto self_id = entity_system.previous_entity_id();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
-				, CharacterVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), self_id, resource_system, entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
+				, CharacterVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), selected_entity, resource_system, entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -436,12 +441,12 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	const auto spr_id = command_system.exec_next();
     	const auto repeat_x = command_system.exec_next();
-    	const auto self_id = entity_system.previous_entity_id();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
-				, HealthVisuals<EntitySystemT>{self_id, SpritesheetID(spr_id.integer()), uint16_t(repeat_x.integer()), entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
+				, HealthVisuals<EntitySystemT>{selected_entity, SpritesheetID(spr_id.integer()), uint16_t(repeat_x.integer()), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -454,10 +459,10 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
     	const auto spr_id = command_system.exec_next();
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
-				, MenuItemVisuals<EntitySystemT>{self_id, SpritesheetID(spr_id.integer()), entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
+				, MenuItemVisuals<EntitySystemT>{selected_entity, SpritesheetID(spr_id.integer()), entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -470,7 +475,7 @@ CommandReturnValue UseComponentCommand<StaticVisuals>::operator()(CommandSystemT
 	const auto spr_id = command_system.exec_next();
 	const auto sprite = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, {SpritesheetID(spr_id.integer()), int(sprite.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals, {SpritesheetID(spr_id.integer()), int(sprite.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -484,10 +489,10 @@ public:
     	const auto spr_id = command_system.exec_next();
     	const auto tile_w = command_system.exec_next();
     	const auto tile_h = command_system.exec_next();
-    	const auto self_id = entity_system.previous_entity_id();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 
-		entity_system.set_entity_component(entity_system.previous_entity_id(), all_systems, rendering_system
-				, TiledVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), tile_w.real(), tile_h.real(), self_id, entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
+				, TiledVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), tile_w.real(), tile_h.real(), selected_entity, entity_system});
 
     	return CommandReturnValue{0l};
 	}

@@ -31,7 +31,8 @@ public:
     	const auto fy = command_system.exec_next();
     	const auto gravity_affected = command_system.exec_next();
 
-    	Movement& movement = entity_system.entity_component(entity_system.previous_entity_id(), (Movement*)nullptr);
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	Movement& movement = entity_system.entity_component(selected_entity, Movement::null);
 
 		if(movement)
 		{
@@ -79,7 +80,7 @@ public:
 		}
 		else
 		{
-			//error entity_system.previous_entity_id()
+			//error selected_entity
 			return CommandReturnValue{-1l};
 		}
 	}

@@ -88,15 +88,14 @@ public:
 
     void remove_entity(const EntityID id)
     {
-    	m_entities_to_remove.insert(resolved_id(id));
+    	m_entities_to_remove.insert(id);
     }
 
     template<typename T>
     T& entity_component(const EntityID id, const T* ptr)
     {
-    	const EntityID res_id = resolved_id(id);
-    	if(res_id < static_cast<EntityID>(m_entities.size()))
-    		return m_entities[res_id].component(ptr);
+    	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
+    		return m_entities[id].component(ptr);
     	else
     		return *T::null;
     }
@@ -104,9 +103,8 @@ public:
     template<typename T>
     const T& entity_component(const EntityID id, const T* ptr) const
     {
-    	const EntityID res_id = resolved_id(id); // @suppress("Invalid arguments")
-    	if(res_id < static_cast<EntityID>(m_entities.size()))
-    		return m_entities[res_id].component(ptr);
+    	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
+    		return m_entities[id].component(ptr);
     	else
     		return *T::null;
     }
@@ -114,9 +112,8 @@ public:
     template<typename T, typename AllSystemsT>
 	void set_entity_component(const EntityID id, AllSystemsT& all_systems, RenderingSystem& rendering_system, const T& component)
     {
-    	const EntityID res_id = resolved_id(id);
-    	if(res_id < static_cast<EntityID>(m_entities.size()))
-    		m_entities[res_id].set_component(all_systems, rendering_system, component);
+    	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
+    		m_entities[id].set_component(all_systems, rendering_system, component);
     }
 
     void clear()
@@ -137,32 +134,6 @@ public:
     		m_free_entities.insert(id);
     	}
     	m_entities_to_remove.clear();
-    }
-
-    void add_accessed_entity(const EntityID id)
-    {
-    	const EntityID res_id = resolved_id(id);
-    	m_head_of_last_accessed_entities = (m_head_of_last_accessed_entities+m_last_accessed_entities.size()-1)%m_last_accessed_entities.size();
-    	m_last_accessed_entities[m_head_of_last_accessed_entities] = res_id;
-    }
-
-    constexpr EntityID previous_entity_id() const
-    {
-    	return EntityID{m_last_accessed_entities[m_head_of_last_accessed_entities]};
-    }
-
-    constexpr EntityID previous_entity_id(const unsigned int n) const
-    {
-    	const unsigned int cycling_index = (m_head_of_last_accessed_entities+n)%m_last_accessed_entities.size();
-		return EntityID{m_last_accessed_entities[cycling_index]};
-    }
-
-    EntityID resolved_id(const EntityID in_entity_id)
-    {
-    	if(in_entity_id >= 0)
-    		return in_entity_id;
-    	else
-    		return previous_entity_id(-1-in_entity_id);
     }
 
 private:

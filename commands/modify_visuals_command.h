@@ -28,7 +28,8 @@ public:
     	const auto spr_id = command_system.exec_next();
     	const auto layer = command_system.exec_next();
 
-    	Visuals& visuals = entity_system.entity_component(entity_system.previous_entity_id(), (Visuals*)nullptr);
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	Visuals& visuals = entity_system.entity_component(selected_entity, Visuals::null);
 
 		if(visuals)
 		{
@@ -52,7 +53,7 @@ public:
 				if(visuals.layer() != Visuals::VisualLayer::FAR_BACKGROUND)
 				{
 					visuals.set_layer(Visuals::VisualLayer(0));
-					rendering_system.component_updated(visuals, entity_system.previous_entity_id(), false);
+					rendering_system.component_updated(visuals, selected_entity, false);
 				}
 			}
 			else
@@ -60,7 +61,7 @@ public:
 				if(layer.integer() != 0)
 				{
 					visuals.set_layer(Visuals::VisualLayer(int(visuals.layer())+layer.integer()));
-					rendering_system.component_updated(visuals, entity_system.previous_entity_id(), false);
+					rendering_system.component_updated(visuals, selected_entity, false);
 				}
 			}
 
@@ -68,7 +69,7 @@ public:
 		}
 		else
 		{
-			//error entity_system.previous_entity()
+			//error selected_entity
 			return CommandReturnValue{-1l};
 		}
 	}

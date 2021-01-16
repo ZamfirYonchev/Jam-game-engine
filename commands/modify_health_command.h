@@ -26,7 +26,8 @@ public:
     	const auto hp = command_system.exec_next();
     	const auto hp_change = command_system.exec_next();
 
-    	Health& health = entity_system.entity_component(entity_system.previous_entity_id(), (Health*)nullptr);
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	Health& health = entity_system.entity_component(selected_entity, Health::null);
 
 		if(health)
 		{
@@ -49,7 +50,7 @@ public:
 		}
 		else
 		{
-			//error entity_system.previous_entity_id()
+			//error selected_entity
 			return CommandReturnValue{-1l};
 		}
 	}

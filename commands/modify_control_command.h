@@ -27,7 +27,8 @@ public:
     	const auto decision_walk = command_system.exec_next();
     	const auto look_dir = command_system.exec_next();
 
-    	Control& control = entity_system.entity_component(entity_system.previous_entity_id(), (Control*)nullptr);
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	Control& control = entity_system.entity_component(selected_entity, Control::null);
 
 		if(control)
 		{
@@ -55,7 +56,7 @@ public:
 		}
 		else
 		{
-			//error entity_system.previous_entity_id()
+			//error selected_entity
 			return CommandReturnValue{-1l};
 		}
 	}

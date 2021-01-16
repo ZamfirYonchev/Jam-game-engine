@@ -25,7 +25,6 @@ public:
     {
     	const EntityID entity_id = entity_system.add_new_entity();
     	globals(Globals::selected_entity) = CommandReturnValue{static_cast<int64_t>(entity_id)};
-    	entity_system.add_accessed_entity(entity_id);
     	return CommandReturnValue{static_cast<int64_t>(entity_id)};
     }
 };
