@@ -25,6 +25,7 @@ public:
     	const auto max_hp = command_system.exec_next();
     	const auto hp = command_system.exec_next();
     	const auto hp_change = command_system.exec_next();
+    	const auto proc_id = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	Health& health = entity_system.entity_component(selected_entity, Health::null);
@@ -45,6 +46,11 @@ public:
 				health.set_hp_change(0);
 			else
 				health.mod_hp_change(hp_change.real());
+
+			if(is_negative_zero(proc_id.real()))
+				health.set_on_death_exec(0);
+			else
+				health.set_on_death_exec(health.on_death_exec() + proc_id.integer());
 
 			return CommandReturnValue{0l};
 		}
