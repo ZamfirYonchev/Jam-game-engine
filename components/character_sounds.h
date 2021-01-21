@@ -21,7 +21,18 @@ public:
 
     const Time LONG_IDLE_TIMEOUT = 5000;
 
-    CharacterSounds(const SoundID idle_id, const SoundID walk_id, const SoundID jump_id, const SoundID fall_id, const SoundID land_id, const SoundID attack_id, const SoundID hit_id, const SoundID dead_id, const double volume, const EntityID self_id, EntitySystemT& entity_system)
+    CharacterSounds
+		(const SoundID idle_id
+	   , const SoundID walk_id
+	   , const SoundID jump_id
+	   , const SoundID fall_id
+	   , const SoundID land_id
+	   , const SoundID attack_id
+	   , const SoundID hit_id
+	   , const SoundID dead_id
+	   , const double volume
+	   , const EntityID self_id
+	   , const EntitySystemT& entity_system)
     : m_self_id(self_id)
     , m_play_new_sound(false)
     , m_current_sound_id(-1)
@@ -173,7 +184,7 @@ private:
     double m_volume;
 
     State m_state;
-    EntitySystemT& m_entity_system;
+    const EntitySystemT& m_entity_system;
 };
 
 #endif /* COMPONENTS_CHARACTER_SOUNDS_H_ */

@@ -15,7 +15,7 @@ class ConstantControl : public Control
 {
 public:
 	using Base = Control;
-	ConstantControl(double move_decision, double vertical_decision, LookDir look_dir)
+	ConstantControl(const double move_decision, const double vertical_decision, const LookDir look_dir)
 	: m_move_decision(clip(move_decision, -1.0, 1.0))
 	, m_vertical_decision(clip(vertical_decision, -1.0, 1.0))
 	, m_look_dir(look_dir)

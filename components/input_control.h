@@ -18,7 +18,13 @@ class InputControl : public Control
 {
 public:
 	using Base = Control;
-    InputControl(ProcedureID shoot_proc_id, double shoot_cooldown, EntityID self_id, bool stability_control, EntitySystemT& entity_system, InputSystem& input_system)
+    InputControl
+		(const ProcedureID shoot_proc_id
+	   , const double shoot_cooldown
+	   , const EntityID self_id
+	   , const bool stability_control
+	   , const EntitySystemT& entity_system
+	   , const InputSystem& input_system)
     : m_self_id(self_id)
 	, m_walk_dir(0)
     , m_vertical_dir(0)
@@ -93,8 +99,8 @@ private:
     int m_current_shoot_cooldown;
     LookDir m_look_dir;
     bool m_stability_control;
-    EntitySystemT& m_entity_system;
-    InputSystem& m_input_system;
+    const EntitySystemT& m_entity_system;
+    const InputSystem& m_input_system;
 };
 
 

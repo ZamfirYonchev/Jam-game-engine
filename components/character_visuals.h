@@ -23,23 +23,131 @@ public:
     static const unsigned int ANIMATION_DELAY_MS = 50;
     enum class RenderStates { IDLE, WALK, JUMP, FALL, ATTACK, HIT, DEAD};
 
-    CharacterVisuals(SpritesheetID spr_id, const EntityID self_id, ResourceSystem& resource_system, EntitySystemT& entity_system)
-    : m_self_id(self_id)
-    , m_current_state(RenderStates::IDLE)
-    , m_animation_count(0)
-    , m_animation_time(0)
-    , m_spritesheet_id(spr_id)
-    , m_layer(VisualLayer::ACTION)
-    , m_animation_state_size(1)
-	, m_animation_state_offset(0)
-    , m_resource_system(resource_system)
-    , m_entity_system(entity_system)
-    {}
+    CharacterVisuals(
+    		const AnimationID idle_anim_id
+    	  , const AnimationID walk_anim_id
+    	  , const AnimationID jump_anim_id
+    	  , const AnimationID fall_anim_id
+    	  , const AnimationID attack_anim_id
+    	  , const AnimationID hit_anim_id
+    	  , const AnimationID dead_anim_id
+		  , const ResourceSystem& resource_system
+		  , const EntityID self_id
+		  , const EntitySystemT& entity_system
+		  )
+    		: m_current_state(RenderStates::IDLE)
+    		, m_current_anim_id{idle_anim_id}
+			, m_idle_anim_id{idle_anim_id}
+			, m_walk_anim_id{walk_anim_id}
+			, m_jump_anim_id{jump_anim_id}
+			, m_fall_anim_id{fall_anim_id}
+			, m_attack_anim_id{attack_anim_id}
+			, m_hit_anim_id{hit_anim_id}
+			, m_dead_anim_id{dead_anim_id}
+    	    , m_current_anim_frame_delay{1}
+    	    , m_idle_anim_frame_delay{1}
+    	    , m_walk_anim_frame_delay{1}
+    	    , m_jump_anim_frame_delay{1}
+    	    , m_fall_anim_frame_delay{1}
+    	    , m_attack_anim_frame_delay{1}
+    	    , m_hit_anim_frame_delay{1}
+    	    , m_dead_anim_frame_delay{1}
+    	    , m_current_anim_time_max{1}
+    	    , m_idle_anim_time_max{1}
+    	    , m_walk_anim_time_max{1}
+    	    , m_jump_anim_time_max{1}
+    	    , m_fall_anim_time_max{1}
+    	    , m_attack_anim_time_max{1}
+    	    , m_hit_anim_time_max{1}
+    	    , m_dead_anim_time_max{1}
+    		, m_anim_time{0}
+    		, m_last_frame{false}
+			, m_layer{VisualLayer::ACTION}
+			, m_self_id{self_id}
+			, m_entity_system{entity_system}
+			{
+				const auto& idle_anim_opt = resource_system.animation(idle_anim_id);
+
+				if(idle_anim_opt)
+				{
+					m_idle_anim_frame_delay = idle_anim_opt->get().frame_delay_ms();
+					m_idle_anim_time_max = m_idle_anim_frame_delay*idle_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error idle_anim_id*/ }
+
+				const auto& walk_anim_opt = resource_system.animation(walk_anim_id);
+
+				if(walk_anim_opt)
+				{
+					m_walk_anim_frame_delay = walk_anim_opt->get().frame_delay_ms();
+					m_walk_anim_time_max = m_walk_anim_frame_delay*walk_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error walk_anim_id*/ }
+
+				const auto& jump_anim_opt = resource_system.animation(jump_anim_id);
+
+				if(jump_anim_opt)
+				{
+					m_jump_anim_frame_delay = jump_anim_opt->get().frame_delay_ms();
+					m_jump_anim_time_max = m_jump_anim_frame_delay*jump_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error jump_anim_id*/ }
+
+				const auto& fall_anim_opt = resource_system.animation(fall_anim_id);
+
+				if(fall_anim_opt)
+				{
+					m_fall_anim_frame_delay = fall_anim_opt->get().frame_delay_ms();
+					m_fall_anim_time_max = m_fall_anim_frame_delay*fall_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error fall_anim_id*/ }
+
+				const auto& attack_anim_opt = resource_system.animation(attack_anim_id);
+
+				if(attack_anim_opt)
+				{
+					m_attack_anim_frame_delay = attack_anim_opt->get().frame_delay_ms();
+					m_attack_anim_time_max = m_attack_anim_frame_delay*attack_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error attack_anim_id*/ }
+
+				const auto& hit_anim_opt = resource_system.animation(hit_anim_id);
+
+				if(hit_anim_opt)
+				{
+					m_hit_anim_frame_delay = hit_anim_opt->get().frame_delay_ms();
+					m_hit_anim_time_max = m_hit_anim_frame_delay*hit_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error hit_anim_id*/ }
+
+				const auto& dead_anim_opt = resource_system.animation(dead_anim_id);
+
+				if(dead_anim_opt)
+				{
+					m_dead_anim_frame_delay = dead_anim_opt->get().frame_delay_ms();
+					m_dead_anim_time_max = m_dead_anim_frame_delay*dead_anim_opt->get().frame_count();
+				}
+				else
+				{ /*error dead_anim_id*/ }
+
+			}
 
     void print(std::ostream& to) const
     {
     	to << "UseCharacterVisuals "
-    	   << m_spritesheet_id<< " ";
+    	   << m_idle_anim_id << " "
+		   << m_walk_anim_id << " "
+		   << m_jump_anim_id << " "
+		   << m_fall_anim_id << " "
+		   << m_attack_anim_id << " "
+		   << m_hit_anim_id << " "
+		   << m_dead_anim_id << " ";
     }
 
     void update_animation(const Time time_diff)
@@ -51,6 +159,7 @@ public:
 
     	switch(m_current_state)
 		{
+    		default:
 			case RenderStates::IDLE:
 				if(health.alive() == false) set_new_state(RenderStates::DEAD);
 				else if(health.stunned()) set_new_state(RenderStates::HIT);
@@ -77,7 +186,7 @@ public:
 				else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
 				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(RenderStates::WALK);
 				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(RenderStates::IDLE);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1 && animation_count_max()) set_new_state(RenderStates::FALL);
+				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1 && m_last_frame) set_new_state(RenderStates::FALL);
 				else advance_animation(time_diff);
 			break;
 
@@ -93,132 +202,147 @@ public:
 			case RenderStates::ATTACK:
 				if(health.alive() == false) set_new_state(RenderStates::DEAD);
 				else if(health.stunned()) set_new_state(RenderStates::HIT);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
-				else if(animation_count_max()) set_new_state(RenderStates::IDLE);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
+				else if(m_last_frame) set_new_state(RenderStates::IDLE);
 				else advance_animation(time_diff);
 			break;
 
 			case RenderStates::HIT:
 				if(health.alive() == false) set_new_state(RenderStates::DEAD);
-				else if(animation_count_max() && control.decision_attack()) set_new_state(RenderStates::ATTACK);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
-				else if(animation_count_max() && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(RenderStates::IDLE);
+				else if(m_last_frame && control.decision_attack()) set_new_state(RenderStates::ATTACK);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(RenderStates::IDLE);
 				else advance_animation(time_diff);
 			break;
 
 			case RenderStates::DEAD:
-				if(animation_count_max() == false)
+				if(m_last_frame == false)
 					advance_animation(time_diff);
 				//else do nothing
-			break;
-
-			default:
-				advance_animation(time_diff);
 			break;
 		}
     }
 
-    uint8_t animation_sprite(uint16_t rx, uint16_t ry) const
+    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
     {
-        return m_animation_state_offset + m_animation_count;
+    	return {m_current_anim_id, m_anim_time/m_current_anim_frame_delay};
     }
-
-    SpritesheetID spritesheet_id() { return m_spritesheet_id; }
-    void set_spritesheet_id(SpritesheetID spr_id) { m_spritesheet_id = spr_id; }
 
     uint16_t repeat_x() const { return 1; }
     uint16_t repeat_y() const { return 1; }
-    void set_repeat_x(uint16_t val) {}
-    void set_repeat_y(uint16_t val) {}
+    void set_repeat_x(const uint16_t val) {}
+    void set_repeat_y(const uint16_t val) {}
     VisualLayer layer() const { return m_layer; }
-    void set_layer(VisualLayer val) { m_layer = val; }
-
-    EntityID m_self_id;
+    void set_layer(const VisualLayer val) { m_layer = val; }
 
 private:
-    RenderStates m_current_state;
-    uint8_t m_animation_count;
-    double m_animation_time;
-    SpritesheetID m_spritesheet_id;
+	RenderStates m_current_state;
+    AnimationID m_current_anim_id;
+    AnimationID m_idle_anim_id;
+	AnimationID m_walk_anim_id;
+	AnimationID m_jump_anim_id;
+	AnimationID m_fall_anim_id;
+	AnimationID m_attack_anim_id;
+	AnimationID m_hit_anim_id;
+	AnimationID m_dead_anim_id;
+    int m_current_anim_frame_delay;
+    int m_idle_anim_frame_delay;
+    int m_walk_anim_frame_delay;
+    int m_jump_anim_frame_delay;
+    int m_fall_anim_frame_delay;
+    int m_attack_anim_frame_delay;
+    int m_hit_anim_frame_delay;
+    int m_dead_anim_frame_delay;
+    Time m_current_anim_time_max;
+    Time m_idle_anim_time_max;
+    Time m_walk_anim_time_max;
+    Time m_jump_anim_time_max;
+    Time m_fall_anim_time_max;
+    Time m_attack_anim_time_max;
+    Time m_hit_anim_time_max;
+    Time m_dead_anim_time_max;
+    Time m_anim_time;
+    bool m_last_frame;
     VisualLayer m_layer;
-    int m_animation_state_size, m_animation_state_offset;
-    ResourceSystem& m_resource_system;
-    EntitySystemT& m_entity_system;
+    EntityID m_self_id;
+    const EntitySystemT& m_entity_system;
 
     void set_new_state(RenderStates new_state)
     {
-        m_current_state = new_state;
-        m_animation_count = 0;
-        m_animation_time = 0;
-        m_animation_state_size = animation_state_size();
-        m_animation_state_offset = animation_state_offset();
+		switch(new_state)
+    	{
+    		default:
+    		case RenderStates::IDLE:
+    		{
+    			m_current_anim_id = m_idle_anim_id;
+    			m_current_anim_frame_delay = m_idle_anim_frame_delay;
+    			m_current_anim_time_max = m_idle_anim_time_max;
+    		}
+    		break;
+
+    		case RenderStates::WALK:
+    		{
+    			m_current_anim_id = m_walk_anim_id;
+    			m_current_anim_frame_delay = m_walk_anim_frame_delay;
+    			m_current_anim_time_max = m_walk_anim_time_max;
+    		}
+    		break;
+
+    		case RenderStates::JUMP:
+    		{
+    			m_current_anim_id = m_jump_anim_id;
+    			m_current_anim_frame_delay = m_jump_anim_frame_delay;
+    			m_current_anim_time_max = m_jump_anim_time_max;
+    		}
+    		break;
+
+    		case RenderStates::FALL:
+    		{
+    			m_current_anim_id = m_fall_anim_id;
+    			m_current_anim_frame_delay = m_fall_anim_frame_delay;
+    			m_current_anim_time_max = m_fall_anim_time_max;
+    		}
+    		break;
+
+    		case RenderStates::ATTACK:
+    		{
+    			m_current_anim_id = m_attack_anim_id;
+    			m_current_anim_frame_delay = m_attack_anim_frame_delay;
+    			m_current_anim_time_max = m_attack_anim_time_max;
+    		}
+    		break;
+
+    		case RenderStates::HIT:
+    		{
+    			m_current_anim_id = m_hit_anim_id;
+    			m_current_anim_frame_delay = m_hit_anim_frame_delay;
+    			m_current_anim_time_max = m_hit_anim_time_max;
+    		}
+    		break;
+
+    		case RenderStates::DEAD:
+    		{
+    			m_current_anim_id = m_dead_anim_id;
+    			m_current_anim_frame_delay = m_dead_anim_frame_delay;
+    			m_current_anim_time_max = m_dead_anim_time_max;
+    		}
+    		break;
+
+    	}
+
+		m_current_state = new_state;
+        m_anim_time = 0;
+        m_last_frame = false;
     }
 
     void advance_animation(Time time_diff)
     {
-        m_animation_time += time_diff;
-        if(m_animation_time >= ANIMATION_DELAY_MS)
-        {
-            m_animation_time -= ANIMATION_DELAY_MS;
-    		m_animation_count = (m_animation_count+1)%m_animation_state_size;
-        }
-    }
-
-    bool animation_count_max() const
-    {
-        return (m_animation_count == m_animation_state_size-1);
-    }
-
-    uint8_t animation_state_offset() const
-    {
-    	const auto& spritesheet = m_resource_system.spritesheet(m_spritesheet_id)->get();
-        switch(m_current_state)
-        {
-            case RenderStates::IDLE:
-                return spritesheet.idle_sprite_start();
-            case RenderStates::WALK:
-                return spritesheet.walk_sprite_start();
-            case RenderStates::JUMP:
-                return spritesheet.jump_sprite_start();
-            case RenderStates::FALL:
-                return spritesheet.fall_sprite_start();
-            case RenderStates::ATTACK:
-                return spritesheet.attack_sprite_start();
-            case RenderStates::HIT:
-                return spritesheet.hit_sprite_start();
-            case RenderStates::DEAD:
-                return spritesheet.dead_sprite_start();
-            default:
-                return 0;
-        }
-    }
-
-    uint8_t animation_state_size() const
-    {
-    	const auto& spritesheet = m_resource_system.spritesheet(m_spritesheet_id)->get();
-        switch(m_current_state)
-        {
-            case RenderStates::IDLE:
-            	return spritesheet.idle_sprite_size();
-            case RenderStates::WALK:
-            	return spritesheet.walk_sprite_size();
-            case RenderStates::JUMP:
-            	return spritesheet.jump_sprite_size();
-            case RenderStates::FALL:
-            	return spritesheet.fall_sprite_size();
-            case RenderStates::ATTACK:
-            	return spritesheet.attack_sprite_size();
-            case RenderStates::HIT:
-            	return spritesheet.hit_sprite_size();
-            case RenderStates::DEAD:
-            	return spritesheet.dead_sprite_size();
-            default:
-            	return 0;
-        }
+    	m_last_frame = (m_anim_time+time_diff) >= m_current_anim_time_max;
+    	m_anim_time = (m_anim_time+time_diff)%m_current_anim_time_max;
     }
 };
 

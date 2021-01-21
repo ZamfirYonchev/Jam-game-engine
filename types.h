@@ -28,7 +28,7 @@ class ExplicitAlias
 using HashT = uint64_t;
 
 using EntityID = int32_t;
-using SpritesheetID = int32_t;
+using AnimationID = int32_t;
 using TextureID = int32_t;
 using ProcedureID = int32_t;
 using SoundID = int32_t;

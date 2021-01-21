@@ -53,25 +53,26 @@
 #include "../components/menu_item_visuals.h"
 #include "../components/static_visuals.h"
 #include "../components/tiled_visuals.h"
+#include "../components/animation_visuals.h"
 #include "../components/null_visuals.h"
 
 class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
 
-template<typename T>
+template<typename ComponentT>
 class UseComponentCommand
 {
 public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	set_component(entity_system, rendering_system, all_systems, globals, T{});
+    	set_component(entity_system, rendering_system, all_systems, globals, ComponentT{});
     	return CommandReturnValue{0l};
 	}
 
     template<typename EntitySystemT, typename AllSystemsT>
-    void set_component(EntitySystemT& entity_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals, const T& component) const
+    void set_component(EntitySystemT& entity_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals, const ComponentT& component) const
     {
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, component);
@@ -426,10 +427,26 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	const auto spr_id = command_system.exec_next();
+    	const auto idle_anim_id = command_system.exec_next();
+    	const auto walk_anim_id = command_system.exec_next();
+    	const auto jump_anim_id = command_system.exec_next();
+    	const auto fall_anim_id = command_system.exec_next();
+    	const auto attack_anim_id = command_system.exec_next();
+    	const auto hit_anim_id = command_system.exec_next();
+    	const auto dead_anim_id = command_system.exec_next();
 
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
-				, CharacterVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), selected_entity, resource_system, entity_system});
+				, CharacterVisuals<EntitySystemT>
+					{AnimationID(idle_anim_id.integer())
+				   , AnimationID(walk_anim_id.integer())
+				   , AnimationID(jump_anim_id.integer())
+				   , AnimationID(fall_anim_id.integer())
+				   , AnimationID(attack_anim_id.integer())
+				   , AnimationID(hit_anim_id.integer())
+				   , AnimationID(dead_anim_id.integer())
+				   , resource_system
+				   , selected_entity
+				   , entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -442,11 +459,18 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	const auto spr_id = command_system.exec_next();
+    	const auto active_anim_id = command_system.exec_next();
+    	const auto inactive_anim_id = command_system.exec_next();
     	const auto repeat_x = command_system.exec_next();
 
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
-				, HealthVisuals<EntitySystemT>{selected_entity, SpritesheetID(spr_id.integer()), uint16_t(repeat_x.integer()), entity_system});
+				, HealthVisuals<EntitySystemT>
+					{AnimationID(active_anim_id.integer())
+				   , AnimationID(inactive_anim_id.integer())
+				   , uint16_t(repeat_x.integer())
+				   , resource_system
+				   , selected_entity
+				   , entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -458,11 +482,19 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto spr_id = command_system.exec_next();
+    	const auto inactive_anim_id = command_system.exec_next();
+    	const auto focus_anim_id = command_system.exec_next();
+    	const auto select_anim_id = command_system.exec_next();
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
-				, MenuItemVisuals<EntitySystemT>{selected_entity, SpritesheetID(spr_id.integer()), entity_system});
+				, MenuItemVisuals<EntitySystemT>
+					{AnimationID(inactive_anim_id.integer())
+				   , AnimationID(focus_anim_id.integer())
+				   , AnimationID(select_anim_id.integer())
+				   , resource_system
+			  	   , selected_entity
+				   , entity_system});
 
     	return CommandReturnValue{0l};
 	}
@@ -472,10 +504,11 @@ template<>
 template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
 CommandReturnValue UseComponentCommand<StaticVisuals>::operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 {
-	const auto spr_id = command_system.exec_next();
+	const auto anim_id = command_system.exec_next();
 	const auto sprite = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, globals, {SpritesheetID(spr_id.integer()), int(sprite.integer())});
+	set_component(entity_system, rendering_system, all_systems, globals,
+				  {AnimationID(anim_id.integer()), int(sprite.integer())});
 
 	return CommandReturnValue{0l};
 }
@@ -486,13 +519,53 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto spr_id = command_system.exec_next();
     	const auto tile_w = command_system.exec_next();
     	const auto tile_h = command_system.exec_next();
+    	const auto bottom_left_anim_id = command_system.exec_next();
+    	const auto bottom_center_anim_id = command_system.exec_next();
+    	const auto bottom_right_anim_id = command_system.exec_next();
+    	const auto middle_left_anim_id = command_system.exec_next();
+    	const auto middle_center_anim_id = command_system.exec_next();
+    	const auto middle_right_anim_id = command_system.exec_next();
+    	const auto top_left_anim_id = command_system.exec_next();
+    	const auto top_center_anim_id = command_system.exec_next();
+    	const auto top_right_anim_id = command_system.exec_next();
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
-				, TiledVisuals<EntitySystemT>{SpritesheetID(spr_id.integer()), tile_w.real(), tile_h.real(), selected_entity, entity_system});
+				, TiledVisuals<EntitySystemT>
+					{tile_w.real()
+			   	   , tile_h.real()
+			   	   , AnimationID(bottom_left_anim_id.integer())
+			   	   , AnimationID(bottom_center_anim_id.integer())
+			   	   , AnimationID(bottom_right_anim_id.integer())
+			   	   , AnimationID(middle_left_anim_id.integer())
+			   	   , AnimationID(middle_center_anim_id.integer())
+			   	   , AnimationID(middle_right_anim_id.integer())
+			   	   , AnimationID(top_left_anim_id.integer())
+			   	   , AnimationID(top_center_anim_id.integer())
+			   	   , AnimationID(top_right_anim_id.integer())
+				   , resource_system
+				   , selected_entity
+				   , entity_system});
+
+    	return CommandReturnValue{0l};
+	}
+};
+
+class UseAnimationVisualsCommand
+{
+public:
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+    	const auto anim_id = command_system.exec_next();
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
+				, AnimationVisuals
+					{AnimationID(anim_id.integer())
+			   	   , resource_system});
 
     	return CommandReturnValue{0l};
 	}

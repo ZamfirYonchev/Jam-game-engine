@@ -17,7 +17,13 @@ class ChaseAIControl : public Control
 {
 public:
 	using Base = Control;
-	ChaseAIControl(EntityID self_id, EntityID target_id, ProcedureID attack_proc_id, double attack_cooldown, double attack_range, EntitySystemT& entity_system)
+	ChaseAIControl
+		(const EntityID self_id
+	   , const EntityID target_id
+	   , const ProcedureID attack_proc_id
+	   , const double attack_cooldown
+	   , const double attack_range
+	   , const EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
@@ -94,7 +100,7 @@ private:
     int m_current_attack_cooldown;
     LookDir m_look_dir;
     double m_attack_range;
-    EntitySystemT& m_entity_system;
+    const EntitySystemT& m_entity_system;
 };
 
 

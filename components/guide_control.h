@@ -17,7 +17,11 @@ class GuideControl : public Control
 {
 public:
 	using Base = Control;
-	GuideControl(EntityID self_id, EntityID target_id, double range, EntitySystemT& entity_system)
+	GuideControl
+		(const EntityID self_id
+	   , const EntityID target_id
+	   , const double range
+	   , const EntitySystemT& entity_system)
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
@@ -81,7 +85,7 @@ private:
     double m_walk_dir, m_vertical;
     LookDir m_look_dir;
     double m_range;
-    EntitySystemT& m_entity_system;
+    const EntitySystemT& m_entity_system;
 };
 
 

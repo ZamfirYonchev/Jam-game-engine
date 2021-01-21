@@ -14,7 +14,11 @@ class TriggerInteraction : public Interaction
 {
 public:
 	using Base = Interaction;
-	TriggerInteraction(int8_t trigger_group, ProcedureID proc_id_self, ProcedureID proc_id_other, ProcedureID on_exit_proc_id_self)
+	TriggerInteraction
+		(const int8_t trigger_group
+	   , const ProcedureID proc_id_self
+	   , const ProcedureID proc_id_other
+	   , const ProcedureID on_exit_proc_id_self)
 	: m_trigger_group(trigger_group)
 	, m_proc_id_self(proc_id_self)
 	, m_proc_id_other(proc_id_other)

@@ -14,7 +14,7 @@ class BasicCollision : public Collision
 {
 public:
 	using Base = Collision;
-    BasicCollision(CollisionState state, const double elasticity)
+    BasicCollision(const CollisionState state, const double elasticity)
     : m_state(state)
     , m_standing_on(SurfaceType::AIR)
 	, m_elasticity(elasticity)

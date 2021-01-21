@@ -12,7 +12,7 @@
 #include "../types.h"
 #include "../texture.h"
 #include "../font.h"
-#include "../spritesheet.h"
+#include "../animation.h"
 #include "../music.h"
 #include "../sound_chunk.h"
 
@@ -51,24 +51,11 @@ public:
     	}
     }
 
-    SpritesheetID addNewSpritesheet(const Spritesheet& spritesheet)
+    AnimationID addNewAnimation(const Animation& animation)
     {
-    	const SpritesheetID spr_id = m_spritesheets.size();
-        m_spritesheets.push_back(spritesheet);
-        return spr_id;
-    }
-
-    void addNewSprite(const SpritesheetID spritesheet_id, const Sprite& sprite)
-    {
-    	if(0 <= spritesheet_id && spritesheet_id < static_cast<SpritesheetID>(m_spritesheets.size())
-    	&& 0 <= sprite.texture_id && sprite.texture_id < static_cast<TextureID>(m_textures.size()))
-        {
-        	m_spritesheets[spritesheet_id].add_sprite(sprite.texture_id, sprite.clip.x, sprite.clip.y, sprite.clip.w, sprite.clip.h);
-        }
-        else
-        {
-        	// error spritesheet_id
-        }
+    	const AnimationID anim_id = m_animations.size();
+        m_animations.push_back(animation);
+        return anim_id;
     }
 
     FontID addNewFont(std::string_view font_file, const int size)
@@ -100,15 +87,18 @@ public:
         	return {};
     }
 
-    const std::vector<Spritesheet>& spritesheets() const
+    optional_ref<Animation> animation(const AnimationID anim_id)
     {
-        return m_spritesheets;
+        if(0 <= anim_id && anim_id < static_cast<AnimationID>(m_animations.size()))
+        	return optional_ref<Animation>{m_animations[anim_id]};
+        else
+        	return {};
     }
 
-    optional_ref<Spritesheet> spritesheet(const SpritesheetID spr_id)
+    optional_ref<const Animation> animation(const AnimationID anim_id) const
     {
-        if(0 <= spr_id && spr_id < static_cast<SpritesheetID>(m_spritesheets.size()))
-        	return optional_ref<Spritesheet>{m_spritesheets[spr_id]};
+        if(0 <= anim_id && anim_id < static_cast<AnimationID>(m_animations.size()))
+        	return optional_ref<const Animation>{m_animations[anim_id]};
         else
         	return {};
     }
@@ -142,9 +132,9 @@ public:
         m_textures.clear();
     }
 
-    void clear_spritesheets()
+    void clear_animations()
     {
-        m_spritesheets.clear();
+        m_animations.clear();
     }
 
     void clear_fonts()
@@ -161,14 +151,14 @@ public:
     void clear()
     {
         clear_textures();
-        clear_spritesheets();
+        clear_animations();
         clear_fonts();
         clear_sounds();
     }
 
 private:
     std::vector<Texture> m_textures;
-    std::vector<Spritesheet> m_spritesheets;
+    std::vector<Animation> m_animations;
     std::vector<Font> m_fonts;
     std::vector<SoundChunk> m_sounds;
     std::vector<Music> m_music;

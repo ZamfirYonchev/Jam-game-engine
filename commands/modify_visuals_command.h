@@ -25,7 +25,6 @@ public:
 	{
     	const auto repeat_x = command_system.exec_next();
     	const auto repeat_y = command_system.exec_next();
-    	const auto spr_id = command_system.exec_next();
     	const auto layer = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
@@ -42,11 +41,6 @@ public:
 				visuals.set_repeat_y(0);
 			else
 				visuals.set_repeat_y(visuals.repeat_y()+repeat_y.integer());
-
-			if(is_negative_zero(spr_id.real()))
-				visuals.set_spritesheet_id(SpritesheetID{0});
-			else
-				visuals.set_spritesheet_id(SpritesheetID(visuals.spritesheet_id()+ spr_id.integer()));
 
 			if(is_negative_zero(layer.real()))
 			{

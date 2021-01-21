@@ -17,7 +17,13 @@ class AttachedPosition : public Position
 {
 public:
 	using Base = Position;
-    AttachedPosition(EntityID attached_id, double offset_x, double offset_y, double offset_w, double offset_h, EntitySystemT& entity_system)
+    AttachedPosition
+		(const EntityID attached_id
+	   , const double offset_x
+	   , const double offset_y
+	   , const double offset_w
+	   , const double offset_h
+	   , const EntitySystemT& entity_system)
     : m_attached_id(attached_id)
     , m_offset_x(offset_x)
     , m_offset_y(offset_y)
@@ -25,9 +31,6 @@ public:
     , m_offset_h(offset_h)
 	, m_entity_system(entity_system)
     {}
-
-    AttachedPosition(EntityID attached_id, EntitySystemT& entity_system)
-    : AttachedPosition(attached_id, 0, 0, 0, 0, entity_system) {}
 
     void print(std::ostream& to) const
     {
@@ -76,7 +79,7 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
-    EntitySystemT& m_entity_system;
+    const EntitySystemT& m_entity_system;
 };
 
 

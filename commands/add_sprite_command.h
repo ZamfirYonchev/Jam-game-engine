@@ -25,16 +25,16 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	const auto spr_id = command_system.exec_next();
+    	const auto anim_id = command_system.exec_next();
     	const auto tex_id = command_system.exec_next();
     	const auto x = command_system.exec_next();
     	const auto y = command_system.exec_next();
     	const auto w = command_system.exec_next();
     	const auto h = command_system.exec_next();
 
-    	if(spr_id.integer() < 0)
+    	if(anim_id.integer() < 0)
     	{
-			std::cerr << "AddSprite: spritesheet id " << spr_id.integer() << " must be >= 0\n";
+			std::cerr << "AddSprite: animation id " << anim_id.integer() << " must be >= 0\n";
 			return CommandReturnValue{-1l};
     	}
 
@@ -59,7 +59,7 @@ public:
     	width = (w.integer() == 0) ? width  : w.integer();
     	height = (h.integer() == 0) ? height : h.integer();
 
-    	const int sprite_id = resource_system.spritesheet(spr_id.integer())->get().add_sprite(tex_id.integer(), x.integer(), y.integer(), width, height);
+    	const int sprite_id = resource_system.animation(anim_id.integer())->get().add_sprite({TextureID(tex_id.integer()), {int(x.integer()), int(y.integer()), width, height}});
 
 		return CommandReturnValue{static_cast<int64_t>(sprite_id)};
     }

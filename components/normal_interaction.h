@@ -14,7 +14,7 @@ class NormalInteraction : public Interaction
 {
 public:
 	using Base = Interaction;
-	NormalInteraction(int32_t group_vec)
+	NormalInteraction(const int32_t group_vec)
 	: m_group_vec(group_vec)
 	{}
 

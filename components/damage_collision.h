@@ -14,7 +14,7 @@ class DamageCollision : public Collision
 {
 public:
 	using Base = Collision;
-    DamageCollision(CollisionState state, double damage)
+    DamageCollision(const CollisionState state, const double damage)
 	: m_state(state)
 	, m_damage(damage)
 	{}

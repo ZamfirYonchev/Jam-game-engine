@@ -40,7 +40,7 @@
 #include "commands/quit_command.h"
 #include "commands/clear_all_entities_command.h"
 #include "commands/clear_all_textures_command.h"
-#include "commands/clear_all_spritesheets_command.h"
+#include "commands/clear_all_animations_command.h"
 #include "commands/clear_all_procedures_command.h"
 #include "commands/call_procedure_command.h"
 #include "commands/add_font_command.h"
@@ -48,7 +48,7 @@
 #include "commands/add_music_command.h"
 #include "commands/add_texture_from_file_command.h"
 #include "commands/add_texture_from_string_command.h"
-#include "commands/add_spritesheet_command.h"
+#include "commands/add_animation_command.h"
 #include "commands/add_sprite_command.h"
 #include "commands/add_entity_command.h"
 #include "commands/remove_entity_command.h"
@@ -65,6 +65,7 @@
 #include "commands/finalize_build_command.h"
 #include "commands/play_sound_command.h"
 #include "commands/play_music_command.h"
+#include "commands/read_component_command.h"
 
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
@@ -172,7 +173,7 @@ int main(int argc, char** argv)
 		command_system.register_command("Reload", ReloadCommand{});
 		command_system.register_command("Quit", QuitCommand{});
 		command_system.register_command("ClearAllEntities", ClearAllTexturesCommand{});
-		command_system.register_command("ClearAllSpritesheets", ClearAllSpritesheetsCommand{});
+		command_system.register_command("ClearAllAnimations", ClearAllAnimationsCommand{});
 		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{});
 		command_system.register_command("ExecuteFile", ExecuteFileCommand{});
 		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{});
@@ -181,7 +182,7 @@ int main(int argc, char** argv)
 		command_system.register_command("AddFont", AddFontCommand{});
 		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{});
 		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{});
-		command_system.register_command("AddSpritesheet", AddSpritesheetCommand{});
+		command_system.register_command("AddAnimation", AddAnimationCommand{});
 		command_system.register_command("AddSprite", AddSpriteCommand{});
 		command_system.register_command("AddSound", AddSoundCommand{});
 		command_system.register_command("AddMusic", AddMusicCommand{});
@@ -238,6 +239,14 @@ int main(int argc, char** argv)
 		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{});
 		command_system.register_command("PlaySound", PlaySoundCommand{});
 		command_system.register_command("PlayMusic", PlayMusicCommand{});
+		command_system.register_command("ReadPosition", ReadComponentCommand<Position>{});
+		command_system.register_command("ReadControl", ReadComponentCommand<Control>{});
+		command_system.register_command("ReadMovement", ReadComponentCommand<Movement>{});
+		command_system.register_command("ReadCollision", ReadComponentCommand<Collision>{});
+		command_system.register_command("ReadInteraction", ReadComponentCommand<Interaction>{});
+		command_system.register_command("ReadHealth", ReadComponentCommand<Health>{});
+		command_system.register_command("ReadSounds", ReadComponentCommand<Sounds>{});
+		command_system.register_command("ReadVisuals", ReadComponentCommand<Visuals>{});
 
 		//this will load the data from the init.jel file and potentially give new values to the globals
 		command_system.push(ExecuteFileCleanCommand{});
@@ -273,6 +282,7 @@ int main(int argc, char** argv)
 		int32_t number_of_frames = 0;
 		const Time start_frame_time = Time(SDL_GetTicks());
 		Time last_update_time = start_frame_time;
+		Time last_render_time = start_frame_time;
 
 		do
 		{
@@ -283,14 +293,19 @@ int main(int argc, char** argv)
 			const bool app_paused = globals(Globals::app_paused).boolean();
 			const bool show_hitboxes = globals(Globals::app_show_hitboxes).boolean();
 
-			if((SDL_GetTicks()-last_update_time) >= update_time_delta)
+			if(SDL_GetTicks()-last_update_time >= update_time_delta)
 			{
 				last_update_time += update_time_delta;
 				all_systems.update(update_time_delta, globals, command_system.procedure_calls());
 				input_system.clear_toggle_inputs();
 			}
 
-			rendering_system.render_entities(update_time_delta, entity_system, resource_system, app_paused, show_hitboxes);
+			if(SDL_GetTicks()-last_render_time > 0)
+			{
+				const Time diff = SDL_GetTicks()-last_render_time;
+				last_render_time = SDL_GetTicks();
+				rendering_system.render_entities(diff, entity_system, resource_system, app_paused, show_hitboxes);
+			}
 
 			++number_of_frames;
 

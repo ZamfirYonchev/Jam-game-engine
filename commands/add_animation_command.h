@@ -1,13 +1,14 @@
 /*
- * clear_all_spritesheets_command.h
+ * add_animation_command.h
  *
- *  Created on: Nov 25, 2019
+ *  Created on: Jan 17, 2021
  *      Author: zamfi
  */
 
-#ifndef COMMANDS_CLEAR_ALL_SPRITESHEETS_COMMAND_H_
-#define COMMANDS_CLEAR_ALL_SPRITESHEETS_COMMAND_H_
+#ifndef COMMANDS_ADD_ANIMATION_COMMAND_H_
+#define COMMANDS_ADD_ANIMATION_COMMAND_H_
 
+#include <string>
 #include "command_return_value.h"
 #include "../globals.h"
 #include "../systems/resource_system.h"
@@ -16,17 +17,16 @@ class ResourceSystem;
 class InputSystem;
 class RenderingSystem;
 
-class ClearAllSpritesheetsCommand
+class AddAnimationCommand
 {
 public:
-	ClearAllSpritesheetsCommand() {}
-
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
-	{
-		resource_system.clear_spritesheets();
-		return CommandReturnValue{0l};
-	}
+    {
+    	const auto frame_delay_ms = command_system.exec_next();
+    	const auto scale_factor = command_system.exec_next();
+    	return CommandReturnValue{static_cast<int64_t>(resource_system.addNewAnimation({int(frame_delay_ms.integer()), scale_factor.real()}))};
+    }
 };
 
-#endif /* COMMANDS_CLEAR_ALL_SPRITESHEETS_COMMAND_H_ */
+#endif /* COMMANDS_ADD_ANIMATION_COMMAND_H_ */

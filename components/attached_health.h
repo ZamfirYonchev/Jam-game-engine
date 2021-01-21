@@ -15,7 +15,11 @@ class AttachedHealth : public Health
 {
 public:
 	using Base = Health;
-	AttachedHealth(EntityID attached_id, double offset_hp, double offset_max_hp, EntitySystemT& entity_system)
+	AttachedHealth
+		( const EntityID attached_id
+		, const double offset_hp
+		, const double offset_max_hp
+		, const EntitySystemT& entity_system)
 	: m_attached_id(attached_id)
 	, m_offset_hp(offset_hp)
 	, m_offset_max_hp(offset_max_hp)
@@ -52,7 +56,7 @@ public:
     EntityID m_attached_id;
 private:
     double m_offset_hp, m_offset_max_hp;
-    EntitySystemT& m_entity_system;
+    const EntitySystemT& m_entity_system;
 };
 
 #endif /* COMPONENTS_ATTACHED_HEALTH_H_ */

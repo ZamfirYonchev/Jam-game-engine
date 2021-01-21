@@ -83,72 +83,74 @@ public:
 					if(app_paused == false)
     					visuals.update_animation(time_diff);
 
-    				const optional_ref<Spritesheet> spritesheet = resource_system.spritesheet(visuals.spritesheet_id());
-    				if(spritesheet)
-    				{
-    					double scale_factor = spritesheet->get().scale_factor();
-    					const SDL_RendererFlip flip = (control.look_dir()==Control::LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
-    					AbsolutePosition screen_pos;
-    					SDL_Rect dest;
-    					const double pos_x = position.x() + position.w()/visuals.repeat_x()/2.0 - screen_zone_position.x();
-    					const double pos_y = position.y() + position.h()/visuals.repeat_y()/2.0 - screen_zone_position.y();
+					const SDL_RendererFlip flip = (control.look_dir()==Control::LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
+					AbsolutePosition screen_pos;
+					SDL_Rect dest;
+					const double pos_x = position.x() + position.w()/visuals.repeat_x()/2.0 - screen_zone_position.x();
+					const double pos_y = position.y() + position.h()/visuals.repeat_y()/2.0 - screen_zone_position.y();
 
-    					for(int16_t rx = 0; rx < visuals.repeat_x(); ++rx)
-    						for(int16_t ry = 0; ry < visuals.repeat_y(); ++ry)
-    						{
-    							const optional_ref<Sprite> sprite_opt = spritesheet->get().sprite(visuals.animation_sprite(rx, ry));
-    							if(sprite_opt)
-    							{
-    								const optional_ref<Texture> texture_opt = resource_system.texture(sprite_opt->get().texture_id);
-    								if(texture_opt)
-    								{
-    									//TODO: to optimize and add constness
-    									SDL_Texture* texture = texture_opt->get().texture();
-    									screen_pos.set_w(sprite_opt->get().clip.w*scale_factor);
-    									screen_pos.set_h(sprite_opt->get().clip.h*scale_factor);
-    									screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
-    									screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
-    									dest.w = screen_pos.w()*m_screen_to_view_scale + 0.5;
-    									dest.h = screen_pos.h()*m_screen_to_view_scale + 0.5;
-    									dest.x = screen_pos.x()*m_screen_to_view_scale + 0.5;
-    									dest.y = m_resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5;
+					for(int16_t rx = 0; rx < visuals.repeat_x(); ++rx)
+						for(int16_t ry = 0; ry < visuals.repeat_y(); ++ry)
+						{
+							const auto animation_frame = visuals.animation_frame(rx, ry);
+							const optional_ref<Animation> anim_opt = resource_system.animation(animation_frame.id);
+							if(anim_opt)
+							{
+								double scale_factor = anim_opt->get().scale_factor();
+								const optional_ref<Sprite> sprite_opt = anim_opt->get().sprite(animation_frame.frame);
+								if(sprite_opt)
+								{
+									const optional_ref<Texture> texture_opt = resource_system.texture(sprite_opt->get().texture_id);
+									if(texture_opt)
+									{
+										//TODO: to optimize and add constness
+										SDL_Texture* texture = texture_opt->get().texture();
+										screen_pos.set_w(sprite_opt->get().clip.w*scale_factor);
+										screen_pos.set_h(sprite_opt->get().clip.h*scale_factor);
+										screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
+										screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
+										dest.w = screen_pos.w()*m_screen_to_view_scale + 0.5;
+										dest.h = screen_pos.h()*m_screen_to_view_scale + 0.5;
+										dest.x = screen_pos.x()*m_screen_to_view_scale + 0.5;
+										dest.y = m_resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5;
 
-    									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, m_resolution_x, m_resolution_y))
-    									{
-    										const int err = SDL_RenderCopyEx(m_renderer, texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
-    										if(err)
-    										{
-    											std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;
-    										}
-    									}
-    								}
-    								else
-    								{
-    									//error sprite->texture_id
-    								}
+										if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, m_resolution_x, m_resolution_y))
+										{
+											const int err = SDL_RenderCopyEx(m_renderer, texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
+											if(err)
+											{
+												std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;
+											}
+										}
+									}
+									else
+									{
+										//error sprite->texture_id
+									}
 
-    							}
-    							else
-    							{
-    								//error visuals->animation_sprite(rx, ry)
-    							}
-    						}
-    					if(show_hitboxes)
-    					{
-    						const SDL_Rect hitbox
-    							{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)
-    							, int(m_resolution_y + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
-    							, int(position.w()*m_screen_to_view_scale)
-    							, int(position.h()*m_screen_to_view_scale)
-    							};
-    						SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-    						SDL_RenderDrawRect(m_renderer, &hitbox);
-    					}
-    				}
-    				else
-    				{
-    					//error visuals->spritesheet_id()
-    				}
+								}
+								else
+								{
+									//error animation_frame.frame
+								}
+							}
+							else
+							{
+								//error animation_frame.id
+							}
+						}
+
+					if(show_hitboxes)
+					{
+						const SDL_Rect hitbox
+							{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)
+							, int(m_resolution_y + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
+							, int(position.w()*m_screen_to_view_scale)
+							, int(position.h()*m_screen_to_view_scale)
+							};
+						SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+						SDL_RenderDrawRect(m_renderer, &hitbox);
+					}
     			}
     			else
     			{

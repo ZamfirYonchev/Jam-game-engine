@@ -15,7 +15,7 @@ class TimedHealth : public Health
 {
 public:
 	using Base = Health;
-    TimedHealth(double ttl, ProcedureID proc_id)
+    TimedHealth(const double ttl, const ProcedureID proc_id)
 	: m_time_to_live(ttl)
 	, m_max_ttl(ttl)
 	, m_ttl_change(0.0)

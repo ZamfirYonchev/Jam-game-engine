@@ -15,7 +15,11 @@ class InstantMovement : public Movement
 {
 public:
 	using Base = Movement;
-	InstantMovement(double mass, double friction_x, double friction_y, double move_force)
+	InstantMovement
+		(const double mass
+	   , const double friction_x
+	   , const double friction_y
+	   , const double move_force)
     : m_mass(mass)
 	, m_friction_x(friction_x)
 	, m_friction_y(friction_y)

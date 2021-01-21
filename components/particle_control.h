@@ -17,7 +17,11 @@ class ParticleControl : public Control
 {
 public:
 	using Base = Control;
-	ParticleControl(std::mt19937& gen, const double random_factor, const double directed_factor, const double direction_angle)
+	ParticleControl
+		(std::mt19937& gen
+	   , const double random_factor
+	   , const double directed_factor
+	   , const double direction_angle)
 	: m_gen(gen)
 	, m_dist(0.0, M_PI*2)
 	, m_random_factor(random_factor)

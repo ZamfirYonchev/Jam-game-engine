@@ -18,7 +18,11 @@ class BuildPosition : public Position
 {
 public:
 	using Base = Position;
-	BuildPosition(EntityID attached_id, double origin_x, double origin_y, EntitySystemT& entity_system)
+	BuildPosition
+		(const EntityID attached_id
+	   , const double origin_x
+	   , const double origin_y
+	   , const EntitySystemT& entity_system)
 	: m_attached_id(attached_id)
     , m_origin_x(origin_x)
     , m_origin_y(origin_y)
@@ -65,7 +69,7 @@ public:
     double m_origin_x, m_origin_y;
 
 private:
-    EntitySystemT& m_entity_system;
+    const EntitySystemT& m_entity_system;
 };
 
 #endif /* COMPONENTS_BUILD_POSITION_H_ */

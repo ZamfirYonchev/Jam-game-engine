@@ -15,7 +15,13 @@ class FullMovement : public Movement
 {
 public:
 	using Base = Movement;
-    FullMovement(double mass, double friction_x, double friction_y, double move_force, double jump_force, bool gravity_affected)
+    FullMovement
+		(const double mass
+	   , const double friction_x
+	   , const double friction_y
+	   , const double move_force
+	   , const double jump_force
+	   , const bool gravity_affected)
     : m_mass(mass)
     , m_friction_x(friction_x)
     , m_friction_y(friction_y)

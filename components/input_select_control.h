@@ -16,7 +16,11 @@ class InputSelectControl : public Control
 {
 public:
 	using Base = Control;
-	InputSelectControl(const int select, const int max, const ProcedureID proc_id, InputSystem& input_system)
+	InputSelectControl
+		(const int select
+	   , const int max
+	   , const ProcedureID proc_id
+	   , const InputSystem& input_system)
     : m_select(select)
 	, m_max(max)
 	, m_curr_selection(0)
@@ -53,7 +57,7 @@ public:
 private:
     int m_select, m_max, m_curr_selection;
     ProcedureID m_proc_id;
-    InputSystem& m_input_system;
+    const InputSystem& m_input_system;
 };
 
 #endif /* COMPONENTS_INPUT_SELECT_CONTROL_H_ */
