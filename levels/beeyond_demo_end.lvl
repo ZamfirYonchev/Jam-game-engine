@@ -1,10 +1,10 @@
 @app_current_level "levels/beeyond_demo_end.txt"
 
-AddTextureFromFile "beeyond_assets/end.png" #0: background top
+@tex_bg AddTextureFromFile "beeyond_assets/end.png" #0: background top
 
-AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #0
-AddSprite 0 0 0 0 1366 768
+@anim_bg AddAnimation 1 1
+AddSprite *anim_bg *tex_bg 0 0 1366 768
 
 AddEntity #0: screen
 UseAbsolutePosition 0 0 1366 768
-UseStaticVisuals 0 0
+UseStaticVisuals *anim_bg 0

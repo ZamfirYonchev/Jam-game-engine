@@ -91,18 +91,18 @@
 @procedure_halfdead_to_dying_timer
 {
 	UseTimedHealth 300 *procedure_dying_to_fresh_timer
-	UseStaticVisuals 5 2
+	UseStaticVisuals *anim_flower 2
 }
 
 @procedure_dying_to_fresh_timer
 {
 	UseTimedHealth 300 *procedure_fresh_flower
-	UseStaticVisuals 5 1
+	UseStaticVisuals *anim_flower 1
 }
 
 @procedure_fresh_flower
 {
-	UseStaticVisuals 5 0
+	UseStaticVisuals *anim_flower 0
 	UseNormalInteraction 0
 	ModifyInteraction *group_flower 1 0 0 0 0
 	CallProcedure *procedure_incremenet_goal_count
@@ -110,16 +110,25 @@
 
 @procedure_fresh_to_dead_flower
 {
-	UseStaticVisuals 5 3
+	UseStaticVisuals *anim_flower 3
 	UseNullHealth
 }
 
+#@spr_bee AddSpritesheet 6 1 0 6 0 6 0 6 0 6 0 6 7 1 1 #1: bee
+#AddSprite *spr_bee *tex_bee_flying_1 0 0 99 71
+#AddSprite *spr_bee *tex_bee_flying_2 0 0 99 71
+#AddSprite *spr_bee *tex_bee_flying_3 0 0 99 71
+#AddSprite *spr_bee *tex_bee_flying_4 0 0 99 71
+#AddSprite *spr_bee *tex_bee_flying_3 0 0 99 71
+#AddSprite *spr_bee *tex_bee_flying_2 0 0 99 71
+#AddSprite *spr_bee *tex_bee_idle 0 0 99 71
+#AddSprite *spr_bee *tex_bee_dead 0 0 99 71
 @procedure_spawn_bee_at_hive
 {
 	UseAbsolutePosition 140 335 60 37
-	UseCharacterVisuals 1
-	ModifyVisuals 0 0 0 -0
-	ModifyVisuals 0 0 0 3
+	UseCharacterVisuals *anim_bee_idle *anim_bee_flying *anim_bee_flying *anim_bee_flying *anim_bee_flying *anim_bee_flying *anim_bee_dead
+	ModifyVisuals 0 0 -0
+	ModifyVisuals 0 0 3
 	UseFullMovement 1 0.01 0.01 0.006 0.6 0
 	UseBasicCollision 1 0.5
 	UseInputControl -1 300 0
@@ -265,98 +274,76 @@
 
 @tex_bee_dead AddTextureFromFile "beeyond_assets/bee-6.png" #26: bee dead
 
-### Spritesheets
-@spr_background AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #0: background
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
-AddSprite *spr_background 0 0 0 1234 768
+### Animations
+@anim_background AddAnimation 50 1
+AddSprite *anim_background 0 0 0 1234 768
 
-@spr_bee AddSpritesheet 6 1 0 6 0 6 0 6 0 6 0 6 7 1 1 #1: bee
-AddSprite *spr_bee *tex_bee_flying_1 0 0 99 71
-AddSprite *spr_bee *tex_bee_flying_2 0 0 99 71
-AddSprite *spr_bee *tex_bee_flying_3 0 0 99 71
-AddSprite *spr_bee *tex_bee_flying_4 0 0 99 71
-AddSprite *spr_bee *tex_bee_flying_3 0 0 99 71
-AddSprite *spr_bee *tex_bee_flying_2 0 0 99 71
-AddSprite *spr_bee *tex_bee_idle 0 0 99 71
-AddSprite *spr_bee *tex_bee_dead 0 0 99 71
+@anim_bee_idle AddAnimation 50 1
+AddSprite *anim_bee_idle *tex_bee_idle 0 0 99 71
 
-@spr_grass_fresh AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #2: grass fresh
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
-AddSprite *spr_grass_fresh *tex_grass_1 0 0 200 200
+@anim_bee_flying AddAnimation 50 1
+AddSprite *anim_bee_flying *tex_bee_flying_1 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_2 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_3 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_4 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_3 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_2 0 0 99 71
 
-@spr_grass_halfdead AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #3: grass half-dead
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
-AddSprite *spr_grass_halfdead *tex_grass_2 0 0 200 200
+@anim_bee_dead AddAnimation 50 1
+AddSprite *anim_bee_dead *tex_bee_dead 0 0 99 71
 
-@spr_grass_dead AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #4: grass dead
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
-AddSprite *spr_grass_dead *tex_grass_3 0 0 200 200
+@anim_grass_fresh AddAnimation 50 1
+AddSprite *anim_grass_fresh *tex_grass_1 0 0 200 200
 
-@spr_flower AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #5: flower
-AddSprite *spr_flower *tex_flower_1 0 0 115 301
-AddSprite *spr_flower *tex_flower_2 0 0 115 301
-AddSprite *spr_flower *tex_flower_3 0 0 115 301
-AddSprite *spr_flower *tex_flower_4 0 0 115 301
+@anim_grass_halfdead AddAnimation 50 1
+AddSprite *anim_grass_halfdead *tex_grass_2 0 0 200 200
 
-@spr_hive AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #6: hive
-AddSprite *spr_hive *tex_hive 0 0 289 243
+@anim_grass_dead AddAnimation 50 1
+AddSprite *anim_grass_dead *tex_grass_3 0 0 200 200
 
-@spr_spider AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #7: spider
-AddSprite *spr_spider *tex_spider 0 0 99 71
-AddSprite *spr_spider *tex_cobweb 0 0 370 339
+@anim_flower AddAnimation 50 1
+AddSprite *anim_flower *tex_flower_1 0 0 115 301
+AddSprite *anim_flower *tex_flower_2 0 0 115 301
+AddSprite *anim_flower *tex_flower_3 0 0 115 301
+AddSprite *anim_flower *tex_flower_4 0 0 115 301
 
-@spr_frog AddSpritesheet 0 3 0 3 0 9 0 1 0 1 0 1 0 1 1 #8: frog
-AddSprite *spr_frog *tex_frog_idle 0 0 141 149
-AddSprite *spr_frog *tex_frog_idle 0 0 141 149
-AddSprite *spr_frog *tex_frog_idle 0 0 141 149
-AddSprite *spr_frog *tex_frog_jump 0 0 141 149
-AddSprite *spr_frog *tex_frog_jump 0 0 141 149
-AddSprite *spr_frog *tex_frog_jump 0 0 141 149
-AddSprite *spr_frog *tex_frog_eat 0 0 141 149
-AddSprite *spr_frog *tex_frog_eat 0 0 141 149
-AddSprite *spr_frog *tex_frog_eat 0 0 141 149
+@anim_hive AddAnimation 50 1
+AddSprite *anim_hive *tex_hive 0 0 289 243
 
-@spr_tree AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0.8 #9: tree
-AddSprite *spr_tree *tex_tree_with_bush 0 0 740 880
-AddSprite *spr_tree *tex_tree_normal 0 0 740 880
-AddSprite *spr_tree *tex_tree_wide 0 0 740 880
+@anim_spider AddAnimation 50 1
+AddSprite *anim_spider *tex_spider 0 0 99 71
 
-@spr_health AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #10 health visuals
-AddSprite *spr_health *tex_honeycomb_empty 0 0 28 32
-AddSprite *spr_health *tex_honeycomb_full 0 0 28 32
+@anim_cobweb AddAnimation 50 1
+AddSprite *anim_cobweb *tex_cobweb 0 0 370 339
 
-@spr_flower_icon AddSpritesheet 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 #11 flower icon visuals
-AddSprite *spr_flower_icon *tex_flower_icon_empty 0 0 30 30
-AddSprite *spr_flower_icon *tex_flower_icon_full 0 0 30 30
+@anim_frog_idle AddAnimation 150 1
+AddSprite *anim_frog_idle *tex_frog_idle 0 0 141 149
 
+@anim_frog_jump AddAnimation 150 1
+AddSprite *anim_frog_jump *tex_frog_jump 0 0 141 149
+
+@anim_frog_eat AddAnimation 150 1
+AddSprite *anim_frog_eat *tex_frog_jump 0 0 141 149
+AddSprite *anim_frog_eat *tex_frog_eat 0 0 141 149
+
+@anim_trees AddAnimation 50 0.8
+AddSprite *anim_trees *tex_tree_with_bush 0 0 740 880
+AddSprite *anim_trees *tex_tree_normal 0 0 740 880
+AddSprite *anim_trees *tex_tree_wide 0 0 740 880
+
+@anim_health_empty AddAnimation 50 1
+AddSprite *anim_health_empty *tex_honeycomb_empty 0 0 28 32
+
+@anim_health_full AddAnimation 50 1
+AddSprite *anim_health_full *tex_honeycomb_full 0 0 28 32
+
+@anim_flower_icon_full AddAnimation 50 1
+AddSprite *anim_flower_icon_full *tex_flower_icon_full 0 0 30 30
+
+@anim_flower_icon_empty AddAnimation 50 1
+AddSprite *anim_flower_icon_empty *tex_flower_icon_empty 0 0 30 30
+
+### Sound and Music
 @sound_bee_buzz AddSound "assets/sounds/Bee-noise.wav" -1 #0
 
 @music_background AddMusic "Birds_and_Wind-Ambient.ogg"
@@ -373,8 +360,8 @@ PlayMusic 0 -1
 
 @entity_background AddEntity #1: background
 UseAbsolutePosition -300 0 4098 768
-UseTiledVisuals *spr_background 1366 768
-ModifyVisuals 0 0 0 -0
+UseTiledVisuals 1366 768 *anim_background *anim_background *anim_background *anim_background *anim_background *anim_background *anim_background *anim_background *anim_background
+ModifyVisuals 0 0 -0
 
 @entity_bee AddEntity #2: bee
 CallProcedure *procedure_spawn_bee_at_hive #spawn bee
@@ -404,33 +391,33 @@ UseAttachedPosition *entity_screen 1366 -10 -1356 20
 @entity_grass_0 AddEntity #8: grass
 UseAbsolutePosition 0 0 3000 200
 UseBasicCollision 0 1
-UseTiledVisuals 2 200 200
+UseTiledVisuals 200 200 *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh 
 
 @entity_grass_1 AddEntity #9: grass
 UseAbsolutePosition -100 0 3000 200
 UseBasicCollision 0 1
-UseTiledVisuals 2 200 200
+UseTiledVisuals 200 200 *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh 
 
 @entity_grass_2 AddEntity #10: grass
 UseAbsolutePosition 0 -30 3000 200
 UseBasicCollision 0 1
-UseTiledVisuals 2 200 200
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
+UseTiledVisuals 200 200 *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh 
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 4
 
 @entity_grass_3 AddEntity #11: grass
 UseAbsolutePosition -100 -30 3000 200
 UseBasicCollision 0 1
-UseTiledVisuals 2 200 200
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 4
+UseTiledVisuals 200 200 *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh *anim_grass_fresh 
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 4
 
 @entity_flower_0 AddEntity #12: flower
 UseAbsolutePosition 300 200 30 5
 UseBasicCollision 0 1
-UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_flower 3
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
 ModifyInteraction *group_flower 1 0 0 0 0
 
@@ -439,7 +426,7 @@ UseAttachedPosition *entity_flower_0 0 -1 0 0
 UseBasicCollision 2 1
 
 @entity_hive AddEntity #14: hive
-UseStaticVisuals 6 0
+UseStaticVisuals *anim_hive 0
 UseAbsolutePosition 0 300 289 243
 
 @entity_hive_land_site AddEntity #15: hive landing zone
@@ -455,9 +442,9 @@ ModifyInteraction *group_flower 1 0 0 0 0
 @entity_flower_1 AddEntity #17: flower
 UseAbsolutePosition 600 250 30 5
 UseBasicCollision 0 1
-UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_flower 3
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
 ModifyInteraction *group_flower 1 0 0 0 0
 
@@ -468,9 +455,9 @@ UseBasicCollision 2 1
 @entity_cobweb_0 AddEntity #19: cobweb
 UseAbsolutePosition 600 200 370 339
 UseBasicCollision 0 1
-UseStaticVisuals 7 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_cobweb 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 
 @entity_cobweb_0_top AddEntity #20: cobweb top
 UseAbsolutePosition 600 509 370 1
@@ -495,9 +482,9 @@ UseTriggerInteraction *group_spider *procedure_null *procedure_move_left *proced
 @entity_spider_0 AddEntity #24: spider
 UseAbsolutePosition 736 334 59 51
 UseDamageCollision 0 10
-UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_spider 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseInstantMovement 1 0.01 0.01 0.02
 UseConstantControl 1 1 0
 UseNormalInteraction 0
@@ -512,10 +499,10 @@ ModifyInteraction *group_bottom 1 0 0 0 0
 @entity_frog_0 AddEntity #26: frog
 UseAbsolutePosition 1002 0 91 59
 UseBasicCollision 1 0.5
-UseCharacterVisuals 8
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 3
-UseFullMovement 2 0.01 0.01 0.003 3 1
+UseCharacterVisuals *anim_frog_idle *anim_frog_idle *anim_frog_eat *anim_frog_eat *anim_frog_idle *anim_frog_idle *anim_frog_idle *anim_frog_idle *anim_frog_idle
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 3
+UseFullMovement 2 0.01 0.01 0.003 4.5 1
 UseFullInteraction 0 *group_bottom *procedure_make_frog_moveable *procedure_null *procedure_make_frog_transparent
 ModifyInteraction *group_frog 1 0 0 0 0
 
@@ -540,7 +527,7 @@ UseTriggerInteraction *group_bee *procedure_frog0_start_attack *procedure_null *
 
 @entity_tree_0 AddEntity #31: tree
 UseAbsolutePosition 600 80 540 680
-UseStaticVisuals 9 2
+UseStaticVisuals *anim_trees 2
 
 @entity_screen_move_left_trigger AddEntity #32: trigger zone move screen left 
 UseAttachedPosition *entity_screen 0 0 -0.9 0
@@ -555,9 +542,9 @@ UseTriggerInteraction *group_bee *procedure_move_screen_right *procedure_null *p
 @entity_bee_health AddEntity #34: bee health
 	UseAttachedPosition 0 20 668 -440 -668
 	UseAttachedHealth 2 0 0
- 	UseHealthVisuals 10 10
-	ModifyVisuals 0 0 0 -0
-	ModifyVisuals 0 0 0 4
+ 	UseHealthVisuals *anim_health_full *anim_health_empty 10
+	ModifyVisuals 0 0 -0
+	ModifyVisuals 0 0 4
  	
 @entity_hive_healing_site CallProcedure *procedure_spawn_healing_site #entity 35: healing site
 	UseAttachedPosition 16 0 5 0 0
@@ -567,9 +554,9 @@ AddEntity #36: unused
 @entity_flowers_collected AddEntity #37: flowers collected tooltip
 	UseAttachedPosition 0 -25 568 -440 -568
 	UseCharacterHealth 0 5
- 	UseHealthVisuals 11 5
-	ModifyVisuals 0 0 0 -0
-	ModifyVisuals 0 0 0 4
+ 	UseHealthVisuals *anim_flower_icon_full *anim_flower_icon_empty 5
+	ModifyVisuals 0 0 -0
+	ModifyVisuals 0 0 4
 
 @entity_flowers_collected_counter AddEntity #38: flowers collected counter
 	UseAbsolutePosition 0 0 1 1
@@ -611,14 +598,14 @@ AddEntity #36: unused
 @entity_grass_4 AddEntity #46: grass
 UseAbsolutePosition 1000 30 400 200
 UseBasicCollision 0 1
-UseTiledVisuals 3 200 200
+UseTiledVisuals 200 200 *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead
 
 @entity_flower_2 AddEntity #47: flower
 UseAbsolutePosition 1380 150 30 5
 UseBasicCollision 0 1
-UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_flower 3
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
 ModifyInteraction *group_flower 1 0 0 0 0
 
@@ -631,24 +618,24 @@ UseBasicCollision 2 1
 
 @entity_tree_1 AddEntity #50: tree
 UseAbsolutePosition 1350 80 540 680
-UseStaticVisuals 9 0
+UseStaticVisuals *anim_trees 0
 
 @entity_grass_5 AddEntity #51: grass
 UseAbsolutePosition 0 30 600 200
 UseBasicCollision 0 1
-UseTiledVisuals 3 200 200
+UseTiledVisuals 200 200 *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead
 	
 @entity_grass_6 AddEntity #52: grass
 UseAbsolutePosition 0 1400 600 200
 UseBasicCollision 0 1
-UseTiledVisuals 3 200 200
+UseTiledVisuals 200 200 *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead *anim_grass_halfdead
 
 @entity_cobweb_1 AddEntity #53: cobweb
 UseAbsolutePosition 1400 350 370 339
 UseBasicCollision 0 1
-UseStaticVisuals 7 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_cobweb 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 
 @entity_cobweb_1_top AddEntity #54: cobweb top
 UseAbsolutePosition 1400 659 370 1
@@ -673,9 +660,9 @@ UseTriggerInteraction *group_spider *procedure_null *procedure_move_left *proced
 @entity_spider_1 AddEntity #58: spider
 UseAbsolutePosition 1436 450 59 51
 UseDamageCollision 0 10
-UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_spider 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseInstantMovement 1 0.01 0.01 0.02
 UseConstantControl 1 1 0
 UseNormalInteraction 0
@@ -684,9 +671,9 @@ ModifyInteraction *group_spider 1 0 0 0 0
 @entity_cobweb_2 AddEntity #59: cobweb
 UseAbsolutePosition 1400 50 370 339
 UseBasicCollision 0 1
-UseStaticVisuals 7 1
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_cobweb 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 
 @entity_cobweb_2_top AddEntity #60: cobweb top
 UseAbsolutePosition 1400 359 370 1
@@ -711,9 +698,9 @@ UseTriggerInteraction *group_spider *procedure_null *procedure_move_left *proced
 @entity_spider_2 AddEntity #64: spider
 UseAbsolutePosition 1456 250 59 51
 UseDamageCollision 0 10
-UseStaticVisuals 7 0
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_spider 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseInstantMovement 1 0.01 0.01 0.014
 UseConstantControl 1 1 0
 UseNormalInteraction 0
@@ -722,9 +709,9 @@ ModifyInteraction *group_spider 1 0 0 0 0
 @entity_flower_3 AddEntity #65: flower
 UseAbsolutePosition 1780 250 30 5
 UseBasicCollision 0 1
-UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_flower 3
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
 ModifyInteraction *group_flower 1 0 0 0 0
 
@@ -739,9 +726,9 @@ UseBasicCollision 2 1
 @entity_flower_4 AddEntity #68: flower
 UseAbsolutePosition 1980 200 30 5
 UseBasicCollision 0 1
-UseStaticVisuals 5 3
-ModifyVisuals 0 0 0 -0
-ModifyVisuals 0 0 0 2
+UseStaticVisuals *anim_flower 3
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 2
 UseFullInteraction 0 *group_bee *procedure_dead_to_halfdead_timer *procedure_null *procedure_fresh_to_dead_flower
 ModifyInteraction *group_flower 1 0 0 0 0
 
