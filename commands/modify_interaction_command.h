@@ -26,8 +26,8 @@ public:
     	const auto group_value = command_system.exec_next();
     	const auto trigger_group = command_system.exec_next();
     	const auto proc_id_self = command_system.exec_next();
-    	const auto on_exit_proc_id_self = command_system.exec_next();
     	const auto proc_id_other = command_system.exec_next();
+    	const auto on_exit_proc_id_self = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	Interaction& interaction = entity_system.entity_component(selected_entity, Interaction::null);
