@@ -278,7 +278,7 @@ int main(int argc, char** argv)
 		rendering_system.set_resolution_x(res_x);
 		rendering_system.set_resolution_y(res_y);
 
-		const double update_time_delta = 10; //100 Updates per second
+		const Time update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;
 		const Time start_frame_time = Time(SDL_GetTicks());
 		Time last_update_time = start_frame_time;
