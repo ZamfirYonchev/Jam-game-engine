@@ -53,12 +53,12 @@ public:
         m_hp_change += hp_change;
     }
 
-    void update_health(double time_diff)
+    void update_health(const Time time_diff)
     {
     	if(m_hp_change < 0) //hit
     		m_stun_cnt = STUN_TIME;
     	else
-    		m_stun_cnt = max(m_stun_cnt - time_diff, 0.0);
+    		m_stun_cnt = max(m_stun_cnt - time_diff, 0);
 
         m_hit_points = clip(m_hit_points + m_hp_change, 0.0, m_max_hit_points);
         m_hp_change = 0;

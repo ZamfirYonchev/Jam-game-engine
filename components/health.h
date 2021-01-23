@@ -33,7 +33,7 @@ public:
 
     virtual void mod_hp_change(double hp_change) = 0;
 
-    virtual void update_health(double time_diff) = 0;
+    virtual void update_health(const Time time_diff) = 0;
 
     static Health* null;
 

@@ -23,7 +23,7 @@ public:
     void set_hp(double hp) {}
     void set_hp_change(double hp_change) {}
     void mod_hp_change(double hp_change) {}
-    void update_health(double time_diff) {}
+    void update_health(const Time time_diff) {}
     double hp() const { return 0; }
     double max_hp() const { return 0; }
     bool alive() const { return true; }

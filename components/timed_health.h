@@ -33,7 +33,7 @@ public:
     void set_hp(double hp) { m_time_to_live = hp; }
     void set_hp_change(double hp_change) { m_ttl_change = hp_change; }
     void mod_hp_change(double hp_change) { m_ttl_change += hp_change; }
-    void update_health(double time_diff)
+    void update_health(const Time time_diff)
     {
     	m_time_to_live = clip(m_time_to_live+m_ttl_change-time_diff, 0.0, m_max_ttl);
     	m_ttl_change = 0;
@@ -49,7 +49,7 @@ public:
 private:
     double m_time_to_live;
     double m_max_ttl;
-    double m_ttl_change;
+    double m_ttl_change; //TODO change from double to Time
     ProcedureID m_proc_id;
 };
 

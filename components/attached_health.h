@@ -38,7 +38,7 @@ public:
     void set_hp(double hp) { m_offset_hp = hp; }
     void set_hp_change(double hp_change) {}
     void mod_hp_change(double hp_change) {}
-    void update_health(double time_diff) {}
+    void update_health(const Time time_diff) {}
     double hp() const
     {
     	return m_entity_system.entity_component(m_attached_id, Health::null).hp() + m_offset_hp;
