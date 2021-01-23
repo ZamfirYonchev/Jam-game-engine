@@ -52,7 +52,7 @@ public:
 			else
 				control.set_look_dir(Control::LookDir(look_dir.boolean() ^ bool(control.look_dir())));
 
-			return CommandReturnValue{0l};
+			return CommandReturnValue{0.0};
 		}
 		else
 		{

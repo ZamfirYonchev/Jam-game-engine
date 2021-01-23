@@ -120,18 +120,18 @@
 int main(int argc, char** argv)
 {
 	Globals globals;
-	globals(Globals::app_resolution_x) = CommandReturnValue{800l};
-	globals(Globals::app_resolution_y) = CommandReturnValue{600l};
-	globals(Globals::app_fullscreen) = CommandReturnValue{0l};
-	globals(Globals::app_enable_audio) = CommandReturnValue{0l};
-	globals(Globals::app_sound_channels) = CommandReturnValue{2l};
+	globals(Globals::app_resolution_x) = CommandReturnValue{static_cast<int64_t>(800)};
+	globals(Globals::app_resolution_y) = CommandReturnValue{static_cast<int64_t>(600)};
+	globals(Globals::app_fullscreen) = CommandReturnValue{0.0};
+	globals(Globals::app_enable_audio) = CommandReturnValue{0.0};
+	globals(Globals::app_sound_channels) = CommandReturnValue{static_cast<int64_t>(2)};
 	globals(Globals::app_window_title) = CommandReturnValue{"Jam engine"};
-	globals(Globals::app_running) = CommandReturnValue{1l};
-	globals(Globals::app_paused) = CommandReturnValue{0l};
-	globals(Globals::app_needs_reload) = CommandReturnValue{0l};
-	globals(Globals::app_show_hitboxes) = CommandReturnValue{0l};
+	globals(Globals::app_running) = CommandReturnValue{static_cast<int64_t>(1)};
+	globals(Globals::app_paused) = CommandReturnValue{0.0};
+	globals(Globals::app_needs_reload) = CommandReturnValue{0.0};
+	globals(Globals::app_show_hitboxes) = CommandReturnValue{0.0};
 	globals(Globals::app_current_level) = CommandReturnValue{"init.jel"};
-	globals(Globals::app_debug_level) = CommandReturnValue{0l};
+	globals(Globals::app_debug_level) = CommandReturnValue{0.0};
 
 	do
 	{
@@ -312,7 +312,7 @@ int main(int argc, char** argv)
 		} while(globals(Globals::app_running).boolean() && globals(Globals::app_needs_reload).boolean() == false);
 
 		std::cout << "FPS = " << 1000.0*number_of_frames / (SDL_GetTicks()-start_frame_time) << std::endl;
-		globals(Globals::app_needs_reload) = CommandReturnValue{0l};
+		globals(Globals::app_needs_reload) = CommandReturnValue{0.0};
 
 	} while(globals(Globals::app_running).boolean());
 

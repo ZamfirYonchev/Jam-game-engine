@@ -52,7 +52,7 @@ public:
 			else
 				collision.set_elasticity(clip(collision.elasticity() + elasticity.real(), 0.0, 1.0));
 
-			return CommandReturnValue{0l};
+			return CommandReturnValue{0.0};
 		}
 		else
 		{

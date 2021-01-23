@@ -26,7 +26,7 @@ public:
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 		const auto& position = entity_system.entity_component(selected_entity, Position::null);
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, AbsolutePosition{position.x(), position.y(), position.w(), position.h()});
-    	return CommandReturnValue{0l};
+    	return CommandReturnValue{0.0};
 	}
 };
 

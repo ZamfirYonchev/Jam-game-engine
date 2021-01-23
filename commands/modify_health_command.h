@@ -52,7 +52,7 @@ public:
 			else
 				health.set_on_death_exec(health.on_death_exec() + proc_id.integer());
 
-			return CommandReturnValue{0l};
+			return CommandReturnValue{0.0};
 		}
 		else
 		{

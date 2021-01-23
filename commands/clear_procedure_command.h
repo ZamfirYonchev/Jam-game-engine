@@ -24,7 +24,7 @@ public:
     {
     	const auto proc_id = command_system.exec_next();
     	command_system.procedure(ProcedureID(proc_id.integer())).clear();
-    	return CommandReturnValue{0l};
+    	return CommandReturnValue{0.0};
     }
 };
 

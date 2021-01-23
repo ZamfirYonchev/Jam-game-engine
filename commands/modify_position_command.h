@@ -53,7 +53,7 @@ public:
 			else
 				position.mod_h(h.real());
 
-			return CommandReturnValue{0l};
+			return CommandReturnValue{0.0};
 		}
 		else
 		{

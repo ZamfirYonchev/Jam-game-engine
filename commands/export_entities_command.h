@@ -29,7 +29,7 @@ public:
 		if(file)
 		{
 			entity_system.for_each([&](const auto& entity){ file << entity << std::endl; });
-	    	return CommandReturnValue{0l};
+	    	return CommandReturnValue{0.0};
 		}
 		else
 		{

@@ -24,7 +24,7 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
     	command_system.clear_procedures();
-    	return CommandReturnValue{0l};
+    	return CommandReturnValue{0.0};
     }
 };
 

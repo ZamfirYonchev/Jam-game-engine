@@ -36,7 +36,7 @@ public:
     			std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
     		}
 
-        	return CommandReturnValue{0l};
+        	return CommandReturnValue{0.0};
     	}
     	else
     	{

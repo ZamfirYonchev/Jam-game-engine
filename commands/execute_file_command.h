@@ -29,7 +29,7 @@ public:
     	{
     		std::cout << "Parsing file " << file_name.string() << std::endl;
     		command_system.process_stream(file);
-    		return CommandReturnValue{0l};
+    		return CommandReturnValue{0.0};
     	}
     	else
     	{

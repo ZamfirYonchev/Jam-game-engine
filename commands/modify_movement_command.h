@@ -76,7 +76,7 @@ public:
 			else
 				movement.set_gravity_affected(gravity_affected.boolean() ^ movement.gravity_affected());
 
-			return CommandReturnValue{0l};
+			return CommandReturnValue{0.0};
 		}
 		else
 		{

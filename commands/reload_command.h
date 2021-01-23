@@ -21,9 +21,9 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
-    	globals(Globals::app_needs_reload) = CommandReturnValue{1l};
+    	globals(Globals::app_needs_reload) = CommandReturnValue{static_cast<int64_t>(1)};
         std::cout << "Issuing a game reload\n";
-        return CommandReturnValue{0l};
+        return CommandReturnValue{0.0};
     }
 };
 
