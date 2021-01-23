@@ -94,7 +94,6 @@ CommandReturnValue UseComponentCommand<AbsolutePosition>::operator()(CommandSyst
 }
 
 
-template<>
 template<typename EntitySystemT>
 class UseComponentCommand<AttachedPosition<EntitySystemT>>
 {
