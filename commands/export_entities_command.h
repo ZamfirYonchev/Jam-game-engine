@@ -34,7 +34,7 @@ public:
 		else
 		{
 			std::cerr << "Could not open file \"" << file_name.string() << "\" for write." << std::endl;
-	    	return CommandReturnValue{-1l};
+	    	return CommandReturnValue{-1.0};
 		}
 	}
 };

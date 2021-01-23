@@ -34,7 +34,7 @@ public:
     	if(proc_id.integer() < 0)
     	{
 			std::cerr << "CallProcedure: procedure id " << proc_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1l};
+			return CommandReturnValue{static_cast<int64_t>(-1)};
     	}
     	else
     	{

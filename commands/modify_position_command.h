@@ -58,7 +58,7 @@ public:
 		else
 		{
 			//error selected_entity
-			return CommandReturnValue{-1l};
+			return CommandReturnValue{-1.0};
 		}
 	}
 };

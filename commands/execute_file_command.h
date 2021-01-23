@@ -34,7 +34,7 @@ public:
     	else
     	{
     		std::cerr << "File \"" << file_name.string() << "\" cannot be opened!" << std::endl;
-    		return CommandReturnValue{-1l};
+    		return CommandReturnValue{-1.0};
     	}
     }
 };

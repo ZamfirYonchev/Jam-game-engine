@@ -35,13 +35,13 @@ public:
     	if(anim_id.integer() < 0)
     	{
 			std::cerr << "AddSprite: animation id " << anim_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1l};
+			return CommandReturnValue{-1.0};
     	}
 
     	if(tex_id.integer() < 0)
     	{
 			std::cerr << "AddSprite: texture id " << tex_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1l};
+			return CommandReturnValue{-1.0};
     	}
 
     	int width, height;
@@ -52,7 +52,7 @@ public:
     		else
     		{
     			//todo add error message
-    			return CommandReturnValue{-1l};
+    			return CommandReturnValue{-1.0};
     		}
     	}
 
