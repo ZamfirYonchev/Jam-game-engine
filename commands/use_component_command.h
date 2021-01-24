@@ -161,7 +161,7 @@ public:
     	const auto cooldown = command_system.exec_next();
     	const auto stability_control = command_system.exec_next();
 
-		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.real(), selected_entity, stability_control.real(), entity_system, input_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.real(), selected_entity, stability_control.boolean(), entity_system, input_system});
 
     	return CommandReturnValue{0.0};
 	}
