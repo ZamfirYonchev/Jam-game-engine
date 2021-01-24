@@ -93,7 +93,7 @@ public:
     void process_stream(std::istream& input)
     {
     	std::list<CommandT> commands;
-    	auto procedure_size_insert_it = end(m_commands);
+    	auto procedure_size_insert_it = end(commands);
 
         while(input.good())
         {
@@ -179,10 +179,10 @@ public:
         		{
                 	input.get(); //extract the { char
                 	commands.push_back(ExtendProcedureCommand{});
-                	commands.push_back(LiteralValueCommand{int64_t(m_procedures.size())});
-                	commands.push_back(NullCommand{}); //reserve space for procedure size
+                	commands.push_back(LiteralValueCommand{int32_t(m_procedures.size()), 0});
 
-                    procedure_size_insert_it = std::prev(commands.end());
+                	//reserve space for procedure size
+                	procedure_size_insert_it = commands.insert(end(commands), NullCommand{});
 
                 	m_procedures.emplace_back();
 
@@ -198,8 +198,8 @@ public:
                 	if(procedure_size_insert_it != end(m_commands))
                 	{
                 		const auto proc_size = std::distance(procedure_size_insert_it, end(commands)) - 1;
-						*procedure_size_insert_it = LiteralValueCommand{proc_size};
-						procedure_size_insert_it = end(m_commands);
+						*procedure_size_insert_it = LiteralValueCommand{int32_t(proc_size), 0};
+						procedure_size_insert_it = end(commands);
 
 	                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
 	                		std::cout << "PARSER: Closing procedure\n";
