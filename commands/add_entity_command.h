@@ -24,8 +24,8 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
     	const EntityID entity_id = entity_system.add_new_entity();
-    	globals(Globals::selected_entity) = CommandReturnValue{static_cast<int64_t>(entity_id)};
-    	return CommandReturnValue{static_cast<int64_t>(entity_id)};
+    	globals(Globals::selected_entity) = CommandReturnValue{entity_id, 0};
+    	return CommandReturnValue{entity_id, 0};
     }
 };
 

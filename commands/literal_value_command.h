@@ -19,7 +19,7 @@ class LiteralValueCommand
 {
 public:
 	LiteralValueCommand(const double value) : m_value{value} {}
-	LiteralValueCommand(const int64_t value) : m_value{value} {}
+	LiteralValueCommand(const int32_t value, int) : m_value{value, 0} {}
 	LiteralValueCommand(std::string_view value) : m_value{std::string{value}} {}
 	LiteralValueCommand(const CommandReturnValue& value) : m_value{value} {} // @suppress("Symbol is not resolved")
 

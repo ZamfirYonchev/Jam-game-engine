@@ -24,7 +24,7 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
     	const auto file_name = command_system.exec_next();
-    	return CommandReturnValue{static_cast<int64_t>(resource_system.addNewMusic(file_name.string()))};
+    	return CommandReturnValue{resource_system.addNewMusic(file_name.string()), 0};
     }
 };
 

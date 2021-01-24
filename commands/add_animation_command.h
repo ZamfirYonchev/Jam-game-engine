@@ -25,7 +25,7 @@ public:
     {
     	const auto frame_delay_ms = command_system.exec_next();
     	const auto scale_factor = command_system.exec_next();
-    	return CommandReturnValue{static_cast<int64_t>(resource_system.addNewAnimation({int(frame_delay_ms.integer()), scale_factor.real()}))};
+    	return CommandReturnValue{resource_system.addNewAnimation({frame_delay_ms.integer(), scale_factor.real()}), 0};
     }
 };
 

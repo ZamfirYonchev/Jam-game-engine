@@ -61,7 +61,7 @@ public:
 
     	const int sprite_id = resource_system.animation(anim_id.integer())->get().add_sprite({TextureID(tex_id.integer()), {int(x.integer()), int(y.integer()), width, height}});
 
-		return CommandReturnValue{static_cast<int64_t>(sprite_id)};
+		return CommandReturnValue{sprite_id, 0};
     }
 };
 

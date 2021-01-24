@@ -21,8 +21,8 @@ class CallProcedureCommand
 {
 public:
 	CallProcedureCommand(std::string_view proc_name) : m_procedure{std::string{proc_name}} {}
-	CallProcedureCommand(const ProcedureID proc_id) : m_procedure{static_cast<int64_t>(proc_id)} {}
-	CallProcedureCommand() : m_procedure{static_cast<int64_t>(0)} {}
+	CallProcedureCommand(const ProcedureID proc_id) : m_procedure{proc_id, 0} {} // @suppress("Symbol is not resolved")
+	CallProcedureCommand() : m_procedure{0.0} {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
@@ -34,7 +34,7 @@ public:
     	if(proc_id.integer() < 0)
     	{
 			std::cerr << "CallProcedure: procedure id " << proc_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{static_cast<int64_t>(-1)};
+			return CommandReturnValue{-1};
     	}
     	else
     	{

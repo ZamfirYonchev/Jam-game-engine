@@ -19,8 +19,8 @@ class RenderingSystem;
 class SelectEntityCommand
 {
 public:
-	SelectEntityCommand(const EntityID entity_id) : m_entity_id{static_cast<int64_t>(entity_id)} {}
-	SelectEntityCommand() : m_entity_id{static_cast<int64_t>(-1)} {}
+	SelectEntityCommand(const EntityID entity_id) : m_entity_id{entity_id, 0} {} // @suppress("Symbol is not resolved")
+	SelectEntityCommand() : m_entity_id{-1.0} {}
 
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const

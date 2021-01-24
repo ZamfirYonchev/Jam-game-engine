@@ -43,7 +43,7 @@ public:
 														 , g.integer()
 														 , b.integer()
 														 , rendering_system.renderer());
-	    	return CommandReturnValue{static_cast<int64_t>(tex_id)};
+	    	return CommandReturnValue{tex_id, 0};
     	}
     }
 };

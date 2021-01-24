@@ -39,11 +39,11 @@ void InputSystem::process_input(Globals& globals, std::list<std::pair<EntityID, 
                 else if(m_event.key.keysym.sym == m_keyquit || m_event.key.keysym.sym == SDLK_F10)
                 	globals(Globals::app_running) = CommandReturnValue{0.0};
                 else if(m_event.key.keysym.sym == SDLK_r)
-                	globals(Globals::app_needs_reload) = CommandReturnValue{static_cast<int64_t>(1)};
+                	globals(Globals::app_needs_reload) = CommandReturnValue{true};
                 else if(m_event.key.keysym.sym == m_keypause)
-                	globals(Globals::app_paused) = CommandReturnValue{!globals(Globals::app_paused).boolean()};
+                	globals(Globals::app_paused) = CommandReturnValue{!globals(Globals::app_paused).boolean(), 0};
                 else if(m_event.key.keysym.sym == SDLK_h)
-                	globals(Globals::app_show_hitboxes) = CommandReturnValue{!globals(Globals::app_show_hitboxes).boolean()};
+                	globals(Globals::app_show_hitboxes) = CommandReturnValue{!globals(Globals::app_show_hitboxes).boolean(), 0};
             break;
 
             case SDL_KEYUP:

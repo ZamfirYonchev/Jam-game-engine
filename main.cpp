@@ -120,13 +120,13 @@
 int main(int argc, char** argv)
 {
 	Globals globals;
-	globals(Globals::app_resolution_x) = CommandReturnValue{static_cast<int64_t>(800)};
-	globals(Globals::app_resolution_y) = CommandReturnValue{static_cast<int64_t>(600)};
+	globals(Globals::app_resolution_x) = CommandReturnValue{800.0};
+	globals(Globals::app_resolution_y) = CommandReturnValue{600.0};
 	globals(Globals::app_fullscreen) = CommandReturnValue{0.0};
 	globals(Globals::app_enable_audio) = CommandReturnValue{0.0};
-	globals(Globals::app_sound_channels) = CommandReturnValue{static_cast<int64_t>(2)};
+	globals(Globals::app_sound_channels) = CommandReturnValue{2.0};
 	globals(Globals::app_window_title) = CommandReturnValue{"Jam engine"};
-	globals(Globals::app_running) = CommandReturnValue{static_cast<int64_t>(1)};
+	globals(Globals::app_running) = CommandReturnValue{1.0};
 	globals(Globals::app_paused) = CommandReturnValue{0.0};
 	globals(Globals::app_needs_reload) = CommandReturnValue{0.0};
 	globals(Globals::app_show_hitboxes) = CommandReturnValue{0.0};
@@ -271,8 +271,8 @@ int main(int argc, char** argv)
 					 , title.c_str()
 					 );
 
-		globals(Globals::app_resolution_x) = CommandReturnValue{static_cast<int64_t>(res_x)};
-		globals(Globals::app_resolution_y) = CommandReturnValue{static_cast<int64_t>(res_y)};
+		globals(Globals::app_resolution_x) = CommandReturnValue{res_x, 0};
+		globals(Globals::app_resolution_y) = CommandReturnValue{res_y, 0};
 
 		rendering_system.set_renderer(sdl.renderer());
 		rendering_system.set_resolution_x(res_x);

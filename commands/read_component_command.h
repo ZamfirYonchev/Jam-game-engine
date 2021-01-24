@@ -145,7 +145,7 @@ CommandReturnValue ReadComponentCommand<Interaction>::operator()(CommandSystemT&
 		   + on_exit_proc_id_self_modifier.real()
 		   ) == 0)
 		   ?
-			CommandReturnValue{static_cast<int64_t>(interaction.group_vector())}
+			CommandReturnValue{interaction.group_vector(), 0}
 		   :
 			CommandReturnValue
 			{interaction.group_vector()*group_vector_modifier.real()
