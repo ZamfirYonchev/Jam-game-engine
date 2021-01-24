@@ -161,7 +161,7 @@ public:
     	const auto cooldown = command_system.exec_next();
     	const auto stability_control = command_system.exec_next();
 
-		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.real(), selected_entity, stability_control.boolean(), entity_system, input_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, InputControl<EntitySystemT>{ProcedureID(shoot_proc_id.integer()), cooldown.integer(), selected_entity, stability_control.boolean(), entity_system, input_system});
 
     	return CommandReturnValue{0.0};
 	}
@@ -221,7 +221,7 @@ public:
     	const auto attack_cooldown = command_system.exec_next();
     	const auto range = command_system.exec_next();
 
-		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, ChaseAIControl<EntitySystemT>{selected_entity, EntityID(target_id.integer()), ProcedureID(attack_proc_id.integer()), attack_cooldown.real(), range.real(), entity_system});
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, ChaseAIControl<EntitySystemT>{selected_entity, EntityID(target_id.integer()), ProcedureID(attack_proc_id.integer()), attack_cooldown.integer(), range.real(), entity_system});
 
     	return CommandReturnValue{0.0};
 	}

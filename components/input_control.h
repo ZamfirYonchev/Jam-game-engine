@@ -20,7 +20,7 @@ public:
 	using Base = Control;
     InputControl
 		(const ProcedureID shoot_proc_id
-	   , const double shoot_cooldown
+	   , const int shoot_cooldown
 	   , const EntityID self_id
 	   , const bool stability_control
 	   , const EntitySystemT& entity_system

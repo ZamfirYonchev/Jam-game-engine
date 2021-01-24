@@ -21,7 +21,7 @@ public:
 		(const EntityID self_id
 	   , const EntityID target_id
 	   , const ProcedureID attack_proc_id
-	   , const double attack_cooldown
+	   , const int attack_cooldown
 	   , const double attack_range
 	   , const EntitySystemT& entity_system)
 	: m_self_id(self_id)
@@ -86,7 +86,7 @@ public:
 
     void clear_decisions()
     {
-        m_walk_dir = 0.0;
+        m_walk_dir = 0;
         m_attack = 0.0;
     }
 

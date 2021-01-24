@@ -203,7 +203,7 @@ public:
 
 		}
 
-		for(const auto entity_pair : collision_correction)
+		for(const auto& entity_pair : collision_correction)
 		{
 			auto& position = m_entity_system.entity_component(entity_pair.first, Position::null);
 			auto& movement = m_entity_system.entity_component(entity_pair.first, Movement::null);

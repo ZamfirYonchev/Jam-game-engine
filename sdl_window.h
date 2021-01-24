@@ -30,7 +30,10 @@ public:
 	~SdlWindow();
 
 	SdlWindow(const SdlWindow&) = delete;
-	SdlWindow(SdlWindow&& rhs) noexcept : m_window(rhs.m_window), m_renderer(rhs.m_renderer)
+	SdlWindow(SdlWindow&& rhs) noexcept
+		: m_window{rhs.m_window}
+		, m_renderer{rhs.m_renderer}
+		, m_audio_opened{rhs.m_audio_opened}
 	{
 		rhs.m_window = nullptr;
 		rhs.m_renderer = nullptr;

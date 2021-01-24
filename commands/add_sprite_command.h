@@ -44,7 +44,7 @@ public:
 			return CommandReturnValue{-1.0};
     	}
 
-    	int width, height;
+    	int width = 0, height = 0;
     	if(w.integer() == 0 || h.integer() == 0)
     	{
     		if(resource_system.texture(tex_id.integer()))

@@ -109,10 +109,10 @@ public:
 										screen_pos.set_h(sprite_opt->get().clip.h*scale_factor);
 										screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
 										screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
-										dest.w = screen_pos.w()*m_screen_to_view_scale + 0.5;
-										dest.h = screen_pos.h()*m_screen_to_view_scale + 0.5;
-										dest.x = screen_pos.x()*m_screen_to_view_scale + 0.5;
-										dest.y = m_resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5;
+										dest.w = int(screen_pos.w()*m_screen_to_view_scale + 0.5);
+										dest.h = int(screen_pos.h()*m_screen_to_view_scale + 0.5);
+										dest.x = int(screen_pos.x()*m_screen_to_view_scale + 0.5);
+										dest.y = int(m_resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5);
 
 										if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, m_resolution_x, m_resolution_y))
 										{

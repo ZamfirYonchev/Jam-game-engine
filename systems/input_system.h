@@ -33,6 +33,7 @@ public:
 	, m_up_pressed(false)
 	, m_down_pressed(false)
 	, m_select_pressed(false)
+	, m_event{}
 	{}
 
     void process_input(Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls);
