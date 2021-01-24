@@ -195,7 +195,7 @@ public:
         		{
                 	input.get(); //extract the } char
 
-                	if(procedure_size_insert_it != end(m_commands))
+                	if(procedure_size_insert_it != end(commands))
                 	{
                 		const auto proc_size = std::distance(procedure_size_insert_it, end(commands)) - 1;
 						*procedure_size_insert_it = LiteralValueCommand{int32_t(proc_size), 0};
