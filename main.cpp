@@ -135,6 +135,7 @@ int main(int argc, char** argv)
 
 	do
 	{
+		SdlWindow sdl;
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
@@ -260,7 +261,6 @@ int main(int argc, char** argv)
 		int res_x = globals(Globals::app_resolution_x).integer();
 		int res_y = globals(Globals::app_resolution_y).integer();
 		const std::string title = globals(Globals::app_window_title).string();
-		SdlWindow sdl;
 
 		sdl.init_video(res_x
 					 , res_y
