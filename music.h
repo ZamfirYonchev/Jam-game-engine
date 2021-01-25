@@ -25,7 +25,6 @@ public:
 
     Music& load_from_file(std::string_view file)
     {
-        unload();
         m_music.reset(Mix_LoadMUS(file.data()));
 
         if(m_music == nullptr)
@@ -34,15 +33,6 @@ public:
         }
 
         return *this;
-    }
-
-    void unload() noexcept
-    {
-        if(m_music != nullptr)
-        {
-        	Mix_FreeMusic(m_music.get());
-        	m_music = nullptr;
-        }
     }
 
     Mix_Music* music() const
