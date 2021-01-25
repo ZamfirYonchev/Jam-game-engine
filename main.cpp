@@ -250,9 +250,12 @@ int main(int argc, char** argv)
 		command_system.register_command("ReadVisuals", ReadComponentCommand<Visuals>{});
 
 		//this will load the data from the init.jel file and potentially give new values to the globals
-		command_system.push(ExecuteFileCleanCommand{});
-		command_system.push(LiteralValueCommand{globals(Globals::app_current_level)});
-		command_system.process(resource_system, rendering_system, input_system);
+		if(globals(Globals::app_current_level).string() == "init.jel")
+		{
+			command_system.push(ExecuteFileCleanCommand{});
+			command_system.push(LiteralValueCommand{"init.jel"});
+			command_system.process(resource_system, rendering_system, input_system);
+		}
 
 		//this will schedule the loading of the level which should be set in init.jel
 		command_system.push(ExecuteFileCleanCommand{});
