@@ -12,6 +12,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
+#include <memory>
 
 class SoundChunk
 {
@@ -25,33 +26,9 @@ public:
 
 	SoundChunk() : m_sound(nullptr), m_repeat(0) {}
 
-    ~SoundChunk()
-    {
-        unload();
-    }
-
-    SoundChunk(const SoundChunk&) = delete;
-    SoundChunk(SoundChunk&& rhs) noexcept
-    : m_sound(std::move(rhs.m_sound))
-    , m_repeat(std::move(rhs.m_repeat))
-    {
-    	rhs.m_sound = nullptr;
-    }
-
-    SoundChunk& operator=(const SoundChunk&) = delete;
-    SoundChunk& operator=(SoundChunk&& rhs) noexcept
-    {
-    	unload();
-    	m_sound = rhs.m_sound;
-    	rhs.m_sound = nullptr;
-
-    	return *this;
-    }
-
     SoundChunk& load_from_wav_file(std::string_view file)
     {
-        unload();
-        m_sound = Mix_LoadWAV(file.data());
+        m_sound.reset(Mix_LoadWAV(file.data()));
 
         if(m_sound == nullptr)
         {
@@ -61,18 +38,9 @@ public:
         return *this;
     }
 
-    void unload() noexcept
-    {
-        if(m_sound != nullptr)
-        {
-        	Mix_FreeChunk(m_sound);
-        	m_sound = nullptr;
-        }
-    }
-
     Mix_Chunk* sound() const
     {
-        return m_sound;
+        return m_sound.get();
     }
 
     int repeat() const
@@ -81,7 +49,9 @@ public:
     }
 
 private:
-    Mix_Chunk* m_sound;
+    struct Mix_Chunk_Destructor { void operator()(Mix_Chunk* ptr) { Mix_FreeChunk(ptr); } };
+
+    std::unique_ptr<Mix_Chunk, Mix_Chunk_Destructor> m_sound;
     int m_repeat;
 };
 
