@@ -11,6 +11,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
+#include <memory>
 
 class Music
 {
@@ -22,31 +23,10 @@ public:
 
 	Music() : m_music(nullptr) {}
 
-    ~Music()
-    {
-        unload();
-    }
-
-    Music(const Music&) = delete;
-    Music(Music&& rhs) noexcept : m_music(rhs.m_music)
-    {
-    	rhs.m_music = nullptr;
-    }
-
-    Music& operator=(const Music&) = delete;
-    Music& operator=(Music&& rhs) noexcept
-    {
-    	unload();
-    	m_music = rhs.m_music;
-    	rhs.m_music = nullptr;
-
-    	return *this;
-    }
-
     Music& load_from_file(std::string_view file)
     {
         unload();
-        m_music = Mix_LoadMUS(file.data());
+        m_music.reset(Mix_LoadMUS(file.data()));
 
         if(m_music == nullptr)
         {
@@ -60,18 +40,20 @@ public:
     {
         if(m_music != nullptr)
         {
-        	Mix_FreeMusic(m_music);
+        	Mix_FreeMusic(m_music.get());
         	m_music = nullptr;
         }
     }
 
     Mix_Music* music() const
     {
-        return m_music;
+        return m_music.get();
     }
 
 private:
-    Mix_Music* m_music;
+    struct Mix_Music_Destructor { void operator()(Mix_Music* ptr) { Mix_FreeMusic(ptr); } };
+
+    std::unique_ptr<Mix_Music, Mix_Music_Destructor> m_music;
 };
 
 #endif /* MUSIC_H_ */
