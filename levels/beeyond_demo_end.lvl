@@ -1,4 +1,4 @@
-@app_current_level "levels/beeyond_demo_end.txt"
+@app_current_level "levels/beeyond_demo_end.lvl"
 
 @tex_bg AddTextureFromFile "beeyond_assets/end.png" #0: background top
 
