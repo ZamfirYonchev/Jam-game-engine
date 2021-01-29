@@ -81,6 +81,7 @@
 #include "components/input_control.h"
 #include "components/input_select_control.h"
 #include "components/particle_control.h"
+#include "components/timed_control.h"
 #include "components/null_control.h"
 #include "components/full_movement.h"
 #include "components/instant_movement.h"
@@ -207,6 +208,7 @@ int main(int argc, char** argv)
 		command_system.register_command("UseChaseAIControl", UseChaseAIControlCommand{});
 		command_system.register_command("UseGuideControl", UseGuideControlCommand{});
 		command_system.register_command("UseParticleControl", UseParticleControlCommand{gen});
+		command_system.register_command("UseTimedControl", UseComponentCommand<TimedControl>{});
 		command_system.register_command("UseNullMovement", UseComponentCommand<NullMovement>{});
 		command_system.register_command("UseFullMovement", UseComponentCommand<FullMovement>{});
 		command_system.register_command("UseInstantMovement", UseComponentCommand<InstantMovement>{});
@@ -308,9 +310,8 @@ int main(int argc, char** argv)
 				const Time diff = SDL_GetTicks()-last_render_time;
 				last_render_time = SDL_GetTicks();
 				rendering_system.render_entities(diff, entity_system, resource_system, app_paused, show_hitboxes);
+				++number_of_frames;
 			}
-
-			++number_of_frames;
 
 		} while(globals(Globals::app_running).boolean() && globals(Globals::app_needs_reload).boolean() == false);
 
