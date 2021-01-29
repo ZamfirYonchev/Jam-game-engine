@@ -152,13 +152,15 @@ public:
 								const double dvx = 2*(movement1.vx()-movement0.vx())*((collision1.state()==Collision::CollisionState::SOLID) ? 1 : movement1.mass()/(movement0.mass()+movement1.mass()))*collision0.elasticity()*collision1.elasticity();
 								const double dvy = 2*(movement1.vy()-movement0.vy())*((collision1.state()==Collision::CollisionState::SOLID) ? 1 : movement1.mass()/(movement0.mass()+movement1.mass()))*collision0.elasticity()*collision1.elasticity();
 
+								collision_correction[id0].vy += dvy;
+								collision_correction[id0].vx += dvx;
+
 								if(dy > 0)
 								{
 									const double t = clip(lines_cross(x1, y1, dx, dy, x2, y2+sh, sw, 0), -1.0, 1.0);
 									if(t >= 0.0)
 									{
 										collision_correction[id0].y = t*((collision1.state()==Collision::CollisionState::SOLID)*movement1.dy() - movement0.dy());
-										collision_correction[id0].vy += dvy;
 										collision0.set_standing_on(Collision::SurfaceType::GROUND);
 									}
 								}
@@ -166,10 +168,7 @@ public:
 								{
 									const double t = lines_cross(x1, y1, dx, dy, x2, y2, sw, 0);
 									if(t >= 0.0)
-									{
 										collision_correction[id0].y = t*((collision1.state()==Collision::CollisionState::SOLID)*movement1.dy() - movement0.dy());
-										collision_correction[id0].vy += dvy;
-									}
 								}
 
 
@@ -177,19 +176,13 @@ public:
 								{
 									const double t = clip(lines_cross(x1, y1, dx, dy, x2, y2, 0, sh), -1.0, 1.0);
 									if(t >= 0.0)
-									{
 										collision_correction[id0].x = t*((collision1.state()==Collision::CollisionState::SOLID)*movement1.dx()- movement0.dx());
-										collision_correction[id0].vx += dvx;
-									}
 								}
 								else if(dx > 0)
 								{
 									const double t = clip(lines_cross(x1, y1, dx, dy, x2+sw, y2, 0, sh), -1.0, 1.0);
 									if(t >= 0.0)
-									{
 										collision_correction[id0].x = t*((collision1.state()==Collision::CollisionState::SOLID)*movement1.dx() - movement0.dx());
-										collision_correction[id0].vx += dvx;
-									}
 								}
 							}
 						}
