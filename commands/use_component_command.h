@@ -260,7 +260,7 @@ CommandReturnValue UseComponentCommand<FullMovement>::operator()(CommandSystemT&
 	const auto jump_force = command_system.exec_next();
 	const auto gravity_affected = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, globals, {mass.real(), friction_x.real(), friction_x.real(), move_force.real(), jump_force.real(), gravity_affected.boolean()});
+	set_component(entity_system, rendering_system, all_systems, globals, {mass.real(), friction_x.real(), friction_y.real(), move_force.real(), jump_force.real(), gravity_affected.boolean()});
 
 	return CommandReturnValue{0.0};
 }
