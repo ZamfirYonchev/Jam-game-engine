@@ -37,7 +37,7 @@ public:
 
     void print(std::ostream& to) const
     {
-    	to << "UseStaticAnimationVisuals "
+    	to << "UseAnimationVisuals "
     	   << m_anim_id << " ";
     }
 
@@ -46,9 +46,9 @@ public:
     	m_anim_time = (m_anim_time+time_diff)%m_anim_time_max;
     }
 
-    uint8_t animation_sprite(const uint16_t rx, const uint16_t ry) const
+    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
     {
-    	return m_anim_time/m_anim_frame_delay;
+    	return {m_anim_id, m_anim_time/m_anim_frame_delay};
     }
 
     AnimationID animation_id(const uint16_t rx, const uint16_t ry) const { return m_anim_id; }
@@ -59,6 +59,7 @@ public:
     void set_repeat_x(uint16_t val) {}
     void set_repeat_y(uint16_t val) {}
     void set_layer(VisualLayer val) { m_layer = val; }
+
 
 private:
     AnimationID m_anim_id;
