@@ -19,11 +19,15 @@ public:
 	TimedControl
 		(const Time max_duration
 	   , const int repeats
+	   , const double horizontal
+	   , const double vertical
 	   , const ProcedureID proc_id
 		)
 	: m_max_duration{max_duration}
 	, m_current_duration{0}
 	, m_proc_id{proc_id}
+	, m_horizontal{horizontal}
+	, m_vertical{vertical}
 	, m_attack{false}
 	, m_repeats{repeats}
 	, m_walk{1}
@@ -36,9 +40,9 @@ public:
     	   << m_repeats << " ";
     }
 
-    double decision_vertical() const { return 0; }
+    double decision_vertical() const { return m_walk * m_vertical; }
     bool decision_attack() const { return m_attack; }
-    double decision_walk() const { return m_walk; }
+    double decision_walk() const { return m_walk * m_horizontal; }
     ProcedureID attack_proc_id() const { return m_proc_id; }
     LookDir look_dir() const { return m_walk < 0 ? Control::LookDir::LEFT : Control::LookDir::RIGHT; }
 
@@ -69,6 +73,8 @@ private:
     Time m_max_duration;
     Time m_current_duration;
     ProcedureID m_proc_id;
+    double m_horizontal;
+    double m_vertical;
     bool m_attack;
     int m_repeats;
     int8_t m_walk;
@@ -80,9 +86,11 @@ CommandReturnValue UseComponentCommand<TimedControl>::operator()(CommandSystemT&
 {
 	const auto max_duration = command_system.exec_next();
 	const auto repeats = command_system.exec_next();
+	const auto horizontal = command_system.exec_next();
+	const auto vertical = command_system.exec_next();
 	const auto proc_id = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, globals, {max_duration.integer(), repeats.integer(), proc_id.integer()});
+	set_component(entity_system, rendering_system, all_systems, globals, {max_duration.integer(), repeats.integer(), horizontal.real(), vertical.real(), proc_id.integer()});
 
 	return CommandReturnValue{0.0};
 }
