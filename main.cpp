@@ -70,6 +70,7 @@
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
 #include "components/build_position.h"
+#include "components/attached_directional_position.h"
 #include "components/null_position.h"
 #include "components/constant_control.h"
 #include "components/absolute_position.h"
@@ -92,6 +93,7 @@
 #include "components/full_interaction.h"
 #include "components/normal_interaction.h"
 #include "components/trigger_interaction.h"
+#include "components/attached_interaction.h"
 #include "components/null_interaction.h"
 #include "components/attached_health.h"
 #include "components/character_health.h"
@@ -201,6 +203,7 @@ int main(int argc, char** argv)
 		command_system.register_command("UseAbsolutePosition", UseComponentCommand<AbsolutePosition>{});
 		command_system.register_command("UseAttachedPosition", UseComponentCommand<AttachedPosition<ES>>{});
 		command_system.register_command("UseBuildPosition", UseBuildPositionCommand{});
+		command_system.register_command("UseAttachedDirectionalPosition", UseComponentCommand<AttachedDirectionalPosition<ES>>{});
 		command_system.register_command("UseNullControl", UseComponentCommand<NullControl>{});
 		command_system.register_command("UseConstantControl",UseComponentCommand<ConstantControl>{});
 		command_system.register_command("UseInputControl", UseInputControlCommand{});
@@ -219,6 +222,7 @@ int main(int argc, char** argv)
 		command_system.register_command("UseNormalInteraction", UseComponentCommand<NormalInteraction>{});
 		command_system.register_command("UseTriggerInteraction", UseComponentCommand<TriggerInteraction>{});
 		command_system.register_command("UseFullInteraction", UseComponentCommand<FullInteraction>{});
+		command_system.register_command("UseAttachedInteraction", UseComponentCommand<AttachedInteraction>{});
 		command_system.register_command("UseNullHealth", UseComponentCommand<NullHealth>{});
 		command_system.register_command("UseAttachedHealth", UseAttachedHealthCommand{});
 		command_system.register_command("UseCharacterHealth", UseComponentCommand<CharacterHealth>{});
@@ -229,6 +233,7 @@ int main(int argc, char** argv)
 		command_system.register_command("UseStaticVisuals", UseComponentCommand<StaticVisuals>{});
 		command_system.register_command("UseHealthVisuals", UseHealthVisualsCommand{});
 		command_system.register_command("UseMenuItemVisuals", UseMenuItemVisualsCommand{});
+		command_system.register_command("UseAnimationVisuals", UseAnimationVisualsCommand{});
 		command_system.register_command("UseNullSounds", UseComponentCommand<NullSounds>{});
 		command_system.register_command("UseCharacterSounds", UseCharacterSoundsCommand{});
 		command_system.register_command("ReusePosition", ReuseComponentCommand<Position>{});
@@ -237,6 +242,7 @@ int main(int argc, char** argv)
 		command_system.register_command("ReuseCollision", ReuseComponentCommand<Collision>{});
 		command_system.register_command("ReuseInteraction", ReuseComponentCommand<Interaction>{});
 		command_system.register_command("ReuseHealth", ReuseComponentCommand<Health>{});
+		command_system.register_command("ReuseSounds", ReuseComponentCommand<Sounds>{});
 		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals>{});
 		command_system.register_command("ExportEntities", ExportEntitiesCommand{});
 		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{});
