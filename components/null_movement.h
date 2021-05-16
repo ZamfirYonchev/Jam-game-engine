@@ -39,7 +39,7 @@ public:
     double vy() const { return 0; }
     double dx() const { return 0; }
     double dy() const { return 0; }
-    double mass() const { return 1; }
+    double mass() const { return std::numeric_limits<double>::max(); }
     double friction_x() const { return 0; }
     double friction_y() const { return 0; }
     double move_force() const { return 0; }
