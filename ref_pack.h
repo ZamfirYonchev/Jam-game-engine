@@ -19,21 +19,21 @@ struct RefPack<T, Ts...>
     RefPack(T& _t, Ts&... _ts) : t{_t}, pack{_ts...} {}
 
     template<typename U>
-    U& access(const U* ptr)
+    U& access()
     {
         if constexpr(std::is_same<T, U>::value)
             return t;
         else
-            return pack.access(ptr);
+            return pack.template access<U>();
     }
 
     template<typename U>
-    const U& access(const U* ptr) const
+    const U& access() const
     {
         if constexpr(std::is_same<T, U>::value)
             return t;
         else
-            return pack.access(ptr);
+            return pack.template access<U>();
     }
 
     T& t;
@@ -45,8 +45,11 @@ struct RefPack<T>
 {
     RefPack(T& _t) : t{_t} {}
 
-    T& access(const T*) { return t; }
-    const T& access(const T*) const { return t; }
+    template<typename U>
+    T& access() { return t; }
+
+    template<typename U>
+    const T& access() const { return t; }
 
     T& t;
 };
