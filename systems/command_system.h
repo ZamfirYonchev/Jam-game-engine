@@ -33,6 +33,7 @@
 #include "../commands/pause_all_sounds_command.h"
 #include "../commands/debug_message_command.h"
 #include "../globals.h"
+#include <iomanip>
 
 class ResourceSystem;
 class InputSystem;
@@ -137,8 +138,7 @@ public:
         		case '"':
         		{
                 	std::string str;
-                	input.get(); //extract the " char
-                	std::getline(input, str, '"');
+                	input >> std::quoted(str);
                 	commands.push_back(LiteralValueCommand{str});
 
                 	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
