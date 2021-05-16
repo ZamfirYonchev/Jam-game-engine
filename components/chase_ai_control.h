@@ -61,13 +61,13 @@ public:
 
     void update_decisions(const Time time_diff)
     {
-    	m_current_attack_cooldown = max(m_current_attack_cooldown-time_diff, 0);
+    	m_current_attack_cooldown = max(m_current_attack_cooldown-int(time_diff), 0);
 
-    	const auto& target_position = m_entity_system.entity_component(m_target_id, Position::null);
+    	const auto& target_position = m_entity_system.template entity_component<Position>(m_target_id);
 
     	if(target_position)
     	{
-    		const auto& self_position = m_entity_system.entity_component(m_self_id, Position::null);
+    		const auto& self_position = m_entity_system.template entity_component<Position>(m_self_id);
     		const double distance_x = target_position.x() - self_position.x() + (target_position.w() - self_position.w())/2.0;
     		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
 
@@ -87,7 +87,7 @@ public:
     void clear_decisions()
     {
         m_walk_dir = 0;
-        m_attack = 0.0;
+        m_attack = false;
     }
 
     EntityID m_self_id, m_target_id;
