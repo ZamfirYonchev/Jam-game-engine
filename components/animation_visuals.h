@@ -43,7 +43,7 @@ public:
 
     void update_animation(const Time time_diff)
     {
-    	m_anim_time = (m_anim_time+time_diff)%m_anim_time_max;
+    	m_anim_time = (m_anim_time+int(time_diff))%m_anim_time_max;
     }
 
     AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
@@ -65,8 +65,8 @@ private:
     AnimationID m_anim_id;
     VisualLayer m_layer;
     int m_anim_frame_delay;
-    Time m_anim_time;
-    Time m_anim_time_max;
+    int m_anim_time;
+    int m_anim_time_max;
 };
 
 #endif /* COMPONENTS_ANIMATION_VISUALS_H_ */
