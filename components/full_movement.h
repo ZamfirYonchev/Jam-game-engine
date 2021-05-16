@@ -56,26 +56,23 @@ public:
 		const double vy_avg = m_vy + m_fy*time_diff/m_mass/2.0;
 
 		//account for air friction
-		m_fx -= vx_avg * m_friction_x;
-		m_fy -= vy_avg * m_friction_y;
+		const double fx = m_fx - vx_avg * m_friction_x;
+		const double fy = m_fy - vy_avg * m_friction_y;
 
-		m_dx = (m_vx + m_fx*time_diff/m_mass/2.0)*time_diff;
-		m_dy = (m_vy + m_fy*time_diff/m_mass/2.0)*time_diff;
+		m_dx = (m_vx + fx*time_diff/m_mass/2.0)*time_diff;
+		m_dy = (m_vy + fy*time_diff/m_mass/2.0)*time_diff;
 
-
-		m_vx += m_fx * time_diff / m_mass;
-		m_vy += m_fy * time_diff / m_mass;
+		m_vx += fx * time_diff / m_mass;
+		m_vy += fy * time_diff / m_mass;
 
 		if(sign(m_dx) != sign(vx_avg))
 		{
 			m_dx = 0;
-			m_vx = 0;
 		}
 
 		if(sign(m_dy) != sign(vy_avg))
 		{
 			m_dy = 0;
-			m_vy = 0;
 		}
     }
 
