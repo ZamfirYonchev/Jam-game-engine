@@ -152,10 +152,10 @@ public:
 
     void update_animation(const Time time_diff)
     {
-    	const auto& control = m_entity_system.entity_component(m_self_id, Control::null);
-    	const auto& movement = m_entity_system.entity_component(m_self_id, Movement::null);
-    	const auto& collision = m_entity_system.entity_component(m_self_id, Collision::null);
-    	const auto& health = m_entity_system.entity_component(m_self_id, Health::null);
+    	const auto& control = m_entity_system.template entity_component<Control>(m_self_id);
+    	const auto& movement = m_entity_system.template entity_component<Movement>(m_self_id);
+    	const auto& collision = m_entity_system.template entity_component<Collision>(m_self_id);
+    	const auto& health = m_entity_system.template entity_component<Health>(m_self_id);
 
     	switch(m_current_state)
 		{
@@ -166,7 +166,7 @@ public:
 				else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
 				else if(collision.standing_on()!=Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
 				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
+				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
 				else advance_animation(time_diff);
 			break;
 
@@ -176,7 +176,7 @@ public:
 				else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
 				else if(collision.standing_on()!=Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
 				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(RenderStates::IDLE);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
+				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
 				else advance_animation(time_diff);
 			break;
 
@@ -186,7 +186,7 @@ public:
 				else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
 				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(RenderStates::WALK);
 				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(RenderStates::IDLE);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1 && m_last_frame) set_new_state(RenderStates::FALL);
+				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < 0 && m_last_frame) set_new_state(RenderStates::FALL);
 				else advance_animation(time_diff);
 			break;
 
@@ -202,7 +202,7 @@ public:
 			case RenderStates::ATTACK:
 				if(health.alive() == false) set_new_state(RenderStates::DEAD);
 				else if(health.stunned()) set_new_state(RenderStates::HIT);
-				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
 				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
 				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
 				else if(m_last_frame) set_new_state(RenderStates::IDLE);
@@ -212,7 +212,7 @@ public:
 			case RenderStates::HIT:
 				if(health.alive() == false) set_new_state(RenderStates::DEAD);
 				else if(m_last_frame && control.decision_attack()) set_new_state(RenderStates::ATTACK);
-				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(RenderStates::FALL);
+				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
 				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
 				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
 				else if(m_last_frame && collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(RenderStates::IDLE);
@@ -257,15 +257,15 @@ private:
     int m_attack_anim_frame_delay;
     int m_hit_anim_frame_delay;
     int m_dead_anim_frame_delay;
-    Time m_current_anim_time_max;
-    Time m_idle_anim_time_max;
-    Time m_walk_anim_time_max;
-    Time m_jump_anim_time_max;
-    Time m_fall_anim_time_max;
-    Time m_attack_anim_time_max;
-    Time m_hit_anim_time_max;
-    Time m_dead_anim_time_max;
-    Time m_anim_time;
+    int m_current_anim_time_max;
+    int m_idle_anim_time_max;
+    int m_walk_anim_time_max;
+    int m_jump_anim_time_max;
+    int m_fall_anim_time_max;
+    int m_attack_anim_time_max;
+    int m_hit_anim_time_max;
+    int m_dead_anim_time_max;
+    int m_anim_time;
     bool m_last_frame;
     VisualLayer m_layer;
     EntityID m_self_id;
@@ -339,7 +339,7 @@ private:
         m_last_frame = false;
     }
 
-    void advance_animation(Time time_diff)
+    void advance_animation(const int time_diff)
     {
     	m_last_frame = (m_anim_time+time_diff) >= m_current_anim_time_max;
     	m_anim_time = (m_anim_time+time_diff)%m_current_anim_time_max;
