@@ -68,13 +68,13 @@ public:
 
     void update_animation(const Time time_diff)
     {
-    	m_active_animation_time = (m_active_animation_time + time_diff) % m_active_animation_time_max;
-    	m_inactive_animation_time = (m_inactive_animation_time + time_diff) % m_inactive_animation_time_max;
+    	m_active_animation_time = (m_active_animation_time + int(time_diff)) % m_active_animation_time_max;
+    	m_inactive_animation_time = (m_inactive_animation_time + int(time_diff)) % m_inactive_animation_time_max;
     }
 
     AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
     {
-    	const auto& health = m_entity_system.entity_component(m_self_id, Health::null);
+    	const auto& health = m_entity_system.template entity_component<Health>(m_self_id);
     	const bool active_animation = (m_repeat_x != 0) && (health.max_hp() != 0) && (health.max_hp()*rx < health.hp()*m_repeat_x);
     	return {active_animation ? m_active_anim_id : m_inactive_anim_id
     		  , active_animation ? m_active_animation_time/m_active_animation_frame_delay
@@ -94,8 +94,8 @@ private:
     int m_inactive_animation_frame_delay;
     int m_active_animation_time_max;
     int m_inactive_animation_time_max;
-    Time m_active_animation_time;
-    Time m_inactive_animation_time;
+    int m_active_animation_time;
+    int m_inactive_animation_time;
     uint16_t m_repeat_x;
     EntityID m_self_id;
     const EntitySystemT& m_entity_system;
