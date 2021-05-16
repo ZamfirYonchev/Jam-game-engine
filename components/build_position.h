@@ -37,22 +37,22 @@ public:
 
     double x() const
     {
-    	return min(m_origin_x, m_entity_system.entity_component(m_attached_id, Position::null).x());
+    	return min(m_origin_x, m_entity_system.template entity_component<Position>(m_attached_id).x());
     }
 
     double y() const
     {
-    	return min(m_origin_y, m_entity_system.entity_component(m_attached_id, Position::null).y());
+    	return min(m_origin_y, m_entity_system.template entity_component<Position>(m_attached_id).y());
     }
 
     double w() const
     {
-    	return abs(m_origin_x - m_entity_system.entity_component(m_attached_id, Position::null).x());
+    	return abs(m_origin_x - m_entity_system.template entity_component<Position>(m_attached_id).x());
     }
 
     double h() const
     {
-    	return abs(m_origin_y - m_entity_system.entity_component(m_attached_id, Position::null).y());
+    	return abs(m_origin_y - m_entity_system.template entity_component<Position>(m_attached_id).y());
     }
 
     void set_x(double val) {}

@@ -45,7 +45,7 @@ CommandReturnValue ReadComponentCommand<Position>::operator()(CommandSystemT& co
 	const auto w_modifier = command_system.exec_next();
 	const auto h_modifier = command_system.exec_next();
 
-	const Position& position = entity_system.entity_component(source_id.integer(), Position::null);
+	const Position& position = entity_system.template entity_component<Position>(source_id.integer());
 
 	return CommandReturnValue
 			{position.x()*x_modifier.real()
@@ -66,7 +66,7 @@ CommandReturnValue ReadComponentCommand<Control>::operator()(CommandSystemT& com
 	const auto look_dir_modifier = command_system.exec_next();
 	const auto proc_id_modifier = command_system.exec_next();
 
-	const Control& control = entity_system.entity_component(source_id.integer(), Control::null);
+	const Control& control = entity_system.template entity_component<Control>(source_id.integer());
 
 	return CommandReturnValue
 			{control.decision_walk()*dec_x_modifier.real()
@@ -91,7 +91,7 @@ CommandReturnValue ReadComponentCommand<Movement>::operator()(CommandSystemT& co
 	const auto fy_modifier = command_system.exec_next();
 	const auto gravity_modifier = command_system.exec_next();
 
-	const Movement& movement = entity_system.entity_component(source_id.integer(), Movement::null);
+	const Movement& movement = entity_system.template entity_component<Movement>(source_id.integer());
 
 	return CommandReturnValue
 			{movement.mass()*mass_modifier.real()
@@ -115,7 +115,7 @@ CommandReturnValue ReadComponentCommand<Collision>::operator()(CommandSystemT& c
 	const auto damage_modifier = command_system.exec_next();
 	const auto elasticity_modifier = command_system.exec_next();
 
-	const Collision& collision = entity_system.entity_component(source_id.integer(), Collision::null);
+	const Collision& collision = entity_system.template entity_component<Collision>(source_id.integer());
 
 	return CommandReturnValue
 			{double(collision.state())*state_modifier.real()
@@ -136,7 +136,7 @@ CommandReturnValue ReadComponentCommand<Interaction>::operator()(CommandSystemT&
 	const auto proc_id_other_modifier = command_system.exec_next();
 	const auto on_exit_proc_id_self_modifier = command_system.exec_next();
 
-	const Interaction& interaction = entity_system.entity_component(source_id.integer(), Interaction::null);
+	const Interaction& interaction = entity_system.template entity_component<Interaction>(source_id.integer());
 
 	return (group_vector_modifier.real() == 1.0 &&
 			(trigger_group_modifier.real()
@@ -164,7 +164,7 @@ CommandReturnValue ReadComponentCommand<Health>::operator()(CommandSystemT& comm
 	const auto max_hp_modifier = command_system.exec_next();
 	const auto proc_id_modifier = command_system.exec_next();
 
-	const Health& health = entity_system.entity_component(source_id.integer(), Health::null);
+	const Health& health = entity_system.template entity_component<Health>(source_id.integer());
 
 	return CommandReturnValue
 			{health.hp()*hp_modifier.real()
@@ -182,7 +182,7 @@ CommandReturnValue ReadComponentCommand<Sounds>::operator()(CommandSystemT& comm
 	const auto sound_id_modifier = command_system.exec_next();
 	const auto changed_modifier = command_system.exec_next();
 
-	const Sounds& sounds = entity_system.entity_component(source_id.integer(), Sounds::null);
+	const Sounds& sounds = entity_system.template entity_component<Sounds>(source_id.integer());
 
 	return CommandReturnValue
 			{sounds.id()*sound_id_modifier.real()
@@ -199,7 +199,7 @@ CommandReturnValue ReadComponentCommand<Visuals>::operator()(CommandSystemT& com
 	const auto repeat_y_modifier = command_system.exec_next();
 	const auto layer_modifier = command_system.exec_next();
 
-	const Visuals& visuals = entity_system.entity_component(source_id.integer(), Visuals::null);
+	const Visuals& visuals = entity_system.template entity_component<Visuals>(source_id.integer());
 
 	return CommandReturnValue
 			{visuals.repeat_x()*repeat_x_modifier.real()

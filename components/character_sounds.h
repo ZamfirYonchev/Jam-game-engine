@@ -102,10 +102,10 @@ public:
     {
     	m_play_new_sound = false;
 
-    	const auto& control = m_entity_system.entity_component(m_self_id, Control::null);
-    	const auto& movement = m_entity_system.entity_component(m_self_id, Movement::null);
-    	const auto& collision = m_entity_system.entity_component(m_self_id, Collision::null);
-    	const auto& health = m_entity_system.entity_component(m_self_id, Health::null);
+    	const auto& control = m_entity_system.template entity_component<Control>(m_self_id);
+    	const auto& movement = m_entity_system.template entity_component<Movement>(m_self_id);
+    	const auto& collision = m_entity_system.template entity_component<Collision>(m_self_id);
+    	const auto& health = m_entity_system.template entity_component<Health>(m_self_id);
 
     	switch(m_state)
     	{

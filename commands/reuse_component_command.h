@@ -26,7 +26,7 @@ public:
 	{
     	const auto source_id = command_system.exec_next();
 
-    	const T& component = entity_system.entity_component(source_id.integer(), T::null);
+    	const T& component = entity_system.template entity_component<T>(source_id.integer());
 		std::stringstream ss;
 		ss << component;
 		command_system.process_stream(ss);

@@ -41,34 +41,34 @@ public:
     Entity& operator=(Entity&& rhs) noexcept = default;
 
     template<typename T>
-    T& component(const T*)
+    T& component()
     {
-    	return *(m_component_pack.access((unique_component_ptr<T>*)nullptr));
+    	return *(m_component_pack.template access<unique_component_ptr<T>>());
     }
 
     template<typename T>
-    const T& component(const T*) const
+    const T& component() const
     {
-    	return *(m_component_pack.access((unique_component_ptr<T>*)nullptr));
+    	return *(m_component_pack.template access<unique_component_ptr<T>>());
     }
 
     template<typename T>
 	void set_component_ptr(unique_component_ptr<T> _component)
     {
-    	m_component_pack.access(&_component) = std::move(_component);
+    	m_component_pack.template access<unique_component_ptr<T>>() = std::move(_component);
     }
 
     template<typename T, typename AllSystemsT, typename RenderingSystemT>
 	void set_component(AllSystemsT& all_systems, RenderingSystemT& rendering_system, const T& _component)
 	{
     	using BaseT = typename T::Base;
-		const int8_t change = is_null_component(component(BaseT::null)) - is_null_component(_component);
+		const int8_t change = is_null_component(component<BaseT>()) - is_null_component(_component);
 
 		set_component_ptr<BaseT>(make_unique_component<T>(_component));
 
-		all_systems.component_updated(component(BaseT::null), m_id, change);
+		all_systems.component_updated(component<BaseT>(), m_id, change);
 		if constexpr(std::is_same<BaseT, Visuals>::value)
-			rendering_system.component_updated(component(BaseT::null), m_id, change);
+			rendering_system.component_updated(component<BaseT>(), m_id, change);
 	}
 
 	void set_id(const EntityID id) { m_id = id; }
@@ -77,13 +77,13 @@ public:
 
     void clear()
     {
-    	((void) m_component_pack.access((unique_component_ptr<Ts>*)nullptr).reset(Ts::null), ...);
+    	((void) m_component_pack.template access<unique_component_ptr<Ts>>().reset(Ts::null), ...);
     }
 
     friend std::ostream& operator<<(std::ostream& stream, const Entity& entity)
     {
 		stream << "AddEntity\n";
-    	((stream << entity.component(Ts::null)), ...);
+    	((stream << entity.template component<Ts>()), ...);
 		stream << std::endl;
 
     	return stream;

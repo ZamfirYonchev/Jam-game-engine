@@ -29,7 +29,7 @@ public:
     	const auto h = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Position& position = entity_system.entity_component(selected_entity, Position::null);
+    	Position& position = entity_system.template entity_component<Position>(selected_entity);
 
 		if(position)
 		{

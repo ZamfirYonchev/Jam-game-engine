@@ -22,7 +22,7 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-		Position& position = entity_system.entity_component(EntityID{0}, Position::null);
+		Position& position = entity_system.template entity_component<Position>(EntityID{0});
 		position.set_w(int(position.h()*globals(Globals::app_resolution_x).real()/globals(Globals::app_resolution_y).real()));
 
     	return CommandReturnValue{0.0};

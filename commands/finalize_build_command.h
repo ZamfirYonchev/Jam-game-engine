@@ -24,7 +24,7 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-		const auto& position = entity_system.entity_component(selected_entity, Position::null);
+		const auto& position = entity_system.template entity_component<Position>(selected_entity);
 		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, AbsolutePosition{position.x(), position.y(), position.w(), position.h()});
     	return CommandReturnValue{0.0};
 	}

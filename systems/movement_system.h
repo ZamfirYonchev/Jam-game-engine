@@ -14,6 +14,7 @@
 #include "../components/movement.h"
 #include "../components/collision.h"
 #include "../math_ext.h"
+#include "../globals.h"
 #include <list>
 #include <utility>
 #include <type_traits>
@@ -32,12 +33,12 @@ public:
 
 		for(const auto id : entities)
     	{
-    		auto& movement = m_entity_system.entity_component(id, Movement::null);
+    		auto& movement = m_entity_system.template entity_component<Movement>(id);
         	if(movement)
         	{
-    			const auto& control = m_entity_system.entity_component(id, Control::null);
-    			const auto& collision = m_entity_system.entity_component(id, Collision::null);
-    			auto& position  = m_entity_system.entity_component(id, Position::null);
+    			const auto& control = m_entity_system.template entity_component<Control>(id);
+    			const auto& collision = m_entity_system.template entity_component<Collision>(id);
+    			auto& position  = m_entity_system.template entity_component<Position>(id);
 
     			if(movement.gravity_affected())
     			{

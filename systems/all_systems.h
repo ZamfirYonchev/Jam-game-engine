@@ -23,23 +23,23 @@ struct AllSystems
 
 	void clear()
 	{
-		((void)pack.access((Ts*)nullptr).clear(), ...);
+		((void)pack.template access<Ts>().clear(), ...);
 	}
 
 	template<typename ComponentT>
 	void component_updated(const ComponentT& component, const EntityID id, const int8_t change)
 	{
-		((void)pack.access((Ts*)nullptr).component_updated(component, id, change), ...);
+		((void)pack.template access<Ts>().component_updated(component, id, change), ...);
 	}
 
 	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
-		((void)pack.access((Ts*)nullptr).update(time_diff, globals, procedure_calls), ...);
+		((void)pack.template access<Ts>().update(time_diff, globals, procedure_calls), ...);
 	}
 
 	void remove_id(const EntityID id)
 	{
-		((void)pack.access((Ts*)nullptr).remove_id(id), ...);
+		((void)pack.template access<Ts>().remove_id(id), ...);
 	}
 };
 

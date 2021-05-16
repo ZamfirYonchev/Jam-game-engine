@@ -56,7 +56,7 @@ public:
 		{
 			for(const auto id : entities)
 			{
-				auto& sounds = m_entity_system.entity_component(id, Sounds::null);
+				auto& sounds = m_entity_system.template entity_component<Sounds>(id);
 				if(sounds)
 				{
 					sounds.update(time_diff);

@@ -44,8 +44,8 @@ public:
 
     double x() const
     {
-    	const Position& attached_position = m_entity_system.entity_component(m_attached_id, Position::null);
-    	const Control& attached_control = m_entity_system.entity_component(m_attached_id, Control::null);
+    	const Position& attached_position = m_entity_system.template entity_component<Position>(m_attached_id);
+    	const Control& attached_control = m_entity_system.template entity_component<Control>(m_attached_id);
 		return attached_position.x()
 			 + attached_position.w()/2
 			 + m_offset_x * (1 - 2*(attached_control.look_dir() == Control::LookDir::LEFT))
@@ -54,7 +54,7 @@ public:
 
     double y() const
     {
-    	const Position& attached_position = m_entity_system.entity_component(m_attached_id, Position::null);
+    	const Position& attached_position = m_entity_system.template entity_component<Position>(m_attached_id);
 		return attached_position.y()
 			 + attached_position.h()/2
 			 + m_offset_y

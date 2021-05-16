@@ -28,7 +28,7 @@ public:
     	const auto look_dir = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Control& control = entity_system.entity_component(selected_entity, Control::null);
+    	Control& control = entity_system.template entity_component<Control>(selected_entity);
 
 		if(control)
 		{

@@ -28,7 +28,7 @@ public:
     	const auto proc_id = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Health& health = entity_system.entity_component(selected_entity, Health::null);
+    	Health& health = entity_system.template entity_component<Health>(selected_entity);
 
 		if(health)
 		{

@@ -11,6 +11,7 @@
 #include "interaction.h"
 #include "../commands/use_component_command.h"
 
+//TODO to store entity system reference rather than attached interaction reference
 class AttachedInteraction : public Interaction
 {
 public:
@@ -24,7 +25,7 @@ public:
 	   , const int offset_proc_id_on_exit_self
 	   , EntitySystemT& entity_system)
 	: m_attached_id{attached_id}
-	, m_attached_interaction{entity_system.entity_component(attached_id, Interaction::null)}
+	, m_attached_interaction{entity_system.template entity_component<Interaction>(attached_id)}
 	, m_offset_proc_id_self{offset_proc_id_self}
 	, m_offset_proc_id_other{offset_proc_id_other}
 	, m_offset_proc_id_on_exit_self{offset_proc_id_on_exit_self}

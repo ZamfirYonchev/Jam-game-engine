@@ -30,7 +30,7 @@ public:
     	const auto on_exit_proc_id_self = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Interaction& interaction = entity_system.entity_component(selected_entity, Interaction::null);
+    	Interaction& interaction = entity_system.template entity_component<Interaction>(selected_entity);
 
 		if(interaction)
 		{

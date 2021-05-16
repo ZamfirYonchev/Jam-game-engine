@@ -81,7 +81,7 @@ public:
         }
 
         //TODO add debug_level control
-        std::cout << (m_entities.size() - m_free_entities.size()) << " entities.\n";
+        //std::cout << (m_entities.size() - m_free_entities.size()) << " entities.\n";
 
         return id;
     }
@@ -92,19 +92,19 @@ public:
     }
 
     template<typename T>
-    T& entity_component(const EntityID id, const T* ptr)
+    T& entity_component(const EntityID id)
     {
     	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
-    		return m_entities[id].component(ptr);
+    		return m_entities[id].template component<T>();
     	else
     		return *T::null;
     }
 
     template<typename T>
-    const T& entity_component(const EntityID id, const T* ptr) const
+    const T& entity_component(const EntityID id) const
     {
     	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
-    		return m_entities[id].component(ptr);
+    		return m_entities[id].template component<T>();
     	else
     		return *T::null;
     }

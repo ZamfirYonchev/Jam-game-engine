@@ -26,7 +26,7 @@ public:
 
 		for(const auto id : entities)
 		{
-			auto& health = m_entity_system.entity_component(id, Health::null);
+			auto& health = m_entity_system.template entity_component<Health>(id);
 	    	if(health)
 	    	{
 				const bool was_alive = health.alive();
