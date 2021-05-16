@@ -62,14 +62,14 @@ public:
 
     void update_decisions(const Time time_diff)
     {
-    	m_current_shoot_cooldown = max(m_current_shoot_cooldown-time_diff, 0);
+    	m_current_shoot_cooldown = max(m_current_shoot_cooldown-int(time_diff), 0);
 
         m_vertical_dir = m_input_system.jumping() - m_input_system.ducking();
         m_walk_dir = m_input_system.going_right() - m_input_system.going_left();
 
     	m_look_dir = m_walk_dir > 0 ? LookDir::RIGHT : m_walk_dir < 0 ? LookDir::LEFT : m_look_dir;
 
-    	const auto& self_movement = m_entity_system.entity_component(m_self_id, Movement::null);
+    	const auto& self_movement = m_entity_system.template entity_component<Movement>(m_self_id);
 
     	if(m_stability_control && m_walk_dir == 0 && abs(self_movement.vx()) > self_movement.move_force()/self_movement.mass())
         {

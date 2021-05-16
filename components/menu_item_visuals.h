@@ -81,14 +81,14 @@ public:
 
     void update_animation(const Time time_diff)
     {
-    	m_inactive_anim_time = (m_inactive_anim_time+time_diff)%m_inactive_animation_time_max;
-    	m_focus_anim_time = (m_focus_anim_time+time_diff)%m_focus_animation_time_max;
-    	m_select_anim_time = (m_select_anim_time+time_diff)%m_select_animation_time_max;
+    	m_inactive_anim_time = (m_inactive_anim_time+int(time_diff))%m_inactive_animation_time_max;
+    	m_focus_anim_time = (m_focus_anim_time+int(time_diff))%m_focus_animation_time_max;
+    	m_select_anim_time = (m_select_anim_time+int(time_diff))%m_select_animation_time_max;
     }
 
     AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
     {
-    	const auto& control = m_entity_system.entity_component(m_self_id, Control::null);
+    	const auto& control = m_entity_system.template entity_component<Control>(m_self_id);
 
     	return {control.decision_attack() ? m_select_anim_id
     		 : (control.decision_vertical() != 0) ? m_focus_anim_id

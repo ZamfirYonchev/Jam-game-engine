@@ -17,7 +17,7 @@ class TimedControl : public Control
 public:
 	using Base = Control;
 	TimedControl
-		(const Time max_duration
+		(const int max_duration
 	   , const int repeats
 	   , const double horizontal
 	   , const double vertical
@@ -70,8 +70,8 @@ public:
     }
 
 private:
-    Time m_max_duration;
-    Time m_current_duration;
+    int m_max_duration;
+    int m_current_duration;
     ProcedureID m_proc_id;
     double m_horizontal;
     double m_vertical;
