@@ -1,0 +1,62 @@
+@app_current_level "levels/finding_atlantis_demo_menu.lvl"
+
+### Procedures ###
+
+@proc_new_game {
+	ExecuteFileClean "levels/finding_atlantis_0.lvl"
+}
+
+@proc_quit {
+	Quit
+}
+
+### Fonts ###
+
+AddFont "fonts/pcsenior.ttf" 25 #0: text font
+
+### Textures ###
+
+@tex_bg AddTextureFromFile "assets/atlantis/menu/backdgound_start.png" #0: background top
+@tex_buttont_inactive_play AddTextureFromFile "assets/atlantis/menu/buton_aktiven_play.png" #1
+@tex_buttont_inactive_quit AddTextureFromFile "assets/atlantis/menu/buton_aktiven_quit.png" #1
+@tex_buttont_active_play AddTextureFromFile "assets/atlantis/menu/buton_neaktiven_play.png" #1
+@tex_buttont_active_quit AddTextureFromFile "assets/atlantis/menu/buton_neaktiven_quit.png" #1
+
+### Animations ###
+
+@anim_bg AddAnimation 1 1 #0: background
+AddSprite 0 0 0 0 1366 768
+
+@anim_play AddAnimation 1 1 #1
+AddSprite *anim_play *tex_buttont_active_play 0 0 0 0
+
+@anim_play_in AddAnimation 1 1 #1
+AddSprite *anim_play_in *tex_buttont_inactive_play 0 0 0 0
+
+@anim_quit AddAnimation 1 1 #1
+AddSprite *anim_quit *tex_buttont_active_quit 0 0 0 0
+
+@anim_quit_in AddAnimation 1 1 #1
+AddSprite *anim_quit_in *tex_buttont_inactive_quit 0 0 0 0
+
+
+### Entities ###
+
+AddEntity #0: screen
+UseAbsolutePosition 0 0 1366 768
+
+AddEntity #1: background
+UseStaticVisuals *anim_bg 0
+UseAbsolutePosition 0 0 1366 768
+ModifyVisuals 0 0 -0
+
+AddEntity #2: button new game
+UseAbsolutePosition 910 406 181 89
+UseInputSelectControl 0 2 *proc_new_game
+UseMenuItemVisuals *anim_play_in *anim_play *anim_play
+
+AddEntity #3: button quit
+UseAbsolutePosition 910 206 181 89
+UseInputSelectControl 1 2 *proc_quit
+UseMenuItemVisuals *anim_quit_in *anim_quit *anim_quit
+

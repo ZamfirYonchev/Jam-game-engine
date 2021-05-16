@@ -1,0 +1,262 @@
+@g_moveable 0
+@g_fixed 1
+@g_grabbable 2
+@g_solid 3
+@g_placeable 4
+
+@p_remove
+{
+	RemoveEntity
+}
+
+@p_set_fixed
+{
+	UseNullMovement
+	UseBasicCollision 2 0
+	ModifyInteraction *g_fixed -0 0 0 0 0
+	ModifyInteraction *g_fixed 1 0 0 0 0
+}
+
+@p_set_moveable
+{
+	UseFullMovement 1 0.01 0.01 0.06 0 1
+	UseBasicCollision 1 0
+	ModifyInteraction *g_moveable -0 0 0 0 0
+	ModifyInteraction *g_moveable 1 0 0 0 0
+}
+
+@p_debug_position
+{
+  DebugMessage 0 ReadPosition *selected_entity 1 0 0 0
+}
+
+@p_spawn_stone
+{
+	@stone AddEntity
+	UseAbsolutePosition 0 0 30 20
+	UseStaticVisuals *anim_bee_idle 0
+	UseFullMovement 1 0.05 0.05 0.0006 0 1
+	UseBasicCollision 1 0
+	UseFullInteraction 0 *g_fixed *p_set_fixed 0 *p_set_moveable
+	(p_set_grabbable)
+	(p_set_solid)
+
+	@zone AddEntity
+	UseAttachedPosition *stone 0 21 0 -19
+	UseBasicCollision 0 0
+	UseNormalInteraction 0
+	ModifyInteraction *g_fixed 1 0 0 0 0	
+	
+	SelectEntity *stone
+}
+
+@p_spawn_claw_zone_grab
+{
+	@e_claw AddEntity
+	UseAttachedDirectionalPosition *e_bee 50 5 1 1
+	UseTimedHealth 1 *p_remove
+	UseStaticVisuals *anim_bee_idle 0 #DEBUG
+	ModifyVisuals 0 0 -0 #DEBUG
+	ModifyVisuals 0 0 3 #DEBUG
+	UseBasicCollision 0 0
+	UseTriggerInteraction *g_grabbable 0 *p_object_grabbed 0
+}
+
+@p_spawn_claw_zone_release
+{
+	@e_claw AddEntity
+	UseAttachedDirectionalPosition *e_bee 50 5 1 1
+	UseTimedHealth 1 *p_remove
+	UseStaticVisuals *anim_bee_idle 0 #DEBUG
+	ModifyVisuals 0 0 -0 #DEBUG
+	ModifyVisuals 0 0 3 #DEBUG
+	UseBasicCollision 0 0
+	UseTriggerInteraction *g_placeable 0 *p_place_object 0
+
+	DebugMessage 0 "grabbed:"
+	DebugMessage 0 ReadPosition *e_stone1 1 0 0 0
+	DebugMessage 0 ReadPosition *e_stone1 0 1 0 0
+	DebugMessage 0 ReadPosition *e_stone1 0 0 1 0
+	DebugMessage 0 ReadPosition *e_stone1 0 0 0 1
+
+	DebugMessage 0 "grabbed_zone:"
+	DebugMessage 0 ReadPosition *e_zone1 1 0 0 0
+	DebugMessage 0 ReadPosition *e_zone1 0 1 0 0
+	DebugMessage 0 ReadPosition *e_zone1 0 0 1 0
+	DebugMessage 0 ReadPosition *e_zone1 0 0 0 1
+
+	DebugMessage 0 "stone2:"
+	DebugMessage 0 ReadPosition *e_stone2 1 0 0 0
+	DebugMessage 0 ReadPosition *e_stone2 0 1 0 0
+	DebugMessage 0 ReadPosition *e_stone2 0 0 1 0
+	DebugMessage 0 ReadPosition *e_stone2 0 0 0 1
+
+	DebugMessage 0 "zone2:"
+	DebugMessage 0 ReadPosition *e_zone2 1 0 0 0
+	DebugMessage 0 ReadPosition *e_zone2 0 1 0 0
+	DebugMessage 0 ReadPosition *e_zone2 0 0 1 0
+	DebugMessage 0 ReadPosition *e_zone2 0 0 0 1
+}
+
+@p_object_grabbed
+{
+	@e_grabbed_object *selected_entity
+	DebugMessage 0 "object grabbed"
+	(p_set_not_grabbable)
+	@w ReadPosition *selected_entity 0 0 1 0
+	@h ReadPosition *selected_entity 0 0 0 1
+	UseAttachedDirectionalPosition *e_bee 50 5 *w *h
+	UseBasicCollision 0 0
+	UseNullMovement
+	UseFullInteraction 0 *g_solid *p_set_not_placeable 0 *p_set_placeable
+	ModifyInteraction *g_placeable 1 0 0 0 0
+	
+	#update object zone
+	#@calc AddEntity
+	#UseAbsolutePosition *e_grabbed_object 0 0 0
+	#ModifyPosition 1 0 0 0
+	#@e_grabbed_object_zone ReadPosition *calc 1 0 0 0
+	#SelectEntity *e_grabbed_object_zone
+	#UseNullInteraction
+	
+	SelectEntity *e_bee
+	@look_dir ReadControl *e_bee 0 0 0 1 0
+	UseInputControl *p_spawn_claw_zone_release 300 0
+	ModifyControl 0 0 0 *look_dir
+}
+
+@p_place_object
+{
+	DebugMessage 0 "object placed"
+	@x ReadPosition *selected_entity 1 0 0 0
+	@y ReadPosition *selected_entity 0 1 0 0
+	@w ReadPosition *selected_entity 0 0 1 0
+	@h ReadPosition *selected_entity 0 0 0 1
+	UseAbsolutePosition *x *y *w *h
+	UseFullInteraction 0 *g_fixed *p_set_fixed 0 *p_set_moveable
+	(p_set_moveable)
+	(p_set_grabbable)
+	(p_set_solid)
+
+	#SelectEntity *e_grabbed_object_zone
+	#UseNormalInteraction 0
+	#ModifyInteraction *g_fixed 1 0 0 0 0	
+
+	SelectEntity *e_bee
+	@look_dir ReadControl *e_bee 0 0 0 1 0
+	UseInputControl *p_spawn_claw_zone_grab 300 0
+	ModifyControl 0 0 0 *look_dir
+}
+
+@p_set_placeable
+{
+	ModifyInteraction *g_placeable -0 0 0 0 0
+	ModifyInteraction *g_placeable 1 0 0 0 0
+	DebugMessage 0 "object placeable"
+}
+
+@p_set_not_placeable
+{
+	ModifyInteraction *g_placeable -0 0 0 0 0
+	DebugMessage 0 "object not placeable"
+}
+
+DebugMessage 0 "*g_placeable"
+DebugMessage 0 *g_placeable
+
+@p_set_grabbable
+{
+	ModifyInteraction *g_grabbable -0 0 0 0 0
+	ModifyInteraction *g_grabbable 1 0 0 0 0
+}
+
+@p_set_not_grabbable
+{
+	ModifyInteraction *g_grabbable -0 0 0 0 0
+}
+
+@p_set_solid
+{
+	ModifyInteraction *g_solid -0 0 0 0 0
+	ModifyInteraction *g_solid 1 0 0 0 0
+}
+
+@tex_background AddTextureFromFile "assets/atlantis/fon.png"
+
+@tex_bee_flying_1 AddTextureFromFile "beeyond_assets/bee-1.png" #1: bee flying
+@tex_bee_flying_2 AddTextureFromFile "beeyond_assets/bee-2.png" #2: bee flying
+@tex_bee_flying_3 AddTextureFromFile "beeyond_assets/bee-3.png" #3: bee flying
+@tex_bee_flying_4 AddTextureFromFile "beeyond_assets/bee-4.png" #4: bee flying
+@tex_bee_idle AddTextureFromFile "beeyond_assets/bee-5.png" #12: bee idle
+@tex_bee_dead AddTextureFromFile "beeyond_assets/bee-6.png" #26: bee dead
+
+@anim_background AddAnimation 1 1
+AddSprite *anim_background *tex_background 0 0 1521 769 
+
+@anim_bee_idle AddAnimation 50 1
+AddSprite *anim_bee_idle *tex_bee_idle 0 0 99 71
+
+@anim_bee_flying AddAnimation 50 1
+AddSprite *anim_bee_flying *tex_bee_flying_1 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_2 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_3 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_4 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_3 0 0 99 71
+AddSprite *anim_bee_flying *tex_bee_flying_2 0 0 99 71
+
+@anim_bee_dead AddAnimation 50 1
+AddSprite *anim_bee_dead *tex_bee_dead 0 0 99 71
+
+@e_screen AddEntity
+UseAbsolutePosition 0 0 1366 768
+
+@e_background AddEntity
+UseAbsolutePosition -683 0 3042 769
+UseTiledVisuals 1521 769 *anim_background *anim_background *anim_background
+						 *anim_background *anim_background *anim_background
+						 *anim_background *anim_background *anim_background
+ModifyVisuals 0 0 -0
+
+@e_platform AddEntity
+UseAbsolutePosition 0 0 2000 50
+UseBasicCollision 2 0.01
+UseNormalInteraction 0
+ModifyInteraction *g_fixed 1 0 0 0 0
+
+@e_platform_support_zone AddEntity
+UseAttachedPosition *e_platform 0 50 0 -49
+UseBasicCollision 0 0
+UseNormalInteraction 0
+ModifyInteraction *g_fixed 1 0 0 0 0	
+
+@e_bee AddEntity
+UseAbsolutePosition 100 100 60 37
+UseStaticVisuals *anim_bee_idle 0
+ModifyVisuals 0 0 -0
+ModifyVisuals 0 0 3
+UseFullMovement 1 0.01 0.01 0.006 3 1
+UseBasicCollision 1 1
+UseInputControl *p_spawn_claw_zone_grab 300 0
+#UseFullInteraction 0 0 *p_climb 0 *p_unclimb
+#ModifyInteraction *g_bee 1 0 0 0 0
+#ModifyInteraction *g_moveable 1 0 0 0 0
+
+
+
+@e_stone1 (p_spawn_stone)
+ModifyPosition 260 100 0 0
+@e_zone1 *zone
+
+@e_stone2 (p_spawn_stone)
+ModifyPosition 260 200 0 0
+@e_zone2 *zone
+
+#@e_stone3 (p_spawn_stone)
+#ModifyPosition 260 300 0 0
+
+#@e_stone4 (p_spawn_stone)
+#ModifyPosition 260 400 0 0
+
+#@e_stone5 (p_spawn_stone)
+#ModifyPosition 260 500 0 0
+	

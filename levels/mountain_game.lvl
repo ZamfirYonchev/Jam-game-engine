@@ -1,0 +1,84 @@
+### Procedures ###
+@p_export
+{
+	ExportEntities "exported_mountain.lvl"
+	DebugMessage 0 "Exported!"
+}
+
+@p_move_screen_left
+{
+	SelectEntity *e_screen
+	UseConstantControl -1 0 0
+}
+
+@p_move_screen_right
+{
+	SelectEntity *e_screen
+	UseConstantControl 1 0 0
+}
+
+@p_stop_screen_move
+{
+	SelectEntity *e_screen
+	UseConstantControl 0 0 0
+}
+
+@p_place_yourself
+{
+	AddEntity
+	ReusePosition *e_player
+	ReuseMovement *e_player
+	ModifyMovement 0 0 0 0 0 0 0 -0
+	ReuseSounds *e_player
+	ReuseVisuals *e_player
+}
+
+### Textures ###
+@tex_player AddTextureFromFile "resources/01.png"
+
+@tex_tri_01 AddTextureFromFile "assets/mountain_game/01.png"
+@tex_tri_02 AddTextureFromFile "assets/mountain_game/02.png"
+@tex_tri_03 AddTextureFromFile "assets/mountain_game/03.png"
+@tex_tri_04 AddTextureFromFile "assets/mountain_game/04.png"
+@tex_tri_05 AddTextureFromFile "assets/mountain_game/05.png"
+@tex_tri_06 AddTextureFromFile "assets/mountain_game/06.png"
+@tex_tri_mesh AddTextureFromFile "assets/mountain_game/mreja.png"
+
+### Animations ###
+@anim_player AddAnimation 1 1 AddSprite *anim_player *tex_player 0 0 64 64
+
+@anim_mesh AddAnimation 1 1 AddSprite *anim_mesh *tex_tri_mesh  0 0 0 0
+@anim_tri_01 AddAnimation 1 1 AddSprite *anim_tri_01 *tex_tri_01  0 0 0 0
+@anim_tri_02 AddAnimation 1 1 AddSprite *anim_tri_02 *tex_tri_02  0 0 0 0
+@anim_tri_03 AddAnimation 1 1 AddSprite *anim_tri_03 *tex_tri_03  0 0 0 0
+@anim_tri_04 AddAnimation 1 1 AddSprite *anim_tri_04 *tex_tri_04  0 0 0 0
+@anim_tri_05 AddAnimation 1 1 AddSprite *anim_tri_05 *tex_tri_05  0 0 0 0
+@anim_tri_06 AddAnimation 1 1 AddSprite *anim_tri_06 *tex_tri_06  0 0 0 0
+
+@e_screen AddEntity
+UseAbsolutePosition 0 0 1366 768
+FixViewWidth
+
+@e_background AddEntity
+UseAbsolutePosition 0 0 1366 768
+UseStaticVisuals *anim_mesh 0 
+
+#######################################################
+@e_player AddEntity
+UseAbsolutePosition 200 400 57 49
+UseAnimationVisuals *anim_tri_01
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
+UseFullMovement 1 0.03 0.05 0.01 10 0
+UseInputControl *p_place_yourself 300 0
+UseBasicCollision 0 0
+UseNormalInteraction 0
+ModifyInteraction *g_player 1 0 0 0 0
+
+@e_save AddEntity
+UseAbsolutePosition 0 200 64 64
+UseStaticVisuals *anim_player 0
+ModifyVisuals 0 0 0 -0
+ModifyVisuals 0 0 0 4
+UseBasicCollision 0 0
+UseTriggerInteraction *g_player *p_export 0 0

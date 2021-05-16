@@ -1,0 +1,48 @@
+@p_print
+{
+	DebugMessage 0 "Golqm kamyk:\tvx\tvy"
+}
+
+@tex_golqm_kamyk  	AddTextureFromFile "assets/atlantis/objects/golqm_kamyk.png"
+@tex_crab_w_shell_walk_00 AddTextureFromFile "assets/atlantis/animations/w_shell/walk/Hodeshta shell_00000.png"
+
+@anim_golqm_kamyk  	AddAnimation 1 1 AddSprite *anim_golqm_kamyk  *tex_golqm_kamyk  0 0 0 0
+
+@anim_crab_w_shell_idle AddAnimation 20 1
+AddSprite *anim_crab_w_shell_idle *tex_crab_w_shell_walk_00 19 32 298 296
+
+@e_screen AddEntity
+UseAbsolutePosition 0 0 1366 768
+FixViewWidth
+
+@e_platform AddEntity
+UseAbsolutePosition 0 0 1000 50 
+UseBasicCollision 2 0.01
+UseFullMovement 100000000 0.003 0.005 0.003 6 0
+
+@e_golqm_kamyk AddEntity
+UseAbsolutePosition 50 100 181 70 
+UseStaticVisuals *anim_golqm_kamyk 0 
+UseBasicCollision 1 0.01
+UseFullMovement 100 0.1 0.1 0.06 0.006 1
+
+@e_golqm_kamyk2 AddEntity
+UseAbsolutePosition 50 200 181 70 
+UseStaticVisuals *anim_golqm_kamyk 0 
+UseBasicCollision 1 0.01
+UseFullMovement 100 0.1 0.1 0.06 0.006 1
+
+@e_crab AddEntity
+UseAbsolutePosition 500 100 86 205 
+UseInputControl 0 300 0
+UseFullMovement 10 0.1 0.1 0.03 50 1
+UseBasicCollision 1 0.01
+#UseNormalInteraction 0
+#ModifyInteraction *g_player 1 0 0 0 0
+UseCharacterVisuals *anim_crab_w_shell_idle *anim_crab_w_shell_idle *anim_crab_w_shell_idle *anim_crab_w_shell_idle *anim_crab_w_shell_idle *anim_crab_w_shell_idle *anim_crab_w_shell_idle 
+#UseCharacterHealth 1 1
+#UseCharacterSounds -1 *sound_walk *sound_jump *sound_fall -1 *sound_attack -1 *sound_die 1
+#UseCharacterSounds -1 *sound_walk *sound_jump *sound_fall -1 -1 -1 *sound_die 1
+
+#@debugger AddEntity
+#UseTimedHealth 1 *p_print
