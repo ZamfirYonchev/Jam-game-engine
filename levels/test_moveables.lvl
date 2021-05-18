@@ -18,7 +18,6 @@ FixViewWidth
 @e_platform AddEntity
 UseAbsolutePosition 0 0 1000 50 
 UseBasicCollision 2 0.01
-UseFullMovement 100000000 0.003 0.005 0.003 6 0
 
 @e_golqm_kamyk AddEntity
 UseAbsolutePosition 50 100 181 70 
@@ -31,6 +30,18 @@ UseAbsolutePosition 50 200 181 70
 UseStaticVisuals *anim_golqm_kamyk 0 
 UseBasicCollision 1 0.01
 UseFullMovement 100 0.1 0.1 0.06 0.006 1
+
+@e_golqm_kamyk3 AddEntity
+UseAbsolutePosition 50 300 181 70 
+UseStaticVisuals *anim_golqm_kamyk 0 
+UseBasicCollision 1 0.01
+UseFullMovement 100 0.1 0.1 0.06 0.006 1
+
+#@e_golqm_kamyk4 AddEntity
+#UseAbsolutePosition 50 400 181 70 
+#UseStaticVisuals *anim_golqm_kamyk 0 
+#UseBasicCollision 1 0.01
+#UseFullMovement 10 0.1 0.1 0.06 0.006 1
 
 @e_crab AddEntity
 UseAbsolutePosition 500 100 86 205 
