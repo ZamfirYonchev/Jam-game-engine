@@ -75,11 +75,7 @@ public:
 		std::unordered_map<EntityID, CorrectionValues> collision_correction;
 
 		for(const auto entity_id : entities)
-		{
-			//const auto& collision = m_entity_system.template entity_component<Collision>(entity_id);
-			//TODO if(collision.state() == Collision::CollisionState::MOVEABLE)
-				collision_correction.insert(std::make_pair(entity_id, CorrectionValues{}));
-		}
+			collision_correction.insert(std::make_pair(entity_id, CorrectionValues{}));
 
 		for(const auto id0 : entities)
 		{
@@ -136,8 +132,7 @@ public:
 
 							m_entity_system.template entity_component<Health>(id0).mod_hp_change(-collision1.on_collision_damage()*time_diff);
 
-							const bool entity0_correctable = (collision0.state() == Collision::CollisionState::MOVEABLE)
-														  && (collision1.state() >= Collision::CollisionState::MOVEABLE);
+							const bool entity0_correctable = movement0 && collision0.solid() && collision1.solid();
 
 							if(entity0_correctable)
 							{

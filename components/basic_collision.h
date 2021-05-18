@@ -14,22 +14,22 @@ class BasicCollision : public Collision
 {
 public:
 	using Base = Collision;
-    BasicCollision(const CollisionState state, const double elasticity)
-    : m_state(state)
-    , m_standing_on(SurfaceType::AIR)
+    BasicCollision(const bool solid, const double elasticity)
+    : m_standing_on(SurfaceType::AIR)
 	, m_elasticity(elasticity)
+    , m_solid(solid)
     {}
 
-    BasicCollision() : BasicCollision(CollisionState::TRANSPARENT, 1) {}
+    BasicCollision() : BasicCollision(false, 1) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseBasicCollision "
-    	   << int(m_state) << " ";
+    	   << m_solid << " ";
     }
 
-    CollisionState state() const { return m_state; }
-    void set_state(CollisionState val) { m_state = val; }
+    bool solid() const { return m_solid; }
+    void set_solid(const bool val) { m_solid = val; }
     SurfaceType standing_on() const { return m_standing_on; }
     void set_standing_on(SurfaceType surface) { m_standing_on = surface; }
     double on_collision_damage() const { return 0; }
@@ -38,9 +38,9 @@ public:
     void set_elasticity(double val) { m_elasticity = val; }
 
 private:
-    CollisionState m_state;
     SurfaceType m_standing_on;
     double m_elasticity;
+    bool m_solid;
 };
 
 #endif /* COMPONENTS_BASIC_COLLISION_H_ */

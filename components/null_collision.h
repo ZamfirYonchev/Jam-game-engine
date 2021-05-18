@@ -19,8 +19,8 @@ public:
     	to << "UseNullCollision ";
     }
 
-    CollisionState state() const { return CollisionState::TRANSPARENT; }
-    void set_state(CollisionState val) {}
+    bool solid() const { return false; }
+    void set_solid(const bool val) {}
     SurfaceType standing_on() const { return SurfaceType::GROUND; }
     void set_standing_on(SurfaceType surface) {}
     double on_collision_damage() const { return 0; }

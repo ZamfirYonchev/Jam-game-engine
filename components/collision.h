@@ -35,16 +35,15 @@ public:
 	};
 
 	enum class SurfaceType {AIR = 0, GROUND = 1};
-    enum class CollisionState {TRANSPARENT = 0, MOVEABLE = 1, SOLID = 2};
     virtual ~Collision() {}
     virtual void print(std::ostream& to) const = 0;
 
-    virtual CollisionState state() const = 0;
+    virtual bool solid() const = 0;
     virtual SurfaceType standing_on() const = 0;
     virtual double on_collision_damage() const = 0;
     virtual double elasticity() const = 0;
 
-    virtual void set_state(CollisionState val) = 0;
+    virtual void set_solid(const bool val) = 0;
     virtual void set_standing_on(SurfaceType surface) = 0;
     virtual void set_collision_damage(double) = 0;
     virtual void set_elasticity(double val) = 0;

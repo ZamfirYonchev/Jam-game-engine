@@ -14,21 +14,21 @@ class DamageCollision : public Collision
 {
 public:
 	using Base = Collision;
-    DamageCollision(const CollisionState state, const double damage)
-	: m_state(state)
-	, m_damage(damage)
+    DamageCollision(const bool solid, const double damage)
+	: m_damage(damage)
+	, m_solid(solid)
 	{}
-    DamageCollision() : DamageCollision(CollisionState::TRANSPARENT, 0) {}
+    DamageCollision() : DamageCollision(false, 0) {}
 
     void print(std::ostream& to) const
     {
     	to << "UseDamageCollision "
-    	   << int(m_state) << " "
+    	   << m_solid << " "
     	   << m_damage << " ";
     }
 
-    CollisionState state() const { return m_state; }
-    void set_state(CollisionState val) { m_state = val; }
+    bool solid() const { return m_solid; }
+    void set_solid(const bool val) { m_solid = val; }
     SurfaceType standing_on() const { return SurfaceType::AIR; }
     void set_standing_on(SurfaceType surface) {}
     double on_collision_damage() const { return m_damage; }
@@ -37,8 +37,8 @@ public:
     void set_elasticity(double val) {}
 
 private:
-    CollisionState m_state;
     double m_damage;
+    bool m_solid;
 };
 
 #endif /* COMPONENTS_DAMAGE_COLLISION_H_ */

@@ -22,7 +22,7 @@ public:
     template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 	{
-    	const auto state = command_system.exec_next();
+    	const auto solid = command_system.exec_next();
     	const auto standing_on = command_system.exec_next();
     	const auto on_collision_damage = command_system.exec_next();
     	const auto elasticity = command_system.exec_next();
@@ -32,10 +32,10 @@ public:
 
 		if(collision)
 		{
-			if(is_negative_zero(state.real()))
-				collision.set_state(Collision::CollisionState(0));
+			if(is_negative_zero(solid.real()))
+				collision.set_solid(false);
 			else
-				collision.set_state(Collision::CollisionState((state.integer() + int(collision.state()))%3));
+				collision.set_solid(solid.boolean() ^ collision.solid());
 
 			if(is_negative_zero(standing_on.real()))
 				collision.set_standing_on(Collision::SurfaceType::AIR);

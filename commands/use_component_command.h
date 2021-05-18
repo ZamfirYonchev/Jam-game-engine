@@ -283,10 +283,10 @@ template<>
 template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
 CommandReturnValue UseComponentCommand<BasicCollision>::operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 {
-	const auto state = command_system.exec_next();
+	const auto solid = command_system.exec_next();
 	const auto elasticity = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, globals, {Collision::CollisionState(state.integer()), elasticity.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {solid.boolean(), elasticity.real()});
 
 	return CommandReturnValue{0.0};
 }
@@ -295,10 +295,10 @@ template<>
 template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
 CommandReturnValue UseComponentCommand<DamageCollision>::operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
 {
-	const auto state = command_system.exec_next();
+	const auto solid = command_system.exec_next();
 	const auto damage = command_system.exec_next();
 
-	set_component(entity_system, rendering_system, all_systems, globals, {Collision::CollisionState(state.integer()), damage.real()});
+	set_component(entity_system, rendering_system, all_systems, globals, {solid.boolean(), damage.real()});
 
 	return CommandReturnValue{0.0};
 }

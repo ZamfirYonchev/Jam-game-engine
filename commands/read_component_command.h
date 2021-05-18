@@ -118,7 +118,7 @@ CommandReturnValue ReadComponentCommand<Collision>::operator()(CommandSystemT& c
 	const Collision& collision = entity_system.template entity_component<Collision>(source_id.integer());
 
 	return CommandReturnValue
-			{double(collision.state())*state_modifier.real()
+			{double(collision.solid())*state_modifier.real()
 		   + double(collision.standing_on())*standing_on_modifier.real()
 		   + collision.on_collision_damage()*damage_modifier.real()
 		   + collision.elasticity()*elasticity_modifier.real()
