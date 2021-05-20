@@ -24,6 +24,9 @@ public:
     CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
     {
     	const auto file_name = command_system.exec_next();
+
+    	if(globals(Globals::app_enable_audio).boolean() == false) return CommandReturnValue{-1.0};
+
     	return CommandReturnValue{resource_system.addNewMusic(file_name.string()), 0};
     }
 };

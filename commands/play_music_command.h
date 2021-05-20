@@ -27,7 +27,9 @@ public:
     	const auto music_id = command_system.exec_next();
     	const auto loops = command_system.exec_next();
 
-    	const auto music_optional = resource_system.music(MusicID(music_id.integer()));
+		if(globals(Globals::app_enable_audio).boolean() == false) return music_id;
+
+		const auto music_optional = resource_system.music(MusicID(music_id.integer()));
 
     	if(music_optional)
     	{
@@ -36,7 +38,7 @@ public:
     			std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
     		}
 
-        	return CommandReturnValue{0.0};
+        	return music_id;
     	}
     	else
     	{

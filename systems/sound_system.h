@@ -28,6 +28,8 @@ public:
 
 	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
+		if(globals(Globals::app_enable_audio).boolean() == false) return;
+
 		const int pause_change = globals(Globals::app_paused).boolean() - m_last_paused;
 		switch(pause_change)
 		{

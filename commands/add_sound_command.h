@@ -25,6 +25,9 @@ public:
     {
     	const auto file_name = command_system.exec_next();
     	const auto loops = command_system.exec_next();
+
+    	if(globals(Globals::app_enable_audio).boolean() == false) return CommandReturnValue{-1.0};
+
     	return CommandReturnValue{resource_system.addNewSound(file_name.string(), loops.integer()), 0};
     }
 };

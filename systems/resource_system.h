@@ -23,8 +23,7 @@ public:
 
     TextureID addNewTextureFromFile(std::string_view file, SDL_Renderer* renderer)
     {
-        m_textures.emplace_back();
-        m_textures.back().load_from_file(file, renderer);
+    	m_textures.push_back(Texture(file, renderer));
         return m_textures.size()-1;
     }
 
@@ -53,30 +52,26 @@ public:
 
     AnimationID addNewAnimation(const Animation& animation)
     {
-    	const AnimationID anim_id = m_animations.size();
         m_animations.push_back(animation);
-        return anim_id;
+        return m_animations.size()-1;
     }
 
     FontID addNewFont(std::string_view font_file, const int size)
     {
-    	const FontID font_id = m_fonts.size();
     	m_fonts.push_back(Font(font_file, size));
-    	return font_id;
+    	return m_fonts.size()-1;
     }
 
     SoundID addNewSound(std::string_view sound_file, const int repeat)
     {
-    	const SoundID sound_id = m_sounds.size();
     	m_sounds.push_back(SoundChunk(sound_file, repeat));
-    	return sound_id;
+    	return m_sounds.size()-1;
     }
 
     MusicID addNewMusic(std::string_view file)
     {
-    	const MusicID music_id = m_music.size();
     	m_music.push_back(Music(file));
-    	return music_id;
+    	return m_music.size()-1;
     }
 
     optional_ref<Texture> texture(const TextureID tex_id)

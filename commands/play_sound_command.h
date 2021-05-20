@@ -27,7 +27,9 @@ public:
     	const auto sound_id = command_system.exec_next();
     	const auto channel = command_system.exec_next();
 
-    	const auto sound_optional = resource_system.sound(SoundID(sound_id.integer()));
+		if(globals(Globals::app_enable_audio).boolean() == false) return sound_id;
+
+		const auto sound_optional = resource_system.sound(SoundID(sound_id.integer()));
 
     	if(sound_optional)
     	{
@@ -36,7 +38,7 @@ public:
     			std::cerr << "Cannot play sound " << sound_id.integer() << " on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
     		}
 
-        	return CommandReturnValue{0.0};
+        	return sound_id;
     	}
     	else
     	{

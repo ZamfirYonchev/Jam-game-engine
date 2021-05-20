@@ -24,6 +24,8 @@ public:
     {
     	const auto paused = command_system.exec_next();
 
+    	if(globals(Globals::app_enable_audio).boolean() == false) return paused;
+
     	if(paused.boolean())
     	{
     		Mix_Pause(-1);
