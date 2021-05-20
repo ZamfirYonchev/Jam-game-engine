@@ -19,24 +19,23 @@ template<typename EntitySystemT>
 class SoundSystem : public SystemBase
 {
 public:
-	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system, Globals& globals)
+	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system)
 	: m_entity_system(entity_system)
 	, m_resource_system(resource_system)
-	, m_globals(globals)
 	, m_last_paused(false)
 	, m_channel_activity_per_entity()
 	{}
 
 	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
 	{
-		const int pause_change = m_globals(Globals::app_paused).boolean() - m_last_paused;
+		const int pause_change = globals(Globals::app_paused).boolean() - m_last_paused;
 		switch(pause_change)
 		{
 			case -1 :
 			{
 				Mix_Resume(-1);
 				Mix_ResumeMusic();
-				m_last_paused = m_globals(Globals::app_paused).boolean();
+				m_last_paused = globals(Globals::app_paused).boolean();
 			}
 			break;
 
@@ -44,7 +43,7 @@ public:
 			{
 				Mix_Pause(-1);
 				Mix_PauseMusic();
-				m_last_paused = m_globals(Globals::app_paused).boolean();
+				m_last_paused = globals(Globals::app_paused).boolean();
 			}
 			break;
 
@@ -109,7 +108,6 @@ public:
 private:
     EntitySystemT& m_entity_system;
     ResourceSystem& m_resource_system;
-    Globals& m_globals;
     bool m_last_paused;
     std::unordered_map<EntityID, std::pair<int, int>> m_channel_activity_per_entity;
 };

@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 		MovementSystem<ES> movement_system {entity_system};
 		CollisionSystem<ES> collision_system {entity_system};
 		DamageSystem<ES> damage_system {entity_system};
-		SoundSystem<ES> sound_system {entity_system, resource_system, globals};
+		SoundSystem<ES> sound_system {entity_system, resource_system};
 
 		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>,DamageSystem<ES>, SoundSystem<ES>> all_systems
 		{ control_system
