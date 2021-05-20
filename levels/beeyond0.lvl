@@ -130,7 +130,7 @@
 	ModifyVisuals 0 0 -0
 	ModifyVisuals 0 0 3
 	UseFullMovement 1 0.01 0.01 0.006 0.6 0
-	UseBasicCollision 1 0.5
+	UseBasicCollision 1 0.05
 	UseInputControl -1 300 0
 	UseFullInteraction 0 *group_flower *procedure_bee_touched_ground *procedure_null *procedure_bee_lifted_off
 	ModifyInteraction *group_bee 1 0 0 0 0
