@@ -33,7 +33,7 @@ public:
     	{
     		if(Mix_PlayChannel(channel.integer(), sound_optional->get().sound(), sound_optional->get().repeat()) < 0)
     		{
-    			std::cerr << "Cannot play sound " << sound_id.integer() << "on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
+    			std::cerr << "Cannot play sound " << sound_id.integer() << " on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
     		}
 
         	return CommandReturnValue{0.0};
