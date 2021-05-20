@@ -17,7 +17,12 @@
 class Texture
 {
 public:
-    Texture() : m_texture(nullptr) {}
+	Texture(std::string_view filename, SDL_Renderer* renderer) : m_texture(nullptr)
+	{
+		load_from_file(filename, renderer);
+	}
+
+	Texture() : m_texture(nullptr) {}
 
     ~Texture()
     {
