@@ -20,7 +20,6 @@ class CharacterVisuals : public Visuals
 {
 public:
 	using Base = Visuals;
-    static const unsigned int ANIMATION_DELAY_MS = 50;
     enum class RenderStates { IDLE, WALK, JUMP, FALL, ATTACK, HIT, DEAD};
 
     CharacterVisuals(
@@ -227,15 +226,15 @@ public:
 		}
     }
 
-    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
+    AnimationFrame animation_frame(const int rx, const int ry) const
     {
     	return {m_current_anim_id, m_anim_time/m_current_anim_frame_delay};
     }
 
-    uint16_t repeat_x() const { return 1; }
-    uint16_t repeat_y() const { return 1; }
-    void set_repeat_x(const uint16_t val) {}
-    void set_repeat_y(const uint16_t val) {}
+    int repeat_x() const { return 1; }
+    int repeat_y() const { return 1; }
+    void set_repeat_x(const int val) {}
+    void set_repeat_y(const int val) {}
     VisualLayer layer() const { return m_layer; }
     void set_layer(const VisualLayer val) { m_layer = val; }
 

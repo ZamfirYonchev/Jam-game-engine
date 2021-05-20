@@ -86,7 +86,7 @@ public:
     	m_select_anim_time = (m_select_anim_time+int(time_diff))%m_select_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
+    AnimationFrame animation_frame(const int rx, const int ry) const
     {
     	const auto& control = m_entity_system.template entity_component<Control>(m_self_id);
 
@@ -100,10 +100,10 @@ public:
     		   };
     }
 
-    uint16_t repeat_x() const { return 1; }
-    uint16_t repeat_y() const { return 1; }
-    void set_repeat_x(uint16_t val) {}
-    void set_repeat_y(uint16_t val) {}
+    int repeat_x() const { return 1; }
+    int repeat_y() const { return 1; }
+    void set_repeat_x(const int val) {}
+    void set_repeat_y(const int val) {}
     VisualLayer layer() const { return VisualLayer::FOREGROUND; }
     void set_layer(VisualLayer val) {}
 

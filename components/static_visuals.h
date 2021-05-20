@@ -29,22 +29,22 @@ public:
 
     void update_animation(const Time time_diff) {}
 
-    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
+    AnimationFrame animation_frame(const int rx, const int ry) const
     {
     	return {m_anim_id, m_sprite};
     }
 
-    uint16_t repeat_x() const { return 1; }
-    uint16_t repeat_y() const { return 1; }
+    int repeat_x() const { return 1; }
+    int repeat_y() const { return 1; }
     VisualLayer layer() const { return m_layer; }
 
-    void set_repeat_x(uint16_t val) {}
-    void set_repeat_y(uint16_t val) {}
+    void set_repeat_x(const int val) {}
+    void set_repeat_y(const int val) {}
     void set_layer(VisualLayer val) { m_layer = val; }
 
 private:
     AnimationID m_anim_id;
-    uint16_t m_sprite;
+    int m_sprite;
     VisualLayer m_layer;
 };
 

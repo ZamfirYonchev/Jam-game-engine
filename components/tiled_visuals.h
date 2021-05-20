@@ -89,29 +89,29 @@ public:
     	m_anim_time = (m_anim_time + int(time_diff))%m_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
+    AnimationFrame animation_frame(const int rx, const int ry) const
     {
     	return {m_animation_id[anim_index(rx, ry)], m_anim_time/m_animation_frame_delay};
     }
 
-    uint16_t repeat_x() const
+    int repeat_x() const
     {
     	return std::ceil(m_entity_system.template entity_component<Position>(m_self_id).w()/m_tile_w);
     }
 
-    uint16_t repeat_y() const
+    int repeat_y() const
     {
     	return std::ceil(m_entity_system.template entity_component<Position>(m_self_id).h()/m_tile_h);
     }
     VisualLayer layer() const { return m_layer; }
 
 
-    void set_repeat_x(const uint16_t val)
+    void set_repeat_x(const int val)
     {
     	m_tile_w = m_entity_system.template entity_component<Position>(m_self_id).w()/val;
     }
 
-    void set_repeat_y(const uint16_t val)
+    void set_repeat_y(const int val)
     {
     	m_tile_h = m_entity_system.template entity_component<Position>(m_self_id).h()/val;
     }
@@ -129,7 +129,7 @@ private:
     EntityID m_self_id;
     const EntitySystemT& m_entity_system;
 
-    int anim_index(const uint16_t rx, const uint16_t ry) const
+    int anim_index(const int rx, const int ry) const
     {
     	return (rx > 0) * (1 + (rx==(repeat_x()-1))) + 3*((ry > 0) * (1 + (ry==(repeat_y()-1))));
     }

@@ -466,7 +466,7 @@ public:
 				, HealthVisuals<EntitySystemT>
 					{AnimationID(active_anim_id.integer())
 				   , AnimationID(inactive_anim_id.integer())
-				   , uint16_t(repeat_x.integer())
+				   , repeat_x.integer()
 				   , resource_system
 				   , selected_entity
 				   , entity_system});

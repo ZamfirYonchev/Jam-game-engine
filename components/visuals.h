@@ -25,14 +25,14 @@ public:
     virtual ~Visuals() {}
     virtual void print(std::ostream& to) const = 0;
 
-    virtual AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const = 0;
-    virtual uint16_t repeat_x() const = 0;
-    virtual uint16_t repeat_y() const = 0;
+    virtual AnimationFrame animation_frame(const int rx, const int ry) const = 0;
+    virtual int repeat_x() const = 0;
+    virtual int repeat_y() const = 0;
     virtual VisualLayer layer() const = 0;
 
     virtual void update_animation(const Time time_diff) = 0;
-    virtual void set_repeat_x(const uint16_t val) = 0;
-    virtual void set_repeat_y(const uint16_t val) = 0;
+    virtual void set_repeat_x(const int val) = 0;
+    virtual void set_repeat_y(const int val) = 0;
     virtual void set_layer(const VisualLayer val) = 0;
 
     static Visuals* null;

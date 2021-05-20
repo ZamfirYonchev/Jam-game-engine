@@ -20,7 +20,7 @@ public:
 	HealthVisuals
 	   ( const AnimationID active_id
 	   , const AnimationID inactive_id
-	   , const uint16_t repeat_x
+	   , const int repeat_x
 	   , const ResourceSystem& resource_system
 	   , const EntityID self_id
 	   , const EntitySystemT& entity_system
@@ -72,7 +72,7 @@ public:
     	m_inactive_animation_time = (m_inactive_animation_time + int(time_diff)) % m_inactive_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const uint16_t rx, const uint16_t ry) const
+    AnimationFrame animation_frame(const int rx, const int ry) const
     {
     	const auto& health = m_entity_system.template entity_component<Health>(m_self_id);
     	const bool active_animation = (m_repeat_x != 0) && (health.max_hp() != 0) && (health.max_hp()*rx < health.hp()*m_repeat_x);
@@ -81,10 +81,10 @@ public:
     				  	  	  	 : m_inactive_animation_time/m_inactive_animation_frame_delay};
     }
 
-    uint16_t repeat_x() const { return m_repeat_x; }
-    uint16_t repeat_y() const { return 1; }
-    void set_repeat_x(const uint16_t val) { m_repeat_x = val; }
-    void set_repeat_y(const uint16_t val) {}
+    int repeat_x() const { return m_repeat_x; }
+    int repeat_y() const { return 1; }
+    void set_repeat_x(const int val) { m_repeat_x = val; }
+    void set_repeat_y(const int val) {}
     VisualLayer layer() const { return VisualLayer::CLOSE_BACKGROUND; }
     void set_layer(VisualLayer val) {}
 
@@ -96,7 +96,7 @@ private:
     int m_inactive_animation_time_max;
     int m_active_animation_time;
     int m_inactive_animation_time;
-    uint16_t m_repeat_x;
+    int m_repeat_x;
     EntityID m_self_id;
     const EntitySystemT& m_entity_system;
 };
