@@ -50,6 +50,23 @@ public:
     	   << m_gravity_affected << " ";
     }
 
+    std::pair<double, double> displacement(const Time time_diff) const
+	{
+		const double vx_avg = m_vx + m_fx*time_diff/m_mass/2.0;
+		const double vy_avg = m_vy + m_fy*time_diff/m_mass/2.0;
+
+		//account for air friction
+		const double fx = m_fx - vx_avg * m_friction_x;
+		const double fy = m_fy - vy_avg * m_friction_y;
+
+		const double dx = (m_vx + fx*time_diff/m_mass/2.0)*time_diff;
+		const double dy = (m_vy + fy*time_diff/m_mass/2.0)*time_diff;
+
+		return { (sign(dx) != sign(vx_avg)) ? 0.0 : dx
+			   , (sign(dy) != sign(vy_avg)) ? 0.0 : dy
+				};
+	}
+
     void update(const Time time_diff)
     {
 		const double vx_avg = m_vx + m_fx*time_diff/m_mass/2.0;

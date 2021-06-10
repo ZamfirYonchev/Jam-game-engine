@@ -32,6 +32,7 @@ public:
     virtual double move_force() const = 0;
     virtual double jump_force() const = 0;
     virtual bool gravity_affected() const = 0;
+    virtual std::pair<double, double> displacement(const Time time_diff) const = 0;
 
     virtual void update(const Time time_diff) = 0;
     virtual void set_force_x(double val) = 0;

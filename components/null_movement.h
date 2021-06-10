@@ -48,6 +48,7 @@ public:
     void set_gravity_affected(bool val) {}
     void mod_dx(double dx) {}
     void mod_dy(double dy) {}
+    std::pair<double, double> displacement(const Time time_diff) const { return {0.0, 0.0}; }
 };
 
 #endif /* COMPONENTS_NULL_MOVEMENT_H_ */

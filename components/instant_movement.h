@@ -46,12 +46,28 @@ public:
 		const double vx_avg = m_fx*time_diff/m_mass/2.0;
 		const double vy_avg = m_fy*time_diff/m_mass/2.0;
 
-		m_fx -= vx_avg * m_friction_x; //account for air friction
-		m_fy -= vy_avg * m_friction_y; //account for air friction
+		const double fx = m_fx - vx_avg * m_friction_x;
+		const double fy = m_fy - vy_avg * m_friction_y;
 
-		m_dx = (m_fx*time_diff/m_mass/2.0)*time_diff;
-		m_dy = (m_fy*time_diff/m_mass/2.0)*time_diff;
+		m_dx = (fx*time_diff/m_mass/2.0)*time_diff;
+		m_dy = (fy*time_diff/m_mass/2.0)*time_diff;
     }
+
+    std::pair<double, double> displacement(const Time time_diff) const
+	{
+		const double vx_avg = m_fx*time_diff/m_mass/2.0;
+		const double vy_avg = m_fy*time_diff/m_mass/2.0;
+
+		//account for air friction
+		const double fx = m_fx - vx_avg * m_friction_x;
+		const double fy = m_fy - vy_avg * m_friction_y;
+
+		const double dx = (fx*time_diff/m_mass/2.0)*time_diff;
+		const double dy = (fy*time_diff/m_mass/2.0)*time_diff;
+
+		return {dx, dy};
+	}
+
     void set_force_x(double fx) { m_fx = fx; }
     void set_force_y(double fy) { m_fy = fy; }
     void mod_force_x(double fx) { m_fx += fx; }
