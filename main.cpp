@@ -26,6 +26,7 @@
 #include "systems/damage_system.h"
 #include "systems/sound_system.h"
 #include "systems/all_systems.h"
+#include "systems/movement_collision_system.h"
 
 #include "commands/null_command.h"
 #include "commands/debug_message_command.h"
@@ -148,13 +149,15 @@ int main(int argc, char** argv)
 		ControlSystem<ES> control_system {entity_system};
 		MovementSystem<ES> movement_system {entity_system};
 		CollisionSystem<ES> collision_system {entity_system};
+		//MovementCollisionSystem<ES> movement_collision_system {entity_system};
 		DamageSystem<ES> damage_system {entity_system};
 		SoundSystem<ES> sound_system {entity_system, resource_system};
 
-		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>,DamageSystem<ES>, SoundSystem<ES>> all_systems
+		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>/*MovementCollisionSystem<ES>*/,DamageSystem<ES>, SoundSystem<ES>> all_systems
 		{ control_system
 		, movement_system
 		, collision_system
+		//, movement_collision_system
 		, damage_system
 		, sound_system
 		};
