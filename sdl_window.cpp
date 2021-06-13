@@ -105,7 +105,7 @@ void SdlWindow::init_video( int& res_width
 
 	uint32_t flags = SDL_WINDOW_OPENGL;
 
-	if(fullscreen == true) flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+	if(fullscreen == true) flags |= SDL_WINDOW_FULLSCREEN;
 
 	SDL_CreateWindowAndRenderer(final_res_w, final_res_h, flags, &m_window, &m_renderer);
 
