@@ -26,7 +26,7 @@
 #include "systems/damage_system.h"
 #include "systems/sound_system.h"
 #include "systems/all_systems.h"
-#include "systems/movement_collision_system.h"
+//#include "systems/movement_collision_system.h"
 
 #include "commands/null_command.h"
 #include "commands/debug_message_command.h"
