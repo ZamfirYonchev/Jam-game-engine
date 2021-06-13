@@ -67,6 +67,7 @@
 #include "commands/play_sound_command.h"
 #include "commands/play_music_command.h"
 #include "commands/read_component_command.h"
+#include "commands/pause_all_sounds_command.h"
 
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
@@ -251,6 +252,7 @@ int main(int argc, char** argv)
 		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{});
 		command_system.register_command("PlaySound", PlaySoundCommand{});
 		command_system.register_command("PlayMusic", PlayMusicCommand{});
+		command_system.register_command("PauseAllSounds", PauseAllSoundsCommand{});
 		command_system.register_command("ReadPosition", ReadComponentCommand<Position>{});
 		command_system.register_command("ReadControl", ReadComponentCommand<Control>{});
 		command_system.register_command("ReadMovement", ReadComponentCommand<Movement>{});
