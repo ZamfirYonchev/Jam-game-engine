@@ -29,22 +29,30 @@ public:
 
 		if(globals(Globals::app_enable_audio).boolean() == false) return music_id;
 
-		const auto music_optional = resource_system.music(MusicID(music_id.integer()));
+		if(music_id.integer() == -1)
+		{
+			Mix_HaltMusic();
+			return music_id;
+		}
+		else
+		{
+			const auto music_optional = resource_system.music(MusicID(music_id.integer()));
 
-    	if(music_optional)
-    	{
-    		if(Mix_PlayMusic(music_optional->get().music(), loops.integer()) < 0)
-    		{
-    			std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
-    		}
+			if(music_optional)
+			{
+				if(Mix_PlayMusic(music_optional->get().music(), loops.integer()) < 0)
+				{
+					std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
+				}
 
-        	return music_id;
-    	}
-    	else
-    	{
-    		//error m_sound_id
-        	return CommandReturnValue{-1.0};
-    	}
+				return music_id;
+			}
+			else
+			{
+				//error m_sound_id
+				return CommandReturnValue{-1.0};
+			}
+		}
     }
 };
 
