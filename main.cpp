@@ -102,6 +102,7 @@
 #include "components/timed_health.h"
 #include "components/null_health.h"
 #include "components/character_visuals.h"
+#include "components/flying_character_visuals.h"
 #include "components/health_visuals.h"
 #include "components/menu_item_visuals.h"
 #include "components/static_visuals.h"
@@ -233,6 +234,7 @@ int main(int argc, char** argv)
 		command_system.register_command("UseTimedHealth", UseComponentCommand<TimedHealth>{});
 		command_system.register_command("UseNullVisuals", UseComponentCommand<NullVisuals>{});
 		command_system.register_command("UseCharacterVisuals", UseCharacterVisualsCommand{});
+		command_system.register_command("UseFlyingCharacterVisuals", UseFlyingCharacterVisualsCommand{});
 		command_system.register_command("UseTiledVisuals", UseTiledVisualsCommand{});
 		command_system.register_command("UseStaticVisuals", UseComponentCommand<StaticVisuals>{});
 		command_system.register_command("UseHealthVisuals", UseHealthVisualsCommand{});

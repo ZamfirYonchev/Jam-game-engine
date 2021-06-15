@@ -49,6 +49,7 @@
 #include "../components/null_sounds.h"
 
 #include "../components/character_visuals.h"
+#include "../components/flying_character_visuals.h"
 #include "../components/health_visuals.h"
 #include "../components/menu_item_visuals.h"
 #include "../components/static_visuals.h"
@@ -440,6 +441,40 @@ public:
 				   , AnimationID(walk_anim_id.integer())
 				   , AnimationID(jump_anim_id.integer())
 				   , AnimationID(fall_anim_id.integer())
+				   , AnimationID(attack_anim_id.integer())
+				   , AnimationID(hit_anim_id.integer())
+				   , AnimationID(dead_anim_id.integer())
+				   , resource_system
+				   , selected_entity
+				   , entity_system});
+
+    	return CommandReturnValue{0.0};
+	}
+};
+
+class UseFlyingCharacterVisualsCommand
+{
+public:
+    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
+    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	{
+    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const auto land_idle_anim_id = command_system.exec_next();
+    	const auto fly_idle_anim_id = command_system.exec_next();
+    	const auto fly_side_anim_id = command_system.exec_next();
+    	const auto fly_up_anim_id = command_system.exec_next();
+    	const auto fly_down_anim_id = command_system.exec_next();
+    	const auto attack_anim_id = command_system.exec_next();
+    	const auto hit_anim_id = command_system.exec_next();
+    	const auto dead_anim_id = command_system.exec_next();
+
+		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
+				, FlyingCharacterVisuals<EntitySystemT>
+					{AnimationID(land_idle_anim_id.integer())
+				   , AnimationID(fly_idle_anim_id.integer())
+				   , AnimationID(fly_side_anim_id.integer())
+				   , AnimationID(fly_up_anim_id.integer())
+				   , AnimationID(fly_down_anim_id.integer())
 				   , AnimationID(attack_anim_id.integer())
 				   , AnimationID(hit_anim_id.integer())
 				   , AnimationID(dead_anim_id.integer())
