@@ -1,0 +1,177 @@
+@app_current_level "levels/drone_menu.lvl"
+
+@layer_bg 0
+@layer_bg2 1
+@layer_act 2
+@layer_act2 3
+@layer_fg 4
+
+### Procedures ###
+
+@proc_new_game {
+	ExecuteFileClean "levels/drone0.lvl"
+}
+
+@proc_howto
+{
+	SelectEntity *entity_background
+	UseStaticVisuals *anim_howto 0
+	ModifyVisuals 0 0 -0
+
+	(proc_deactivate_main_menu)
+
+	@e_button_back AddEntity #button back
+	UseAbsolutePosition 592 86 181 89
+	UseInputSelectControl 0 1 *proc_back
+	UseMenuItemVisuals *anim_button_back_in *anim_button_back *anim_button_back
+	ModifyVisuals 0 0 *layer_fg
+}
+
+@proc_credits
+{
+	SelectEntity *entity_background
+	UseStaticVisuals *anim_credits 0
+	ModifyVisuals 0 0 -0
+
+	(proc_deactivate_main_menu)
+
+	@e_button_back AddEntity #button back
+	UseAbsolutePosition 592 86 181 89
+	UseInputSelectControl 0 1 *proc_back
+	UseMenuItemVisuals *anim_button_back_in *anim_button_back *anim_button_back
+	ModifyVisuals 0 0 *layer_fg
+}
+
+@proc_back
+{
+	SelectEntity *entity_background
+	UseStaticVisuals *anim_bg 0
+
+	SelectEntity *e_button_back
+	RemoveEntity
+
+	(proc_activate_main_menu)
+}
+
+@proc_quit
+{
+	Quit
+}
+
+@proc_activate_main_menu
+{
+	@button_new_game AddEntity #button new game
+	UseAbsolutePosition 592 356 181 89
+	UseInputSelectControl 0 4 *proc_new_game
+	UseMenuItemVisuals *anim_button_play_in *anim_button_play *anim_button_play
+	
+	@button_howto AddEntity #button howto
+	UseAbsolutePosition 592 256 181 89
+	UseInputSelectControl 1 4 *proc_howto
+	UseMenuItemVisuals *anim_button_howto_in *anim_button_howto *anim_button_howto
+	
+	@button_credits AddEntity #button credits
+	UseAbsolutePosition 592 156 181 89
+	UseInputSelectControl 2 4 *proc_credits
+	UseMenuItemVisuals *anim_button_credits_in *anim_button_credits *anim_button_credits
+	
+	@button_quit AddEntity #button quit
+	UseAbsolutePosition 592 56 181 89
+	UseInputSelectControl 3 4 *proc_quit
+	UseMenuItemVisuals *anim_button_quit_in *anim_button_quit *anim_button_quit
+}
+
+@proc_deactivate_main_menu
+{
+	SelectEntity *button_new_game
+	RemoveEntity
+
+	SelectEntity *button_howto
+	RemoveEntity
+
+	SelectEntity *button_credits
+	RemoveEntity
+
+	SelectEntity *button_quit
+	RemoveEntity
+}
+
+### Textures ###
+
+@tex_bg AddTextureFromFile "drone/menu/start.png"
+@tex_buttont_inactive_play AddTextureFromFile "drone/menu/play-1.png"
+@tex_buttont_inactive_quit AddTextureFromFile "drone/menu/quit-1.png"
+@tex_buttont_inactive_howto AddTextureFromFile "drone/menu/how-to-play-1.png"
+@tex_buttont_inactive_credits AddTextureFromFile "drone/menu/credits-1.png"
+@tex_buttont_inactive_back AddTextureFromFile "drone/menu/back-1.png"
+@tex_buttont_inactive_retry AddTextureFromFile "drone/menu/retry-1.png"
+@tex_buttont_active_play AddTextureFromFile "drone/menu/play-2.png"
+@tex_buttont_active_quit AddTextureFromFile "drone/menu/quit-2.png"
+@tex_buttont_active_howto AddTextureFromFile "drone/menu/how-to-play-2.png"
+@tex_buttont_active_credits AddTextureFromFile "drone/menu/credits-2.png"
+@tex_buttont_active_back AddTextureFromFile "drone/menu/back-2.png"
+@tex_buttont_active_retry AddTextureFromFile "drone/menu/retry-2.png"
+
+@tex_credits AddTextureFromFile "drone/menu/credits.png"
+@tex_howto AddTextureFromFile "drone/menu/how-to-play.png"
+
+### Animations ###
+
+@anim_bg AddAnimation 1 1 #0: background
+AddSprite 0 0 0 0 1366 768
+
+@anim_button_play AddAnimation 1 1 #1
+AddSprite *anim_button_play *tex_buttont_active_play 0 0 0 0
+
+@anim_button_play_in AddAnimation 1 1 #1
+AddSprite *anim_button_play_in *tex_buttont_inactive_play 0 0 0 0
+
+@anim_button_quit AddAnimation 1 1 #1
+AddSprite *anim_button_quit *tex_buttont_active_quit 0 0 0 0
+
+@anim_button_quit_in AddAnimation 1 1 #1
+AddSprite *anim_button_quit_in *tex_buttont_inactive_quit 0 0 0 0
+
+@anim_button_howto AddAnimation 1 1 #1
+AddSprite *anim_button_howto *tex_buttont_active_howto 0 0 0 0
+
+@anim_button_howto_in AddAnimation 1 1 #1
+AddSprite *anim_button_howto_in *tex_buttont_inactive_howto 0 0 0 0
+
+@anim_button_credits AddAnimation 1 1 #1
+AddSprite *anim_button_credits *tex_buttont_active_credits 0 0 0 0
+
+@anim_button_credits_in AddAnimation 1 1 #1
+AddSprite *anim_button_credits_in *tex_buttont_inactive_credits 0 0 0 0
+
+@anim_button_back AddAnimation 1 1 #1
+AddSprite *anim_button_back *tex_buttont_active_back 0 0 0 0
+
+@anim_button_back_in AddAnimation 1 1 #1
+AddSprite *anim_button_back_in *tex_buttont_inactive_back 0 0 0 0
+
+@anim_button_retry AddAnimation 1 1 #1
+AddSprite *anim_button_retry *tex_buttont_active_retry 0 0 0 0
+
+@anim_button_retry_in AddAnimation 1 1 #1
+AddSprite *anim_button_retry_in *tex_buttont_inactive_retry 0 0 0 0
+
+@anim_howto AddAnimation 1 1 #1
+AddSprite *anim_howto *tex_howto 0 0 0 0
+
+@anim_credits AddAnimation 1 1 #1
+AddSprite *anim_credits *tex_credits 0 0 0 0
+
+### Entities ###
+
+AddEntity #screen
+UseAbsolutePosition 0 0 1366 768
+FixViewWidth
+
+@entity_background AddEntity #background
+UseStaticVisuals *anim_bg 0
+UseAbsolutePosition 0 0 1366 768
+ModifyVisuals 0 0 -0
+
+(proc_activate_main_menu)
+
