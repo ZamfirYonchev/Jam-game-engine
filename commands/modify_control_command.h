@@ -8,19 +8,25 @@
 #ifndef COMMANDS_MODIFY_CONTROL_COMMAND_H_
 #define COMMANDS_MODIFY_CONTROL_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../math_ext.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename EntitySystemT>
 class ModifyControlCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	EntitySystemT& entity_system;
+	Globals& globals;
+
+	ModifyControlCommand(CommandSystemT& _command_system, EntitySystemT& _entity_system, Globals& _globals)
+	: command_system{_command_system}
+	, entity_system{_entity_system}
+	, globals{_globals}
+	{}
+
+	CommandValue operator()() const
 	{
     	const auto decision_vertical = command_system.exec_next();
     	const auto decision_attack = command_system.exec_next();
@@ -48,16 +54,16 @@ public:
 				control.mod_decision_walk(decision_walk.real());
 
 			if(is_negative_zero(look_dir.real()))
-				control.set_look_dir(Control::LookDir::RIGHT);
+				control.set_look_dir(LookDir::RIGHT);
 			else
-				control.set_look_dir(Control::LookDir(look_dir.boolean() ^ bool(control.look_dir())));
+				control.set_look_dir(LookDir(look_dir.boolean() ^ bool(control.look_dir())));
 
-			return CommandReturnValue{0.0};
+			return CommandValue{0.0};
 		}
 		else
 		{
 			//error selected_entity
-			return CommandReturnValue{-1.0};
+			return CommandValue{-1.0};
 		}
 	}
 };

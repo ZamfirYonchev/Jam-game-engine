@@ -8,23 +8,25 @@
 #ifndef COMPONENTS_INPUT_CONTROL_H_
 #define COMPONENTS_INPUT_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
 #include "../math_ext.h"
 #include "../systems/input_system.h"
-#include "movement.h"
+#include "../types.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class InputControl : public Control
+class Movement;
+
+class InputControl
 {
 public:
-	using Base = Control;
-    InputControl
+	InputControl
 		(const ProcedureID shoot_proc_id
 	   , const int shoot_cooldown
-	   , const EntityID self_id
 	   , const bool stability_control
-	   , const EntitySystemT& entity_system
-	   , const InputSystem& input_system)
+	   , InputSystem& input_system
+	   , const EntityID self_id
+	   , const std::function<const Movement&(const EntityID)>& movement_accessor
+	   )
     : m_self_id(self_id)
 	, m_walk_dir(0)
     , m_vertical_dir(0)
@@ -34,8 +36,25 @@ public:
 	, m_current_shoot_cooldown(shoot_cooldown)
 	, m_look_dir(LookDir::RIGHT)
 	, m_stability_control(stability_control)
-	, m_entity_system(entity_system)
 	, m_input_system(input_system)
+	, m_movement_accessor{movement_accessor}
+    {}
+
+    template<typename ExtractorF>
+	InputControl
+	( ExtractorF&& extract
+	, InputSystem& input_system
+	, const CommandValue& self_id
+	, const std::function<const Movement&(const EntityID)>& movement_accessor
+	)
+	: InputControl
+	  { extract().integer() //shoot_proc_id
+	  , extract().integer() //shoot cooldown
+	  , extract().boolean() //stability control
+	  , input_system
+	  , EntityID(self_id.integer())
+	  , movement_accessor
+	  }
     {}
 
     void print(std::ostream& to) const
@@ -60,28 +79,7 @@ public:
     void set_attack_proc_id(ProcedureID val) { m_shoot_proc_id = val; }
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(const Time time_diff)
-    {
-    	m_current_shoot_cooldown = max(m_current_shoot_cooldown-int(time_diff), 0);
-
-        m_vertical_dir = m_input_system.jumping() - m_input_system.ducking();
-        m_walk_dir = m_input_system.going_right() - m_input_system.going_left();
-
-    	m_look_dir = m_walk_dir > 0 ? LookDir::RIGHT : m_walk_dir < 0 ? LookDir::LEFT : m_look_dir;
-
-    	const auto& self_movement = m_entity_system.template entity_component<Movement>(m_self_id);
-
-    	if(m_stability_control && m_walk_dir == 0 && abs(self_movement.vx()) > self_movement.move_force()/self_movement.mass())
-        {
-        	m_walk_dir = -sign(self_movement.vx());
-        }
-
-        m_shoot = m_input_system.shooting() && (m_current_shoot_cooldown == 0);
-
-        if(m_shoot)
-        	m_current_shoot_cooldown = m_shoot_cooldown;
-    }
-
+    void update_decisions(const Time time_diff);
     void clear_decisions()
     {
         m_vertical_dir = 0.0;
@@ -99,8 +97,8 @@ private:
     int m_current_shoot_cooldown;
     LookDir m_look_dir;
     bool m_stability_control;
-    const EntitySystemT& m_entity_system;
-    const InputSystem& m_input_system;
+    std::reference_wrapper<InputSystem> m_input_system;
+    std::function<const Movement&(const EntityID id)> m_movement_accessor;
 };
 
 

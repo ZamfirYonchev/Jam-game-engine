@@ -8,24 +8,36 @@
 #ifndef COMMANDS_CALL_PROCEDURE_COMMAND_H_
 #define COMMANDS_CALL_PROCEDURE_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../types.h"
 #include "../utilities.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT>
 class CallProcedureCommand
 {
 public:
-	CallProcedureCommand(std::string_view proc_name) : m_procedure{std::string{proc_name}} {}
-	CallProcedureCommand(const ProcedureID proc_id) : m_procedure{proc_id, 0} {} // @suppress("Symbol is not resolved")
-	CallProcedureCommand() : m_procedure{0.0} {}
+	CommandSystemT& command_system;
+	Globals& globals;
+    const CommandValue m_procedure;
 
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CallProcedureCommand(CommandSystemT& _command_system, Globals& _globals, std::string_view proc_name)
+	: command_system{_command_system}
+	, globals{_globals}
+	, m_procedure{std::string{proc_name}}
+	{}
+
+	CallProcedureCommand(CommandSystemT& _command_system, Globals& _globals, const ProcedureID proc_id)
+	: command_system{_command_system}
+	, globals{_globals}
+	, m_procedure{proc_id, 0} {} // @suppress("Symbol is not resolved")
+
+	CallProcedureCommand(CommandSystemT& _command_system, Globals& _globals)
+	: command_system{_command_system}
+	, globals{_globals}
+	, m_procedure{0.0} {}
+
+    CommandValue operator()() const
     {
     	const auto proc_id = m_procedure.holds_string() ? globals(m_procedure.string()) :
 							(m_procedure.integer() > 0) ? m_procedure
@@ -34,7 +46,7 @@ public:
     	if(proc_id.integer() < 0)
     	{
 			std::cerr << "CallProcedure: procedure id " << proc_id.integer() << " must be >= 0\n";
-			return CommandReturnValue{-1};
+			return CommandValue{-1};
     	}
     	else
     	{
@@ -42,9 +54,6 @@ public:
 			return command_system.exec_next(); //return the result from the first command
     	}
     }
-
-private:
-    const CommandReturnValue m_procedure;
 };
 
 

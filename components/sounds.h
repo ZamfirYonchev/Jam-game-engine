@@ -10,33 +10,31 @@
 #include "../types.h"
 #include <ostream>
 
-class NullSounds;
+#include "component.h"
+#include "null_sounds.h"
+#include "character_sounds.h"
 
 class Sounds
 {
 public:
-	using Null = NullSounds;
+	using Variant = std::variant<NullSounds, CharacterSounds>;
+	Variant variant;
 
-    virtual ~Sounds() {}
-    virtual void print(std::ostream& to) const = 0;
+    void update(const Time time_diff) { std::visit([&](auto& snd){ return snd.update(time_diff); }, variant); }
 
-    virtual void update(const Time time_diff) = 0;
+    SoundID id() const { return std::visit([](const auto& snd){ return snd.id(); }, variant); }
+    bool changed() const { return std::visit([](const auto& snd){ return snd.changed(); }, variant); }
 
-    virtual SoundID id() const = 0;
-    virtual bool changed() const = 0;
+    double volume() const { return std::visit([](const auto& snd){ return snd.volume(); }, variant); }
 
-    virtual double volume() const = 0;
+    operator bool() const { return variant.index() != 0; }
 
-    static Sounds* null;
-
-    operator bool() const { return this != null; }
-
-    friend std::ostream& operator<< (std::ostream& out, const Sounds& component)
-    {
-    	component.print(out);
-        out << std::endl;
-        return out;
-    }
+	friend std::ostream& operator<< (std::ostream& out, const Sounds& component)
+	{
+		print(out, component.variant);
+	    out << '\n';
+	    return out;
+	}
 };
 
 #endif /* COMPONENTS_SOUNDS_H_ */

@@ -8,27 +8,44 @@
 #ifndef COMPONENTS_GUIDE_CONTROL_H_
 #define COMPONENTS_GUIDE_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
 #include "../math_ext.h"
-#include "position.h"
+#include "../types.h"
+#include <ostream>
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class GuideControl : public Control
+class Position;
+
+class GuideControl
 {
 public:
-	using Base = Control;
 	GuideControl
 		(const EntityID self_id
 	   , const EntityID target_id
 	   , const double range
-	   , const EntitySystemT& entity_system)
+	   , std::function<const Position&(const EntityID id)> position_accessor
+	   )
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
 	, m_vertical(0)
 	, m_look_dir(LookDir::RIGHT)
 	, m_range(range)
-	, m_entity_system(entity_system)
+	, m_position_accessor(std::move(position_accessor))
+	{}
+
+    template<typename ExtractorF>
+	GuideControl
+	( ExtractorF&& extract
+	, const CommandValue& self_id
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	)
+	: GuideControl
+	  { EntityID(self_id.integer())
+	  , extract().integer()
+	  , extract().real()
+	  , position_accessor
+	  }
 	{}
 
     void print(std::ostream& to) const
@@ -52,27 +69,7 @@ public:
     void set_attack_proc_id(ProcedureID val) {}
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(const Time time_diff)
-    {
-    	const auto& target_position = m_entity_system.template entity_component<Position>(m_target_id);
-
-    	if(target_position)
-    	{
-    		const auto& self_position = m_entity_system.template entity_component<Position>(m_self_id);
-    		const double distance_x = target_position.x() - self_position.x() + (target_position.w() - self_position.w())/2.0;
-    		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
-
-    		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_range);
-    		m_look_dir = distance_x > 0 ? LookDir::RIGHT : distance_x < 0 ? LookDir::LEFT : m_look_dir;
-
-    		m_vertical = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
-    	}
-    	else
-    	{
-    		//error m_target_id
-    	}
-    }
-
+    void update_decisions(const Time time_diff);
     void clear_decisions()
     {
         m_walk_dir = 0.0;
@@ -85,7 +82,7 @@ private:
     double m_walk_dir, m_vertical;
     LookDir m_look_dir;
     double m_range;
-    const EntitySystemT& m_entity_system;
+    std::function<const Position&(const EntityID id)> m_position_accessor;
 };
 
 

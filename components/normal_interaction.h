@@ -8,14 +8,23 @@
 #ifndef COMPONENTS_NORMAL_INTERACTION_H_
 #define COMPONENTS_NORMAL_INTERACTION_H_
 
-#include "interaction.h"
+#include <cinttypes>
+#include "../command_value.h"
 
-class NormalInteraction : public Interaction
+class NormalInteraction
 {
 public:
-	using Base = Interaction;
 	NormalInteraction(const int32_t group_vec)
 	: m_group_vec(group_vec)
+	{}
+
+    template<typename ExtractorF>
+	NormalInteraction
+	( ExtractorF&& extract
+	)
+	: NormalInteraction
+	  { extract().integer()
+	  }
 	{}
 
 	NormalInteraction() : NormalInteraction(0) {}
@@ -34,13 +43,13 @@ public:
 	}
 	void clear_groups() { m_group_vec = 0; }
 
-	int8_t trigger_group() const { return 0; }
+	GroupID trigger_group() const { return 0; }
 	ProcedureID proc_id_self() const { return ProcedureID(0); }
 	ProcedureID proc_id_other() const { return ProcedureID(0); }
 	ProcedureID on_exit_proc_id_self() const { return ProcedureID(0); }
 	bool triggered() const { return false; }
 
-	void set_trigger_group(int8_t group) {}
+	void set_trigger_group(GroupID group) {}
 	void set_proc_id_self(ProcedureID proc_id) {}
 	void set_proc_id_other(ProcedureID proc_id) {}
 	void set_on_exit_proc_id_self(ProcedureID proc_id) {}

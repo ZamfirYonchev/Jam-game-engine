@@ -18,9 +18,13 @@ template<typename EntitySystemT>
 class DamageSystem : public SystemBase
 {
 public:
-	DamageSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
+	DamageSystem(EntitySystemT& entity_system, Globals& _globals, std::stringstream& _external_commands)
+	: m_entity_system(entity_system)
+	, globals{_globals}
+	, external_commands{_external_commands}
+	{}
 
-	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff)
 	{
 		if(globals(Globals::app_paused).boolean()) return;
 
@@ -33,9 +37,7 @@ public:
 
 				health.update_health(time_diff);
 				if(was_alive && health.alive() == false && health.on_death_exec() > 0)
-				{
-					procedure_calls.emplace_back(id, health.on_death_exec());
-				}
+					external_commands << "Select " << id << " Call " << health.on_death_exec() << '\n';
 	    	}
 	    	else
 	    	{
@@ -58,6 +60,8 @@ public:
 
 private:
     EntitySystemT& m_entity_system;
+    Globals& globals;
+    std::stringstream& external_commands;
 };
 
 #endif /* SYSTEMS_DAMAGE_SYSTEM_H_ */

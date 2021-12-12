@@ -25,9 +25,12 @@ class MovementSystem : public SystemBase
 public:
     constexpr static double GRAVITY_ACCEL = -0.00980665; //always (IRL, 9.80665m/s^2 = 0.00980665mm/ms^2)
 
-    MovementSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
+    MovementSystem(EntitySystemT& entity_system, Globals& _globals)
+    : m_entity_system(entity_system)
+	, globals{_globals}
+    {}
 
-	void update(const Time time_delta, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_delta)
     {
 		if(globals(Globals::app_paused).boolean()) return;
 
@@ -44,7 +47,7 @@ public:
     			{
     				movement.mod_force_y(GRAVITY_ACCEL*movement.mass());
 
-    				if((control.decision_vertical() > 0) && collision.standing_on() == Collision::SurfaceType::GROUND)
+    				if((control.decision_vertical() > 0) && collision.standing_on() == SurfaceType::GROUND)
     					movement.mod_velocity_y(movement.jump_force()/movement.mass());
     			}
     			else
@@ -83,6 +86,7 @@ public:
 
 private:
     EntitySystemT& m_entity_system;
+    Globals& globals;
 };
 
 #endif /* SYSTEMS_MOVEMENT_SYSTEM_H_ */

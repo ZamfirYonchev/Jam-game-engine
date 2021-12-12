@@ -9,41 +9,50 @@
 #define COMPONENTS_POSITION_H_
 
 #include <ostream>
+#include <variant>
 
-class NullPosition;
+#include "component.h"
+#include "null_position.h"
+#include "absolute_position.h"
+#include "attached_position.h"
+#include "attached_directional_position.h"
+#include "build_position.h"
 
-class Position
+struct Position
 {
-public:
-	using Null = NullPosition;
-    virtual ~Position() {}
-    virtual void print(std::ostream& to) const = 0;
+	using Variant = std::variant<NullPosition, AbsolutePosition, AttachedPosition, BuildPosition, AttachedDirectionalPosition>;
+	Variant variant;
 
-    virtual double x() const = 0;
-    virtual double y() const = 0;
-    virtual double w() const = 0;
-    virtual double h() const = 0;
+    template<typename InserterF>
+    void obtain(InserterF&& inserter) const
+	{
+		std::visit([&](const auto& pos){ return pos.obtain(std::forward<InserterF>(inserter)); }, variant);
+	}
 
-    virtual void set_x(double val) = 0;
-    virtual void set_y(double val) = 0;
-    virtual void set_w(double val) = 0;
-    virtual void set_h(double val) = 0;
+	double x() const { return std::visit([](const auto& pos){ return pos.x(); }, variant); }
+	double y() const { return std::visit([](const auto& pos){ return pos.y(); }, variant); }
+	double w() const { return std::visit([](const auto& pos){ return pos.w(); }, variant); }
+	double h() const { return std::visit([](const auto& pos){ return pos.h(); }, variant); }
 
-    virtual void mod_x(double val) = 0;
-    virtual void mod_y(double val) = 0;
-    virtual void mod_w(double val) = 0;
-    virtual void mod_h(double val) = 0;
+	void set_x(const double value) { std::visit([&](auto& pos){ pos.set_x(value); }, variant); }
+	void set_y(const double value) { std::visit([&](auto& pos){ pos.set_y(value); }, variant); }
+	void set_w(const double value) { std::visit([&](auto& pos){ pos.set_w(value); }, variant); }
+	void set_h(const double value) { std::visit([&](auto& pos){ pos.set_h(value); }, variant); }
 
-    static Position* null;
+	void mod_x(const double value) { std::visit([&](auto& pos){ pos.mod_x(value); }, variant); }
+	void mod_y(const double value) { std::visit([&](auto& pos){ pos.mod_y(value); }, variant); }
+	void mod_w(const double value) { std::visit([&](auto& pos){ pos.mod_w(value); }, variant); }
+	void mod_h(const double value) { std::visit([&](auto& pos){ pos.mod_h(value); }, variant); }
 
-    operator bool() const { return this != null; }
+    operator bool() const { return variant.index() != 0; }
 
-    friend std::ostream& operator<< (std::ostream& out, const Position& component)
-    {
-    	component.print(out);
-        out << '\n';
-        return out;
-    }
+private:
+	friend std::ostream& operator<< (std::ostream& out, const Position& component)
+	{
+		print(out, component.variant);
+	    out << '\n';
+	    return out;
+	}
 };
 
 #endif /* COMPONENTS_POSITION_H_ */

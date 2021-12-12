@@ -10,44 +10,45 @@
 
 #include "../types.h"
 #include <ostream>
+#include <variant>
 
-class NullInteraction;
+#include "component.h"
+#include "null_interaction.h"
+#include "normal_interaction.h"
+#include "trigger_interaction.h"
+#include "full_interaction.h"
+#include "attached_interaction.h"
 
 class Interaction
 {
 public:
-	using Null = NullInteraction;
-	static const int NUM_OF_GROUPS = 32;
+	using Variant  = std::variant<NullInteraction, NormalInteraction, TriggerInteraction, FullInteraction, AttachedInteraction>;
+	Variant variant;
 
-	virtual ~Interaction() {}
-    virtual void print(std::ostream& to) const = 0;
+	bool is_in_group(int group_id) const { return std::visit([&](const auto& inter){ return inter.is_in_group(group_id); }, variant); }
+	GroupID trigger_group() const { return std::visit([](const auto& inter){ return inter.trigger_group(); }, variant); }
+	bool triggered() const { return std::visit([](const auto& inter){ return inter.triggered(); }, variant); }
+	ProcedureID proc_id_self() const { return std::visit([](const auto& inter){ return inter.proc_id_self(); }, variant); }
+	ProcedureID proc_id_other() const { return std::visit([](const auto& inter){ return inter.proc_id_other(); }, variant); }
+	ProcedureID on_exit_proc_id_self() const { return std::visit([](const auto& inter){ return inter.on_exit_proc_id_self(); }, variant); }
+	int32_t last_triggered_groups() const { return std::visit([](const auto& inter){ return inter.last_triggered_groups(); }, variant); }
+	int32_t triggered_groups() const { return std::visit([](const auto& inter){ return inter.triggered_groups(); }, variant); }
+	int32_t group_vector() const { return std::visit([](const auto& inter){ return inter.group_vector(); }, variant); }
 
-	virtual bool is_in_group(int group_id) const = 0;
-	virtual int8_t trigger_group() const = 0;
-	virtual bool triggered() const = 0;
-	virtual ProcedureID proc_id_self() const = 0;
-	virtual ProcedureID proc_id_other() const = 0;
-	virtual ProcedureID on_exit_proc_id_self() const = 0;
-	virtual int32_t last_triggered_groups() const = 0;
-	virtual int32_t triggered_groups() const = 0;
-	virtual int32_t group_vector() const = 0;
+	void clear_groups() { std::visit([](auto& inter){ inter.clear_groups(); }, variant); }
+	void set_group(int group_id, bool val) { std::visit([&](auto& inter){ inter.set_group(group_id, val); }, variant); }
+	void set_trigger_group(GroupID group) { std::visit([&](auto& inter){ inter.set_trigger_group(group); }, variant); }
+	void set_triggered_groups(int32_t group_vec) { std::visit([&](auto& inter){ inter.set_triggered_groups(group_vec); }, variant); }
+	void update_last_triggered_groups() { std::visit([](auto& inter){ inter.update_last_triggered_groups(); }, variant); }
+	void set_proc_id_self(ProcedureID proc_id) { std::visit([&](auto& inter){ inter.set_proc_id_self(proc_id); }, variant); }
+	void set_proc_id_other(ProcedureID proc_id) { std::visit([&](auto& inter){ inter.set_proc_id_other(proc_id); }, variant); }
+	void set_on_exit_proc_id_self(ProcedureID proc_id) { std::visit([&](auto& inter){ inter.set_on_exit_proc_id_self(proc_id); }, variant); }
 
-	virtual void clear_groups() = 0;
-	virtual void set_group(int group_id, bool val) = 0;
-	virtual void set_trigger_group(int8_t group) = 0;
-	virtual void set_triggered_groups(int32_t group_vec) = 0;
-	virtual void update_last_triggered_groups() = 0;
-	virtual void set_proc_id_self(ProcedureID proc_id) = 0;
-	virtual void set_proc_id_other(ProcedureID proc_id) = 0;
-	virtual void set_on_exit_proc_id_self(ProcedureID proc_id) = 0;
-
-	static Interaction* null;
-
-    operator bool() const { return this != null; }
+    operator bool() const { return variant.index() != 0; }
 
     friend std::ostream& operator<< (std::ostream& out, const Interaction& component)
     {
-    	component.print(out);
+		print(out, component.variant);
         out << std::endl;
         return out;
     }

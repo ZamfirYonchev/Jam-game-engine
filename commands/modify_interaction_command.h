@@ -8,19 +8,25 @@
 #ifndef COMMANDS_MODIFY_INTERACTION_COMMAND_H_
 #define COMMANDS_MODIFY_INTERACTION_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../math_ext.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename EntitySystemT>
 class ModifyInteractionCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	EntitySystemT& entity_system;
+	Globals& globals;
+
+	ModifyInteractionCommand(CommandSystemT& _command_system, EntitySystemT& _entity_system, Globals& _globals)
+	: command_system{_command_system}
+	, entity_system{_entity_system}
+	, globals{_globals}
+	{}
+
+	CommandValue operator()() const
 	{
     	const auto groups = command_system.exec_next();
     	const auto group_value = command_system.exec_next();
@@ -62,12 +68,12 @@ public:
 			else
 				interaction.set_on_exit_proc_id_self(ProcedureID(interaction.on_exit_proc_id_self() + on_exit_proc_id_self.integer()));
 
-			return CommandReturnValue{0.0};
+			return CommandValue{0.0};
 		}
 		else
 		{
 			//error selected_entity
-			return CommandReturnValue{-1.0};
+			return CommandValue{-1.0};
 		}
 	}
 };

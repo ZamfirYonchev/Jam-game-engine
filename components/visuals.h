@@ -11,37 +11,40 @@
 #include "../types.h"
 #include <ostream>
 
-class NullVisuals;
+#include "component.h"
+#include "null_visuals.h"
+#include "character_visuals.h"
+#include "flying_character_visuals.h"
+#include "health_visuals.h"
+#include "menu_item_visuals.h"
+#include "static_visuals.h"
+#include "tiled_visuals.h"
+#include "animation_visuals.h"
+
+#include "visuals_enums.h"
 
 class Visuals
 {
 public:
-	using Null = NullVisuals;
-    enum class VisualLayer {FAR_BACKGROUND = 0, CLOSE_BACKGROUND = 1, ACTION = 2, ACTION_FRONT = 3, FOREGROUND = 4};
-    static constexpr int NUM_OF_LAYERS = 5;
 
-    struct AnimationFrame {AnimationID id; int frame; };
+	using Variant = std::variant<NullVisuals, CharacterVisuals, FlyingCharacterVisuals, HealthVisuals, MenuItemVisuals, StaticVisuals, TiledVisuals, AnimationVisuals>;
+	Variant variant;
 
-    virtual ~Visuals() {}
-    virtual void print(std::ostream& to) const = 0;
+    AnimationFrame animation_frame(const int rx, const int ry) const { return std::visit([&](const auto& vis){ return vis.animation_frame(rx, ry); }, variant); }
+    int repeat_x() const { return std::visit([](const auto& vis){ return vis.repeat_x(); }, variant); }
+    int repeat_y() const { return std::visit([](const auto& vis){ return vis.repeat_y(); }, variant); }
+    VisualLayer layer() const { return std::visit([](const auto& vis){ return vis.layer(); }, variant); }
 
-    virtual AnimationFrame animation_frame(const int rx, const int ry) const = 0;
-    virtual int repeat_x() const = 0;
-    virtual int repeat_y() const = 0;
-    virtual VisualLayer layer() const = 0;
+    void update_animation(const Time time_diff) { std::visit([&](auto& vis){ vis.update_animation(time_diff); }, variant); }
+    void set_repeat_x(const int val) { std::visit([&](auto& vis){ vis.set_repeat_x(val); }, variant); }
+    void set_repeat_y(const int val) { std::visit([&](auto& vis){ vis.set_repeat_y(val); }, variant); }
+    void set_layer(const VisualLayer val) { std::visit([&](auto& vis){ vis.set_layer(val); }, variant); }
 
-    virtual void update_animation(const Time time_diff) = 0;
-    virtual void set_repeat_x(const int val) = 0;
-    virtual void set_repeat_y(const int val) = 0;
-    virtual void set_layer(const VisualLayer val) = 0;
-
-    static Visuals* null;
-
-    operator bool() const { return this != null; }
+    operator bool() const { return variant.index() != 0; }
 
     friend std::ostream& operator<< (std::ostream& out, const Visuals& component)
     {
-    	component.print(out);
+		print(out, component.variant);
         out << std::endl;
         return out;
     }

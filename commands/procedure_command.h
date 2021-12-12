@@ -10,10 +10,6 @@
 
 #include <list>
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
 template<typename CommandSystemT>
 class ProcedureCommand
 {

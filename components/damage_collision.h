@@ -8,17 +8,27 @@
 #ifndef COMPONENTS_DAMAGE_COLLISION_H_
 #define COMPONENTS_DAMAGE_COLLISION_H_
 
-#include "collision.h"
+#include "collision_enums.h"
+#include "../command_value.h"
 
-class DamageCollision : public Collision
+class DamageCollision
 {
 public:
-	using Base = Collision;
     DamageCollision(const bool solid, const double damage)
 	: m_damage(damage)
 	, m_solid(solid)
 	{}
     DamageCollision() : DamageCollision(false, 0) {}
+
+    template<typename ExtractorF>
+    DamageCollision
+	( ExtractorF&& extract
+	)
+	: DamageCollision
+	  { extract().boolean()
+	  , extract().real()
+	  }
+	{}
 
     void print(std::ostream& to) const
     {

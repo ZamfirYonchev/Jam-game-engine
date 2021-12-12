@@ -11,7 +11,7 @@
 #include <type_traits>
 
 template<typename... Ts>
-struct RefPack;
+struct RefPack {};
 
 template<typename T, typename... Ts>
 struct RefPack<T, Ts...>
@@ -40,7 +40,10 @@ struct RefPack<T, Ts...>
     RefPack<Ts...> pack;
 };
 
-template<typename T>
+template<typename T, typename... Ts>
+RefPack(T& _t, Ts&... _ts) -> RefPack<T, Ts...>;
+
+/*template<typename T>
 struct RefPack<T>
 {
     RefPack(T& _t) : t{_t} {}
@@ -52,6 +55,6 @@ struct RefPack<T>
     const T& access() const { return t; }
 
     T& t;
-};
+};*/
 
 #endif /* REF_PACK_H_ */

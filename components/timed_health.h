@@ -8,18 +8,28 @@
 #ifndef COMPONENTS_TIMED_HEALTH_H_
 #define COMPONENTS_TIMED_HEALTH_H_
 
-#include "health.h"
+#include "../types.h"
 #include "../math_ext.h"
+#include "../command_value.h"
 
-class TimedHealth : public Health
+class TimedHealth
 {
 public:
-	using Base = Health;
     TimedHealth(const double ttl, const ProcedureID proc_id)
 	: m_time_to_live(ttl)
 	, m_max_ttl(ttl)
 	, m_ttl_change(0.0)
 	, m_proc_id(proc_id)
+	{}
+
+    template<typename ExtractorF>
+    TimedHealth
+	( ExtractorF&& extract
+	)
+	: TimedHealth
+	  { extract().real()
+	  , extract().integer()
+	  }
 	{}
 
     void print(std::ostream& to) const

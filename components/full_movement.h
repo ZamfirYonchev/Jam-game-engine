@@ -8,13 +8,12 @@
 #ifndef COMPONENTS_FULL_MOVEMENT_H_
 #define COMPONENTS_FULL_MOVEMENT_H_
 
-#include "movement.h"
 #include "../math_ext.h"
+#include "../command_value.h"
 
-class FullMovement : public Movement
+class FullMovement
 {
 public:
-	using Base = Movement;
     FullMovement
 		(const double mass
 	   , const double friction_x
@@ -35,6 +34,20 @@ public:
     , m_dy(0)
     , m_gravity_affected(gravity_affected)
     {}
+
+    template<typename ExtractorF>
+    FullMovement
+	( ExtractorF&& extract
+	)
+	: FullMovement
+	  { extract().real()
+	  , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  , extract().boolean()
+	  }
+	{}
 
     FullMovement(bool gravity_affected) : FullMovement(1, 0, 0, 0, 0, gravity_affected) {}
     FullMovement() : FullMovement(false) {}

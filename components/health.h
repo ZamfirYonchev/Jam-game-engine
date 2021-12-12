@@ -11,37 +11,40 @@
 #include "../types.h"
 #include <ostream>
 
-class NullHealth;
+#include <variant>
+
+#include "component.h"
+#include "null_health.h"
+#include "character_health.h"
+#include "attached_health.h"
+#include "timed_health.h"
 
 class Health
 {
 public:
-	using Null = NullHealth;
-    virtual ~Health() {}
-    virtual void print(std::ostream& to) const = 0;
+	using Variant  = std::variant<NullHealth, CharacterHealth, AttachedHealth, TimedHealth>;
+	Variant variant;
 
-    virtual double hp() const = 0;
-    virtual double max_hp() const = 0;
-    virtual bool alive() const = 0;
-    virtual ProcedureID on_death_exec() const = 0;
-    virtual bool stunned() const = 0;
+    double hp() const { return std::visit([](const auto& health){ return health.hp(); }, variant); }
+    double max_hp() const { return std::visit([](const auto& health){ return health.max_hp(); }, variant); }
+    bool alive() const { return std::visit([](const auto& health){ return health.alive(); }, variant); }
+    ProcedureID on_death_exec() const { return std::visit([](const auto& health){ return health.on_death_exec(); }, variant); }
+    bool stunned() const { return std::visit([](const auto& health){ return health.stunned(); }, variant); }
 
-    virtual void set_max_hp(double hp) = 0;
-    virtual void set_hp(double hp) = 0;
-    virtual void set_hp_change(double hp_change) = 0;
-    virtual void set_on_death_exec(ProcedureID proc_id) = 0;
+    void set_max_hp(double hp) { std::visit([&](auto& health){ health.set_max_hp(hp); }, variant); }
+    void set_hp(double hp) { std::visit([&](auto& health){ health.set_hp(hp); }, variant); }
+    void set_hp_change(double hp_change) { std::visit([&](auto& health){ health.set_hp_change(hp_change); }, variant); }
+    void set_on_death_exec(ProcedureID proc_id) { std::visit([&](auto& health){ health.set_on_death_exec(proc_id); }, variant); }
 
-    virtual void mod_hp_change(double hp_change) = 0;
+    void mod_hp_change(double hp_change) { std::visit([&](auto& health){ health.mod_hp_change(hp_change); }, variant); }
 
-    virtual void update_health(const Time time_diff) = 0;
+    void update_health(const Time time_diff) { std::visit([&](auto& health){ health.update_health(time_diff); }, variant); }
 
-    static Health* null;
-
-    operator bool() const { return this != null; }
+    operator bool() const { return variant.index() != 0; }
 
     friend std::ostream& operator<< (std::ostream& out, const Health& component)
     {
-    	component.print(out);
+		print(out, component.variant);
         out << std::endl;
         return out;
     }

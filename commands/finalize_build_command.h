@@ -8,25 +8,45 @@
 #ifndef COMMANDS_FINALIZE_BUILD_COMMAND_H_
 #define COMMANDS_FINALIZE_BUILD_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../types.h"
 #include "../components/absolute_position.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename EntitySystemT, typename AllSystemsT>
 class FinalizeBuildCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	EntitySystemT& entity_system;
+	AllSystemsT& all_systems;
+	Globals& globals;
+
+	FinalizeBuildCommand(EntitySystemT& _entity_system, AllSystemsT& _all_systems, Globals& _globals)
+	: entity_system{_entity_system}
+	, all_systems{_all_systems}
+	, globals{_globals}
+	{}
+
+    CommandValue operator()() const
 	{
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
 		const auto& position = entity_system.template entity_component<Position>(selected_entity);
-		entity_system.set_entity_component(selected_entity, all_systems, rendering_system, AbsolutePosition{position.x(), position.y(), position.w(), position.h()});
-    	return CommandReturnValue{0.0};
+		int8_t change;
+		const auto& component = entity_system.set_entity_component( selected_entity
+												  	  	  	  	  , Position
+																	{ AbsolutePosition
+																	  { position.x()
+																	  , position.y()
+																	  , position.w()
+																	  , position.h()
+																	  }
+																	}
+																  , change
+																  );
+
+		all_systems.component_updated(component, selected_entity, change);
+
+		return CommandValue{0.0};
 	}
 };
 

@@ -8,18 +8,22 @@
 #ifndef COMMANDS_PAUSE_COMMAND_H_
 #define COMMANDS_PAUSE_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT>
 class PauseCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	Globals& globals;
+
+	PauseCommand(CommandSystemT& _command_system, Globals& _globals)
+	: command_system{_command_system}
+	, globals{_globals}
+	{}
+
+    CommandValue operator()() const
     {
     	const auto paused = command_system.exec_next();
     	globals(Globals::app_paused) = paused;

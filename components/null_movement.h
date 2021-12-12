@@ -8,12 +8,9 @@
 #ifndef COMPONENTS_NULL_MOVEMENT_H_
 #define COMPONENTS_NULL_MOVEMENT_H_
 
-#include "movement.h"
-
-class NullMovement : public Movement
+class NullMovement
 {
 public:
-	using Base = Movement;
     void print(std::ostream& to) const
     {
     	to << "UseNullMovement ";

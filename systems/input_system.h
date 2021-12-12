@@ -36,7 +36,7 @@ public:
 	, m_event{}
 	{}
 
-    void process_input(Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls);
+    void process_input(Globals& globals, std::stringstream& external_commands);
     void clear_toggle_inputs();
     bool jumping() const { return m_jump_pressed; }
     bool ducking() const { return m_duck_pressed; }

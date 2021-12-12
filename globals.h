@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
-#include "commands/command_return_value.h"
+#include "command_value.h"
 #include "types.h"
 #include "utilities.h"
 
@@ -36,17 +36,17 @@ public:
 		selected_entity = hash("selected_entity"),
 	};
 
-	const CommandReturnValue& operator()(HashT name_hash) const
+	const CommandValue& operator()(HashT name_hash) const
 	{
     	return m_variables[name_hash];
 	}
 
-	CommandReturnValue& operator()(HashT name_hash)
+	CommandValue& operator()(HashT name_hash)
 	{
     	return m_variables[name_hash];
 	}
 
-	const CommandReturnValue& operator()(std::string_view name) const
+	const CommandValue& operator()(std::string_view name) const
 	{
     	const HashT name_hash = hash(name.data());
     	if(m_variables.find(name_hash) == cend(m_variables))
@@ -55,7 +55,7 @@ public:
     	return m_variables[hash(name.data())];
 	}
 
-	CommandReturnValue& operator()(std::string_view name)
+	CommandValue& operator()(std::string_view name)
 	{
     	const HashT name_hash = hash(name.data());
     	if(m_variables.find(name_hash) == cend(m_variables))
@@ -65,7 +65,7 @@ public:
 	}
 
 private:
-    mutable std::unordered_map<HashT, CommandReturnValue> m_variables;
+    mutable std::unordered_map<HashT, CommandValue> m_variables;
 };
 
 

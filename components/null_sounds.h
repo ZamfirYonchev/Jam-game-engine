@@ -8,12 +8,9 @@
 #ifndef COMPONENTS_NULL_SOUNDS_H_
 #define COMPONENTS_NULL_SOUNDS_H_
 
-#include "sounds.h"
-
-class NullSounds : public Sounds
+class NullSounds
 {
 public:
-	using Base = Sounds;
     void print(std::ostream& to) const
     {
     	to << "UseNullSounds ";

@@ -19,14 +19,15 @@ template<typename EntitySystemT>
 class SoundSystem : public SystemBase
 {
 public:
-	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system)
+	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system, Globals& _globals)
 	: m_entity_system(entity_system)
 	, m_resource_system(resource_system)
+	, globals{_globals}
 	, m_last_paused(false)
 	, m_channel_activity_per_entity()
 	{}
 
-	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff)
 	{
 		if(globals(Globals::app_enable_audio).boolean() == false) return;
 
@@ -110,6 +111,7 @@ public:
 private:
     EntitySystemT& m_entity_system;
     ResourceSystem& m_resource_system;
+    Globals& globals;
     bool m_last_paused;
     std::unordered_map<EntityID, std::pair<int, int>> m_channel_activity_per_entity;
 };

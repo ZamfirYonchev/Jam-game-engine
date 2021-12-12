@@ -8,24 +8,27 @@
 #ifndef COMMANDS_ADD_TEXTURE_FROM_FILE_COMMAND_H_
 #define COMMANDS_ADD_TEXTURE_FROM_FILE_COMMAND_H_
 
-#include "command_return_value.h"
-#include "../globals.h"
-#include "../systems/resource_system.h"
-#include "../systems/rendering_system.h"
+#include "../command_value.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename RenderingSystemT, typename ResourceSystemT>
 class AddTextureFromFileCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	RenderingSystemT& rendering_system;
+	ResourceSystemT& resource_system;
+
+	AddTextureFromFileCommand(CommandSystemT& _command_system, RenderingSystemT& _rendering_system, ResourceSystemT& _resource_system)
+	: command_system{_command_system}
+	, rendering_system{_rendering_system}
+	, resource_system{_resource_system}
+	{}
+
+    CommandValue operator()() const
     {
     	const auto file_name = command_system.exec_next();
     	const auto tex_id = resource_system.addNewTextureFromFile(file_name.string(), rendering_system.renderer());
-    	return CommandReturnValue{tex_id, 0};
+    	return CommandValue{tex_id, 0};
     }
 };
 

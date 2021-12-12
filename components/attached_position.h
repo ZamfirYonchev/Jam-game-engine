@@ -8,29 +8,55 @@
 #ifndef COMPONENTS_ATTACHED_POSITION_H_
 #define COMPONENTS_ATTACHED_POSITION_H_
 
-#include "position.h"
 #include "../types.h"
-#include "../utilities.h"
+#include <ostream>
+#include <functional>
+#include <iostream>
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class AttachedPosition : public Position
+class Position;
+
+class AttachedPosition
 {
 public:
-	using Base = Position;
     AttachedPosition
-		(const EntityID attached_id
-	   , const double offset_x
-	   , const double offset_y
-	   , const double offset_w
-	   , const double offset_h
-	   , const EntitySystemT& entity_system)
+	( const EntityID attached_id
+    , const double offset_x
+    , const double offset_y
+    , const double offset_w
+    , const double offset_h
+    , const std::function<const Position&(const EntityID id)>& position_accessor
+    )
     : m_attached_id(attached_id)
     , m_offset_x(offset_x)
     , m_offset_y(offset_y)
     , m_offset_w(offset_w)
     , m_offset_h(offset_h)
-	, m_entity_system(entity_system)
+    , m_position_accessor{position_accessor}
     {}
+
+    template<typename ExtractorF>
+	AttachedPosition
+	( ExtractorF&& extract
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	)
+	: m_attached_id{extract().integer()}
+	, m_offset_x{extract().real()}
+	, m_offset_y{extract().real()}
+	, m_offset_w{extract().real()}
+	, m_offset_h{extract().real()}
+	, m_position_accessor{position_accessor}
+	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+	{
+    	insert(CommandValue{"UseAttachedPosition"});
+    	insert(CommandValue{m_offset_x});
+    	insert(CommandValue{m_offset_y});
+    	insert(CommandValue{m_offset_w});
+    	insert(CommandValue{m_offset_h});
+	}
 
     void print(std::ostream& to) const
     {
@@ -41,29 +67,10 @@ public:
 		   << m_offset_h << " ";
     }
 
-    double x() const
-    {
-    	return m_entity_system.template entity_component<Position>(m_attached_id).x()
-    		+ absolute_or_scaled(m_offset_x, m_entity_system.template entity_component<Position>(m_attached_id).w());
-    }
-
-    double y() const
-    {
-    	return m_entity_system.template entity_component<Position>(m_attached_id).y()
-    		+ absolute_or_scaled(m_offset_y, m_entity_system.template entity_component<Position>(m_attached_id).h());
-    }
-
-    double w() const
-    {
-    	return m_entity_system.template entity_component<Position>(m_attached_id).w()
-    		 + absolute_or_scaled(m_offset_w, m_entity_system.template entity_component<Position>(m_attached_id).w());
-    }
-
-    double h() const
-    {
-    	return m_entity_system.template entity_component<Position>(m_attached_id).h()
-    		 + absolute_or_scaled(m_offset_h, m_entity_system.template entity_component<Position>(m_attached_id).h());
-    }
+    double x() const;
+    double y() const;
+    double w() const;
+    double h() const;
 
     void set_x(double val) {}
     void set_y(double val) {}
@@ -79,7 +86,7 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
-    const EntitySystemT& m_entity_system;
+    std::function<const Position&(const EntityID id)> m_position_accessor;
 };
 
 

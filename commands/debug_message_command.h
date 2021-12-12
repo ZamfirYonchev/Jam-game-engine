@@ -8,21 +8,25 @@
 #ifndef COMMANDS_DEBUG_MESSAGE_COMMAND_H_
 #define COMMANDS_DEBUG_MESSAGE_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
+#include "debug_message_enums.h"
 #include <iostream>
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT>
 class DebugMessageCommand
 {
 public:
-	enum class Severity {FATAL = -2, ERROR = -1, NOTE = 0, DEBUG = 1, };
 
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	Globals& globals;
+
+	DebugMessageCommand(CommandSystemT& _command_system, Globals& _globals)
+	: command_system{_command_system}
+	, globals{_globals}
+	{}
+
+    CommandValue operator()() const
     {
     	const auto severity = command_system.exec_next();
     	const auto text = command_system.exec_next();
@@ -41,7 +45,7 @@ public:
     		std::cout << text.string() << std::endl;
     	}
 
-    	return CommandReturnValue{0.0};
+    	return CommandValue{0.0};
     }
 };
 

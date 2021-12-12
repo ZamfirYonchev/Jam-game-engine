@@ -11,30 +11,34 @@
 #include <type_traits>
 
 template<typename... Ts>
-struct TypePack;
+struct TypePack {};
 
 template<typename T, typename... Ts>
 struct TypePack<T, Ts...>
 {
-    template<typename... Us>
-    TypePack(Us&&... us) : t{std::forward<Us>(us)...}, pack{us...} {}
+	TypePack() = default;
+
+    template<typename U, typename... Us>
+    TypePack(U&& u, Us&&... us) : t{std::forward<U>(u)}, pack{std::forward<Us>(us)...} {}
 
     template<typename U>
     U& access()
     {
-        if constexpr(std::is_same<T, U>::value)
+    	using D = std::decay_t<U>;
+        if constexpr(std::is_same<T, D>::value)
             return t;
         else
-            return pack.template access<U>();
+            return pack.template access<D>();
     }
 
     template<typename U>
     const U& access() const
     {
-        if constexpr(std::is_same<T, U>::value)
+    	using D = std::decay_t<U>;
+        if constexpr(std::is_same<T, D>::value)
             return t;
         else
-            return pack.template access<U>();
+            return pack.template access<D>();
     }
 
     T t;
@@ -44,8 +48,10 @@ struct TypePack<T, Ts...>
 template<typename T>
 struct TypePack<T>
 {
-    template<typename... Us>
-    TypePack(Us&&... us) : t{std::forward<Us>(us)...} {}
+	TypePack() = default;
+
+	template<typename U>
+    TypePack(U&& u) : t{std::forward<U>(u)} {}
 
     template<typename U>
     T& access() { return t; }

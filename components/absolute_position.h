@@ -8,15 +8,34 @@
 #ifndef COMPONENTS_ABSOLUTE_POSITION_H_
 #define COMPONENTS_ABSOLUTE_POSITION_H_
 
-#include "position.h"
+#include "../command_value.h"
 
-class AbsolutePosition : public Position
+class AbsolutePosition
 {
 public:
-	using Base = Position;
     AbsolutePosition(const double x, const double y, const double w, const double h)
     : m_x(x), m_y(y), m_width(w), m_height(h) {}
     AbsolutePosition() : AbsolutePosition(0, 0, 0, 0) {}
+
+    template<typename ExtractorF>
+    AbsolutePosition(ExtractorF&& extract)
+    : AbsolutePosition
+	  { extract().real()
+      , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  }
+    {}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert(CommandValue{"UseAbsolutePosition"});
+    	insert(CommandValue{m_x});
+    	insert(CommandValue{m_y});
+    	insert(CommandValue{m_width});
+    	insert(CommandValue{m_height});
+    }
 
     void print(std::ostream& to) const
     {

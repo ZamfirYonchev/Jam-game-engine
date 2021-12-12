@@ -8,19 +8,25 @@
 #ifndef COMMANDS_MODIFY_COLLISION_COMMAND_H_
 #define COMMANDS_MODIFY_COLLISION_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../math_ext.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename EntitySystemT>
 class ModifyCollisionCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	EntitySystemT& entity_system;
+	Globals& globals;
+
+	ModifyCollisionCommand(CommandSystemT& _command_system, EntitySystemT& _entity_system, Globals& _globals)
+	: command_system{_command_system}
+	, entity_system{_entity_system}
+	, globals{_globals}
+	{}
+
+	CommandValue operator()() const
 	{
     	const auto solid = command_system.exec_next();
     	const auto standing_on = command_system.exec_next();
@@ -38,9 +44,9 @@ public:
 				collision.set_solid(solid.boolean() ^ collision.solid());
 
 			if(is_negative_zero(standing_on.real()))
-				collision.set_standing_on(Collision::SurfaceType::AIR);
+				collision.set_standing_on(SurfaceType::AIR);
 			else
-				collision.set_standing_on(Collision::SurfaceType((standing_on.integer() + int(collision.standing_on()))%4));
+				collision.set_standing_on(SurfaceType((standing_on.integer() + int(collision.standing_on()))%4));
 
 			if(is_negative_zero(on_collision_damage.real()))
 				collision.set_collision_damage(0);
@@ -52,12 +58,12 @@ public:
 			else
 				collision.set_elasticity(clip(collision.elasticity() + elasticity.real(), 0.0, 1.0));
 
-			return CommandReturnValue{0.0};
+			return CommandValue{0.0};
 		}
 		else
 		{
 			//error selected_entity
-			return CommandReturnValue{-1.0};
+			return CommandValue{-1.0};
 		}
 	}
 };

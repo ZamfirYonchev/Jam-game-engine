@@ -19,9 +19,13 @@ template<typename EntitySystemT>
 class ControlSystem : public SystemBase
 {
 public:
-	ControlSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
+	ControlSystem(EntitySystemT& entity_system, Globals& _globals, std::stringstream& _external_commands)
+	: m_entity_system(entity_system)
+	, globals{_globals}
+	, external_commands{_external_commands}
+	{}
 
-	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff)
 	{
 		if(globals(Globals::app_paused).boolean()) return;
 
@@ -48,8 +52,8 @@ public:
 				if(control.decision_attack() && control.attack_proc_id() > 0)
 				{
 					//const auto& position = entity_system.template entity_component<Position>(id);
-					procedure_calls.emplace_back(id, control.attack_proc_id());
-					/*if(control.look_dir() == Control::LookDir::LEFT)
+					external_commands << "Select " << id << " Call " << control.attack_proc_id() << '\n';
+					/*if(control.look_dir() == LookDir::LEFT)
 					{
 						//command_system.push(ModifyPositionCommand{position.x(), position.y(), 0, 0});
 						//command_system.push(ModifyControlCommand{0, 0, 0, -0.0, -0.0});
@@ -86,6 +90,8 @@ public:
 
 private:
     EntitySystemT& m_entity_system;
+    Globals& globals;
+    std::stringstream& external_commands;
 };
 
 

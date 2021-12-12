@@ -8,10 +8,8 @@
 //zamfir.yonchev @ gmail.com
 
 #include "sdl_window.h"
-#include <SDL2/SDL.h>
-#include <fstream>
 #include "math_ext.h"
-#include "commands/execute_file_clean_command.h"
+#include "commands/execute_file_command.h"
 #include "systems/rendering_system.h"
 #include "systems/entity_system.h"
 #include "systems/resource_system.h"
@@ -75,11 +73,7 @@
 #include "components/attached_directional_position.h"
 #include "components/null_position.h"
 #include "components/constant_control.h"
-#include "components/absolute_position.h"
-#include "components/attached_position.h"
-#include "components/null_position.h"
 #include "components/chase_ai_control.h"
-#include "components/constant_control.h"
 #include "components/guide_control.h"
 #include "components/input_control.h"
 #include "components/input_select_control.h"
@@ -116,46 +110,92 @@
 #include "commands/literal_value_command.h"
 #include "globals.h"
 #include "utilities.h"
+#include "command_value_extractor.h"
 
 #include <list>
 #include <utility>
 #include <string>
 #include <random>
 #include <array>
+#include <variant>
 
 int main(int argc, char** argv)
 {
 	Globals globals;
-	globals(Globals::app_resolution_x) = CommandReturnValue{800.0};
-	globals(Globals::app_resolution_y) = CommandReturnValue{600.0};
-	globals(Globals::app_fullscreen) = CommandReturnValue{0.0};
-	globals(Globals::app_enable_audio) = CommandReturnValue{0.0};
-	globals(Globals::app_sound_channels) = CommandReturnValue{2.0};
-	globals(Globals::app_window_title) = CommandReturnValue{"Jam engine"};
-	globals(Globals::app_running) = CommandReturnValue{1.0};
-	globals(Globals::app_paused) = CommandReturnValue{0.0};
-	globals(Globals::app_needs_reload) = CommandReturnValue{0.0};
-	globals(Globals::app_show_hitboxes) = CommandReturnValue{0.0};
-	globals(Globals::app_current_level) = CommandReturnValue{"init.jel"};
-	globals(Globals::app_debug_level) = CommandReturnValue{0.0};
+	globals(Globals::app_resolution_x) = CommandValue{800.0};
+	globals(Globals::app_resolution_y) = CommandValue{600.0};
+	globals(Globals::app_fullscreen) = CommandValue{0.0};
+	globals(Globals::app_enable_audio) = CommandValue{0.0};
+	globals(Globals::app_sound_channels) = CommandValue{2.0};
+	globals(Globals::app_window_title) = CommandValue{"Jam engine"};
+	globals(Globals::app_running) = CommandValue{1.0};
+	globals(Globals::app_paused) = CommandValue{0.0};
+	globals(Globals::app_needs_reload) = CommandValue{0.0};
+	globals(Globals::app_show_hitboxes) = CommandValue{0.0};
+	globals(Globals::app_current_level) = CommandValue{"init.jel"};
+	globals(Globals::app_debug_level) = CommandValue{0.0};
 
 	do
 	{
-		SdlWindow sdl;
+		CommandSystem command_system {globals};
+		using CS = decltype(command_system);
+
+		command_system.register_command("ExecuteFile", ExecuteFileCommand{command_system});
+
+		//this will load the data from the init.jel file and potentially give new values to the globals
+		if(globals(Globals::app_current_level).string() == "init.jel")
+		{
+			command_system.external_commands() << "ExecuteFile 'init.jel'\n";
+			command_system.process();
+		}
+
+		//this will schedule the loading of the level which should be set in init.jel
+		command_system.external_commands() << "ExecuteFile '" << globals(Globals::app_current_level).string() << "'\n";
+
+		const std::string title = globals(Globals::app_window_title).string();
+
+		bool sdl_initialized;
+		SdlWindow sdl
+				  { globals(Globals::app_resolution_x).integer()
+				  , globals(Globals::app_resolution_y).integer()
+				  , globals(Globals::app_fullscreen).boolean()
+				  , true
+				  , globals(Globals::app_enable_audio).boolean()
+				  , globals(Globals::app_sound_channels).integer()
+				  , title.c_str()
+				  , sdl_initialized
+				  };
+
+		if(sdl_initialized == false)
+		{
+			std::cerr << "Exiting..." << std::endl;
+			return -1;
+		}
+
+		globals(Globals::app_resolution_x) = CommandValue{sdl.res_width(), 0};
+		globals(Globals::app_resolution_y) = CommandValue{sdl.res_height(), 0};
+
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
 		InputSystem input_system;
-		RenderingSystem rendering_system;
 
-		ControlSystem<ES> control_system {entity_system};
-		MovementSystem<ES> movement_system {entity_system};
-		CollisionSystem<ES> collision_system {entity_system};
-		//MovementCollisionSystem<ES> movement_collision_system {entity_system};
-		DamageSystem<ES> damage_system {entity_system};
-		SoundSystem<ES> sound_system {entity_system, resource_system};
+		ControlSystem<ES> control_system {entity_system, globals, command_system.external_commands()};
+		MovementSystem<ES> movement_system {entity_system, globals};
+		CollisionSystem<ES> collision_system {entity_system, globals, command_system.external_commands()};
+		//MovementCollisionSystem<ES> movement_collision_system {entity_system, globals, command_system.external_commands()};
+		DamageSystem<ES> damage_system {entity_system, globals, command_system.external_commands()};
+		SoundSystem<ES> sound_system {entity_system, resource_system, globals};
+		RenderingSystem<ES, ResourceSystem> rendering_system
+			{ entity_system
+			, resource_system
+			, globals
+			, sdl
+			};
 
-		AllSystems<ControlSystem<ES>,MovementSystem<ES>,CollisionSystem<ES>/*MovementCollisionSystem<ES>*/,DamageSystem<ES>, SoundSystem<ES>> all_systems
+		using RS = decltype(rendering_system);
+
+		AllSystems all_systems
 		{ control_system
 		, movement_system
 		, collision_system
@@ -165,136 +205,121 @@ int main(int argc, char** argv)
 		};
 
 		using AS = decltype(all_systems);
-		CommandSystem<ES, AS> command_system {entity_system, resource_system, input_system, rendering_system, all_systems, globals};
-		//using CS = decltype(command_system);
 
-		std::mt19937 gen {std::random_device{}()};
+		std::mt19937 rand_gen {std::random_device{}()};
 
-	    command_system.register_command("Set", SetVariableCommand{});
-	    command_system.register_command("Val", GetVariableCommand{});
-	    command_system.register_command("DebugMessage", DebugMessageCommand{});
-		command_system.register_command("FixViewWidth", FixViewWidthCommand{});
-		command_system.register_command("SelectEntity", SelectEntityCommand{});
-		command_system.register_command("Select", SelectEntityCommand{});
-		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{});
-		command_system.register_command("ClearProcedure", ClearProcedureCommand{});
-		command_system.register_command("Pause", PauseCommand{});
-		command_system.register_command("Reload", ReloadCommand{});
-		command_system.register_command("Quit", QuitCommand{});
-		command_system.register_command("ClearAllEntities", ClearAllTexturesCommand{});
-		command_system.register_command("ClearAllAnimations", ClearAllAnimationsCommand{});
-		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{});
-		command_system.register_command("ExecuteFile", ExecuteFileCommand{});
-		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{});
-		command_system.register_command("CallProcedure", CallProcedureCommand{});
-		command_system.register_command("Call", CallProcedureCommand{});
-		command_system.register_command("AddFont", AddFontCommand{});
-		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{});
-		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{});
-		command_system.register_command("AddAnimation", AddAnimationCommand{});
-		command_system.register_command("AddSprite", AddSpriteCommand{});
-		command_system.register_command("AddSound", AddSoundCommand{});
-		command_system.register_command("AddMusic", AddMusicCommand{});
-		command_system.register_command("AddEntity", AddEntityCommand{});
-		command_system.register_command("RemoveEntity", RemoveEntityCommand{});
-		command_system.register_command("ModifyPosition", ModifyPositionCommand{});
-		command_system.register_command("ModifyControl", ModifyControlCommand{});
-		command_system.register_command("ModifyMovement", ModifyMovementCommand{});
-		command_system.register_command("ModifyCollision", ModifyCollisionCommand{});
-		command_system.register_command("ModifyInteraction", ModifyInteractionCommand{});
-		command_system.register_command("ModifyHealth", ModifyHealthCommand{});
-		command_system.register_command("ModifyVisuals", ModifyVisualsCommand{});
-		command_system.register_command("UseNullPosition", UseComponentCommand<NullPosition>{});
-		command_system.register_command("UseAbsolutePosition", UseComponentCommand<AbsolutePosition>{});
-		command_system.register_command("UseAttachedPosition", UseComponentCommand<AttachedPosition<ES>>{});
-		command_system.register_command("UseBuildPosition", UseBuildPositionCommand{});
-		command_system.register_command("UseAttachedDirectionalPosition", UseComponentCommand<AttachedDirectionalPosition<ES>>{});
-		command_system.register_command("UseNullControl", UseComponentCommand<NullControl>{});
-		command_system.register_command("UseConstantControl",UseComponentCommand<ConstantControl>{});
-		command_system.register_command("UseInputControl", UseInputControlCommand{});
-		command_system.register_command("UseInputSelectControl", UseComponentCommand<InputSelectControl>{});
-		command_system.register_command("UseChaseAIControl", UseChaseAIControlCommand{});
-		command_system.register_command("UseGuideControl", UseGuideControlCommand{});
-		command_system.register_command("UseParticleControl", UseParticleControlCommand{gen});
-		command_system.register_command("UseTimedControl", UseComponentCommand<TimedControl>{});
-		command_system.register_command("UseNullMovement", UseComponentCommand<NullMovement>{});
-		command_system.register_command("UseFullMovement", UseComponentCommand<FullMovement>{});
-		command_system.register_command("UseInstantMovement", UseComponentCommand<InstantMovement>{});
-		command_system.register_command("UseNullCollision", UseComponentCommand<NullCollision>{});
-		command_system.register_command("UseBasicCollision", UseComponentCommand<BasicCollision>{});
-		command_system.register_command("UseDamageCollision", UseComponentCommand<DamageCollision>{});
-		command_system.register_command("UseNullInteraction", UseComponentCommand<NullInteraction>{});
-		command_system.register_command("UseNormalInteraction", UseComponentCommand<NormalInteraction>{});
-		command_system.register_command("UseTriggerInteraction", UseComponentCommand<TriggerInteraction>{});
-		command_system.register_command("UseFullInteraction", UseComponentCommand<FullInteraction>{});
-		command_system.register_command("UseAttachedInteraction", UseComponentCommand<AttachedInteraction>{});
-		command_system.register_command("UseNullHealth", UseComponentCommand<NullHealth>{});
-		command_system.register_command("UseAttachedHealth", UseAttachedHealthCommand{});
-		command_system.register_command("UseCharacterHealth", UseComponentCommand<CharacterHealth>{});
-		command_system.register_command("UseTimedHealth", UseComponentCommand<TimedHealth>{});
-		command_system.register_command("UseNullVisuals", UseComponentCommand<NullVisuals>{});
-		command_system.register_command("UseCharacterVisuals", UseCharacterVisualsCommand{});
-		command_system.register_command("UseFlyingCharacterVisuals", UseFlyingCharacterVisualsCommand{});
-		command_system.register_command("UseTiledVisuals", UseTiledVisualsCommand{});
-		command_system.register_command("UseStaticVisuals", UseComponentCommand<StaticVisuals>{});
-		command_system.register_command("UseHealthVisuals", UseHealthVisualsCommand{});
-		command_system.register_command("UseMenuItemVisuals", UseMenuItemVisualsCommand{});
-		command_system.register_command("UseAnimationVisuals", UseAnimationVisualsCommand{});
-		command_system.register_command("UseNullSounds", UseComponentCommand<NullSounds>{});
-		command_system.register_command("UseCharacterSounds", UseCharacterSoundsCommand{});
-		command_system.register_command("ReusePosition", ReuseComponentCommand<Position>{});
-		command_system.register_command("ReuseControl", ReuseComponentCommand<Control>{});
-		command_system.register_command("ReuseMovement", ReuseComponentCommand<Movement>{});
-		command_system.register_command("ReuseCollision", ReuseComponentCommand<Collision>{});
-		command_system.register_command("ReuseInteraction", ReuseComponentCommand<Interaction>{});
-		command_system.register_command("ReuseHealth", ReuseComponentCommand<Health>{});
-		command_system.register_command("ReuseSounds", ReuseComponentCommand<Sounds>{});
-		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals>{});
-		command_system.register_command("ExportEntities", ExportEntitiesCommand{});
-		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{});
-		command_system.register_command("PlaySound", PlaySoundCommand{});
-		command_system.register_command("PlayMusic", PlayMusicCommand{});
-		command_system.register_command("PauseAllSounds", PauseAllSoundsCommand{});
-		command_system.register_command("ReadPosition", ReadComponentCommand<Position>{});
-		command_system.register_command("ReadControl", ReadComponentCommand<Control>{});
-		command_system.register_command("ReadMovement", ReadComponentCommand<Movement>{});
-		command_system.register_command("ReadCollision", ReadComponentCommand<Collision>{});
-		command_system.register_command("ReadInteraction", ReadComponentCommand<Interaction>{});
-		command_system.register_command("ReadHealth", ReadComponentCommand<Health>{});
-		command_system.register_command("ReadSounds", ReadComponentCommand<Sounds>{});
-		command_system.register_command("ReadVisuals", ReadComponentCommand<Visuals>{});
+		UseComponentCommandGenerator<ES, AS, RS, CS> use_command_gen
+													 { entity_system
+													 , all_systems
+													 , rendering_system
+													 , command_system
+													 , globals
+													 };
 
-		//this will load the data from the init.jel file and potentially give new values to the globals
-		if(globals(Globals::app_current_level).string() == "init.jel")
-		{
-			command_system.push(ExecuteFileCleanCommand{});
-			command_system.push(LiteralValueCommand{"init.jel"});
-			command_system.process(resource_system, rendering_system, input_system);
-		}
+		CommandValueExtractor<CommandSystem> command_value_extractor{command_system};
 
-		//this will schedule the loading of the level which should be set in init.jel
-		command_system.push(ExecuteFileCleanCommand{});
-		command_system.push(LiteralValueCommand{globals(Globals::app_current_level)});
+		ES::ComponentAccessor<Position> position_accessor{entity_system};
+		ES::ComponentAccessor<Control> control_accessor{entity_system};
+		ES::ComponentAccessor<Movement> movement_accessor{entity_system};
+		ES::ComponentAccessor<Collision> collision_accessor{entity_system};
+		ES::ComponentAccessor<Interaction> interaction_accessor{entity_system};
+		ES::ComponentAccessor<Health> health_accessor{entity_system};
+		ES::ComponentAccessor<Sounds> sounds_accessor{entity_system};
+		ES::ComponentAccessor<Visuals> visuals_accessor{entity_system};
 
-		int res_x = globals(Globals::app_resolution_x).integer();
-		int res_y = globals(Globals::app_resolution_y).integer();
-		const std::string title = globals(Globals::app_window_title).string();
-
-		sdl.init_video(res_x
-					 , res_y
-					 , globals(Globals::app_fullscreen).boolean()
-					 , true
-					 , globals(Globals::app_enable_audio).boolean()
-					 , globals(Globals::app_sound_channels).integer()
-					 , title.c_str()
-					 );
-
-		globals(Globals::app_resolution_x) = CommandReturnValue{res_x, 0};
-		globals(Globals::app_resolution_y) = CommandReturnValue{res_y, 0};
-
-		rendering_system.set_renderer(sdl.renderer());
-		rendering_system.set_resolution_x(res_x);
-		rendering_system.set_resolution_y(res_y);
+	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
+	    command_system.register_command("Val", GetVariableCommand{command_system, globals});
+	    command_system.register_command("DebugMessage", DebugMessageCommand{command_system, globals});
+		command_system.register_command("FixViewWidth", FixViewWidthCommand{entity_system, command_system, globals});
+		command_system.register_command("SelectEntity", SelectEntityCommand{command_system, globals});
+		command_system.register_command("Select", SelectEntityCommand{command_system, globals});
+		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{command_system});
+		command_system.register_command("ClearProcedure", ClearProcedureCommand{command_system});
+		command_system.register_command("Pause", PauseCommand{command_system, globals});
+		command_system.register_command("Reload", ReloadCommand{globals});
+		command_system.register_command("Quit", QuitCommand{globals});
+		command_system.register_command("ClearAllTextures", ClearAllTexturesCommand{resource_system});
+		command_system.register_command("ClearAllEntities", ClearAllEntitiesCommand{entity_system, all_systems});
+		command_system.register_command("ClearAllAnimations", ClearAllAnimationsCommand{resource_system});
+		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{command_system});
+		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{entity_system, command_system, all_systems, rendering_system, resource_system});
+		command_system.register_command("CallProcedure", CallProcedureCommand{command_system, globals});
+		command_system.register_command("Call", CallProcedureCommand{command_system, globals});
+		command_system.register_command("AddFont", AddFontCommand{command_system, resource_system});
+		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{command_system, rendering_system, resource_system});
+		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{command_system, rendering_system, resource_system});
+		command_system.register_command("AddAnimation", AddAnimationCommand{command_system, resource_system});
+		command_system.register_command("AddSprite", AddSpriteCommand{command_system, resource_system});
+		command_system.register_command("AddSound", AddSoundCommand{command_system, resource_system, globals});
+		command_system.register_command("AddMusic", AddMusicCommand{command_system, resource_system, globals});
+		command_system.register_command("AddEntity", AddEntityCommand{entity_system, globals});
+		command_system.register_command("RemoveEntity", RemoveEntityCommand{entity_system, globals});
+		command_system.register_command("ModifyPosition", ModifyPositionCommand{command_system, entity_system, globals});
+		command_system.register_command("ModifyControl", ModifyControlCommand{command_system, entity_system, globals});
+		command_system.register_command("ModifyMovement", ModifyMovementCommand{command_system, entity_system, globals});
+		command_system.register_command("ModifyCollision", ModifyCollisionCommand{command_system, entity_system, globals});
+		command_system.register_command("ModifyInteraction", ModifyInteractionCommand{command_system, entity_system, globals});
+		command_system.register_command("ModifyHealth", ModifyHealthCommand{command_system, entity_system, globals});
+		command_system.register_command("ModifyVisuals", ModifyVisualsCommand{command_system, entity_system, rendering_system, globals});
+		command_system.register_command("UseNullPosition", use_command_gen.make<Position, NullPosition>());
+		command_system.register_command("UseAbsolutePosition", use_command_gen.make<Position, AbsolutePosition>(command_value_extractor));
+		command_system.register_command("UseAttachedPosition", use_command_gen.make<Position, AttachedPosition>(command_value_extractor, position_accessor));
+		command_system.register_command("UseBuildPosition", use_command_gen.make<Position, BuildPosition>(command_value_extractor, position_accessor));
+		command_system.register_command("UseAttachedDirectionalPosition", use_command_gen.make<Position, AttachedDirectionalPosition>(command_value_extractor, position_accessor, control_accessor));
+		command_system.register_command("UseNullControl", use_command_gen.make<Control, NullControl>());
+		command_system.register_command("UseConstantControl", use_command_gen.make<Control, ConstantControl>(command_value_extractor));
+		command_system.register_command("UseInputControl", use_command_gen.make<Control, InputControl>(command_value_extractor, input_system, globals(Globals::selected_entity), movement_accessor));
+		command_system.register_command("UseInputSelectControl", use_command_gen.make<Control, InputSelectControl>(command_value_extractor, input_system));
+		command_system.register_command("UseChaseAIControl", use_command_gen.make<Control, ChaseAIControl>(command_value_extractor, globals(Globals::selected_entity), position_accessor));
+		command_system.register_command("UseGuideControl", use_command_gen.make<Control, GuideControl>(command_value_extractor, globals(Globals::selected_entity), position_accessor));
+		command_system.register_command("UseParticleControl", use_command_gen.make<Control, ParticleControl>(command_value_extractor, rand_gen));
+		command_system.register_command("UseTimedControl", use_command_gen.make<Control, TimedControl>(command_value_extractor));
+		command_system.register_command("UseNullMovement", use_command_gen.make<Movement, NullMovement>());
+		command_system.register_command("UseFullMovement", use_command_gen.make<Movement, FullMovement>(command_value_extractor));
+		command_system.register_command("UseInstantMovement", use_command_gen.make<Movement, InstantMovement>(command_value_extractor));
+		command_system.register_command("UseNullCollision", use_command_gen.make<Collision, NullCollision>());
+		command_system.register_command("UseBasicCollision", use_command_gen.make<Collision, BasicCollision>(command_value_extractor));
+		command_system.register_command("UseDamageCollision", use_command_gen.make<Collision, DamageCollision>(command_value_extractor));
+		command_system.register_command("UseNullInteraction", use_command_gen.make<Interaction, NullInteraction>());
+		command_system.register_command("UseNormalInteraction", use_command_gen.make<Interaction, NormalInteraction>(command_value_extractor));
+		command_system.register_command("UseTriggerInteraction", use_command_gen.make<Interaction, TriggerInteraction>(command_value_extractor));
+		command_system.register_command("UseFullInteraction", use_command_gen.make<Interaction, FullInteraction>(command_value_extractor));
+		command_system.register_command("UseAttachedInteraction", use_command_gen.make<Interaction, AttachedInteraction>(command_value_extractor, interaction_accessor));
+		command_system.register_command("UseNullHealth", use_command_gen.make<Health, NullHealth>());
+		command_system.register_command("UseAttachedHealth", use_command_gen.make<Health, AttachedHealth>(command_value_extractor, health_accessor));
+		command_system.register_command("UseCharacterHealth", use_command_gen.make<Health, CharacterHealth>(command_value_extractor));
+		command_system.register_command("UseTimedHealth", use_command_gen.make<Health, TimedHealth>(command_value_extractor));
+		command_system.register_command("UseNullSounds", use_command_gen.make<Sounds, NullSounds>());
+		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds>(command_value_extractor, globals(Globals::selected_entity), control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseNullVisuals", use_command_gen.make<Visuals, NullVisuals>());
+		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), control_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseTiledVisuals", use_command_gen.make<Visuals, TiledVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), position_accessor));
+		command_system.register_command("UseStaticVisuals", use_command_gen.make<Visuals, StaticVisuals>(command_value_extractor));
+		command_system.register_command("UseHealthVisuals", use_command_gen.make<Visuals, HealthVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), health_accessor));
+		command_system.register_command("UseMenuItemVisuals", use_command_gen.make<Visuals, MenuItemVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), control_accessor));
+		command_system.register_command("UseAnimationVisuals", use_command_gen.make<Visuals, AnimationVisuals>(command_value_extractor, resource_system));
+		command_system.register_command("ReusePosition", ReuseComponentCommand<Position, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseControl", ReuseComponentCommand<Control, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseMovement", ReuseComponentCommand<Movement, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseCollision", ReuseComponentCommand<Collision, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseInteraction", ReuseComponentCommand<Interaction, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseHealth", ReuseComponentCommand<Health, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseSounds", ReuseComponentCommand<Sounds, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ExportEntities", ExportEntitiesCommand{command_system, entity_system});
+		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{entity_system, all_systems, globals});
+		command_system.register_command("PlaySound", PlaySoundCommand{command_system, resource_system, globals});
+		command_system.register_command("PlayMusic", PlayMusicCommand{command_system, resource_system, globals});
+		command_system.register_command("PauseAllSounds", PauseAllSoundsCommand{command_system, globals});
+		command_system.register_command("ReadPosition", ReadPositionCommand{command_system, entity_system});
+		command_system.register_command("ReadControl", ReadControlCommand{command_system, entity_system});
+		command_system.register_command("ReadMovement", ReadMovementCommand{command_system, entity_system});
+		command_system.register_command("ReadCollision", ReadCollisionCommand{command_system, entity_system});
+		command_system.register_command("ReadInteraction", ReadInteractionCommand{command_system, entity_system});
+		command_system.register_command("ReadHealth", ReadHealthCommand{command_system, entity_system});
+		command_system.register_command("ReadSounds", ReadSoundsCommand{command_system, entity_system});
+		command_system.register_command("ReadVisuals", ReadVisualsCommand{command_system, entity_system});
 
 		const Time update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;
@@ -304,17 +329,14 @@ int main(int argc, char** argv)
 
 		do
 		{
-			input_system.process_input(globals, command_system.procedure_calls());
-			command_system.process(resource_system, rendering_system, input_system);
+			input_system.process_input(globals, command_system.external_commands());
+			command_system.process();
 			entity_system.clean_removed_entites(all_systems);
-
-			const bool app_paused = globals(Globals::app_paused).boolean();
-			const bool show_hitboxes = globals(Globals::app_show_hitboxes).boolean();
 
 			if(SDL_GetTicks()-last_update_time >= update_time_delta)
 			{
 				last_update_time += update_time_delta;
-				all_systems.update(update_time_delta, globals, command_system.procedure_calls());
+				all_systems.update(update_time_delta);
 				input_system.clear_toggle_inputs();
 			}
 
@@ -322,14 +344,14 @@ int main(int argc, char** argv)
 			{
 				const Time diff = SDL_GetTicks()-last_render_time;
 				last_render_time = SDL_GetTicks();
-				rendering_system.render_entities(diff, entity_system, resource_system, app_paused, show_hitboxes);
+				rendering_system.update(diff);
 				++number_of_frames;
 			}
 
 		} while(globals(Globals::app_running).boolean() && globals(Globals::app_needs_reload).boolean() == false);
 
 		std::cout << "FPS = " << 1000.0*number_of_frames / (SDL_GetTicks()-start_frame_time) << std::endl;
-		globals(Globals::app_needs_reload) = CommandReturnValue{0.0};
+		globals(Globals::app_needs_reload) = CommandValue{0.0};
 
 	} while(globals(Globals::app_running).boolean());
 

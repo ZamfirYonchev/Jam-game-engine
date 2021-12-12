@@ -8,12 +8,11 @@
 #ifndef COMPONENTS_NULL_VISUALS_H_
 #define COMPONENTS_NULL_VISUALS_H_
 
-#include "visuals.h"
+#include "visuals_enums.h"
 
-class NullVisuals : public Visuals
+class NullVisuals
 {
 public:
-	using Base = Visuals;
     void print(std::ostream& to) const
     {
     	to << "UseNullVisuals ";

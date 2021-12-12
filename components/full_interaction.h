@@ -8,15 +8,15 @@
 #ifndef COMPONENTS_FULL_INTERACTION_H_
 #define COMPONENTS_FULL_INTERACTION_H_
 
-#include "interaction.h"
+#include "../types.h"
+#include "../command_value.h"
 
-class FullInteraction : public Interaction
+class FullInteraction
 {
 public:
-	using Base = Interaction;
 	FullInteraction
 		(const int32_t group_vec
-	   , const int8_t trigger_group
+	   , const GroupID trigger_group
 	   , const ProcedureID proc_id_self
 	   , const ProcedureID proc_id_other
 	   , const ProcedureID on_exit_proc_id_self)
@@ -29,7 +29,20 @@ public:
 	, m_last_triggered_groups(0)
 	{}
 
-	FullInteraction(int8_t trigger_group, ProcedureID proc_id_self, ProcedureID on_exit_proc_id_self, ProcedureID proc_id_other)
+    template<typename ExtractorF>
+	FullInteraction
+	( ExtractorF&& extract
+	)
+	: FullInteraction
+	  { extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  }
+	{}
+
+	FullInteraction(int trigger_group, ProcedureID proc_id_self, ProcedureID on_exit_proc_id_self, ProcedureID proc_id_other)
 	: FullInteraction(0, trigger_group, proc_id_self, on_exit_proc_id_self, proc_id_other)
 	{}
 
@@ -37,7 +50,7 @@ public:
     {
     	to << "UseFullInteraction "
     	   << m_group_vec << " "
-    	   << int(m_trigger_group) << " "
+    	   << m_trigger_group << " "
     	   << m_proc_id_self << " "
     	   << m_proc_id_other << " "
     	   << m_on_exit_proc_id_self << " ";
@@ -51,7 +64,7 @@ public:
 	}
 	void clear_groups() { m_group_vec = 0; }
 
-	int8_t trigger_group() const { return m_trigger_group; }
+	GroupID trigger_group() const { return m_trigger_group; }
 	ProcedureID proc_id_self() const { return m_proc_id_self; }
 	ProcedureID proc_id_other() const { return m_proc_id_other; }
 	ProcedureID on_exit_proc_id_self() const { return m_on_exit_proc_id_self; }
@@ -60,7 +73,7 @@ public:
 		return (m_triggered_groups & (1 << m_trigger_group)) != 0;
 	}
 
-	void set_trigger_group(int8_t group) { m_trigger_group = group; }
+	void set_trigger_group(GroupID group) { m_trigger_group = group; }
 	void set_proc_id_self(ProcedureID proc_id) { m_proc_id_self = proc_id; }
 	void set_proc_id_other(ProcedureID proc_id) { m_proc_id_other = proc_id; }
 	void set_on_exit_proc_id_self(ProcedureID proc_id) { m_on_exit_proc_id_self = proc_id; }
@@ -73,7 +86,7 @@ public:
 
 private:
 	int32_t m_group_vec;
-	int8_t m_trigger_group;
+	GroupID m_trigger_group;
 	ProcedureID m_proc_id_self, m_proc_id_other, m_on_exit_proc_id_self;
 	int32_t m_triggered_groups;
 	int32_t m_last_triggered_groups;

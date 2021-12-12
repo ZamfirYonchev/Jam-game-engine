@@ -8,14 +8,13 @@
 #ifndef COMPONENTS_TIMED_CONTROL_H_
 #define COMPONENTS_TIMED_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
 #include "../math_ext.h"
-#include "../commands/use_component_command.h"
+#include "../command_value.h"
 
-class TimedControl : public Control
+class TimedControl
 {
 public:
-	using Base = Control;
 	TimedControl
 		(const int max_duration
 	   , const int repeats
@@ -33,6 +32,19 @@ public:
 	, m_walk{1}
 	{}
 
+    template<typename ExtractorF>
+	TimedControl
+	( ExtractorF&& extract
+	)
+	: TimedControl
+	  { extract().integer()
+	  , extract().integer()
+	  , extract().real()
+	  , extract().real()
+	  , extract().integer()
+	  }
+	{}
+
     void print(std::ostream& to) const
     {
     	to << "UseTimedControl "
@@ -44,7 +56,7 @@ public:
     bool decision_attack() const { return m_attack; }
     double decision_walk() const { return m_walk * m_horizontal; }
     ProcedureID attack_proc_id() const { return m_proc_id; }
-    LookDir look_dir() const { return m_walk < 0 ? Control::LookDir::LEFT : Control::LookDir::RIGHT; }
+    LookDir look_dir() const { return m_walk < 0 ? LookDir::LEFT : LookDir::RIGHT; }
 
     void set_decision_vertical(double val) {}
     void set_decision_attack(bool val) {}
@@ -79,20 +91,5 @@ private:
     int m_repeats;
     int8_t m_walk;
 };
-
-template<>
-template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-CommandReturnValue UseComponentCommand<TimedControl>::operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
-{
-	const auto max_duration = command_system.exec_next();
-	const auto repeats = command_system.exec_next();
-	const auto horizontal = command_system.exec_next();
-	const auto vertical = command_system.exec_next();
-	const auto proc_id = command_system.exec_next();
-
-	set_component(entity_system, rendering_system, all_systems, globals, {max_duration.integer(), repeats.integer(), horizontal.real(), vertical.real(), proc_id.integer()});
-
-	return CommandReturnValue{0.0};
-}
 
 #endif /* COMPONENTS_TIMED_CONTROL_H_ */

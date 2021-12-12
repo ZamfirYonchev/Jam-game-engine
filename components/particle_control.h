@@ -7,21 +7,21 @@
 
 #ifndef COMPONENTS_PARTICLE_CONTROL_H_
 #define COMPONENTS_PARTICLE_CONTROL_H_
-#include "control.h"
-#include "../math_ext.h"
-#include "position.h"
-#include <random>
-#include "../math_ext.h"
 
-class ParticleControl : public Control
+#include "control_enums.h"
+#include "../math_ext.h"
+#include <random>
+#include "../command_value.h"
+
+class ParticleControl
 {
 public:
-	using Base = Control;
 	ParticleControl
-		(std::mt19937& gen
-	   , const double random_factor
-	   , const double directed_factor
-	   , const double direction_angle)
+	( std::mt19937& gen
+	, const double random_factor
+	, const double directed_factor
+	, const double direction_angle
+	)
 	: m_gen(gen)
 	, m_dist(0.0, M_PI*2)
 	, m_random_factor(random_factor)
@@ -31,6 +31,19 @@ public:
 	, m_decision_y(0)
 	, m_offset_x(0)
 	, m_offset_y(0)
+	{}
+
+    template<typename ExtractorF>
+	ParticleControl
+	( ExtractorF&& extract
+	, std::mt19937& gen
+	)
+	: ParticleControl
+	  { gen
+	  , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  }
 	{}
 
     void print(std::ostream& to) const
@@ -57,7 +70,7 @@ public:
 
     void update_decisions(const Time time_diff)
     {
-    	const double angle = m_dist(m_gen);
+    	const double angle = m_dist(m_gen.get());
     	const double vx = m_offset_x + m_directed_x + m_random_factor*std::cos(angle);
     	const double vy = m_offset_y + m_directed_y + m_random_factor*std::sin(angle);
     	const double v_len = std::sqrt(vx*vx + vy*vy);
@@ -73,7 +86,7 @@ public:
     }
 
 private:
-    std::mt19937& m_gen;
+    std::reference_wrapper<std::mt19937> m_gen;
     std::uniform_real_distribution<> m_dist;
     double m_random_factor;
     double m_directed_x, m_directed_y;

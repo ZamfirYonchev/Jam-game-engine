@@ -8,13 +8,13 @@
 #ifndef COMPONENTS_ANIMATION_VISUALS_H_
 #define COMPONENTS_ANIMATION_VISUALS_H_
 
-#include "visuals.h"
+#include "visuals_enums.h"
 #include "../systems/resource_system.h"
+#include "../command_value.h"
 
-class AnimationVisuals : public Visuals
+class AnimationVisuals
 {
 public:
-	using Base = Visuals;
 	AnimationVisuals(const AnimationID anim_id, const ResourceSystem& resource_system)
 	: m_anim_id{anim_id}
 	, m_layer{VisualLayer::FAR_BACKGROUND}
@@ -34,6 +34,17 @@ public:
 			//error anim_id
 		}
 	}
+
+    template<typename ExtractorF>
+	AnimationVisuals
+	( ExtractorF&& extract
+	, const ResourceSystem& resource_system
+	)
+	: AnimationVisuals
+	  { extract().integer()
+	  , resource_system
+	  }
+    {}
 
     void print(std::ostream& to) const
     {

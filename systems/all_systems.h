@@ -32,9 +32,9 @@ struct AllSystems
 		((void)pack.template access<Ts>().component_updated(component, id, change), ...);
 	}
 
-	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff)
 	{
-		((void)pack.template access<Ts>().update(time_diff, globals, procedure_calls), ...);
+		((void)pack.template access<Ts>().update(time_diff), ...);
 	}
 
 	void remove_id(const EntityID id)

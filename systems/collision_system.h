@@ -23,12 +23,33 @@
 template<typename EntitySystemT>
 class CollisionSystem : public SystemBase
 {
+	struct RegionLocation
+	{
+		int x, y;
+		int x_end, y_end;
+		RegionLocation() : x{0}, y{0}, x_end{0}, y_end{0} {}
+		RegionLocation(int _x, int _y, int _x_end, int _y_end) : x{_x}, y{_y}, x_end{_x_end}, y_end{_y_end} {}
+
+		bool operator==(const RegionLocation& rhs) const
+		{
+			return (x==rhs.x) && (y==rhs.y) && (x_end==rhs.x_end) && (y_end==rhs.y_end);
+		}
+
+		bool operator!=(const RegionLocation& rhs) const { return !(*this == rhs); }
+
+		bool is_null() const { return (x==x_end) || (y==y_end); }
+	};
+
 public:
     constexpr static double GRAVITY_ACCEL = -0.00980665; //always (IRL, 9.80665m/s^2 = 0.00980665mm/ms^2)
 
-	CollisionSystem(EntitySystemT& entity_system) : m_entity_system(entity_system) {}
+	CollisionSystem(EntitySystemT& entity_system, Globals& _globals, std::stringstream& _external_commands)
+    : m_entity_system(entity_system)
+    , globals{_globals}
+	, external_commands{_external_commands}
+	{}
 
-	void update(const Time time_diff, Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+	void update(const Time time_diff)
 	{
 		if(globals(Globals::app_paused).boolean()) return;
 
@@ -44,8 +65,8 @@ public:
 			const Position& position = m_entity_system.template entity_component<Position>(entity_id);
 			if(position)
 			{
-				const Collision::RegionLocation& old_location = regions_per_entity[entity_id];
-				const Collision::RegionLocation new_location
+				const RegionLocation& old_location = regions_per_entity[entity_id];
+				const RegionLocation new_location
 				{
 					int(std::floor(position.x() / REGION_W)),
 					int(std::floor(position.y() / REGION_W)),
@@ -85,9 +106,9 @@ public:
 				auto& interaction0 = m_entity_system.template entity_component<Interaction>(id0);
 				const auto& position0 = m_entity_system.template entity_component<Position>(id0);
 
-				collision0.set_standing_on(Collision::SurfaceType::AIR);
+				collision0.set_standing_on(SurfaceType::AIR);
 
-				const Collision::RegionLocation& location0 = regions_per_entity[id0];
+				const RegionLocation& location0 = regions_per_entity[id0];
 
 				std::unordered_set<EntityID> near_entities;
 
@@ -121,13 +142,13 @@ public:
 							if(interaction1.is_in_group(interaction0.trigger_group()))
 							{
 								if(interaction0.proc_id_other() > 0)
-									procedure_calls.emplace_back(id1, interaction0.proc_id_other());
+									external_commands << "Select " << id1 <<  " Call " << interaction0.proc_id_other() << '\n';
 							}
 
 							if(interaction0.is_in_group(interaction1.trigger_group()))
 							{
 								if(interaction1.proc_id_other() > 0)
-									procedure_calls.emplace_back(id0, interaction1.proc_id_other());
+									external_commands << "Select " << id0 <<  " Call " << interaction1.proc_id_other() << '\n';
 							}
 
 							m_entity_system.template entity_component<Health>(id0).mod_hp_change(-collision1.on_collision_damage()*time_diff);
@@ -184,7 +205,7 @@ public:
 										correction_values.vy += dvy_half*(1+collision0.elasticity()*collision1.elasticity());
 										correction_values.vx += dvx_half*2*movement0.friction_x()*movement1.friction_x();
 
-										collision0.set_standing_on(Collision::SurfaceType::GROUND);
+										collision0.set_standing_on(SurfaceType::GROUND);
 									}
 								}
 								else if(dy < 0)
@@ -250,9 +271,9 @@ public:
 				if(triggered != last_triggered)
 				{
 					if(triggered && interaction.proc_id_self() > 0)
-						procedure_calls.emplace_back(id, interaction.proc_id_self());
+						external_commands << "Select " << id <<  " Call " << interaction.proc_id_self() << '\n';
 					else if(!triggered && interaction.on_exit_proc_id_self() > 0)
-						procedure_calls.emplace_back(id, interaction.on_exit_proc_id_self());
+						external_commands << "Select " << id <<  " Call " << interaction.on_exit_proc_id_self() << '\n';
 				}
 			}
 		}
@@ -311,8 +332,10 @@ private:
 
 
     EntitySystemT& m_entity_system;
+    Globals& globals;
+    std::stringstream& external_commands;
     std::unordered_map<RegionPosition, std::unordered_set<EntityID>, RegionPositionHashFn> entities_per_region;
-    std::unordered_map<EntityID, Collision::RegionLocation> regions_per_entity;
+    std::unordered_map<EntityID, RegionLocation> regions_per_entity;
 	static const unsigned int REGION_W = 32;
     static const unsigned int REGION_H = 32;
 };

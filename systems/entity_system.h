@@ -11,59 +11,33 @@
 #include <vector>
 #include <unordered_set>
 #include <array>
-#include "../entity.h"
 #include "../types.h"
 #include <algorithm>
 #include "../type_pack.h"
-
-class RenderingSystem;
+#include "../components/component.h"
+#include "../ref_pack.h"
 
 template<typename... Ts>
 class EntitySystem
 {
 public:
-	using EntityT = Entity<Ts...>;
-	EntitySystem() : m_entities()
-				   , m_entities_to_remove()
-				   , m_free_entities()
-				   , m_last_accessed_entities()
-				   , m_head_of_last_accessed_entities(0)
-				   {}
-    ~EntitySystem()
-    {
-    	clear();
-    }
-
+	EntitySystem() = default;
+    ~EntitySystem() = default;
     EntitySystem(const EntitySystem&) = delete;
-    EntitySystem(EntitySystem&& rhs) noexcept :
-    								   m_entities(std::move(rhs.m_entities))
-    								 , m_entities_to_remove(std::move(rhs.m_entities_to_remove))
-    								 , m_free_entities(std::move(rhs.m_free_entities))
-    								 , m_last_accessed_entities(std::move(rhs.m_last_accessed_entities))
-    								 , m_head_of_last_accessed_entities(std::move(rhs.m_head_of_last_accessed_entities))
-    {}
-
+    EntitySystem(EntitySystem&& rhs) noexcept = default;
     EntitySystem& operator=(const EntitySystem&) = delete;
-    EntitySystem& operator=(EntitySystem&& rhs) noexcept
-    {
-    	clear();
-    	m_entities = std::move(rhs.m_entities);
-    	m_entities_to_remove = std::move(rhs.m_entities_to_remove);
-    	m_free_entities = std::move(rhs.m_free_entities);
-
-    	return *this;
-    }
+    EntitySystem& operator=(EntitySystem&& rhs) noexcept = default;
 
     template<typename F>
-    void for_each(F&& func) const
+    void for_each_component_pack(F&& func)
     {
-    	std::for_each(std::cbegin(m_entities), std::cend(m_entities), std::forward<F>(func));
+    	for(int entity_id = 0; entity_id < size(); ++entity_id)
+    		func((m_components.template access<std::vector<Ts>>()[entity_id])...);
     }
 
-    template<typename F>
-    void for_each(F&& func)
+    int size() const
     {
-    	std::for_each(std::begin(m_entities), std::end(m_entities), std::forward<F>(func));
+    	return m_components.t.size();
     }
 
     EntityID add_new_entity()
@@ -71,8 +45,8 @@ public:
     	EntityID id;
         if(m_free_entities.size() == 0)
         {
-        	id = m_entities.size();
-        	m_entities.push_back(EntityT(id));
+        	id = size();
+        	(m_components.template access<std::vector<Ts>>().emplace_back(), ...);
         }
         else
         {
@@ -81,7 +55,7 @@ public:
         }
 
         //TODO add debug_level control
-        //std::cout << (m_entities.size() - m_free_entities.size()) << " entities.\n";
+        //std::cout << (size() - m_free_entities.size()) << " entities.\n";
 
         return id;
     }
@@ -94,33 +68,44 @@ public:
     template<typename T>
     T& entity_component(const EntityID id)
     {
-    	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
-    		return m_entities[id].template component<T>();
+    	if(0 <= id && id < static_cast<EntityID>(size()))
+    		return m_components.template access<std::vector<T>>()[id];
     	else
-    		return *T::null;
+    		return null<T>();
     }
 
     template<typename T>
     const T& entity_component(const EntityID id) const
     {
-    	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
-    		return m_entities[id].template component<T>();
+    	if(0 <= id && id < static_cast<EntityID>(size()))
+    		return m_components.template access<std::vector<T>>()[id];
     	else
-    		return *T::null;
+    		return null<T>();
     }
 
-    template<typename T, typename AllSystemsT>
-	void set_entity_component(const EntityID id, AllSystemsT& all_systems, RenderingSystem& rendering_system, const T& component)
+    template<typename T>
+    T& set_entity_component(const EntityID id, T&& component, int8_t& change)
     {
-    	if(0 <= id && id < static_cast<EntityID>(m_entities.size()))
-    		m_entities[id].set_component(all_systems, rendering_system, component);
+    	using ComponentT = std::decay_t<T>;
+
+    	change = 0;
+
+    	if(0 <= id && id < static_cast<EntityID>(size()))
+    	{
+    		T& local_component = m_components.template access<std::vector<ComponentT>>()[id];
+    		change = bool(component) - bool(local_component);
+    		local_component = std::forward<T>(component);
+        	return  local_component;
+    	}
+    	else
+    		return null<ComponentT>();
     }
 
     void clear()
     {
         m_entities_to_remove.clear();
     	m_free_entities.clear();
-        m_entities.clear();
+    	(m_components.template access<std::vector<Ts>>().clear(), ...);
     }
 
     template<typename AllSystemsT>
@@ -130,18 +115,37 @@ public:
     	{
     		all_systems.remove_id(id);
 
-    		m_entities[id].clear();
+    		((m_components.template access<std::vector<Ts>>()[id] = null<Ts>()), ...);
     		m_free_entities.insert(id);
     	}
     	m_entities_to_remove.clear();
     }
 
+    template<typename ComponentT>
+    struct ComponentAccessor
+    {
+    	ComponentAccessor(EntitySystem& _entity_system) : entity_system{_entity_system} {}
+
+    	const ComponentT& operator()(const EntityID id) const
+    	{
+    		return entity_system.get().template entity_component<ComponentT>(id);
+    	}
+
+    	ComponentT& operator()(const EntityID id)
+    	{
+    		return entity_system.get().template entity_component<ComponentT>(id);
+    	}
+
+    	std::reference_wrapper<EntitySystem> entity_system;
+    };
+
+
 private:
-    std::vector<EntityT> m_entities;
+    TypePack<std::vector<Ts>...> m_components;
     std::unordered_set<EntityID> m_entities_to_remove;
     std::unordered_set<EntityID> m_free_entities;
     std::array<EntityID, 16> m_last_accessed_entities;
-    unsigned int m_head_of_last_accessed_entities;
+    unsigned int m_head_of_last_accessed_entities {0};
 };
 
 #endif /* SYSTEMS_ENTITY_SYSTEM_H_ */

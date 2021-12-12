@@ -12,44 +12,47 @@
 #include "../types.h"
 #include <ostream>
 
-class NullControl;
+#include "component.h"
+#include "null_control.h"
+#include "constant_control.h"
+#include "chase_ai_control.h"
+#include "guide_control.h"
+#include "input_control.h"
+#include "input_select_control.h"
+#include "particle_control.h"
+#include "timed_control.h"
+#include "control_enums.h"
 
-class Control
+struct Control
 {
-public:
-	using Null = NullControl;
-    enum class LookDir {RIGHT = 0, LEFT = 1};
-    virtual ~Control() {}
-    virtual void print(std::ostream& to) const = 0;
+	using Variant  = std::variant<NullControl, ConstantControl, ChaseAIControl, GuideControl, InputControl, InputSelectControl, ParticleControl, TimedControl>;
+	Variant variant;
 
-    virtual double decision_vertical() const = 0;
-    virtual bool decision_attack() const = 0;
-    virtual double decision_walk() const = 0;
-    virtual ProcedureID attack_proc_id() const = 0;
-    virtual LookDir look_dir() const = 0;
+    double decision_vertical() const { return std::visit([](const auto& ctrl){ return ctrl.decision_vertical(); }, variant); }
+    bool decision_attack() const { return std::visit([](const auto& ctrl){ return ctrl.decision_attack(); }, variant); }
+    double decision_walk() const { return std::visit([](const auto& ctrl){ return ctrl.decision_walk(); }, variant); }
+    ProcedureID attack_proc_id() const { return std::visit([](const auto& ctrl){ return ctrl.attack_proc_id(); }, variant); }
+    LookDir look_dir() const { return std::visit([](const auto& ctrl){ return ctrl.look_dir(); }, variant); }
 
-    virtual void set_decision_vertical(double val) = 0;
-    virtual void set_decision_attack(bool val) = 0;
-    virtual void set_decision_walk(double val) = 0;
-    virtual void mod_decision_vertical(double val) = 0;
-    virtual void mod_decision_walk(double val) = 0;
-    virtual void set_attack_proc_id(ProcedureID val) = 0;
-    virtual void set_look_dir(LookDir val) = 0;
+    void set_decision_vertical(double val) { std::visit([&](auto& ctrl){ ctrl.set_decision_vertical(val); }, variant); }
+    void set_decision_attack(bool val) { std::visit([&](auto& ctrl){ ctrl.set_decision_attack(val); }, variant); }
+    void set_decision_walk(double val) { std::visit([&](auto& ctrl){ ctrl.set_decision_walk(val); }, variant); }
+    void mod_decision_vertical(double val) { std::visit([&](auto& ctrl){ ctrl.mod_decision_vertical(val); }, variant); }
+    void mod_decision_walk(double val) { std::visit([&](auto& ctrl){ ctrl.mod_decision_walk(val); }, variant); }
+    void set_attack_proc_id(ProcedureID val) { std::visit([&](auto& ctrl){ ctrl.set_attack_proc_id(val); }, variant); }
+    void set_look_dir(LookDir val) { std::visit([&](auto& ctrl){ ctrl.set_look_dir(val); }, variant); }
 
-    virtual void update_decisions(const Time time) = 0;
-    virtual void clear_decisions() = 0;
+    void update_decisions(const Time time) { std::visit([&](auto& ctrl){ ctrl.update_decisions(time); }, variant); }
+    void clear_decisions() { std::visit([](auto& ctrl){ ctrl.clear_decisions(); }, variant); }
 
-    static Control* null;
+    operator bool() const { return variant.index() != 0; }
 
-    operator bool() const { return this != null; }
-
-    friend std::ostream& operator<< (std::ostream& out, const Control& component)
-    {
-    	component.print(out);
-        out << std::endl;
-        return out;
-    }
+	friend std::ostream& operator<< (std::ostream& out, const Control& component)
+	{
+		print(out, component.variant);
+	    out << '\n';
+	    return out;
+	}
 };
-
 
 #endif /* COMPONENTS_CONTROL_H_ */

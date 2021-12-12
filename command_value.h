@@ -1,29 +1,30 @@
 /*
- * command_return_value.h
+ * command_value.h
  *
- *  Created on: Jan 1, 2021
+ *  Created on: Dec 12, 2021
  *      Author: zamfi
  */
 
-#ifndef COMMANDS_COMMAND_RETURN_VALUE_H_
-#define COMMANDS_COMMAND_RETURN_VALUE_H_
+#ifndef COMMAND_VALUE_H_
+#define COMMAND_VALUE_H_
+
 
 #include <variant>
 #include <string>
-#include "../types.h"
+#include "cinttypes"
 
 // helper type for the visitor
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 // explicit deduction guide (not needed as of C++20)
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-struct CommandReturnValue
+struct CommandValue
 {
-	explicit CommandReturnValue() : value{0.0} {} // @suppress("Symbol is not resolved")
-	explicit CommandReturnValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
-	explicit CommandReturnValue(const int32_t v, int) : value{double(v)} {} // @suppress("Symbol is not resolved")
-	explicit CommandReturnValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
-	explicit CommandReturnValue(const char* v) : CommandReturnValue{std::string{v}} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue() : value{0.0} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(const int32_t v, int) : value{double(v)} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(const char* v) : CommandValue{std::string{v}} {} // @suppress("Symbol is not resolved")
 
     double operator=(const double v) { value = v; return v; }
     std::string_view operator=(std::string v)
@@ -69,4 +70,4 @@ struct CommandReturnValue
     std::variant<double, std::string> value;
 };
 
-#endif /* COMMANDS_COMMAND_RETURN_VALUE_H_ */
+#endif /* COMMAND_VALUE_H_ */

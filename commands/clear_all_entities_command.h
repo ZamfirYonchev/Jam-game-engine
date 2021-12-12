@@ -8,24 +8,25 @@
 #ifndef COMMANDS_CLEAR_ALL_ENTITIES_COMMAND_H_
 #define COMMANDS_CLEAR_ALL_ENTITIES_COMMAND_H_
 
-#include "command_return_value.h"
-#include "../globals.h"
+#include "../command_value.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename EntitySystemT, typename AllSystemsT>
 class ClearAllEntitiesCommand
 {
 public:
-	ClearAllEntitiesCommand() {}
+	EntitySystemT& entity_system;
+	AllSystemsT& all_systems;
 
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	ClearAllEntitiesCommand(EntitySystemT& _entity_system, AllSystemsT& _all_systems)
+	: entity_system{_entity_system}
+	, all_systems{_all_systems}
+	{}
+
+    CommandValue operator()() const
 	{
     	all_systems.clear();
 		entity_system.clear();
-		return 0.0;
+		return CommandValue{0.0};
 	}
 };
 

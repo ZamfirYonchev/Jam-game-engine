@@ -10,59 +10,60 @@
 
 #include "../types.h"
 #include <ostream>
+#include <variant>
+#include <utility>
 
-class NullMovement;
+#include "component.h"
+#include "null_movement.h"
+#include "instant_movement.h"
+#include "full_movement.h"
 
-class Movement
+struct Movement
 {
-public:
-	using Null = NullMovement;
-    virtual ~Movement() {}
-    virtual void print(std::ostream& to) const = 0;
+	using Variant = std::variant<NullMovement, InstantMovement, FullMovement>;
+	Variant variant;
 
-    virtual double fx() const = 0;
-    virtual double fy() const = 0;
-    virtual double vx() const = 0;
-    virtual double vy() const = 0;
-    virtual double dx() const = 0;
-    virtual double dy() const = 0;
-    virtual double mass() const = 0;
-    virtual double friction_x() const = 0;
-    virtual double friction_y() const = 0;
-    virtual double move_force() const = 0;
-    virtual double jump_force() const = 0;
-    virtual bool gravity_affected() const = 0;
-    virtual std::pair<double, double> displacement(const Time time_diff) const = 0;
+    double fx() const { return std::visit([](const auto& mov){ return mov.fx(); }, variant); }
+    double fy() const { return std::visit([](const auto& mov){ return mov.fy(); }, variant); }
+    double vx() const { return std::visit([](const auto& mov){ return mov.vx(); }, variant); }
+    double vy() const { return std::visit([](const auto& mov){ return mov.vy(); }, variant); }
+    double dx() const { return std::visit([](const auto& mov){ return mov.dx(); }, variant); }
+    double dy() const { return std::visit([](const auto& mov){ return mov.dy(); }, variant); }
+    double mass() const { return std::visit([](const auto& mov){ return mov.mass(); }, variant); }
+    double friction_x() const { return std::visit([](const auto& mov){ return mov.friction_x(); }, variant); }
+    double friction_y() const { return std::visit([](const auto& mov){ return mov.friction_y(); }, variant); }
+    double move_force() const { return std::visit([](const auto& mov){ return mov.move_force(); }, variant); }
+    double jump_force() const { return std::visit([](const auto& mov){ return mov.jump_force(); }, variant); }
+    bool gravity_affected() const { return std::visit([](const auto& mov){ return mov.gravity_affected(); }, variant); }
+    std::pair<double, double> displacement(const Time time_diff) const { return std::visit([&](const auto& mov){ return mov.displacement(time_diff); }, variant); }
 
-    virtual void update(const Time time_diff) = 0;
-    virtual void set_force_x(double val) = 0;
-    virtual void set_force_y(double val) = 0;
-    virtual void set_velocity_x(double val) = 0;
-    virtual void set_velocity_y(double val) = 0;
-    virtual void set_mass(double val) = 0;
-    virtual void set_friction_x(double val) = 0;
-    virtual void set_friction_y(double val) = 0;
-    virtual void set_move_force(double val) = 0;
-    virtual void set_jump_force(double val) = 0;
-    virtual void set_gravity_affected(bool val) = 0;
+    void update(const Time time_diff) { std::visit([&](auto& mov){ mov.update(time_diff); }, variant); }
+    void set_force_x(const double val) { std::visit([&](auto& mov){ mov.set_force_x(val); }, variant); }
+    void set_force_y(const double val) { std::visit([&](auto& mov){ mov.set_force_y(val); }, variant); }
+    void set_velocity_x(const double val) { std::visit([&](auto& mov){ mov.set_velocity_x(val); }, variant); }
+    void set_velocity_y(const double val) { std::visit([&](auto& mov){ mov.set_velocity_y(val); }, variant); }
+    void set_mass(const double val) { std::visit([&](auto& mov){ mov.set_mass(val); }, variant); }
+    void set_friction_x(const double val) { std::visit([&](auto& mov){ mov.set_friction_x(val); }, variant); }
+    void set_friction_y(const double val) { std::visit([&](auto& mov){ mov.set_friction_y(val); }, variant); }
+    void set_move_force(const double val) { std::visit([&](auto& mov){ mov.set_move_force(val); }, variant); }
+    void set_jump_force(const double val) { std::visit([&](auto& mov){ mov.set_jump_force(val); }, variant); }
+    void set_gravity_affected(const bool val) { std::visit([&](auto& mov){ mov.set_gravity_affected(val); }, variant); }
 
-    virtual void mod_force_x(double ax) = 0;
-    virtual void mod_force_y(double ay) = 0;
-    virtual void mod_velocity_x(double vx) = 0;
-    virtual void mod_velocity_y(double vy) = 0;
-    virtual void mod_dx(double dx) = 0;
-    virtual void mod_dy(double dy) = 0;
+    void mod_force_x(const double val) { std::visit([&](auto& mov){ mov.mod_force_x(val); }, variant); }
+    void mod_force_y(const double val) { std::visit([&](auto& mov){ mov.mod_force_y(val); }, variant); }
+    void mod_velocity_x(const double val) { std::visit([&](auto& mov){ mov.mod_velocity_x(val); }, variant); }
+    void mod_velocity_y(const double val) { std::visit([&](auto& mov){ mov.mod_velocity_y(val); }, variant); }
+    void mod_dx(const double val) { std::visit([&](auto& mov){ mov.mod_dx(val); }, variant); }
+    void mod_dy(const double val) { std::visit([&](auto& mov){ mov.mod_dy(val); }, variant); }
 
-    static Movement* null;
+    operator bool() const { return variant.index() != 0; }
 
-    operator bool() const { return this != null; }
-
-    friend std::ostream& operator<< (std::ostream& out, const Movement& component)
-    {
-    	component.print(out);
-        out << std::endl;
-        return out;
-    }
+	friend std::ostream& operator<< (std::ostream& out, const Movement& component)
+	{
+		print(out, component.variant);
+	    out << '\n';
+	    return out;
+	}
 };
 
 #endif /* COMPONENTS_MOVEMENT_H_ */

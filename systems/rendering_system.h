@@ -12,6 +12,7 @@
 #include <set>
 #include <unordered_map>
 #include <SDL2/SDL.h>
+#include "../sdl_window.h"
 #include "../components/visuals.h"
 #include "../components/collision.h"
 #include "../components/movement.h"
@@ -21,20 +22,27 @@
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
 #include "resource_system.h"
+#include "../components/visuals_enums.h"
+#include "../globals.h"
 
+template<typename EntitySystemT, typename ResourceSystemT>
 class RenderingSystem
 {
 public:
-	RenderingSystem(SDL_Renderer* renderer) : m_renderer(renderer), m_resolution_x{800}, m_resolution_y{600} {}
-	RenderingSystem() : RenderingSystem(nullptr) {}
+	RenderingSystem(EntitySystemT& _entity_system, ResourceSystemT& _resource_system, Globals& _globals, SdlWindow& _sdl_window)
+	: entity_system{_entity_system}
+	, resource_system{_resource_system}
+	, globals{_globals}
+	, sdl_window(_sdl_window)
+	{}
 
-	void add_id(const EntityID entity, const Visuals::VisualLayer layer)
+	void add_id(const EntityID entity, const VisualLayer layer)
 	{
 		entities[int(layer)].insert(entity);
 		entity_layer[entity] = layer;
 	}
 
-	void remove_id(const EntityID entity, const Visuals::VisualLayer layer)
+	void remove_id(const EntityID entity, const VisualLayer layer)
 	{
 		entities[int(layer)].erase(entity);
 		entity_layer.erase(entity);
@@ -42,7 +50,7 @@ public:
 
 	void clear()
     {
-    	for(int layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
+    	for(int layer = 0; layer < NUM_OF_LAYERS; ++layer)
     		entities[layer].clear();
     }
 
@@ -59,18 +67,16 @@ public:
     		add_id(id, visuals.layer());
     }
 
-    template<typename EntitySystemT>
-    void render_entities(const Time time_diff, EntitySystemT& entity_system, ResourceSystem& resource_system, const bool app_paused, const bool show_hitboxes)
+    void update(const Time time_diff)
     {
-        //SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
-        SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
-        SDL_RenderClear(m_renderer);
+        SDL_SetRenderDrawColor(sdl_window.renderer(), 255, 255, 255, 255);
+        SDL_RenderClear(sdl_window.renderer());
 
         const auto& screen_zone_position = entity_system.template entity_component<Position>(EntityID{0});
 
-        const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*m_resolution_y/screen_zone_position.h() : 1.0;
+        const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*sdl_window.res_height()/screen_zone_position.h() : 1.0;
 
-        for(auto layer = 0; layer < Visuals::NUM_OF_LAYERS; ++layer)
+        for(auto layer = 0; layer < NUM_OF_LAYERS; ++layer)
         {
     		for(const EntityID id : entities[layer])
     		{
@@ -80,10 +86,10 @@ public:
     				const auto& position = entity_system.template entity_component<Position>(id);
     				const auto& control = entity_system.template entity_component<Control>(id);
 
-					if(app_paused == false)
+					if(globals(Globals::app_paused).integer() == false)
     					visuals.update_animation(time_diff);
 
-					const SDL_RendererFlip flip = (control.look_dir()==Control::LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
+					const SDL_RendererFlip flip = (control.look_dir()== LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
 					AbsolutePosition screen_pos;
 					SDL_Rect dest;
 					const double pos_x = position.x() + position.w()/visuals.repeat_x()/2.0 - screen_zone_position.x();
@@ -112,11 +118,11 @@ public:
 										dest.w = int(screen_pos.w()*m_screen_to_view_scale + 0.5);
 										dest.h = int(screen_pos.h()*m_screen_to_view_scale + 0.5);
 										dest.x = int(screen_pos.x()*m_screen_to_view_scale + 0.5);
-										dest.y = int(m_resolution_y - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5);
+										dest.y = int(sdl_window.res_height() - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5);
 
-										if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, m_resolution_x, m_resolution_y))
+										if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, sdl_window.res_width(), sdl_window.res_height()))
 										{
-											const int err = SDL_RenderCopyEx(m_renderer, texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
+											const int err = SDL_RenderCopyEx(sdl_window.renderer(), texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
 											if(err)
 											{
 												std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;
@@ -140,16 +146,16 @@ public:
 							}
 						}
 
-					if(show_hitboxes)
+					if(globals(Globals::app_show_hitboxes).integer())
 					{
 						const SDL_Rect hitbox
 							{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)
-							, int(m_resolution_y + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
+							, int(sdl_window.res_height() + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
 							, int(position.w()*m_screen_to_view_scale)
 							, int(position.h()*m_screen_to_view_scale)
 							};
-						SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
-						SDL_RenderDrawRect(m_renderer, &hitbox);
+						SDL_SetRenderDrawColor(sdl_window.renderer(), 0, 0, 0, 255);
+						SDL_RenderDrawRect(sdl_window.renderer(), &hitbox);
 					}
     			}
     			else
@@ -159,20 +165,19 @@ public:
         	}
         }
 
-        SDL_RenderPresent(m_renderer);
+        SDL_RenderPresent(sdl_window.renderer());
 
     }
 
-    void set_renderer(SDL_Renderer* renderer) { m_renderer = renderer; }
-    SDL_Renderer* renderer() { return m_renderer; }
-    void set_resolution_x(const int res_x) { m_resolution_x = res_x; }
-    void set_resolution_y(const int res_y) { m_resolution_y = res_y; }
+    SDL_Renderer* renderer() { return sdl_window.renderer(); }
 
 protected:
-    SDL_Renderer* m_renderer;
-    int m_resolution_x, m_resolution_y;
-    std::set<EntityID> entities[Visuals::NUM_OF_LAYERS];
-    std::unordered_map<EntityID, Visuals::VisualLayer> entity_layer;
+    EntitySystemT& entity_system;
+    ResourceSystemT& resource_system;
+    Globals& globals;
+    SdlWindow& sdl_window;
+    std::set<EntityID> entities[NUM_OF_LAYERS];
+    std::unordered_map<EntityID, VisualLayer> entity_layer;
 };
 
 #endif /* SYSTEMS_RENDERING_SYSTEM_H_ */

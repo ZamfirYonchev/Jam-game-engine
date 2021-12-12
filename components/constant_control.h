@@ -8,17 +8,28 @@
 #ifndef COMPONENTS_CONSTANT_CONTROL_H_
 #define COMPONENTS_CONSTANT_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
 #include "../math_ext.h"
+#include "../command_value.h"
 
-class ConstantControl : public Control
+class ConstantControl
 {
 public:
-	using Base = Control;
 	ConstantControl(const double move_decision, const double vertical_decision, const LookDir look_dir)
 	: m_move_decision(clip(move_decision, -1.0, 1.0))
 	, m_vertical_decision(clip(vertical_decision, -1.0, 1.0))
 	, m_look_dir(look_dir)
+	{}
+
+    template<typename ExtractorF>
+	ConstantControl
+	( ExtractorF&& extract
+	)
+	: ConstantControl
+	  { extract().real()
+	  , extract().real()
+	  , LookDir(extract().integer())
+	  }
 	{}
 
     void print(std::ostream& to) const

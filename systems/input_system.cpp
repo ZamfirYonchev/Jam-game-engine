@@ -7,14 +7,14 @@
 
 #include "input_system.h"
 
-void InputSystem::process_input(Globals& globals, std::list<std::pair<EntityID, ProcedureID>>& procedure_calls)
+void InputSystem::process_input(Globals& globals, std::stringstream& external_commands)
 {
     while(SDL_PollEvent(&m_event) != 0)
     {
         switch(m_event.type)
         {
             case SDL_QUIT:
-            	globals(Globals::app_running) = CommandReturnValue{0.0};
+            	globals(Globals::app_running) = CommandValue{0.0};
             break;
 
             case SDL_KEYDOWN:
@@ -37,13 +37,13 @@ void InputSystem::process_input(Globals& globals, std::list<std::pair<EntityID, 
                 else if(m_event.key.keysym.sym == m_keyselect)
                     m_select_pressed = true;
                 else if(m_event.key.keysym.sym == m_keyquit || m_event.key.keysym.sym == SDLK_F10)
-                	globals(Globals::app_running) = CommandReturnValue{0.0};
+                	globals(Globals::app_running) = CommandValue{0.0};
                 else if(m_event.key.keysym.sym == SDLK_r)
-                	globals(Globals::app_needs_reload) = CommandReturnValue{true};
+                	globals(Globals::app_needs_reload) = CommandValue{true};
                 else if(m_event.key.keysym.sym == m_keypause)
-                	globals(Globals::app_paused) = CommandReturnValue{!globals(Globals::app_paused).boolean(), 0};
+                	globals(Globals::app_paused) = CommandValue{!globals(Globals::app_paused).boolean(), 0};
                 else if(m_event.key.keysym.sym == SDLK_h)
-                	globals(Globals::app_show_hitboxes) = CommandReturnValue{!globals(Globals::app_show_hitboxes).boolean(), 0};
+                	globals(Globals::app_show_hitboxes) = CommandValue{!globals(Globals::app_show_hitboxes).boolean(), 0};
             break;
 
             case SDL_KEYUP:

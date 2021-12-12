@@ -8,24 +8,19 @@
 #ifndef COMMANDS_CLEAR_ALL_TEXTURES_COMMAND_H_
 #define COMMANDS_CLEAR_ALL_TEXTURES_COMMAND_H_
 
-#include "command_return_value.h"
-#include "../globals.h"
-#include "../systems/resource_system.h"
+#include "../command_value.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename ResourceSystemT>
 class ClearAllTexturesCommand
 {
 public:
-	ClearAllTexturesCommand() {}
+	ResourceSystemT& resource_system;
+	ClearAllTexturesCommand(ResourceSystemT& _resource_system) : resource_system{_resource_system} {}
 
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    CommandValue operator()() const
 	{
 		resource_system.clear_textures();
-		return CommandReturnValue{0.0};
+		return CommandValue{0.0};
 	}
 };
 

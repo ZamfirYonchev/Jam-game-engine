@@ -8,16 +8,26 @@
 #ifndef COMPONENTS_STATIC_VISUALS_H_
 #define COMPONENTS_STATIC_VISUALS_H_
 
-#include "visuals.h"
+#include "visuals_enums.h"
+#include "../command_value.h"
 
-class StaticVisuals : public Visuals
+class StaticVisuals
 {
 public:
-	using Base = Visuals;
 	StaticVisuals(const AnimationID anim_id, const int sprite)
 	: m_anim_id(anim_id)
 	, m_sprite(sprite)
 	, m_layer(VisualLayer::FAR_BACKGROUND)
+	{}
+
+    template<typename ExtractorF>
+	StaticVisuals
+	( ExtractorF&& extract
+	)
+	: StaticVisuals
+	  { extract().integer()
+	  , extract().integer()
+	  }
 	{}
 
     void print(std::ostream& to) const

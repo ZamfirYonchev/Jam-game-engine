@@ -9,27 +9,20 @@
 #define COMPONENTS_COMPONENT_H_
 
 #include <memory>
+#include <variant>
+#include <ostream>
 
-struct free_if_not_nullobj
+template<typename Variant>
+void print(std::ostream& to, const Variant& variant)
 {
-	template<typename T>
-	void operator()(T* p){ if(p != T::null) delete p; p = T::null; };
-};
+	std::visit([&](const auto& comp){ comp.print(to); }, variant);
+}
 
-template<typename T>
-using unique_component_ptr = std::unique_ptr<T, free_if_not_nullobj>;
-
-
-template<typename T, typename... Args>
-inline unique_component_ptr<typename T::Base> make_unique_component(Args&&... args)
+template<typename Component>
+Component& null()
 {
-	using BaseT = typename T::Base;
-	using NullT = typename BaseT::Null;
-
-	if constexpr(std::is_same<T, NullT>::value)
-		return unique_component_ptr<BaseT>{T::null};
-	else
-		return unique_component_ptr<BaseT>{new T{std::forward<Args>(args)...}};
+	static Component null_component {};
+	return null_component;
 }
 
 #endif /* COMPONENTS_COMPONENT_H_ */

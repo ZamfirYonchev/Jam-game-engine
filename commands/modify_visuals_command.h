@@ -8,20 +8,27 @@
 #ifndef COMMANDS_MODIFY_VISUALS_COMMAND_H_
 #define COMMANDS_MODIFY_VISUALS_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../math_ext.h"
-#include "../systems/rendering_system.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename EntitySystemT, typename RenderingSystemT>
 class ModifyVisualsCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	EntitySystemT& entity_system;
+	RenderingSystemT& rendering_system;
+	Globals& globals;
+
+	ModifyVisualsCommand(CommandSystemT& _command_system, EntitySystemT& _entity_system, RenderingSystemT& _rendering_system, Globals& _globals)
+	: command_system{_command_system}
+	, entity_system{_entity_system}
+	, rendering_system{_rendering_system}
+	, globals{_globals}
+	{}
+
+	CommandValue operator()() const
 	{
     	const auto repeat_x = command_system.exec_next();
     	const auto repeat_y = command_system.exec_next();
@@ -44,9 +51,9 @@ public:
 
 			if(is_negative_zero(layer.real()))
 			{
-				if(visuals.layer() != Visuals::VisualLayer::FAR_BACKGROUND)
+				if(visuals.layer() != VisualLayer::FAR_BACKGROUND)
 				{
-					visuals.set_layer(Visuals::VisualLayer(0));
+					visuals.set_layer(VisualLayer(0));
 					rendering_system.component_updated(visuals, selected_entity, false);
 				}
 			}
@@ -54,17 +61,17 @@ public:
 			{
 				if(layer.integer() != 0)
 				{
-					visuals.set_layer(Visuals::VisualLayer(int(visuals.layer())+layer.integer()));
+					visuals.set_layer(VisualLayer(int(visuals.layer())+layer.integer()));
 					rendering_system.component_updated(visuals, selected_entity, false);
 				}
 			}
 
-			return CommandReturnValue{0.0};
+			return CommandValue{0.0};
 		}
 		else
 		{
 			//error selected_entity
-			return CommandReturnValue{-1.0};
+			return CommandValue{-1.0};
 		}
 	}
 };

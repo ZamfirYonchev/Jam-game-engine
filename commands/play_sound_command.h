@@ -8,21 +8,27 @@
 #ifndef COMMANDS_PLAY_SOUND_COMMAND_H_
 #define COMMANDS_PLAY_SOUND_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../types.h"
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename ResourceSystemT>
 class PlaySoundCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	ResourceSystemT& resource_system;
+	Globals& globals;
+
+	PlaySoundCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system, Globals& _globals)
+	: command_system{_command_system}
+	, resource_system{_resource_system}
+	, globals{_globals}
+	{}
+
+    CommandValue operator()() const
     {
     	const auto sound_id = command_system.exec_next();
     	const auto channel = command_system.exec_next();
@@ -43,7 +49,7 @@ public:
     	else
     	{
     		//error m_sound_id
-        	return CommandReturnValue{-1.0};
+        	return CommandValue{-1.0};
     	}
     }
 };

@@ -8,38 +8,32 @@
 #ifndef COMMANDS_SET_VARIABLE_COMMAND_H_
 #define COMMANDS_SET_VARIABLE_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../utilities.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT>
 class SetVariableCommand
 {
 public:
-	SetVariableCommand(const HashT name_hash) : m_hash{name_hash} {}
-	SetVariableCommand() : m_hash{0} {}
+	CommandSystemT& command_system;
+	Globals& globals;
 
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	SetVariableCommand(CommandSystemT& _command_system, Globals& _globals)
+	: command_system{_command_system}
+	, globals{_globals}
+	{}
+
+    CommandValue operator()() const
 	{
-    	HashT name_hash = m_hash;
-    	if(m_hash == 0)
-    	{
-    		const auto name = command_system.exec_next();
-    		name_hash = hash(name.string().c_str());
-    	}
+		const auto name = command_system.exec_next();
+		const HashT name_hash = hash(name.string().c_str());
 
-    	const CommandReturnValue result = command_system.exec_next();
+    	const CommandValue result = command_system.exec_next();
     	globals(name_hash) = result;
 
     	return result;
 	}
-
-private:
-    HashT m_hash;
 };
 
 #endif /* COMMANDS_SET_VARIABLE_COMMAND_H_ */

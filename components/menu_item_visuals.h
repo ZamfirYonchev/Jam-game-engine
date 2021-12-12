@@ -8,22 +8,24 @@
 #ifndef COMPONENTS_MENU_ITEM_VISUALS_H_
 #define COMPONENTS_MENU_ITEM_VISUALS_H_
 
-#include "visuals.h"
-#include "control.h"
+#include "visuals_enums.h"
 #include "../systems/resource_system.h"
+#include "../types.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class MenuItemVisuals : public Visuals
+class Control;
+
+class MenuItemVisuals
 {
 public:
-	using Base = Visuals;
-	MenuItemVisuals(
-		    const AnimationID inactive_anim_id
-		  , const AnimationID focus_anim_id
-		  , const AnimationID select_anim_id
-		  , const ResourceSystem& resource_system
-		  , const EntityID self_id
-		  , const EntitySystemT& entity_system)
+	MenuItemVisuals
+	( const AnimationID inactive_anim_id
+	, const AnimationID focus_anim_id
+	, const AnimationID select_anim_id
+	, const ResourceSystem& resource_system
+	, const EntityID self_id
+	, std::function<const Control&(const EntityID id)> control_accessor
+	)
 	: m_self_id{self_id}
 	, m_inactive_anim_id{inactive_anim_id}
 	, m_focus_anim_id{focus_anim_id}
@@ -37,7 +39,7 @@ public:
     , m_inactive_anim_time{0}
     , m_focus_anim_time{0}
     , m_select_anim_time{0}
-	, m_entity_system{entity_system}
+	, m_control_accessor{std::move(control_accessor)}
 	{
 		const auto& inactive_anim_opt = resource_system.animation(m_inactive_anim_id);
 
@@ -68,8 +70,24 @@ public:
 		}
 		else
 		{ /*error idle_anim_id*/ }
-
 	}
+
+    template<typename ExtractorF>
+	MenuItemVisuals
+	( ExtractorF&& extract
+	, const ResourceSystem& resource_system
+	, const CommandValue& self_id
+	, const std::function<const Control&(const EntityID id)>& control_accessor
+	)
+	: MenuItemVisuals
+	  { extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , resource_system
+	  , EntityID(self_id.integer())
+	  , control_accessor
+	  }
+	{}
 
     void print(std::ostream& to) const
     {
@@ -86,20 +104,7 @@ public:
     	m_select_anim_time = (m_select_anim_time+int(time_diff))%m_select_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const int rx, const int ry) const
-    {
-    	const auto& control = m_entity_system.template entity_component<Control>(m_self_id);
-
-    	return {control.decision_attack() ? m_select_anim_id
-    		 : (control.decision_vertical() != 0) ? m_focus_anim_id
-    		 : m_inactive_anim_id
-			 ,
-			   control.decision_attack() ? m_select_anim_time/m_select_animation_frame_delay
-			 : (control.decision_vertical() != 0) ? m_focus_anim_time/m_focus_animation_frame_delay
-			 : m_inactive_anim_time/m_inactive_animation_frame_delay,
-    		   };
-    }
-
+    AnimationFrame animation_frame(const int rx, const int ry) const;
     int repeat_x() const { return 1; }
     int repeat_y() const { return 1; }
     void set_repeat_x(const int val) {}
@@ -121,7 +126,7 @@ private:
     int m_inactive_anim_time;
     int m_focus_anim_time;
     int m_select_anim_time;
-    const EntitySystemT& m_entity_system;
+    std::function<const Control&(const EntityID id)> m_control_accessor;
 };
 
 #endif /* COMPONENTS_MENU_ITEM_VISUALS_H_ */

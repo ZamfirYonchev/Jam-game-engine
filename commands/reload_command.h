@@ -8,26 +8,21 @@
 #ifndef COMMANDS_RELOAD_COMMAND_H_
 #define COMMANDS_RELOAD_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
-
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
 
 class ReloadCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	Globals& globals;
+	ReloadCommand(Globals& _globals) : globals{_globals} {}
+
+    CommandValue operator()() const
     {
-    	globals(Globals::app_needs_reload) = CommandReturnValue{1};
+    	globals(Globals::app_needs_reload) = CommandValue{1};
         std::cout << "Issuing a game reload\n";
-        return CommandReturnValue{0.0};
+        return CommandValue{0.0};
     }
 };
-
-
-
 
 #endif /* COMMANDS_RELOAD_COMMAND_H_ */

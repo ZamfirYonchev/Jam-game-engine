@@ -8,34 +8,34 @@
 #ifndef COMPONENTS_TILED_VISUALS_H_
 #define COMPONENTS_TILED_VISUALS_H_
 
-#include "visuals.h"
+#include "visuals_enums.h"
 #include <array>
 #include "../types.h"
 #include "../math_ext.h"
 #include "../systems/resource_system.h"
-#include "position.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class TiledVisuals : public Visuals
+class Position;
+
+class TiledVisuals
 {
 public:
-	using Base = Visuals;
-    TiledVisuals(
-    		const double tile_w
-		  , const double tile_h
-		  , const AnimationID bottom_left_anim_id
-		  , const AnimationID bottom_center_anim_id
-		  , const AnimationID bottom_right_anim_id
-		  , const AnimationID middle_left_anim_id
-		  , const AnimationID middle_center_anim_id
-		  , const AnimationID middle_right_anim_id
-		  , const AnimationID top_left_anim_id
-		  , const AnimationID top_center_anim_id
-		  , const AnimationID top_right_anim_id
-		  , const ResourceSystem& resource_system
-		  , const EntityID self_id
-		  , const EntitySystemT& entity_system
-		  )
+	TiledVisuals
+	( const double tile_w
+	, const double tile_h
+	, const AnimationID bottom_left_anim_id
+	, const AnimationID bottom_center_anim_id
+	, const AnimationID bottom_right_anim_id
+	, const AnimationID middle_left_anim_id
+	, const AnimationID middle_center_anim_id
+	, const AnimationID middle_right_anim_id
+	, const AnimationID top_left_anim_id
+	, const AnimationID top_center_anim_id
+	, const AnimationID top_right_anim_id
+	, const ResourceSystem& resource_system
+	, const EntityID self_id
+	, std::function<const Position&(const EntityID id)> position_accessor
+	)
     : m_tile_w{tile_w}
     , m_tile_h{tile_h}
     , m_animation_id
@@ -53,9 +53,8 @@ public:
     , m_animation_time_max{1}
 	, m_anim_time{0}
 	, m_layer{VisualLayer::ACTION}
-	, m_resource_system{resource_system}
     , m_self_id{self_id}
-	, m_entity_system{entity_system}
+    , m_position_accessor{std::move(position_accessor)}
     {
 			const auto& anim_opt = resource_system.animation(m_animation_id[0]);
 
@@ -67,6 +66,31 @@ public:
 			else
 			{ /*error m_animation_id[0]*/ }
     }
+
+    template<typename ExtractorF>
+    TiledVisuals
+	( ExtractorF&& extract
+	, const ResourceSystem& resource_system
+	, const CommandValue& self_id
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	)
+	: TiledVisuals
+	  { extract().real()
+	  , extract().real()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , resource_system
+	  , EntityID(self_id.integer())
+	  , position_accessor
+	  }
+	{}
 
     void print(std::ostream& to) const
     {
@@ -94,40 +118,22 @@ public:
     	return {m_animation_id[anim_index(rx, ry)], m_anim_time/m_animation_frame_delay};
     }
 
-    int repeat_x() const
-    {
-    	return std::ceil(m_entity_system.template entity_component<Position>(m_self_id).w()/m_tile_w);
-    }
-
-    int repeat_y() const
-    {
-    	return std::ceil(m_entity_system.template entity_component<Position>(m_self_id).h()/m_tile_h);
-    }
+    int repeat_x() const;
+    int repeat_y() const;
     VisualLayer layer() const { return m_layer; }
-
-
-    void set_repeat_x(const int val)
-    {
-    	m_tile_w = m_entity_system.template entity_component<Position>(m_self_id).w()/val;
-    }
-
-    void set_repeat_y(const int val)
-    {
-    	m_tile_h = m_entity_system.template entity_component<Position>(m_self_id).h()/val;
-    }
-
+    void set_repeat_x(const int val);
+    void set_repeat_y(const int val);
     void set_layer(const VisualLayer val) { m_layer = val; }
 
 private:
     double m_tile_w, m_tile_h;
-    const std::array<AnimationID, 9> m_animation_id;
+    std::array<AnimationID, 9> m_animation_id;
     int m_animation_frame_delay;
     int m_animation_time_max;
     int m_anim_time;
     VisualLayer m_layer;
-    const ResourceSystem& m_resource_system;
     EntityID m_self_id;
-    const EntitySystemT& m_entity_system;
+    std::function<const Position&(const EntityID id)> m_position_accessor;
 
     int anim_index(const int rx, const int ry) const
     {

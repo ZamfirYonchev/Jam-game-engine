@@ -15,51 +15,29 @@
 #include "../commands/null_command.h"
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include "../commands/procedure_command.h"
+#include "../commands/debug_message_command.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
-#include "../commands/set_variable_command.h"
-#include "../types.h"
-#include <utility>
-#include <optional>
-#include "../commands/command_return_value.h"
-#include "../commands/get_variable_command.h"
+#include "../commands/set_fixed_variable_command.h"
+#include "../commands/get_fixed_variable_command.h"
 #include "../commands/literal_value_command.h"
 #include "../commands/extend_procedure_command.h"
-#include "../commands/quit_command.h"
-#include "../commands/reload_command.h"
-#include "../commands/pause_command.h"
-#include "../commands/pause_all_sounds_command.h"
-#include "../commands/debug_message_command.h"
+#include "../types.h"
+#include <utility>
+#include "../command_value.h"
 #include "../globals.h"
 #include <iomanip>
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
-template<typename EntitySystemT, typename AllSystemsT>
 class CommandSystem
 {
 public:
-	using CommandT = std::function<CommandReturnValue(CommandSystem& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals)>;
+	using CommandT = std::function<CommandValue()>;
 
-    CommandSystem(EntitySystemT& entity_system
-    			, ResourceSystem& resource_system
-    			, InputSystem& input_system
-    			, RenderingSystem& rendering_system
-    			, AllSystemsT& all_systems
-    			, Globals& globals
-				)
-	: m_procedure_calls{}
-    , m_commands{}
-	, m_entity_system{entity_system}
-	, m_resource_system{resource_system}
-	, m_input_system{input_system}
-	, m_rendering_system{rendering_system}
-	, m_all_systems{all_systems}
-	, m_globals{globals}
+    CommandSystem(Globals& globals)
+	: m_globals{globals}
 	{
 		initialize_default_procedures();
 	}
@@ -78,23 +56,26 @@ public:
 
     int size() const { return m_commands.size(); }
 
-    void process(ResourceSystem& resource_system, RenderingSystem& rendering_system, InputSystem& input_system)
+    void process()
     {
-    	while(m_procedure_calls.size() > 0)
-    	{
-    		const auto& pair = m_procedure_calls.front();
-    		m_commands.emplace_back(SelectEntityCommand{pair.first});
-    		m_commands.emplace_back(CallProcedureCommand{pair.second});
-    		m_procedure_calls.pop_front();
-    	}
+		parse(m_external_commands);
+		m_external_commands.clear();
+		m_external_commands.str(""); //clear buffer
 
         while(m_commands.size() > 0) exec_next();
     }
 
-    void process_stream(std::istream& input)
+    void push(const CommandT& cmd)
+    {
+		m_commands.push_back(cmd);
+    }
+
+    void parse(std::istream& input)
     {
     	std::list<CommandT> commands;
     	auto procedure_size_insert_it = end(commands);
+
+    	input >> std::ws;
 
         while(input.good())
         {
@@ -106,7 +87,7 @@ public:
         		{
                 	std::string line;
                     std::getline(input, line);
-                    if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                     	std::cout << "PARSER: Reading comment: " << line << '\n';
         		}
 				break;
@@ -116,9 +97,9 @@ public:
                 	std::string var_name;
                 	input.get(); //extract the @ char
                 	input >> var_name;
-                	commands.push_back(SetVariableCommand{hash(var_name.c_str())});
+                	commands.push_back(SetFixedVariableCommand{*this, m_globals, hash(var_name.c_str())});
 
-                    if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                     	std::cout << "PARSER: Setting variable \"" << var_name << "\"\n";
         		}
 				break;
@@ -128,20 +109,21 @@ public:
                 	std::string var_name;
                 	input.get(); //extract the * char
                 	input >> var_name;
-                	commands.push_back(GetVariableCommand{var_name});
+                	commands.push_back(GetFixedVariableCommand{*this, m_globals, var_name});
 
-                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                     	std::cout << "PARSER: Reading variable \"" << var_name << "\"\n";
         		}
 				break;
 
         		case '"':
+        		case '\'':
         		{
                 	std::string str;
-                	input >> std::quoted(str);
+                	input >> std::quoted(str, next_char);
                 	commands.push_back(LiteralValueCommand{str});
 
-                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                 		std::cout << "PARSER: Reading string \"" << str << "\"\n";
         		}
 				break;
@@ -151,9 +133,9 @@ public:
                 	std::string str;
                 	input.get(); //extract the ( char
                 	std::getline(input, str, ')');
-                	commands.push_back(CallProcedureCommand{str});
+                	commands.push_back(CallProcedureCommand{*this, m_globals, str});
 
-                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                 		std::cout << "PARSER: Calling command \"" << str << "\"\n";
         		}
 				break;
@@ -168,7 +150,7 @@ public:
                 		std::cerr << "Error trying to read scalar value beginning with " << next_char << std::endl;
                 	else
                 	{
-                    	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                    	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                     		std::cout << "PARSER: Reading scalar " << value << '\n';
                     	commands.push_back(LiteralValueCommand{value});
                 	}
@@ -178,7 +160,7 @@ public:
         		case '{':
         		{
                 	input.get(); //extract the { char
-                	commands.push_back(ExtendProcedureCommand{});
+                	commands.push_back(ExtendProcedureCommand{*this});
                 	commands.push_back(LiteralValueCommand{int32_t(m_procedures.size()), 0});
 
                 	//reserve space for procedure size
@@ -186,7 +168,7 @@ public:
 
                 	m_procedures.emplace_back();
 
-                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                 		std::cout << "PARSER: Declaring new procedure\n";
         		}
 				break;
@@ -201,7 +183,7 @@ public:
 						*procedure_size_insert_it = LiteralValueCommand{int32_t(proc_size), 0};
 						procedure_size_insert_it = end(commands);
 
-	                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+	                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
 	                		std::cout << "PARSER: Closing procedure\n";
                 	}
                 	else
@@ -216,7 +198,7 @@ public:
                 	std::string token;
                 	input >> token;
 
-                	if(m_globals(Globals::app_debug_level).integer() >= int(DebugMessageCommand::Severity::DEBUG))
+                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                 		std::cout << "PARSER: Reading command " << token << '\n';
 
                 	const auto it = m_command_prototypes.find(hash(token.c_str()));
@@ -239,11 +221,6 @@ public:
 		m_commands.push_front(cmd);
     }
 
-    void push(const CommandT& cmd)
-    {
-		m_commands.push_back(cmd);
-    }
-
     CommandT pop_next()
     {
     	if(m_commands.size() > 0)
@@ -256,9 +233,9 @@ public:
     		return NullCommand{};
     }
 
-    CommandReturnValue exec_next()
+    CommandValue exec_next()
     {
-    	return pop_next()(*this, m_entity_system, m_resource_system, m_input_system, m_rendering_system, m_all_systems, m_globals);
+    	return pop_next()();
     }
 
     void clear()
@@ -309,9 +286,9 @@ public:
         initialize_default_procedures();
     }
 
-    std::list<std::pair<EntityID, ProcedureID>>& procedure_calls()
+    std::stringstream& external_commands()
 	{
-    	return m_procedure_calls;
+    	return m_external_commands;
 	}
 
 private:
@@ -320,16 +297,11 @@ private:
         m_procedures.emplace_back(); //insert an empty procedure at id 0
     }
 
-	std::list<std::pair<EntityID, ProcedureID>> m_procedure_calls;
+    std::stringstream m_external_commands;
     std::list<CommandT> m_commands;
     std::unordered_map<HashT, CommandT> m_command_prototypes;
     std::vector<ProcedureCommand<CommandSystem>> m_procedures;
 
-	EntitySystemT& m_entity_system;
-	ResourceSystem& m_resource_system;
-    InputSystem& m_input_system;
-    RenderingSystem& m_rendering_system;
-    AllSystemsT& m_all_systems;
     Globals& m_globals;
 };
 

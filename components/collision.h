@@ -10,51 +10,35 @@
 
 #include "../types.h"
 #include <ostream>
+#include <variant>
 
-class NullCollision;
+#include "component.h"
+#include "collision_enums.h"
+#include "null_collision.h"
+#include "basic_collision.h"
+#include "damage_collision.h"
 
 class Collision
 {
 public:
-	using Null = NullCollision;
-	struct RegionLocation
-	{
-		int x, y;
-		int x_end, y_end;
-		RegionLocation() : x{0}, y{0}, x_end{0}, y_end{0} {}
-		RegionLocation(int _x, int _y, int _x_end, int _y_end) : x{_x}, y{_y}, x_end{_x_end}, y_end{_y_end} {}
+	using Variant = std::variant<NullCollision, BasicCollision, DamageCollision>;
+	Variant variant;
 
-		bool operator==(const RegionLocation& rhs) const
-		{
-			return (x==rhs.x) && (y==rhs.y) && (x_end==rhs.x_end) && (y_end==rhs.y_end);
-		}
+    bool solid() const { return std::visit([](const auto& col){ return col.solid(); }, variant); }
+    SurfaceType standing_on() const { return std::visit([](const auto& col){ return col.standing_on(); }, variant); }
+    double on_collision_damage() const { return std::visit([](const auto& col){ return col.on_collision_damage(); }, variant); }
+    double elasticity() const { return std::visit([](const auto& col){ return col.elasticity(); }, variant); }
 
-		bool operator!=(const RegionLocation& rhs) const { return !(*this == rhs); }
+    void set_solid(const bool val) { std::visit([&](auto& col){ col.set_solid(val); }, variant); }
+    void set_standing_on(SurfaceType surface) { std::visit([&](auto& col){ return col.set_standing_on(surface); }, variant); }
+    void set_collision_damage(double val) { std::visit([&](auto& col){ return col.set_collision_damage(val); }, variant); }
+    void set_elasticity(double val) { std::visit([&](auto& col){ return col.set_elasticity(val); }, variant); }
 
-		bool is_null() const { return (x==x_end) || (y==y_end); }
-	};
-
-	enum class SurfaceType {AIR = 0, GROUND = 1};
-    virtual ~Collision() {}
-    virtual void print(std::ostream& to) const = 0;
-
-    virtual bool solid() const = 0;
-    virtual SurfaceType standing_on() const = 0;
-    virtual double on_collision_damage() const = 0;
-    virtual double elasticity() const = 0;
-
-    virtual void set_solid(const bool val) = 0;
-    virtual void set_standing_on(SurfaceType surface) = 0;
-    virtual void set_collision_damage(double) = 0;
-    virtual void set_elasticity(double val) = 0;
-
-    static Collision* null;
-
-    operator bool() const { return this != null; }
+    operator bool() const { return variant.index() != 0; }
 
     friend std::ostream& operator<< (std::ostream& out, const Collision& component)
     {
-    	component.print(out);
+		print(out, component.variant);
         out << std::endl;
         return out;
     }

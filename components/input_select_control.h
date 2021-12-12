@@ -8,14 +8,16 @@
 #ifndef COMPONENTS_INPUT_SELECT_CONTROL_H_
 #define COMPONENTS_INPUT_SELECT_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
+#include "../types.h"
+#include <ostream>
+#include "../command_value.h"
 
 class InputSystem;
 
-class InputSelectControl : public Control
+class InputSelectControl
 {
 public:
-	using Base = Control;
 	InputSelectControl
 		(const int select
 	   , const int max
@@ -26,6 +28,19 @@ public:
 	, m_curr_selection(0)
     , m_proc_id(proc_id)
 	, m_input_system(input_system)
+    {}
+
+    template<typename ExtractorF>
+	InputSelectControl
+	( ExtractorF&& extract
+	, const InputSystem& input_system
+	)
+	: InputSelectControl
+	  { extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , input_system
+	  }
     {}
 
     void print(std::ostream& to) const
@@ -57,7 +72,7 @@ public:
 private:
     int m_select, m_max, m_curr_selection;
     ProcedureID m_proc_id;
-    const InputSystem& m_input_system;
+    std::reference_wrapper<const InputSystem> m_input_system;
 };
 
 #endif /* COMPONENTS_INPUT_SELECT_CONTROL_H_ */

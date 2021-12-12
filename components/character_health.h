@@ -8,22 +8,32 @@
 #ifndef COMPONENTS_CHARACTER_HEALTH_H_
 #define COMPONENTS_CHARACTER_HEALTH_H_
 
-#include "health.h"
+#include <ostream>
 #include "../math_ext.h"
+#include "../types.h"
+#include "../command_value.h"
 
-class CharacterHealth : public Health
+class CharacterHealth
 {
 public:
-	using Base = Health;
-	const int STUN_TIME = 100;
+	constexpr static int STUN_TIME = 100;
     CharacterHealth(const double hp, const double max_hp)
 	: m_max_hit_points(max_hp)
 	, m_hp_change(0)
 	, m_stun_cnt(0)
 	{ set_hp(hp); }
 
-    CharacterHealth(double hp) : CharacterHealth(hp, hp) {}
-    CharacterHealth() : CharacterHealth(0) {}
+    template<typename ExtractorF>
+    CharacterHealth
+	( ExtractorF&& extract
+	)
+	: CharacterHealth
+	  { extract().real()
+	  , extract().real()
+	  }
+	{}
+
+    CharacterHealth() : CharacterHealth(0, 0) {}
 
     void print(std::ostream& to) const
     {

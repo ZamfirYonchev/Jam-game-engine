@@ -8,23 +8,21 @@
 #ifndef COMMANDS_CLEAR_ALL_PROCEDURES_COMMAND_H_
 #define COMMANDS_CLEAR_ALL_PROCEDURES_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT>
 class ClearAllProceduresCommand
 {
 public:
-    ClearAllProceduresCommand() {}
+	CommandSystemT& command_system;
 
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+    ClearAllProceduresCommand(CommandSystemT& _command_system) : command_system{_command_system} {}
+
+    CommandValue operator()() const
     {
     	command_system.clear_procedures();
-    	return CommandReturnValue{0.0};
+    	return CommandValue{0.0};
     }
 };
 

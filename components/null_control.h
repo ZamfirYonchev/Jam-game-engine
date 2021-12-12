@@ -8,12 +8,11 @@
 #ifndef COMPONENTS_NULL_CONTROL_H_
 #define COMPONENTS_NULL_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
 
-class NullControl : public Control
+class NullControl
 {
 public:
-	using Base = Control;
     void print(std::ostream& to) const
     {
     	to << "UseNullControl ";

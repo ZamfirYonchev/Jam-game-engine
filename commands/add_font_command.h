@@ -8,26 +8,26 @@
 #ifndef COMMANDS_ADD_FONT_COMMAND_H_
 #define COMMANDS_ADD_FONT_COMMAND_H_
 
-#include <string>
-#include "command_return_value.h"
-#include "../globals.h"
-#include "../systems/resource_system.h"
+#include "../command_value.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename ResourceSystemT>
 class AddFontCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	ResourceSystemT& resource_system;
+
+	AddFontCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system)
+	: command_system{_command_system}
+	, resource_system{_resource_system}
+	{}
+
+    CommandValue operator()() const
     {
     	const auto file_name = command_system.exec_next();
     	const auto font_size = command_system.exec_next();
-    	return CommandReturnValue{resource_system.addNewFont(file_name.string(), font_size.integer()), 0};
+    	return CommandValue{resource_system.addNewFont(file_name.string(), font_size.integer()), 0};
     }
 };
-
 
 #endif /* COMMANDS_ADD_FONT_COMMAND_H_ */

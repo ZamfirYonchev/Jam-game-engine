@@ -8,12 +8,11 @@
 #ifndef COMPONENTS_NULL_COLLISION_H_
 #define COMPONENTS_NULL_COLLISION_H_
 
-#include "collision.h"
+#include "collision_enums.h"
 
-class NullCollision : public Collision
+class NullCollision
 {
 public:
-	using Base = Collision;
     void print(std::ostream& to) const
     {
     	to << "UseNullCollision ";

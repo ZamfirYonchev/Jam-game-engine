@@ -8,24 +8,27 @@
 #ifndef COMMANDS_REMOVE_ENTITY_COMMAND_H_
 #define COMMANDS_REMOVE_ENTITY_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename EntitySystemT>
 class RemoveEntityCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	EntitySystemT& entity_system;
+	Globals& globals;
+
+	RemoveEntityCommand(EntitySystemT& _entity_system, Globals& _globals)
+	: entity_system{_entity_system}
+	, globals{_globals}
+	{}
+
+	CommandValue operator()() const
     {
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	entity_system.remove_entity(selected_entity);
-		return CommandReturnValue{0.0};
+		return CommandValue{0.0};
     }
 };
-
 
 #endif /* COMMANDS_REMOVE_ENTITY_COMMAND_H_ */

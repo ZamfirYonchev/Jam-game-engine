@@ -8,13 +8,12 @@
 #ifndef COMPONENTS_INSTANT_MOVEMENT_H_
 #define COMPONENTS_INSTANT_MOVEMENT_H_
 
-#include "movement.h"
 #include "../math_ext.h"
+#include "../command_value.h"
 
-class InstantMovement : public Movement
+class InstantMovement
 {
 public:
-	using Base = Movement;
 	InstantMovement
 		(const double mass
 	   , const double friction_x
@@ -28,6 +27,18 @@ public:
     , m_fy(0)
 	, m_dx(0)
 	, m_dy(0)
+    {}
+
+    template<typename ExtractorF>
+	InstantMovement
+	( ExtractorF&& extract
+	)
+	: InstantMovement
+	  { extract().real()
+	  , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  }
     {}
 
     InstantMovement() : InstantMovement(1, 0, 0, 0) {}

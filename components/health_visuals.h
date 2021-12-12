@@ -8,23 +8,24 @@
 #ifndef COMPONENTS_HEALTH_VISUALS_H_
 #define COMPONENTS_HEALTH_VISUALS_H_
 
-#include "visuals.h"
-#include "health.h"
+#include "visuals_enums.h"
 #include "../systems/resource_system.h"
+#include "../types.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class HealthVisuals : public Visuals
+class Health;
+
+class HealthVisuals
 {
 public:
-	using Base = Visuals;
 	HealthVisuals
-	   ( const AnimationID active_id
-	   , const AnimationID inactive_id
-	   , const int repeat_x
-	   , const ResourceSystem& resource_system
-	   , const EntityID self_id
-	   , const EntitySystemT& entity_system
-	   )
+	( const AnimationID active_id
+	, const AnimationID inactive_id
+	, const int repeat_x
+	, const ResourceSystem& resource_system
+	, const EntityID self_id
+	, std::function<const Health&(const EntityID id)> health_accessor
+	)
 	: m_active_anim_id{active_id}
 	, m_inactive_anim_id{inactive_id}
 	, m_active_animation_frame_delay{1}
@@ -35,7 +36,7 @@ public:
 	, m_inactive_animation_time{0}
 	, m_repeat_x{repeat_x}
 	, m_self_id{self_id}
-	, m_entity_system(entity_system)
+	, m_health_accessor(std::move(health_accessor))
 	{
 		const auto& active_anim_opt = resource_system.animation(active_id);
 
@@ -58,6 +59,23 @@ public:
 		{ /*error inactive_id*/ }
 	}
 
+    template<typename ExtractorF>
+	HealthVisuals
+	( ExtractorF&& extract
+	, const ResourceSystem& resource_system
+	, const CommandValue& self_id
+	, const std::function<const Health&(const EntityID id)>& health_accessor
+	)
+	: HealthVisuals
+	  { extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , resource_system
+	  , EntityID(self_id.integer())
+	  , health_accessor
+	  }
+	{}
+
     void print(std::ostream& to) const
     {
     	to << "UseHealthVisuals "
@@ -72,15 +90,7 @@ public:
     	m_inactive_animation_time = (m_inactive_animation_time + int(time_diff)) % m_inactive_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const int rx, const int ry) const
-    {
-    	const auto& health = m_entity_system.template entity_component<Health>(m_self_id);
-    	const bool active_animation = (m_repeat_x != 0) && (health.max_hp() != 0) && (health.max_hp()*rx < health.hp()*m_repeat_x);
-    	return {active_animation ? m_active_anim_id : m_inactive_anim_id
-    		  , active_animation ? m_active_animation_time/m_active_animation_frame_delay
-    				  	  	  	 : m_inactive_animation_time/m_inactive_animation_frame_delay};
-    }
-
+    AnimationFrame animation_frame(const int rx, const int ry) const;
     int repeat_x() const { return m_repeat_x; }
     int repeat_y() const { return 1; }
     void set_repeat_x(const int val) { m_repeat_x = val; }
@@ -98,7 +108,7 @@ private:
     int m_inactive_animation_time;
     int m_repeat_x;
     EntityID m_self_id;
-    const EntitySystemT& m_entity_system;
+    std::function<const Health&(const EntityID id)> m_health_accessor;
 };
 
 #endif /* COMPONENTS_HEALTH_VISUALS_H_ */

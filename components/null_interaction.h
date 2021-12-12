@@ -8,12 +8,9 @@
 #ifndef COMPONENTS_NULL_INTERACTION_H_
 #define COMPONENTS_NULL_INTERACTION_H_
 
-#include "interaction.h"
-
-class NullInteraction : public Interaction
+class NullInteraction
 {
 public:
-	using Base = Interaction;
     void print(std::ostream& to) const
     {
     	to << "UseNullInteraction ";
@@ -22,12 +19,12 @@ public:
     bool is_in_group(int group_id) const { return false; }
 	void set_group(int group_id, bool val) {}
 	void clear_groups() {}
-	int8_t trigger_group() const { return 0; }
+	GroupID trigger_group() const { return 0; }
 	bool triggered() const { return false; }
 	ProcedureID proc_id_self() const { return ProcedureID(0); }
 	ProcedureID proc_id_other() const { return ProcedureID(0); }
 	ProcedureID on_exit_proc_id_self() const { return ProcedureID(0); }
-	void set_trigger_group(int8_t group) {}
+	void set_trigger_group(GroupID group) {}
 	void set_proc_id_self(ProcedureID proc_id) {}
 	void set_proc_id_other(ProcedureID proc_id) {}
 	void set_on_exit_proc_id_self(ProcedureID proc_id) {}

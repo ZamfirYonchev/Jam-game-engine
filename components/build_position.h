@@ -8,53 +8,57 @@
 #ifndef COMPONENTS_BUILD_POSITION_H_
 #define COMPONENTS_BUILD_POSITION_H_
 
-#include "position.h"
 #include "../types.h"
 #include <iostream>
-#include "../math_ext.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class BuildPosition : public Position
+class Position;
+
+class BuildPosition
 {
 public:
-	using Base = Position;
 	BuildPosition
-		(const EntityID attached_id
-	   , const double origin_x
-	   , const double origin_y
-	   , const EntitySystemT& entity_system)
+	( const EntityID attached_id
+	, const double origin_x
+	, const double origin_y
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	)
 	: m_attached_id(attached_id)
-    , m_origin_x(origin_x)
-    , m_origin_y(origin_y)
-	, m_entity_system(entity_system)
-    {}
+	, m_origin_x(origin_x)
+	, m_origin_y(origin_y)
+	, m_position_accessor(position_accessor)
+	{}
 
-    void print(std::ostream& to) const
+    template<typename ExtractorF>
+	BuildPosition
+	( ExtractorF&& extract
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	)
+	: BuildPosition
+	  { extract().integer()
+	  , extract().real()
+	  , extract().real()
+	  , position_accessor
+	  }
+	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+	{
+    	insert(CommandValue{"UseBuildPosition"});
+    	insert(CommandValue{m_attached_id, 0});
+	}
+
+	void print(std::ostream& to) const
     {
     	to << "UseBuildPosition "
 		   << m_attached_id << " ";
     }
 
-    double x() const
-    {
-    	return min(m_origin_x, m_entity_system.template entity_component<Position>(m_attached_id).x());
-    }
-
-    double y() const
-    {
-    	return min(m_origin_y, m_entity_system.template entity_component<Position>(m_attached_id).y());
-    }
-
-    double w() const
-    {
-    	return abs(m_origin_x - m_entity_system.template entity_component<Position>(m_attached_id).x());
-    }
-
-    double h() const
-    {
-    	return abs(m_origin_y - m_entity_system.template entity_component<Position>(m_attached_id).y());
-    }
-
+    double x() const;
+    double y() const;
+    double w() const;
+    double h() const;
     void set_x(double val) {}
     void set_y(double val) {}
     void set_w(double val) {}
@@ -69,7 +73,7 @@ public:
     double m_origin_x, m_origin_y;
 
 private:
-    const EntitySystemT& m_entity_system;
+   std::function<const Position&(const EntityID id)> m_position_accessor;
 };
 
 #endif /* COMPONENTS_BUILD_POSITION_H_ */

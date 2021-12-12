@@ -8,30 +8,61 @@
 #ifndef COMPONENTS_ATTACHED_DIRECTIONAL_POSITION_H_
 #define COMPONENTS_ATTACHED_DIRECTIONAL_POSITION_H_
 
-#include "position.h"
-#include "control.h"
 #include "../types.h"
-#include "../commands/use_component_command.h"
+#include <ostream>
+#include <functional>
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class AttachedDirectionalPosition : public Position
+class Position;
+class Control;
+
+class AttachedDirectionalPosition
 {
 public:
-	using Base = Position;
-    AttachedDirectionalPosition
-		(const EntityID attached_id
-	   , const double offset_x
-	   , const double offset_y
-	   , const double w
-	   , const double h
-	   , const EntitySystemT& entity_system)
-    : m_attached_id{attached_id}
-    , m_offset_x{offset_x}
-    , m_offset_y{offset_y}
-    , m_w{w}
-    , m_h{h}
-	, m_entity_system{entity_system}
-    {}
+	AttachedDirectionalPosition
+	( const EntityID attached_id
+    , const double offset_x
+    , const double offset_y
+    , const double w
+    , const double h
+    , const std::function<const Position&(const EntityID id)>& position_accessor
+    , const std::function<const Control&(const EntityID id)>& control_accessor
+    )
+	: m_attached_id{attached_id}
+	, m_offset_x{offset_x}
+	, m_offset_y{offset_y}
+	, m_w{w}
+	, m_h{h}
+	, m_position_accessor{position_accessor}
+	, m_control_accessor{control_accessor}
+	{}
+
+    template<typename ExtractorF>
+	AttachedDirectionalPosition
+	( ExtractorF&& extract
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	, const std::function<const Control&(const EntityID id)>& control_accessor
+	)
+	: AttachedDirectionalPosition
+	  { extract().integer()
+	  , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  , extract().real()
+	  , position_accessor
+	  , control_accessor
+	  }
+	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+	{
+    	insert(CommandValue{"UseAttachedDirectionalPosition"});
+    	insert(CommandValue{m_offset_x});
+    	insert(CommandValue{m_offset_y});
+    	insert(CommandValue{m_w});
+    	insert(CommandValue{m_h});
+	}
 
     void print(std::ostream& to) const
     {
@@ -42,24 +73,9 @@ public:
 		   << m_h << " ";
     }
 
-    double x() const
-    {
-    	const Position& attached_position = m_entity_system.template entity_component<Position>(m_attached_id);
-    	const Control& attached_control = m_entity_system.template entity_component<Control>(m_attached_id);
-		return attached_position.x()
-			 + attached_position.w()/2
-			 + m_offset_x * (1 - 2*(attached_control.look_dir() == Control::LookDir::LEFT))
-			 - m_w/2;
-    }
+    double x() const;
 
-    double y() const
-    {
-    	const Position& attached_position = m_entity_system.template entity_component<Position>(m_attached_id);
-		return attached_position.y()
-			 + attached_position.h()/2
-			 + m_offset_y
-			 - m_h/2;
-    }
+    double y() const;
 
     double w() const { return m_w; }
 
@@ -79,36 +95,9 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_w, m_h;
-    const EntitySystemT& m_entity_system;
+    std::function<const Position&(const EntityID id)> m_position_accessor;
+    std::function<const Control&(const EntityID id)> m_control_accessor;
 };
 
-template<typename EntitySystemT>
-class UseComponentCommand<AttachedDirectionalPosition<EntitySystemT>>
-{
-public:
-    template<typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
-	{
-    	const auto attached_id = command_system.exec_next();
-    	const auto offset_x = command_system.exec_next();
-    	const auto offset_y = command_system.exec_next();
-    	const auto w = command_system.exec_next();
-    	const auto h = command_system.exec_next();
-
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-		entity_system.set_entity_component(selected_entity, all_systems, rendering_system
-									     , AttachedDirectionalPosition<EntitySystemT>
-											{ EntityID(attached_id.integer())
-											, offset_x.real()
-											, offset_y.real()
-											, w.real()
-											, h.real()
-											, entity_system
-											}
-										  );
-
-    	return CommandReturnValue{0.0};
-	}
-};
 
 #endif /* COMPONENTS_ATTACHED_DIRECTIONAL_POSITION_H_ */

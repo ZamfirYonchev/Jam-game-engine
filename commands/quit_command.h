@@ -8,21 +8,19 @@
 #ifndef COMMANDS_QUIT_COMMAND_H_
 #define COMMANDS_QUIT_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
-
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
 
 class QuitCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	Globals& globals;
+	QuitCommand(Globals& _globals) : globals{_globals} {}
+
+    CommandValue operator()() const
     {
-    	globals(Globals::app_running) = CommandReturnValue{0.0};
-        return CommandReturnValue{0.0};
+    	globals(Globals::app_running) = CommandValue{0.0};
+        return CommandValue{0.0};
     }
 };
 

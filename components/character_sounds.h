@@ -8,31 +8,39 @@
 #ifndef COMPONENTS_CHARACTER_SOUNDS_H_
 #define COMPONENTS_CHARACTER_SOUNDS_H_
 
-#include "sounds.h"
 #include <iostream>
 #include <SDL2/SDL_mixer.h>
+#include "../types.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class CharacterSounds : public Sounds
+class Control;
+class Movement;
+class Collision;
+class Health;
+
+class CharacterSounds
 {
 public:
-	using Base = Sounds;
     enum class State { IDLE, WALK, JUMP, FALL, ATTACK, HIT, DEAD} ;
 
-    const Time LONG_IDLE_TIMEOUT = 5000;
+    constexpr static Time LONG_IDLE_TIMEOUT = 5000;
 
     CharacterSounds
-		(const SoundID idle_id
-	   , const SoundID walk_id
-	   , const SoundID jump_id
-	   , const SoundID fall_id
-	   , const SoundID land_id
-	   , const SoundID attack_id
-	   , const SoundID hit_id
-	   , const SoundID dead_id
-	   , const double volume
-	   , const EntityID self_id
-	   , const EntitySystemT& entity_system)
+	( const SoundID idle_id
+	, const SoundID walk_id
+	, const SoundID jump_id
+	, const SoundID fall_id
+	, const SoundID land_id
+	, const SoundID attack_id
+	, const SoundID hit_id
+	, const SoundID dead_id
+	, const double volume
+	, const EntityID self_id
+	, const std::function<const Control&(const EntityID id)>& control_accessor
+	, const std::function<const Movement&(const EntityID id)>& movement_accessor
+	, const std::function<const Collision&(const EntityID id)>& collision_accessor
+	, const std::function<const Health&(const EntityID id)>& health_accessor
+	)
     : m_self_id(self_id)
     , m_play_new_sound(false)
     , m_current_sound_id(-1)
@@ -46,8 +54,38 @@ public:
     , m_dead_id(dead_id)
     , m_volume(volume)
     , m_state(State::IDLE)
-    , m_entity_system(entity_system)
+	, m_control_accessor{control_accessor}
+	, m_movement_accessor{movement_accessor}
+	, m_collision_accessor{collision_accessor}
+	, m_health_accessor{health_accessor}
     {}
+
+    template<typename ExtractorF>
+    CharacterSounds
+	( ExtractorF&& extract
+	, const CommandValue& self_id
+	, const std::function<const Control&(const EntityID id)>& control_accessor
+	, const std::function<const Movement&(const EntityID id)>& movement_accessor
+	, const std::function<const Collision&(const EntityID id)>& collision_accessor
+	, const std::function<const Health&(const EntityID id)>& health_accessor
+	)
+	: CharacterSounds
+	  { extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().real()
+	  , EntityID(self_id.integer())
+	  , control_accessor
+	  , movement_accessor
+	  , collision_accessor
+	  , health_accessor
+	  }
+	{}
 
     void print(std::ostream& to) const
     {
@@ -98,79 +136,7 @@ public:
     	}
     }
 
-    void update(const Time time_diff)
-    {
-    	m_play_new_sound = false;
-
-    	const auto& control = m_entity_system.template entity_component<Control>(m_self_id);
-    	const auto& movement = m_entity_system.template entity_component<Movement>(m_self_id);
-    	const auto& collision = m_entity_system.template entity_component<Collision>(m_self_id);
-    	const auto& health = m_entity_system.template entity_component<Health>(m_self_id);
-
-    	switch(m_state)
-    	{
-			case State::IDLE:
-				if(health.alive() == false) set_new_state(State::DEAD);
-				else if(health.stunned()) set_new_state(State::HIT);
-				else if(control.decision_attack()) set_new_state(State::ATTACK);
-				else if(collision.standing_on()!=Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(State::WALK);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
-			break;
-
-			case State::WALK:
-				if(health.alive() == false) set_new_state(State::DEAD);
-				else if(health.stunned()) set_new_state(State::HIT);
-				else if(control.decision_attack()) set_new_state(State::ATTACK);
-				else if(collision.standing_on()!=Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(State::IDLE);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
-			break;
-
-			case State::JUMP:
-				if(health.alive() == false) set_new_state(State::DEAD);
-				else if(health.stunned()) set_new_state(State::HIT);
-				else if(control.decision_attack()) set_new_state(State::ATTACK);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(State::WALK);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(State::IDLE);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
-			break;
-
-			case State::FALL:
-				if(health.alive() == false) set_new_state(State::DEAD);
-				else if(health.stunned()) set_new_state(State::HIT);
-				else if(control.decision_attack()) set_new_state(State::ATTACK);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(State::WALK);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(State::IDLE);
-			break;
-
-			case State::ATTACK:
-				if(health.alive() == false) set_new_state(State::DEAD);
-				else if(health.stunned()) set_new_state(State::HIT);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(State::WALK);
-				else set_new_state(State::IDLE);
-			break;
-
-			case State::HIT:
-				if(health.alive() == false) set_new_state(State::DEAD);
-				else if(control.decision_attack()) set_new_state(State::ATTACK);
-				else if(collision.standing_on()==Collision::SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(State::WALK);
-				else if(collision.standing_on()==Collision::SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(State::IDLE);
-			break;
-
-			case State::DEAD:
-				//no new state
-			break;
-
-			default:
-			break;
-    	}
-    }
-
+    void update(const Time time_diff);
     SoundID id() const { return m_current_sound_id; }
     bool changed() const { return m_play_new_sound; }
     double volume() const { return m_volume; }
@@ -184,7 +150,10 @@ private:
     double m_volume;
 
     State m_state;
-    const EntitySystemT& m_entity_system;
+	std::function<const Control&(const EntityID id)> m_control_accessor;
+	std::function<const Movement&(const EntityID id)> m_movement_accessor;
+	std::function<const Collision&(const EntityID id)> m_collision_accessor;
+	std::function<const Health&(const EntityID id)> m_health_accessor;
 };
 
 #endif /* COMPONENTS_CHARACTER_SOUNDS_H_ */

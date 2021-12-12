@@ -8,17 +8,27 @@
 #ifndef COMPONENTS_BASIC_COLLISION_H_
 #define COMPONENTS_BASIC_COLLISION_H_
 
-#include "collision.h"
+#include "collision_enums.h"
+#include "../command_value.h"
 
-class BasicCollision : public Collision
+class BasicCollision
 {
 public:
-	using Base = Collision;
     BasicCollision(const bool solid, const double elasticity)
     : m_standing_on(SurfaceType::AIR)
 	, m_elasticity(elasticity)
     , m_solid(solid)
     {}
+
+    template<typename ExtractorF>
+    BasicCollision
+	( ExtractorF&& extract
+	)
+	: BasicCollision
+	  { extract().boolean()
+	  , extract().real()
+	  }
+	{}
 
     BasicCollision() : BasicCollision(false, 1) {}
 

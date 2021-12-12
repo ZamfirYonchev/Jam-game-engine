@@ -10,11 +10,11 @@
 
 bool InputSelectControl::decision_attack() const
 {
-	return m_select == m_curr_selection && m_input_system.select();
+	return m_select == m_curr_selection && m_input_system.get().select();
 }
 
 void InputSelectControl::update_decisions(const Time time_diff)
 {
-	m_curr_selection += m_input_system.down() - m_input_system.up() + m_max;
+	m_curr_selection += m_input_system.get().down() - m_input_system.get().up() + m_max;
 	m_curr_selection %= m_max;
 }

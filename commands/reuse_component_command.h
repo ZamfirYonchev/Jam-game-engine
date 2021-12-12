@@ -8,30 +8,33 @@
 #ifndef COMMANDS_REUSE_COMPONENT_COMMAND_H_
 #define COMMANDS_REUSE_COMPONENT_COMMAND_H_
 
-#include "command_return_value.h"
-#include "../globals.h"
+#include "../command_value.h"
 #include "../types.h"
 #include <sstream>
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
-template<typename T>
+template<typename ComponentT, typename CommandSystemT, typename EntitySystemT>
 class ReuseComponentCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	EntitySystemT& entity_system;
+
+	ReuseComponentCommand(CommandSystemT& _command_system, EntitySystemT& _entity_system)
+	: command_system{_command_system}
+	, entity_system{_entity_system}
+	{}
+
+    CommandValue operator()() const
 	{
     	const auto source_id = command_system.exec_next();
 
-    	const T& component = entity_system.template entity_component<T>(source_id.integer());
+    	const ComponentT& component = entity_system.template entity_component<ComponentT>(source_id.integer());
+    	//TODO use set_entity_component instead
 		std::stringstream ss;
 		ss << component;
-		command_system.process_stream(ss);
+		command_system.parse(ss);
 
-    	return CommandReturnValue{0.0};
+    	return CommandValue{0.0};
 	}
 };
 

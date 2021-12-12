@@ -8,19 +8,25 @@
 #ifndef COMMANDS_MODIFY_HEALTH_COMMAND_H_
 #define COMMANDS_MODIFY_HEALTH_COMMAND_H_
 
-#include "command_return_value.h"
+#include "../command_value.h"
 #include "../globals.h"
 #include "../math_ext.h"
 
-class ResourceSystem;
-class InputSystem;
-class RenderingSystem;
-
+template<typename CommandSystemT, typename EntitySystemT>
 class ModifyHealthCommand
 {
 public:
-    template<typename EntitySystemT, typename CommandSystemT, typename AllSystemsT>
-    CommandReturnValue operator()(CommandSystemT& command_system, EntitySystemT& entity_system, ResourceSystem& resource_system, InputSystem& input_system, RenderingSystem& rendering_system, AllSystemsT& all_systems, Globals& globals) const
+	CommandSystemT& command_system;
+	EntitySystemT& entity_system;
+	Globals& globals;
+
+	ModifyHealthCommand(CommandSystemT& _command_system, EntitySystemT& _entity_system, Globals& _globals)
+	: command_system{_command_system}
+	, entity_system{_entity_system}
+	, globals{_globals}
+	{}
+
+	CommandValue operator()() const
 	{
     	const auto max_hp = command_system.exec_next();
     	const auto hp = command_system.exec_next();
@@ -52,12 +58,12 @@ public:
 			else
 				health.set_on_death_exec(health.on_death_exec() + proc_id.integer());
 
-			return CommandReturnValue{0.0};
+			return CommandValue{0.0};
 		}
 		else
 		{
 			//error selected_entity
-			return CommandReturnValue{-1.0};
+			return CommandValue{-1.0};
 		}
 	}
 };

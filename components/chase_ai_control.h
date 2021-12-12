@@ -8,22 +8,26 @@
 #ifndef COMPONENTS_CHASE_AI_CONTROL_H_
 #define COMPONENTS_CHASE_AI_CONTROL_H_
 
-#include "control.h"
+#include "control_enums.h"
 #include "../math_ext.h"
-#include "position.h"
+#include <functional>
+#include <ostream>
+#include "../types.h"
+#include "../command_value.h"
 
-template<typename EntitySystemT>
-class ChaseAIControl : public Control
+class Position;
+
+class ChaseAIControl
 {
 public:
-	using Base = Control;
 	ChaseAIControl
 		(const EntityID self_id
 	   , const EntityID target_id
 	   , const ProcedureID attack_proc_id
 	   , const int attack_cooldown
 	   , const double attack_range
-	   , const EntitySystemT& entity_system)
+	   , std::function<const Position&(const EntityID id)> position_accessor
+	   )
 	: m_self_id(self_id)
 	, m_target_id(target_id)
 	, m_walk_dir(0)
@@ -33,10 +37,26 @@ public:
 	, m_current_attack_cooldown(0)
 	, m_look_dir(LookDir::RIGHT)
 	, m_attack_range(attack_range)
-	, m_entity_system(entity_system)
+	, m_position_accessor(std::move(position_accessor))
 	{}
 
-    void print(std::ostream& to) const
+    template<typename ExtractorF>
+	ChaseAIControl
+	( ExtractorF&& extract
+	, const CommandValue& self_id
+	, const std::function<const Position&(const EntityID id)>& position_accessor
+	)
+	: ChaseAIControl
+	  { EntityID(self_id.integer())
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().integer()
+	  , extract().real()
+	  , position_accessor
+	  }
+	{}
+
+	void print(std::ostream& to) const
     {
     	to << "UseChaseAIControl "
     	   << m_target_id << " "
@@ -59,31 +79,7 @@ public:
     void set_attack_proc_id(ProcedureID val) { m_attack_proc_id = val; }
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(const Time time_diff)
-    {
-    	m_current_attack_cooldown = max(m_current_attack_cooldown-int(time_diff), 0);
-
-    	const auto& target_position = m_entity_system.template entity_component<Position>(m_target_id);
-
-    	if(target_position)
-    	{
-    		const auto& self_position = m_entity_system.template entity_component<Position>(m_self_id);
-    		const double distance_x = target_position.x() - self_position.x() + (target_position.w() - self_position.w())/2.0;
-    		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
-
-    		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_attack_range);
-    		m_look_dir = distance_x > 0 ? LookDir::RIGHT : distance_x < 0 ? LookDir::LEFT : m_look_dir;
-    		m_attack = (m_attack_proc_id > 0) && (abs(distance_x) <= m_attack_range) && (abs(distance_y) <= 30) && (m_current_attack_cooldown == 0);
-
-    		if(m_attack)
-    			m_current_attack_cooldown = m_attack_cooldown;
-    	}
-    	else
-    	{
-    		//error m_target_id
-    	}
-    }
-
+    void update_decisions(const Time time_diff);
     void clear_decisions()
     {
         m_walk_dir = 0;
@@ -100,7 +96,7 @@ private:
     int m_current_attack_cooldown;
     LookDir m_look_dir;
     double m_attack_range;
-    const EntitySystemT& m_entity_system;
+    std::function<const Position&(const EntityID id)> m_position_accessor;
 };
 
 

@@ -8,12 +8,11 @@
 #ifndef COMPONENTS_NULL_HEALTH_H_
 #define COMPONENTS_NULL_HEALTH_H_
 
-#include "health.h"
+#include <ostream>
 
-class NullHealth : public Health
+class NullHealth
 {
 public:
-	using Base = Health;
     void print(std::ostream& to) const
     {
     	to << "UseNullHealth ";
