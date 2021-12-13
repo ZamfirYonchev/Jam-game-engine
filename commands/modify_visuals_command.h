@@ -54,7 +54,7 @@ public:
 				if(visuals.layer() != VisualLayer::FAR_BACKGROUND)
 				{
 					visuals.set_layer(VisualLayer(0));
-					rendering_system.component_updated(visuals, selected_entity, false);
+					rendering_system.component_updated(visuals, selected_entity, 0);
 				}
 			}
 			else
@@ -62,7 +62,7 @@ public:
 				if(layer.integer() != 0)
 				{
 					visuals.set_layer(VisualLayer(int(visuals.layer())+layer.integer()));
-					rendering_system.component_updated(visuals, selected_entity, false);
+					rendering_system.component_updated(visuals, selected_entity, 0);
 				}
 			}
 
