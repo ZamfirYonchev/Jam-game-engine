@@ -159,7 +159,6 @@ int main(int argc, char** argv)
 				  { globals(Globals::app_resolution_x).integer()
 				  , globals(Globals::app_resolution_y).integer()
 				  , globals(Globals::app_fullscreen).boolean()
-				  , true
 				  , globals(Globals::app_enable_audio).boolean()
 				  , globals(Globals::app_sound_channels).integer()
 				  , title.c_str()

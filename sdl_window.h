@@ -20,7 +20,6 @@ public:
 	SdlWindow(const int res_width
 			  , const int res_height
 			  , const bool fullscreen
-			  , const bool double_buffer
 			  , const bool enable_audio
 			  , const int sound_channels
 			  , std::string_view title
