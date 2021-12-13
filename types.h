@@ -27,4 +27,7 @@ using GroupID = int;
 template<typename T>
 using optional_ref = std::optional<std::reference_wrapper<T>>;
 
+template<typename ComponentT>
+using ComponentAccess = std::function<ComponentT&(const EntityID id)>;
+
 #endif /* TYPES_H_ */

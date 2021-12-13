@@ -10,7 +10,6 @@
 
 #include "../types.h"
 #include <ostream>
-#include "../command_value.h"
 
 class Interaction;
 
@@ -22,7 +21,7 @@ public:
     , const int offset_proc_id_self
     , const int offset_proc_id_other
     , const int offset_proc_id_on_exit_self
-    , const std::function<Interaction&(const EntityID id)>& interaction_accessor
+    , const ComponentAccess<Interaction>& interaction_accessor
     )
     : m_attached_id{attached_id}
     , m_interaction_accessor{interaction_accessor}
@@ -34,14 +33,14 @@ public:
     template<typename ExtractorF>
     AttachedInteraction
 	( ExtractorF&& extract
-	, std::function<Interaction&(const EntityID id)> interaction_accessor
+	, const ComponentAccess<Interaction>& interaction_accessor
 	)
 	: AttachedInteraction
 	  { extract().integer()
 	  , extract().integer()
 	  , extract().integer()
 	  , extract().integer()
-	  , std::move(interaction_accessor)
+	  , interaction_accessor
 	  }
 	{}
 
@@ -77,7 +76,7 @@ public:
 
 private:
 	EntityID m_attached_id;
-    std::function<Interaction&(const EntityID id)> m_interaction_accessor;
+	ComponentAccess<Interaction> m_interaction_accessor;
 	int m_offset_proc_id_self;
 	int m_offset_proc_id_other;
 	int m_offset_proc_id_on_exit_self;

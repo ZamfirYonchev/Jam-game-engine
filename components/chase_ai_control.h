@@ -26,7 +26,7 @@ public:
 	   , const ProcedureID attack_proc_id
 	   , const int attack_cooldown
 	   , const double attack_range
-	   , std::function<const Position&(const EntityID id)> position_accessor
+	   , ComponentAccess<const Position> position_accessor
 	   )
 	: m_self_id(self_id)
 	, m_target_id(target_id)
@@ -44,7 +44,7 @@ public:
 	ChaseAIControl
 	( ExtractorF&& extract
 	, const CommandValue& self_id
-	, const std::function<const Position&(const EntityID id)>& position_accessor
+	, const ComponentAccess<const Position>& position_accessor
 	)
 	: ChaseAIControl
 	  { EntityID(self_id.integer())
@@ -96,7 +96,7 @@ private:
     int m_current_attack_cooldown;
     LookDir m_look_dir;
     double m_attack_range;
-    std::function<const Position&(const EntityID id)> m_position_accessor;
+    ComponentAccess<const Position> m_position_accessor;
 };
 
 

@@ -9,7 +9,6 @@
 #define COMPONENTS_STATIC_VISUALS_H_
 
 #include "visuals_enums.h"
-#include "../command_value.h"
 
 class StaticVisuals
 {

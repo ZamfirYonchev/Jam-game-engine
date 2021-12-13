@@ -9,7 +9,6 @@
 #define COMPONENTS_TRIGGER_INTERACTION_H_
 
 #include "../types.h"
-#include "../command_value.h"
 
 class TriggerInteraction
 {

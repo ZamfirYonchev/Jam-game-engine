@@ -10,7 +10,6 @@
 
 #include "../types.h"
 #include <iostream>
-#include "../command_value.h"
 
 class Position;
 
@@ -21,7 +20,7 @@ public:
 	( const EntityID attached_id
 	, const double origin_x
 	, const double origin_y
-	, const std::function<const Position&(const EntityID id)>& position_accessor
+	, const ComponentAccess<const Position>& position_accessor
 	)
 	: m_attached_id(attached_id)
 	, m_origin_x(origin_x)
@@ -32,7 +31,7 @@ public:
     template<typename ExtractorF>
 	BuildPosition
 	( ExtractorF&& extract
-	, const std::function<const Position&(const EntityID id)>& position_accessor
+	, const ComponentAccess<const Position>& position_accessor
 	)
 	: BuildPosition
 	  { extract().integer()
@@ -45,8 +44,8 @@ public:
     template<typename InserterF>
     void obtain(InserterF&& insert) const
 	{
-    	insert(CommandValue{"UseBuildPosition"});
-    	insert(CommandValue{m_attached_id, 0});
+    	insert("UseBuildPosition");
+    	insert(m_attached_id);
 	}
 
 	void print(std::ostream& to) const
@@ -73,7 +72,7 @@ public:
     double m_origin_x, m_origin_y;
 
 private:
-   std::function<const Position&(const EntityID id)> m_position_accessor;
+    ComponentAccess<const Position> m_position_accessor;
 };
 
 #endif /* COMPONENTS_BUILD_POSITION_H_ */

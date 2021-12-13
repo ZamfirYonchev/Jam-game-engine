@@ -33,10 +33,10 @@ public:
 	, const AnimationID dead_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const std::function<const Control&(const EntityID id)>& control_accessor
-	, const std::function<const Movement&(const EntityID id)>& movement_accessor
-	, const std::function<const Collision&(const EntityID id)>& collision_accessor
-	, const std::function<const Health&(const EntityID id)>& health_accessor
+	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const Movement>& movement_accessor
+	, const ComponentAccess<const Collision>& collision_accessor
+	, const ComponentAccess<const Health>& health_accessor
 	)
 	: m_current_state(RenderStates::IDLE)
 	, m_current_anim_id{idle_anim_id}
@@ -150,10 +150,10 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, const CommandValue& self_id
-	, const std::function<const Control&(const EntityID id)>& control_accessor
-	, const std::function<const Movement&(const EntityID id)>& movement_accessor
-	, const std::function<const Collision&(const EntityID id)>& collision_accessor
-	, const std::function<const Health&(const EntityID id)>& health_accessor
+	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const Movement>& movement_accessor
+	, const ComponentAccess<const Collision>& collision_accessor
+	, const ComponentAccess<const Health>& health_accessor
 	)
 	: CharacterVisuals
 	  { extract().integer()
@@ -227,10 +227,10 @@ private:
     bool m_last_frame;
     VisualLayer m_layer;
     EntityID m_self_id;
-	std::function<const Control&(const EntityID id)> m_control_accessor;
-	std::function<const Movement&(const EntityID id)> m_movement_accessor;
-	std::function<const Collision&(const EntityID id)> m_collision_accessor;
-	std::function<const Health&(const EntityID id)> m_health_accessor;
+    ComponentAccess<const Control> m_control_accessor;
+    ComponentAccess<const Movement> m_movement_accessor;
+    ComponentAccess<const Collision> m_collision_accessor;
+    ComponentAccess<const Health> m_health_accessor;
 
     void set_new_state(RenderStates new_state)
     {

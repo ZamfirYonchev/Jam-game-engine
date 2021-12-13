@@ -8,8 +8,6 @@
 #ifndef COMPONENTS_ABSOLUTE_POSITION_H_
 #define COMPONENTS_ABSOLUTE_POSITION_H_
 
-#include "../command_value.h"
-
 class AbsolutePosition
 {
 public:
@@ -30,11 +28,11 @@ public:
     template<typename InserterF>
     void obtain(InserterF&& insert) const
     {
-    	insert(CommandValue{"UseAbsolutePosition"});
-    	insert(CommandValue{m_x});
-    	insert(CommandValue{m_y});
-    	insert(CommandValue{m_width});
-    	insert(CommandValue{m_height});
+    	insert("UseAbsolutePosition");
+    	insert(m_x);
+    	insert(m_y);
+    	insert(m_width);
+    	insert(m_height);
     }
 
     void print(std::ostream& to) const

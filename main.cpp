@@ -216,7 +216,7 @@ int main(int argc, char** argv)
 													 , globals
 													 };
 
-		CommandValueExtractor<CommandSystem> command_value_extractor{command_system};
+        CommandValueExtractor<CommandSystem> command_value_extractor{command_system};
 
 		ES::ComponentAccessor<Position> position_accessor{entity_system};
 		ES::ComponentAccessor<Control> control_accessor{entity_system};
@@ -226,6 +226,7 @@ int main(int argc, char** argv)
 		ES::ComponentAccessor<Health> health_accessor{entity_system};
 		ES::ComponentAccessor<Sounds> sounds_accessor{entity_system};
 		ES::ComponentAccessor<Visuals> visuals_accessor{entity_system};
+		auto current_id_accessor = [&](){ return EntityID(globals(Globals::selected_entity).integer()); };
 
 	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
 	    command_system.register_command("Val", GetVariableCommand{command_system, globals});
@@ -290,7 +291,7 @@ int main(int argc, char** argv)
 		command_system.register_command("UseCharacterHealth", use_command_gen.make<Health, CharacterHealth>(command_value_extractor));
 		command_system.register_command("UseTimedHealth", use_command_gen.make<Health, TimedHealth>(command_value_extractor));
 		command_system.register_command("UseNullSounds", use_command_gen.make<Sounds, NullSounds>());
-		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds>(command_value_extractor, globals(Globals::selected_entity), control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds>(command_value_extractor, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
 		command_system.register_command("UseNullVisuals", use_command_gen.make<Visuals, NullVisuals>());
 		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), control_accessor, movement_accessor, collision_accessor, health_accessor));
 		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals>(command_value_extractor, resource_system, globals(Globals::selected_entity), control_accessor, collision_accessor, health_accessor));

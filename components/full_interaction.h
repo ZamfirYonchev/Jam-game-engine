@@ -9,7 +9,6 @@
 #define COMPONENTS_FULL_INTERACTION_H_
 
 #include "../types.h"
-#include "../command_value.h"
 
 class FullInteraction
 {

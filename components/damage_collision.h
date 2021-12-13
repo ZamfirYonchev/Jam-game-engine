@@ -9,7 +9,6 @@
 #define COMPONENTS_DAMAGE_COLLISION_H_
 
 #include "collision_enums.h"
-#include "../command_value.h"
 
 class DamageCollision
 {

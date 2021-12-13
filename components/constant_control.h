@@ -10,7 +10,6 @@
 
 #include "control_enums.h"
 #include "../math_ext.h"
-#include "../command_value.h"
 
 class ConstantControl
 {

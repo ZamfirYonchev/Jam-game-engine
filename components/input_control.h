@@ -25,7 +25,7 @@ public:
 	   , const bool stability_control
 	   , InputSystem& input_system
 	   , const EntityID self_id
-	   , const std::function<const Movement&(const EntityID)>& movement_accessor
+	   , const ComponentAccess<const Movement>& movement_accessor
 	   )
     : m_self_id(self_id)
 	, m_walk_dir(0)
@@ -45,7 +45,7 @@ public:
 	( ExtractorF&& extract
 	, InputSystem& input_system
 	, const CommandValue& self_id
-	, const std::function<const Movement&(const EntityID)>& movement_accessor
+	, const ComponentAccess<const Movement>& movement_accessor
 	)
 	: InputControl
 	  { extract().integer() //shoot_proc_id
@@ -98,7 +98,7 @@ private:
     LookDir m_look_dir;
     bool m_stability_control;
     std::reference_wrapper<InputSystem> m_input_system;
-    std::function<const Movement&(const EntityID id)> m_movement_accessor;
+    ComponentAccess<const Movement> m_movement_accessor;
 };
 
 

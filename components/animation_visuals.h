@@ -10,7 +10,6 @@
 
 #include "visuals_enums.h"
 #include "../systems/resource_system.h"
-#include "../command_value.h"
 
 class AnimationVisuals
 {

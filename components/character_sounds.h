@@ -11,7 +11,6 @@
 #include <iostream>
 #include <SDL2/SDL_mixer.h>
 #include "../types.h"
-#include "../command_value.h"
 
 class Control;
 class Movement;
@@ -36,10 +35,10 @@ public:
 	, const SoundID dead_id
 	, const double volume
 	, const EntityID self_id
-	, const std::function<const Control&(const EntityID id)>& control_accessor
-	, const std::function<const Movement&(const EntityID id)>& movement_accessor
-	, const std::function<const Collision&(const EntityID id)>& collision_accessor
-	, const std::function<const Health&(const EntityID id)>& health_accessor
+	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const Movement>& movement_accessor
+	, const ComponentAccess<const Collision>& collision_accessor
+	, const ComponentAccess<const Health>& health_accessor
 	)
     : m_self_id(self_id)
     , m_play_new_sound(false)
@@ -60,14 +59,14 @@ public:
 	, m_health_accessor{health_accessor}
     {}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDF>
     CharacterSounds
 	( ExtractorF&& extract
-	, const CommandValue& self_id
-	, const std::function<const Control&(const EntityID id)>& control_accessor
-	, const std::function<const Movement&(const EntityID id)>& movement_accessor
-	, const std::function<const Collision&(const EntityID id)>& collision_accessor
-	, const std::function<const Health&(const EntityID id)>& health_accessor
+	, SelfIDF&& obtain_self_id
+	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const Movement>& movement_accessor
+	, const ComponentAccess<const Collision>& collision_accessor
+	, const ComponentAccess<const Health>& health_accessor
 	)
 	: CharacterSounds
 	  { extract().integer()
@@ -79,7 +78,7 @@ public:
 	  , extract().integer()
 	  , extract().integer()
 	  , extract().real()
-	  , EntityID(self_id.integer())
+	  , obtain_self_id()
 	  , control_accessor
 	  , movement_accessor
 	  , collision_accessor
@@ -150,10 +149,10 @@ private:
     double m_volume;
 
     State m_state;
-	std::function<const Control&(const EntityID id)> m_control_accessor;
-	std::function<const Movement&(const EntityID id)> m_movement_accessor;
-	std::function<const Collision&(const EntityID id)> m_collision_accessor;
-	std::function<const Health&(const EntityID id)> m_health_accessor;
+    ComponentAccess<const Control> m_control_accessor;
+    ComponentAccess<const Movement> m_movement_accessor;
+    ComponentAccess<const Collision> m_collision_accessor;
+    ComponentAccess<const Health> m_health_accessor;
 };
 
 #endif /* COMPONENTS_CHARACTER_SOUNDS_H_ */

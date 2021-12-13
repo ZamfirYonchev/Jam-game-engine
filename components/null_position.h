@@ -8,8 +8,6 @@
 #ifndef COMPONENTS_NULL_POSITION_H_
 #define COMPONENTS_NULL_POSITION_H_
 
-#include "../command_value.h"
-
 class NullPosition
 {
 public:
@@ -17,7 +15,7 @@ public:
     template<typename InserterF>
     void obtain(InserterF&& insert) const
 	{
-    	insert(CommandValue{"UseNullPosition"});
+    	insert("UseNullPosition");
 	}
 
 	void print(std::ostream& to) const

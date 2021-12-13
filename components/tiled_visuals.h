@@ -34,7 +34,7 @@ public:
 	, const AnimationID top_right_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, std::function<const Position&(const EntityID id)> position_accessor
+	, const ComponentAccess<const Position>& position_accessor
 	)
     : m_tile_w{tile_w}
     , m_tile_h{tile_h}
@@ -54,7 +54,7 @@ public:
 	, m_anim_time{0}
 	, m_layer{VisualLayer::ACTION}
     , m_self_id{self_id}
-    , m_position_accessor{std::move(position_accessor)}
+    , m_position_accessor{position_accessor}
     {
 			const auto& anim_opt = resource_system.animation(m_animation_id[0]);
 
@@ -72,7 +72,7 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, const CommandValue& self_id
-	, const std::function<const Position&(const EntityID id)>& position_accessor
+	, const ComponentAccess<const Position>& position_accessor
 	)
 	: TiledVisuals
 	  { extract().real()
@@ -133,7 +133,7 @@ private:
     int m_anim_time;
     VisualLayer m_layer;
     EntityID m_self_id;
-    std::function<const Position&(const EntityID id)> m_position_accessor;
+    ComponentAccess<const Position> m_position_accessor;
 
     int anim_index(const int rx, const int ry) const
     {

@@ -9,7 +9,6 @@
 #define COMPONENTS_NORMAL_INTERACTION_H_
 
 #include <cinttypes>
-#include "../command_value.h"
 
 class NormalInteraction
 {

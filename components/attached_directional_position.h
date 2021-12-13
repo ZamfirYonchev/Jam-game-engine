@@ -10,8 +10,6 @@
 
 #include "../types.h"
 #include <ostream>
-#include <functional>
-#include "../command_value.h"
 
 class Position;
 class Control;
@@ -25,8 +23,8 @@ public:
     , const double offset_y
     , const double w
     , const double h
-    , const std::function<const Position&(const EntityID id)>& position_accessor
-    , const std::function<const Control&(const EntityID id)>& control_accessor
+    , const ComponentAccess<const Position>& position_accessor
+    , const ComponentAccess<const Control>& control_accessor
     )
 	: m_attached_id{attached_id}
 	, m_offset_x{offset_x}
@@ -40,8 +38,8 @@ public:
     template<typename ExtractorF>
 	AttachedDirectionalPosition
 	( ExtractorF&& extract
-	, const std::function<const Position&(const EntityID id)>& position_accessor
-	, const std::function<const Control&(const EntityID id)>& control_accessor
+	, const ComponentAccess<const Position>& position_accessor
+	, const ComponentAccess<const Control>& control_accessor
 	)
 	: AttachedDirectionalPosition
 	  { extract().integer()
@@ -57,11 +55,11 @@ public:
     template<typename InserterF>
     void obtain(InserterF&& insert) const
 	{
-    	insert(CommandValue{"UseAttachedDirectionalPosition"});
-    	insert(CommandValue{m_offset_x});
-    	insert(CommandValue{m_offset_y});
-    	insert(CommandValue{m_w});
-    	insert(CommandValue{m_h});
+    	insert("UseAttachedDirectionalPosition");
+    	insert(m_offset_x);
+    	insert(m_offset_y);
+    	insert(m_w);
+    	insert(m_h);
 	}
 
     void print(std::ostream& to) const
@@ -95,8 +93,8 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_w, m_h;
-    std::function<const Position&(const EntityID id)> m_position_accessor;
-    std::function<const Control&(const EntityID id)> m_control_accessor;
+    ComponentAccess<const Position> m_position_accessor;
+    ComponentAccess<const Control> m_control_accessor;
 };
 
 

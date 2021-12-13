@@ -11,7 +11,6 @@
 #include <ostream>
 #include "../math_ext.h"
 #include "../types.h"
-#include "../command_value.h"
 
 class CharacterHealth
 {

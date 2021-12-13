@@ -10,9 +10,6 @@
 
 #include "../types.h"
 #include <ostream>
-#include <functional>
-#include <iostream>
-#include "../command_value.h"
 
 class Position;
 
@@ -25,7 +22,7 @@ public:
     , const double offset_y
     , const double offset_w
     , const double offset_h
-    , const std::function<const Position&(const EntityID id)>& position_accessor
+    , const ComponentAccess<const Position>& position_accessor
     )
     : m_attached_id(attached_id)
     , m_offset_x(offset_x)
@@ -51,11 +48,11 @@ public:
     template<typename InserterF>
     void obtain(InserterF&& insert) const
 	{
-    	insert(CommandValue{"UseAttachedPosition"});
-    	insert(CommandValue{m_offset_x});
-    	insert(CommandValue{m_offset_y});
-    	insert(CommandValue{m_offset_w});
-    	insert(CommandValue{m_offset_h});
+    	insert("UseAttachedPosition");
+    	insert(m_offset_x);
+    	insert(m_offset_y);
+    	insert(m_offset_w);
+    	insert(m_offset_h);
 	}
 
     void print(std::ostream& to) const
@@ -86,7 +83,7 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
-    std::function<const Position&(const EntityID id)> m_position_accessor;
+    ComponentAccess<const Position> m_position_accessor;
 };
 
 

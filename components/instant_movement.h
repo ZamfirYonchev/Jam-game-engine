@@ -9,7 +9,6 @@
 #define COMPONENTS_INSTANT_MOVEMENT_H_
 
 #include "../math_ext.h"
-#include "../command_value.h"
 
 class InstantMovement
 {

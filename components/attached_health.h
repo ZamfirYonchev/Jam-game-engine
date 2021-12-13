@@ -10,7 +10,6 @@
 
 #include "../types.h"
 #include <ostream>
-#include "../command_value.h"
 
 class Health;
 
@@ -21,7 +20,7 @@ public:
 	( const EntityID attached_id
 	, const double offset_hp
 	, const double offset_max_hp
-	, const std::function<const Health&(const EntityID id)>& health_accessor
+	, const ComponentAccess<const Health>& health_accessor
 	)
 	: m_attached_id(attached_id)
 	, m_offset_hp(offset_hp)
@@ -32,7 +31,7 @@ public:
     template<typename ExtractorF>
 	AttachedHealth
 	( ExtractorF&& extract
-	, const std::function<const Health&(const EntityID id)>& health_accessor
+	, const ComponentAccess<const Health>& health_accessor
 	)
 	: AttachedHealth
 	  { extract().integer()
@@ -65,7 +64,7 @@ public:
     EntityID m_attached_id;
 private:
     double m_offset_hp, m_offset_max_hp;
-    std::function<const Health&(const EntityID id)> m_health_accessor;
+    ComponentAccess<const Health> m_health_accessor;
 };
 
 #endif /* COMPONENTS_ATTACHED_HEALTH_H_ */
