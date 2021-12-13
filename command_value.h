@@ -26,12 +26,6 @@ struct CommandValue
 	explicit CommandValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(const char* v) : CommandValue{std::string{v}} {} // @suppress("Symbol is not resolved")
 
-    double operator=(const double v) { value = v; return v; }
-    std::string_view operator=(std::string v)
-    {
-    	value = std::move(v); return std::get<std::string>(value);
-    }
-
     bool holds_string() const { return std::holds_alternative<std::string>(value); }
     bool holds_number() const { return std::holds_alternative<double>(value); }
 
