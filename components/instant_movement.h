@@ -82,15 +82,15 @@ public:
     void set_force_y(double fy) { m_fy = fy; }
     void mod_force_x(double fx) { m_fx += fx; }
     void mod_force_y(double fy) { m_fy += fy; }
-    void set_velocity_x(double vx) {}
-    void set_velocity_y(double vy) {}
-    void mod_velocity_x(double vx) {}
-    void mod_velocity_y(double vy) {}
+    void set_velocity_x(double) {}
+    void set_velocity_y(double) {}
+    void mod_velocity_x(double) {}
+    void mod_velocity_y(double) {}
     void set_mass(double val) { m_mass = val; }
     void set_friction_x(double val) { m_friction_x = val; }
     void set_friction_y(double val) { m_friction_y = val; }
     void set_move_force(double val) { m_move_force = val; }
-    void set_jump_force(double val) {}
+    void set_jump_force(double) {}
 
     double fx() const { return m_fx; }
     double fy() const { return m_fy; }
@@ -107,7 +107,7 @@ public:
     void mod_dy(double dy) { m_dy += dy; }
 
     bool gravity_affected() const { return false; }
-    void set_gravity_affected(bool val) {}
+    void set_gravity_affected(bool) {}
 
 private:
     double m_mass, m_friction_x, m_friction_y, m_move_force, m_fx, m_fy, m_dx, m_dy;

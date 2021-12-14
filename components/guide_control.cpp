@@ -8,7 +8,7 @@
 #include "guide_control.h"
 #include "position.h"
 
-void GuideControl::update_decisions(const Time time_diff)
+void GuideControl::update_decisions(const Time)
 {
 	const Position& self_position = m_position_accessor(m_self_id);
 	const Position& target_position = m_position_accessor(m_target_id);

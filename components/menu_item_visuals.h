@@ -107,10 +107,10 @@ public:
     AnimationFrame animation_frame(const int rx, const int ry) const;
     int repeat_x() const { return 1; }
     int repeat_y() const { return 1; }
-    void set_repeat_x(const int val) {}
-    void set_repeat_y(const int val) {}
+    void set_repeat_x(const int) {}
+    void set_repeat_y(const int) {}
     VisualLayer layer() const { return VisualLayer::FOREGROUND; }
-    void set_layer(VisualLayer val) {}
+    void set_layer(VisualLayer) {}
 
 private:
     EntityID m_self_id;

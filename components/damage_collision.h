@@ -39,11 +39,11 @@ public:
     bool solid() const { return m_solid; }
     void set_solid(const bool val) { m_solid = val; }
     SurfaceType standing_on() const { return SurfaceType::AIR; }
-    void set_standing_on(SurfaceType surface) {}
+    void set_standing_on(SurfaceType) {}
     double on_collision_damage() const { return m_damage; }
     void set_collision_damage(double damage) { m_damage = damage; }
     double elasticity() const { return 1; }
-    void set_elasticity(double val) {}
+    void set_elasticity(double) {}
 
 private:
     double m_damage;

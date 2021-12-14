@@ -48,14 +48,14 @@ public:
 	ProcedureID on_exit_proc_id_self() const { return ProcedureID(0); }
 	bool triggered() const { return false; }
 
-	void set_trigger_group(GroupID group) {}
-	void set_proc_id_self(ProcedureID proc_id) {}
-	void set_proc_id_other(ProcedureID proc_id) {}
-	void set_on_exit_proc_id_self(ProcedureID proc_id) {}
+	void set_trigger_group(GroupID) {}
+	void set_proc_id_self(ProcedureID) {}
+	void set_proc_id_other(ProcedureID) {}
+	void set_on_exit_proc_id_self(ProcedureID) {}
 
 	int32_t last_triggered_groups() const { return 0; }
 	int32_t triggered_groups() const { return 0; }
-	void set_triggered_groups(int32_t group_vec) {}
+	void set_triggered_groups(int32_t) {}
 	void update_last_triggered_groups() {}
 	int32_t group_vector() const { return m_group_vec; }
 

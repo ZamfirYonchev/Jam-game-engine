@@ -11,7 +11,7 @@
 #include "collision.h"
 #include "health.h"
 
-void CharacterSounds::update(const Time time_diff)
+void CharacterSounds::update(const Time)
 {
 	m_play_new_sound = false;
 

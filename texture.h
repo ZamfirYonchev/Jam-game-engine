@@ -70,7 +70,7 @@ public:
     Texture& load_from_string(std::string_view text, Font& font, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer* renderer)
     {
         unload();
-        SDL_Surface* surface = TTF_RenderText_Solid(font.font(), text.data(), {r, g, b});
+        SDL_Surface* surface = TTF_RenderText_Solid(font.font(), text.data(), SDL_Color{r, g, b, 0});
 
         if(surface == nullptr)
         {

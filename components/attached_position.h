@@ -69,10 +69,10 @@ public:
     double w() const;
     double h() const;
 
-    void set_x(double val) {}
-    void set_y(double val) {}
-    void set_w(double val) {}
-    void set_h(double val) {}
+    void set_x(double) {}
+    void set_y(double) {}
+    void set_w(double) {}
+    void set_h(double) {}
 
     void mod_x(double val) { m_offset_x += val; }
     void mod_y(double val) { m_offset_y += val; }

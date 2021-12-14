@@ -18,16 +18,16 @@ public:
     	to << "UseNullHealth ";
     }
 
-    void set_max_hp(double hp) {}
-    void set_hp(double hp) {}
-    void set_hp_change(double hp_change) {}
-    void mod_hp_change(double hp_change) {}
-    void update_health(const Time time_diff) {}
+    void set_max_hp(double) {}
+    void set_hp(double) {}
+    void set_hp_change(double) {}
+    void mod_hp_change(double) {}
+    void update_health(const Time) {}
     double hp() const { return 0; }
     double max_hp() const { return 0; }
     bool alive() const { return true; }
     ProcedureID on_death_exec() const { return ProcedureID(0); }
-    void set_on_death_exec(ProcedureID proc_id) {}
+    void set_on_death_exec(ProcedureID) {}
     bool stunned() const { return false; }
 };
 

@@ -47,8 +47,8 @@ public:
     	   << m_on_exit_proc_id_self << " ";
     }
 
-	bool is_in_group(int group_id) const { return false; }
-	void set_group(int group_id, bool val) {}
+	bool is_in_group(int) const { return false; }
+	void set_group(int, bool) {}
 	void clear_groups() {}
 
 	GroupID trigger_group() const { return m_trigger_group; }

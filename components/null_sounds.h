@@ -16,7 +16,7 @@ public:
     	to << "UseNullSounds ";
     }
 
-    void update(const Time time_diff) {}
+    void update(const Time) {}
     bool changed() const { return false; }
     SoundID id() const { return -1; }
     double volume() const { return 0; }

@@ -19,13 +19,13 @@ public:
     }
 
     bool solid() const { return false; }
-    void set_solid(const bool val) {}
+    void set_solid(const bool) {}
     SurfaceType standing_on() const { return SurfaceType::GROUND; }
-    void set_standing_on(SurfaceType surface) {}
+    void set_standing_on(SurfaceType) {}
     double on_collision_damage() const { return 0; }
     void set_collision_damage(double) {}
     double elasticity() const { return 1; }
-    void set_elasticity(double val) {}
+    void set_elasticity(double) {}
 };
 
 #endif /* COMPONENTS_NULL_COLLISION_H_ */

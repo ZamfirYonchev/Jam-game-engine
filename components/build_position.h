@@ -58,15 +58,15 @@ public:
     double y() const;
     double w() const;
     double h() const;
-    void set_x(double val) {}
-    void set_y(double val) {}
-    void set_w(double val) {}
-    void set_h(double val) {}
+    void set_x(double) {}
+    void set_y(double) {}
+    void set_w(double) {}
+    void set_h(double) {}
 
-    void mod_x(double val) {}
-    void mod_y(double val) {}
-    void mod_w(double val) {}
-    void mod_h(double val) {}
+    void mod_x(double) {}
+    void mod_y(double) {}
+    void mod_w(double) {}
+    void mod_h(double) {}
 
     EntityID m_attached_id;
     double m_origin_x, m_origin_y;

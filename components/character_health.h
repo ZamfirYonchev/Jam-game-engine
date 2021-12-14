@@ -77,7 +77,7 @@ public:
     double max_hp() const { return m_max_hit_points; }
     bool alive() const { return m_hit_points > 0; }
     ProcedureID on_death_exec() const { return ProcedureID(0); }
-    void set_on_death_exec(ProcedureID proc_id) {}
+    void set_on_death_exec(ProcedureID) {}
     bool stunned() const { return m_stun_cnt > 0; }
 
 private:

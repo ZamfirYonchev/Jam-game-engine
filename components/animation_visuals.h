@@ -56,18 +56,18 @@ public:
     	m_anim_time = (m_anim_time+int(time_diff))%m_anim_time_max;
     }
 
-    AnimationFrame animation_frame(const int rx, const int ry) const
+    AnimationFrame animation_frame(const int, const int) const
     {
     	return {m_anim_id, m_anim_time/m_anim_frame_delay};
     }
 
-    AnimationID animation_id(const int rx, const int ry) const { return m_anim_id; }
+    AnimationID animation_id(const int, const int) const { return m_anim_id; }
     int repeat_x() const { return 1; }
     int repeat_y() const { return 1; }
     VisualLayer layer() const { return m_layer; }
 
-    void set_repeat_x(const int val) {}
-    void set_repeat_y(const int val) {}
+    void set_repeat_x(const int) {}
+    void set_repeat_y(const int) {}
     void set_layer(const VisualLayer val) { m_layer = val; }
 
 

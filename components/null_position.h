@@ -28,15 +28,15 @@ public:
     double w() const { return 0; }
     double h() const { return 0; }
 
-    void set_x(double val) {}
-    void set_y(double val) {}
-    void set_w(double val) {}
-    void set_h(double val) {}
+    void set_x(double) {}
+    void set_y(double) {}
+    void set_w(double) {}
+    void set_h(double) {}
 
-    void mod_x(double val) {}
-    void mod_y(double val) {}
-    void mod_w(double val) {}
-    void mod_h(double val) {}
+    void mod_x(double) {}
+    void mod_y(double) {}
+    void mod_w(double) {}
+    void mod_h(double) {}
 };
 
 #endif /* COMPONENTS_NULL_POSITION_H_ */

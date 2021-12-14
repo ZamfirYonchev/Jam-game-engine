@@ -94,9 +94,9 @@ public:
     int repeat_x() const { return m_repeat_x; }
     int repeat_y() const { return 1; }
     void set_repeat_x(const int val) { m_repeat_x = val; }
-    void set_repeat_y(const int val) {}
+    void set_repeat_y(const int) {}
     VisualLayer layer() const { return VisualLayer::CLOSE_BACKGROUND; }
-    void set_layer(VisualLayer val) {}
+    void set_layer(VisualLayer) {}
 
 private:
     AnimationID m_active_anim_id, m_inactive_anim_id;

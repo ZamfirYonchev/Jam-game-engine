@@ -16,20 +16,20 @@ public:
     	to << "UseNullMovement ";
     }
 
-    void update(const Time time_diff) {}
-    void set_force_x(double val) {}
-    void set_force_y(double val) {}
-    void mod_force_x(double val) {}
-    void mod_force_y(double val) {}
-    void set_velocity_x(double val) {}
-    void set_velocity_y(double val) {}
-    void mod_velocity_x(double val) {}
-    void mod_velocity_y(double val) {}
-    void set_mass(double val) {}
-    void set_friction_x(double val) {}
-    void set_friction_y(double val) {}
-    void set_move_force(double val) {}
-    void set_jump_force(double val) {}
+    void update(const Time) {}
+    void set_force_x(double) {}
+    void set_force_y(double) {}
+    void mod_force_x(double) {}
+    void mod_force_y(double) {}
+    void set_velocity_x(double) {}
+    void set_velocity_y(double) {}
+    void mod_velocity_x(double) {}
+    void mod_velocity_y(double) {}
+    void set_mass(double) {}
+    void set_friction_x(double) {}
+    void set_friction_y(double) {}
+    void set_move_force(double) {}
+    void set_jump_force(double) {}
     double fx() const { return 0; }
     double fy() const { return 0; }
     double vx() const { return 0; }
@@ -42,10 +42,10 @@ public:
     double move_force() const { return 0; }
     double jump_force() const { return 0; }
     bool gravity_affected() const { return false; }
-    void set_gravity_affected(bool val) {}
-    void mod_dx(double dx) {}
-    void mod_dy(double dy) {}
-    std::pair<double, double> displacement(const Time time_diff) const { return {0.0, 0.0}; }
+    void set_gravity_affected(bool) {}
+    void mod_dx(double) {}
+    void mod_dy(double) {}
+    std::pair<double, double> displacement(const Time) const { return {0.0, 0.0}; }
 };
 
 #endif /* COMPONENTS_NULL_MOVEMENT_H_ */

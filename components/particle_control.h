@@ -60,12 +60,12 @@ public:
     LookDir look_dir() const { return m_decision_x < 0.0 ? LookDir::LEFT : LookDir::RIGHT; }
 
     void set_decision_vertical(double val) { m_offset_y = clip(val, -1.0, 1.0); }
-    void set_decision_attack(bool val) {}
+    void set_decision_attack(bool) {}
     void set_decision_walk(double val) { m_offset_x = clip(val, -1.0, 1.0); }
     void mod_decision_vertical(double val) { m_offset_y = val; }
     void mod_decision_walk(double val) { m_offset_x = val; }
-    void set_attack_proc_id(ProcedureID val) {}
-    void set_look_dir(LookDir val) {}
+    void set_attack_proc_id(ProcedureID) {}
+    void set_look_dir(LookDir) {}
 
     void update_decisions(const Time time_diff)
     {

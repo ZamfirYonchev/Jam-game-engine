@@ -119,7 +119,7 @@
 #include <array>
 #include <variant>
 
-int main(int argc, char** argv)
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	Globals globals;
 	globals(Globals::app_resolution_x) = CommandValue{800.0};
@@ -225,7 +225,7 @@ int main(int argc, char** argv)
 		ES::ComponentAccessor<Health> health_accessor{entity_system};
 		ES::ComponentAccessor<Sounds> sounds_accessor{entity_system};
 		ES::ComponentAccessor<Visuals> visuals_accessor{entity_system};
-		auto current_id_accessor = [&](){ return EntityID(globals(Globals::selected_entity).integer()); };
+		const auto current_id_accessor = [&](){ return EntityID(globals(Globals::selected_entity).integer()); };
 
 	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
 	    command_system.register_command("Val", GetVariableCommand{command_system, globals});

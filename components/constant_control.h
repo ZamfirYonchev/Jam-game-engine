@@ -46,14 +46,14 @@ public:
     LookDir look_dir() const { return m_look_dir; }
 
     void set_decision_vertical(double val) { m_vertical_decision = clip(val, -1.0, 1.0); }
-    void set_decision_attack(bool val) {}
+    void set_decision_attack(bool) {}
     void set_decision_walk(double val) { m_move_decision = clip(val, -1.0, 1.0); }
     void mod_decision_vertical(double val) { set_decision_vertical(m_vertical_decision+val); }
     void mod_decision_walk(double val) { set_decision_walk(m_move_decision+val); }
-    void set_attack_proc_id(ProcedureID val) {}
+    void set_attack_proc_id(ProcedureID) {}
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(const Time time) {}
+    void update_decisions(const Time) {}
     void clear_decisions()
     {
     	m_move_decision = 0;

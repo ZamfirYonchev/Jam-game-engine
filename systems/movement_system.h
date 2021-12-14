@@ -73,7 +73,11 @@ public:
     }
 
     template<typename T>
-    void component_updated(const T& component, const EntityID id, const int8_t change)
+    void component_updated
+	( [[maybe_unused]] const T& component
+	, [[maybe_unused]] const EntityID id
+	, [[maybe_unused]] const int8_t change
+	)
     {
     	if constexpr(std::is_same<T, Movement>::value)
 		{

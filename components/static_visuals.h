@@ -36,9 +36,9 @@ public:
     	   << m_sprite << " ";
     }
 
-    void update_animation(const Time time_diff) {}
+    void update_animation(const Time) {}
 
-    AnimationFrame animation_frame(const int rx, const int ry) const
+    AnimationFrame animation_frame(const int, const int) const
     {
     	return {m_anim_id, m_sprite};
     }
@@ -47,8 +47,8 @@ public:
     int repeat_y() const { return 1; }
     VisualLayer layer() const { return m_layer; }
 
-    void set_repeat_x(const int val) {}
-    void set_repeat_y(const int val) {}
+    void set_repeat_x(const int) {}
+    void set_repeat_y(const int) {}
     void set_layer(VisualLayer val) { m_layer = val; }
 
 private:

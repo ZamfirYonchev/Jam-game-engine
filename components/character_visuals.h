@@ -185,15 +185,15 @@ public:
     }
 
     void update_animation(const Time time_diff);
-    AnimationFrame animation_frame(const int rx, const int ry) const
+    AnimationFrame animation_frame(const int, const int) const
     {
     	return {m_current_anim_id, m_anim_time/m_current_anim_frame_delay};
     }
 
     int repeat_x() const { return 1; }
     int repeat_y() const { return 1; }
-    void set_repeat_x(const int val) {}
-    void set_repeat_y(const int val) {}
+    void set_repeat_x(const int) {}
+    void set_repeat_y(const int) {}
     VisualLayer layer() const { return m_layer; }
     void set_layer(const VisualLayer val) { m_layer = val; }
 
