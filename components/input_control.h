@@ -12,7 +12,6 @@
 #include "../math_ext.h"
 #include "../systems/input_system.h"
 #include "../types.h"
-#include "../command_value.h"
 
 class Movement;
 
@@ -40,11 +39,11 @@ public:
 	, m_movement_accessor{movement_accessor}
     {}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
 	InputControl
 	( ExtractorF&& extract
 	, InputSystem& input_system
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Movement>& movement_accessor
 	)
 	: InputControl
@@ -52,7 +51,7 @@ public:
 	  , extract().integer() //shoot cooldown
 	  , extract().boolean() //stability control
 	  , input_system
-	  , EntityID(self_id.integer())
+	  , obtain_self_id()
 	  , movement_accessor
 	  }
     {}

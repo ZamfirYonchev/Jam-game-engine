@@ -11,7 +11,6 @@
 #include "visuals_enums.h"
 #include "../systems/resource_system.h"
 #include "../types.h"
-#include "../command_value.h"
 
 class Control;
 
@@ -72,11 +71,11 @@ public:
 		{ /*error idle_anim_id*/ }
 	}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
 	MenuItemVisuals
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Control>& control_accessor
 	)
 	: MenuItemVisuals
@@ -84,7 +83,7 @@ public:
 	  , extract().integer()
 	  , extract().integer()
 	  , resource_system
-	  , EntityID(self_id.integer())
+	  , obtain_self_id()
 	  , control_accessor
 	  }
 	{}

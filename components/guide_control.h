@@ -12,7 +12,6 @@
 #include "../math_ext.h"
 #include "../types.h"
 #include <ostream>
-#include "../command_value.h"
 
 class Position;
 
@@ -34,14 +33,14 @@ public:
 	, m_position_accessor(position_accessor)
 	{}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
 	GuideControl
 	( ExtractorF&& extract
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Position>& position_accessor
 	)
 	: GuideControl
-	  { EntityID(self_id.integer())
+	  { obtain_self_id()
 	  , extract().integer()
 	  , extract().real()
 	  , position_accessor

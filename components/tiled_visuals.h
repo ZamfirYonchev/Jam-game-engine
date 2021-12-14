@@ -13,7 +13,6 @@
 #include "../types.h"
 #include "../math_ext.h"
 #include "../systems/resource_system.h"
-#include "../command_value.h"
 
 class Position;
 
@@ -67,11 +66,11 @@ public:
 			{ /*error m_animation_id[0]*/ }
     }
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
     TiledVisuals
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Position>& position_accessor
 	)
 	: TiledVisuals
@@ -87,7 +86,7 @@ public:
 	  , extract().integer()
 	  , extract().integer()
 	  , resource_system
-	  , EntityID(self_id.integer())
+	  , obtain_self_id()
 	  , position_accessor
 	  }
 	{}

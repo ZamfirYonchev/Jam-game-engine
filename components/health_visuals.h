@@ -11,7 +11,6 @@
 #include "visuals_enums.h"
 #include "../systems/resource_system.h"
 #include "../types.h"
-#include "../command_value.h"
 
 class Health;
 
@@ -59,11 +58,11 @@ public:
 		{ /*error inactive_id*/ }
 	}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
 	HealthVisuals
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Health>& health_accessor
 	)
 	: HealthVisuals
@@ -71,7 +70,7 @@ public:
 	  , extract().integer()
 	  , extract().integer()
 	  , resource_system
-	  , EntityID(self_id.integer())
+	  , obtain_self_id()
 	  , health_accessor
 	  }
 	{}

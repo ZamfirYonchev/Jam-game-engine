@@ -9,7 +9,6 @@
 #define COMPONENTS_CHARACTER_SOUNDS_H_
 
 #include <iostream>
-#include <SDL2/SDL_mixer.h>
 #include "../types.h"
 
 class Control;
@@ -59,10 +58,10 @@ public:
 	, m_health_accessor{health_accessor}
     {}
 
-    template<typename ExtractorF, typename SelfIDF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
     CharacterSounds
 	( ExtractorF&& extract
-	, SelfIDF&& obtain_self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Control>& control_accessor
 	, const ComponentAccess<const Movement>& movement_accessor
 	, const ComponentAccess<const Collision>& collision_accessor

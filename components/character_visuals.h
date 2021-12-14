@@ -11,7 +11,6 @@
 #include "visuals_enums.h"
 #include "../systems/resource_system.h"
 #include "../types.h"
-#include "../command_value.h"
 
 class Control;
 class Movement;
@@ -145,11 +144,11 @@ public:
 		set_new_state(RenderStates::IDLE);
 	}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
 	CharacterVisuals
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Control>& control_accessor
 	, const ComponentAccess<const Movement>& movement_accessor
 	, const ComponentAccess<const Collision>& collision_accessor
@@ -164,7 +163,7 @@ public:
 	  , extract().integer()
 	  , extract().integer()
 	  , resource_system
-	  , EntityID(self_id.integer())
+	  , obtain_self_id()
 	  , control_accessor
 	  , movement_accessor
 	  , collision_accessor

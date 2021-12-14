@@ -10,10 +10,8 @@
 
 #include "control_enums.h"
 #include "../math_ext.h"
-#include <functional>
 #include <ostream>
 #include "../types.h"
-#include "../command_value.h"
 
 class Position;
 
@@ -40,14 +38,14 @@ public:
 	, m_position_accessor(std::move(position_accessor))
 	{}
 
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename SelfIDObtainerF>
 	ChaseAIControl
 	( ExtractorF&& extract
-	, const CommandValue& self_id
+	, SelfIDObtainerF&& obtain_self_id
 	, const ComponentAccess<const Position>& position_accessor
 	)
 	: ChaseAIControl
-	  { EntityID(self_id.integer())
+	  { obtain_self_id()
 	  , extract().integer()
 	  , extract().integer()
 	  , extract().integer()
