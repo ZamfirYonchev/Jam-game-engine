@@ -27,6 +27,7 @@ struct CommandValue
 	explicit CommandValue() : value{0.0} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(const int32_t v) : value{v} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(const bool v) : value{int32_t(v)} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(std::string_view v) : CommandValue{std::string{v}} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(const char* v) : CommandValue{std::string{v}} {} // @suppress("Symbol is not resolved")
