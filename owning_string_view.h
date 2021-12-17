@@ -19,7 +19,7 @@ public:
     explicit owning_string_view(const std::string& str) : std::string_view{str}, m_string_buffer{} {}
     explicit owning_string_view(std::string&& str) : std::string_view{}, m_string_buffer{std::move(str)}
     {
-        reassign_base_string_view();
+    	rebind_base_string_view();
     }
 
     owning_string_view(const owning_string_view& rhs)
@@ -37,7 +37,7 @@ public:
         if(rhs.is_owning())
         {
             m_string_buffer = rhs.m_string_buffer;
-            reassign_base_string_view();
+            rebind_base_string_view();
         }
         else
         {
@@ -52,7 +52,7 @@ public:
         if(rhs.is_owning())
         {
             m_string_buffer = std::move(rhs.m_string_buffer);
-            reassign_base_string_view();
+            rebind_base_string_view();
         }
         else
         {
@@ -71,7 +71,7 @@ private:
     constexpr std::string_view& base_string_view() { return static_cast<std::string_view&>(*this); }
     constexpr const std::string_view& base_string_view() const { return static_cast<const std::string_view&>(*this); }
     bool is_owning() const { return base_string_view().data() == m_string_buffer.c_str(); }
-    void reassign_base_string_view() { base_string_view() = m_string_buffer; }
+    void rebind_base_string_view() { base_string_view() = m_string_buffer; }
 };
 
 #endif /* OWNING_STRING_VIEW_H_ */
