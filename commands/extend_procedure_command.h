@@ -23,11 +23,11 @@ public:
     CommandValue operator()() const
     {
     	const auto proc_id = command_system.exec_next();
-    	const auto num_of_cmds = command_system.exec_next();
+    	const auto num_of_cmds = command_system.exec_next().integer();
 
     	auto& proc = command_system.procedure(ProcedureID(proc_id.integer()));
 
-		for(int i = 0; i < num_of_cmds.integer(); ++i)
+		for(int i = 0; i < num_of_cmds; ++i)
 		{
 			proc.add_command(command_system.pop_next());
 		}

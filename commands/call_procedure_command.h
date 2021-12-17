@@ -39,7 +39,7 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto proc_id = m_procedure.holds_string() ? globals(m_procedure.string()) :
+    	const auto proc_id = m_procedure.holds_string() ? globals(m_procedure.string_view()) :
 							(m_procedure.integer() > 0) ? m_procedure
 														: command_system.exec_next();
 

@@ -28,21 +28,21 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto severity = command_system.exec_next();
-    	const auto text = command_system.exec_next();
+    	const auto severity = command_system.exec_next().integer();
+    	const auto text = command_system.exec_next().string();
 
-    	if(severity.integer() == int(Severity::FATAL))
+    	if(severity == int(Severity::FATAL))
     	{
-    		std::cerr << "FATAL: " << text.string() << std::endl;
+    		std::cerr << "FATAL: " << text << std::endl;
     		command_system.flush_commands();
     	}
-    	else if(severity.integer() == int(Severity::ERROR))
+    	else if(severity == int(Severity::ERROR))
     	{
-    		std::cerr << "ERROR: " << text.string() << std::endl;
+    		std::cerr << "ERROR: " << text << std::endl;
     	}
-    	else if(globals(Globals::app_debug_level).integer() >= severity.integer())
+    	else if(globals(Globals::app_debug_level).integer() >= severity)
     	{
-    		std::cout << text.string() << std::endl;
+    		std::cout << text << std::endl;
     	}
 
     	return CommandValue{0.0};

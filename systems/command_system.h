@@ -161,7 +161,7 @@ public:
         		{
                 	input.get(); //extract the { char
                 	commands.push_back(ExtendProcedureCommand{*this});
-                	commands.push_back(LiteralValueCommand{int32_t(m_procedures.size()), 0});
+                	commands.push_back(LiteralValueCommand{int32_t(m_procedures.size())});
 
                 	//reserve space for procedure size
                 	procedure_size_insert_it = commands.insert(end(commands), NullCommand{});
@@ -180,7 +180,7 @@ public:
                 	if(procedure_size_insert_it != end(commands))
                 	{
                 		const auto proc_size = std::distance(procedure_size_insert_it, end(commands)) - 1;
-						*procedure_size_insert_it = LiteralValueCommand{int32_t(proc_size), 0};
+						*procedure_size_insert_it = LiteralValueCommand{int32_t(proc_size)};
 						procedure_size_insert_it = end(commands);
 
 	                	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))

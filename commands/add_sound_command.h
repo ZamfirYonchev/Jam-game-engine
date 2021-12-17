@@ -27,12 +27,12 @@ public:
 
 	CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next();
-    	const auto loops = command_system.exec_next();
+    	const auto file_name = command_system.exec_next().string();
+    	const auto loops = command_system.exec_next().integer();
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1.0};
 
-    	return CommandValue{resource_system.addNewSound(file_name.string(), loops.integer()), 0};
+    	return CommandValue{resource_system.addNewSound(file_name, loops)};
     }
 };
 

@@ -26,8 +26,8 @@ public:
 	CommandValue operator()() const
     {
     	const EntityID entity_id = entity_system.add_new_entity();
-    	globals(Globals::selected_entity) = CommandValue{entity_id, 0};
-    	return CommandValue{entity_id, 0};
+    	globals(Globals::selected_entity) = CommandValue{entity_id};
+    	return CommandValue{entity_id};
     }
 };
 

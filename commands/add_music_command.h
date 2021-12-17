@@ -27,11 +27,11 @@ public:
 
 	CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next();
+    	const auto file_name = command_system.exec_next().string();
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1.0};
 
-    	return CommandValue{resource_system.addNewMusic(file_name.string()), 0};
+    	return CommandValue{resource_system.addNewMusic(file_name)};
     }
 };
 

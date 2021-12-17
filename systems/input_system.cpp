@@ -41,9 +41,9 @@ void InputSystem::process_input(Globals& globals, std::stringstream& external_co
                 else if(m_event.key.keysym.sym == SDLK_r)
                 	globals(Globals::app_needs_reload) = CommandValue{true};
                 else if(m_event.key.keysym.sym == m_keypause)
-                	globals(Globals::app_paused) = CommandValue{!globals(Globals::app_paused).boolean(), 0};
+                	globals(Globals::app_paused) = CommandValue{!globals(Globals::app_paused).boolean()};
                 else if(m_event.key.keysym.sym == SDLK_h)
-                	globals(Globals::app_show_hitboxes) = CommandValue{!globals(Globals::app_show_hitboxes).boolean(), 0};
+                	globals(Globals::app_show_hitboxes) = CommandValue{!globals(Globals::app_show_hitboxes).boolean()};
             break;
 
             case SDL_KEYUP:

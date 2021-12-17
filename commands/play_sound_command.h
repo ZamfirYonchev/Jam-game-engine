@@ -30,21 +30,21 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto sound_id = command_system.exec_next();
-    	const auto channel = command_system.exec_next();
+    	const auto sound_id = command_system.exec_next().integer();
+    	const auto channel = command_system.exec_next().integer();
 
-		if(globals(Globals::app_enable_audio).boolean() == false) return sound_id;
+		if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{sound_id};
 
-		const auto sound_optional = resource_system.sound(SoundID(sound_id.integer()));
+		const auto sound_optional = resource_system.sound(SoundID(sound_id));
 
     	if(sound_optional)
     	{
-    		if(Mix_PlayChannel(channel.integer(), sound_optional->get().sound(), sound_optional->get().repeat()) < 0)
+    		if(Mix_PlayChannel(channel, sound_optional->get().sound(), sound_optional->get().repeat()) < 0)
     		{
-    			std::cerr << "Cannot play sound " << sound_id.integer() << " on channel " << channel.integer() << ": " << Mix_GetError() << '\n';
+    			std::cerr << "Cannot play sound " << sound_id << " on channel " << channel << ": " << Mix_GetError() << '\n';
     		}
 
-        	return sound_id;
+        	return CommandValue{sound_id};
     	}
     	else
     	{

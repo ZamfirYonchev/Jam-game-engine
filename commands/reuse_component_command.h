@@ -26,9 +26,9 @@ public:
 
     CommandValue operator()() const
 	{
-    	const auto source_id = command_system.exec_next();
+    	const auto source_id = command_system.exec_next().integer();
 
-    	const ComponentT& component = entity_system.template entity_component<ComponentT>(source_id.integer());
+    	const ComponentT& component = entity_system.template entity_component<ComponentT>(source_id);
     	//TODO use set_entity_component instead
 		std::stringstream ss;
 		ss << component;

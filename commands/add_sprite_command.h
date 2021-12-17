@@ -26,30 +26,30 @@ public:
 
 	CommandValue operator()() const
     {
-    	const auto anim_id = command_system.exec_next();
-    	const auto tex_id = command_system.exec_next();
-    	const auto x = command_system.exec_next();
-    	const auto y = command_system.exec_next();
-    	const auto w = command_system.exec_next();
-    	const auto h = command_system.exec_next();
+    	const auto anim_id = command_system.exec_next().integer();
+    	const auto tex_id = command_system.exec_next().integer();
+    	const auto x = command_system.exec_next().integer();
+    	const auto y = command_system.exec_next().integer();
+    	const auto w = command_system.exec_next().real();
+    	const auto h = command_system.exec_next().real();
 
-    	if(anim_id.integer() < 0)
+    	if(anim_id < 0)
     	{
-			std::cerr << "AddSprite: animation id " << anim_id.integer() << " must be >= 0\n";
+			std::cerr << "AddSprite: animation id " << anim_id << " must be >= 0\n";
 			return CommandValue{-1.0};
     	}
 
-    	if(tex_id.integer() < 0)
+    	if(tex_id < 0)
     	{
-			std::cerr << "AddSprite: texture id " << tex_id.integer() << " must be >= 0\n";
+			std::cerr << "AddSprite: texture id " << tex_id << " must be >= 0\n";
 			return CommandValue{-1.0};
     	}
 
     	int width = 0, height = 0;
-    	if(w.integer() == 0 || h.integer() == 0)
+    	if(w == 0 || h == 0)
     	{
-    		if(resource_system.texture(tex_id.integer()))
-    			SDL_QueryTexture(resource_system.texture(tex_id.integer())->get().texture(), nullptr, nullptr, &width, &height);
+    		if(resource_system.texture(tex_id))
+    			SDL_QueryTexture(resource_system.texture(tex_id)->get().texture(), nullptr, nullptr, &width, &height);
     		else
     		{
     			//todo add error message
@@ -57,12 +57,12 @@ public:
     		}
     	}
 
-    	width = (w.integer() == 0) ? width  : w.integer();
-    	height = (h.integer() == 0) ? height : h.integer();
+    	width = (w == 0) ? width  : w;
+    	height = (h == 0) ? height : h;
 
-    	const int sprite_id = resource_system.animation(anim_id.integer())->get().add_sprite({TextureID(tex_id.integer()), {int(x.integer()), int(y.integer()), width, height}});
+    	const int sprite_id = resource_system.animation(anim_id)->get().add_sprite({TextureID(tex_id), {x, y, width, height}});
 
-		return CommandValue{sprite_id, 0};
+		return CommandValue{sprite_id};
     }
 };
 

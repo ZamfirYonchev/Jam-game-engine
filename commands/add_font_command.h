@@ -24,9 +24,9 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next();
-    	const auto font_size = command_system.exec_next();
-    	return CommandValue{resource_system.addNewFont(file_name.string(), font_size.integer()), 0};
+    	const auto file_name = command_system.exec_next().string();
+    	const auto font_size = command_system.exec_next().integer();
+    	return CommandValue{resource_system.addNewFont(file_name, font_size)};
     }
 };
 

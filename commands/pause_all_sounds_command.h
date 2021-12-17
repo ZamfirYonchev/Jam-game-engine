@@ -26,11 +26,11 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto paused = command_system.exec_next();
+    	const auto paused = command_system.exec_next().boolean();
 
-    	if(globals(Globals::app_enable_audio).boolean() == false) return paused;
+    	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{paused};
 
-    	if(paused.boolean())
+    	if(paused)
     	{
     		Mix_Pause(-1);
     		Mix_PauseMusic();
@@ -41,7 +41,7 @@ public:
     		Mix_ResumeMusic();
     	}
 
-    	return paused;
+    	return CommandValue{paused};
     }
 };
 

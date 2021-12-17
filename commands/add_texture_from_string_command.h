@@ -27,26 +27,26 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto font_id = command_system.exec_next();
-    	const auto r = command_system.exec_next();
-    	const auto g = command_system.exec_next();
-    	const auto b = command_system.exec_next();
-    	const auto text = command_system.exec_next();
+    	const auto font_id = command_system.exec_next().integer();
+    	const auto r = command_system.exec_next().integer();
+    	const auto g = command_system.exec_next().integer();
+    	const auto b = command_system.exec_next().integer();
+    	const auto text = command_system.exec_next().string();
 
-    	if(font_id.integer() < 0)
+    	if(font_id < 0)
     	{
-			std::cerr << "AddTextureFromStringCommand: font id " << font_id.integer() << " must be >= 0\n";
+			std::cerr << "AddTextureFromStringCommand: font id " << font_id << " must be >= 0\n";
 			return CommandValue{-1.0};
     	}
     	else
     	{
-			const auto tex_id = resource_system.addNewTextureFromString(text.string()
-														 , FontID(font_id.integer())
-														 , r.integer()
-														 , g.integer()
-														 , b.integer()
+			const auto tex_id = resource_system.addNewTextureFromString(text
+														 , FontID(font_id)
+														 , r
+														 , g
+														 , b
 														 , rendering_system.renderer());
-	    	return CommandValue{tex_id, 0};
+	    	return CommandValue{tex_id};
     	}
     }
 };

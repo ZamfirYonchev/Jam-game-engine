@@ -27,8 +27,8 @@ public:
 
     CommandValue operator()() const
 	{
-    	const auto file_name = command_system.exec_next();
-		std::ofstream file {file_name.string()};
+    	const auto file_name = command_system.exec_next().string();
+		std::ofstream file {std::string{file_name}};
 
 		if(file)
 		{
@@ -42,7 +42,7 @@ public:
 		}
 		else
 		{
-			std::cerr << "Could not open file \"" << file_name.string() << "\" for write." << std::endl;
+			std::cerr << "Could not open file \"" << std::string_view{file_name} << "\" for write." << std::endl;
 	    	return CommandValue{-1.0};
 		}
 	}

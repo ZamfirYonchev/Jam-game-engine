@@ -26,8 +26,8 @@ public:
 
     CommandValue operator()() const
 	{
-		const auto name = command_system.exec_next();
-		const HashT name_hash = hash(name.string().c_str());
+		const auto name = command_system.exec_next().string();
+		const HashT name_hash = hash(name.data());
 
     	const CommandValue result = command_system.exec_next();
     	globals(name_hash) = result;

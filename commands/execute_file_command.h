@@ -24,17 +24,17 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next();
-    	std::ifstream file {file_name.string()};
+    	const auto file_name = command_system.exec_next().string();
+    	std::ifstream file {std::string{file_name}};
     	if (file)
     	{
-    		std::cout << "Parsing file " << file_name.string() << std::endl;
+    		std::cout << "Parsing file " << file_name << std::endl;
     		command_system.parse(file);
     		return CommandValue{0.0};
     	}
     	else
     	{
-    		std::cerr << "File \"" << file_name.string() << "\" cannot be opened!" << std::endl;
+    		std::cerr << "File \"" << file_name << "\" cannot be opened!" << std::endl;
     		return CommandValue{-1.0};
     	}
     }

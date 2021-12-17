@@ -12,6 +12,10 @@
 #include <variant>
 #include <string>
 #include "cinttypes"
+#include <forward_list>
+#include <memory>
+#include <iostream>
+#include "owning_string_view.h"
 
 // helper type for the visitor
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -22,26 +26,39 @@ struct CommandValue
 {
 	explicit CommandValue() : value{0.0} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(const double v) : value{v} {} // @suppress("Symbol is not resolved")
-	explicit CommandValue(const int32_t v, int) : value{double(v)} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(const int32_t v) : value{v} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(std::string v) : value{std::move(v)} {} // @suppress("Symbol is not resolved")
+	explicit CommandValue(std::string_view v) : CommandValue{std::string{v}} {} // @suppress("Symbol is not resolved")
 	explicit CommandValue(const char* v) : CommandValue{std::string{v}} {} // @suppress("Symbol is not resolved")
 
+    bool holds_real() const { return std::holds_alternative<double>(value); }
+    bool holds_integer() const { return std::holds_alternative<int32_t>(value); }
     bool holds_string() const { return std::holds_alternative<std::string>(value); }
-    bool holds_number() const { return std::holds_alternative<double>(value); }
 
-    std::string string() const
+    owning_string_view string_view() const &
     {
         return std::visit(overloaded { // @suppress("Invalid arguments") // @suppress("Type cannot be resolved")
-            [](const double arg) { return std::to_string(arg); },
-            [](const std::string& arg) { return arg; },
+            [](const double arg) { return owning_string_view{std::to_string(arg)}; },
+            [](const int32_t arg) { return owning_string_view{std::to_string(arg)}; },
+            [](const std::string& arg) { return owning_string_view{arg}; },
             }, value);
     }
 
-    int integer() const
+    std::string string() &&
     {
         return std::visit(overloaded { // @suppress("Invalid arguments") // @suppress("Type cannot be resolved")
-            [](const double arg) { return static_cast<int>(arg); },
-            [](const std::string& arg) { return static_cast<int>(arg.size()); },
+            [](const double arg) { return std::to_string(arg); },
+            [](const int32_t arg) { return std::to_string(arg); },
+            [](std::string& arg) { return std::move(arg); },
+            }, value);
+    }
+
+    int32_t integer() const
+    {
+        return std::visit(overloaded { // @suppress("Invalid arguments") // @suppress("Type cannot be resolved")
+            [](const double arg) { return static_cast<int32_t>(arg); },
+			[](const int32_t arg) { return arg; },
+            [](const std::string arg) { return static_cast<int32_t>(arg.size()); },
             }, value);
     }
 
@@ -49,7 +66,8 @@ struct CommandValue
     {
         return std::visit(overloaded { // @suppress("Invalid arguments") // @suppress("Type cannot be resolved")
             [](const double arg) { return arg != 0.0; },
-            [](const std::string& arg) { return arg != ""; },
+			[](const int32_t arg) { return arg != 0; },
+            [](const std::string arg) { return arg != ""; },
             }, value);
     }
 
@@ -57,11 +75,12 @@ struct CommandValue
     {
         return std::visit(overloaded { // @suppress("Invalid arguments") // @suppress("Type cannot be resolved")
             [](const double arg) { return arg; },
-            [](const std::string& arg) { return static_cast<double>(arg.size()); },
+			[](const int32_t arg) { return double(arg); },
+            [](const std::string arg) { return static_cast<double>(arg.size()); },
             }, value);
     }
 
-    std::variant<double, std::string> value;
+    std::variant<double, int32_t, std::string> value;
 };
 
 #endif /* COMMAND_VALUE_H_ */

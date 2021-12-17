@@ -143,16 +143,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("ExecuteFile", ExecuteFileCommand{command_system});
 
 		//this will load the data from the init.jel file and potentially give new values to the globals
-		if(globals(Globals::app_current_level).string() == "init.jel")
+		if(globals(Globals::app_current_level).string_view() == "init.jel")
 		{
 			command_system.external_commands() << "ExecuteFile 'init.jel'\n";
 			command_system.process();
 		}
 
 		//this will schedule the loading of the level which should be set in init.jel
-		command_system.external_commands() << "ExecuteFile '" << globals(Globals::app_current_level).string() << "'\n";
-
-		const std::string title = globals(Globals::app_window_title).string();
+		command_system.external_commands() << "ExecuteFile '" << globals(Globals::app_current_level).string_view() << "'\n";
 
 		bool sdl_initialized;
 		SdlWindow sdl
@@ -161,7 +159,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 				  , globals(Globals::app_fullscreen).boolean()
 				  , globals(Globals::app_enable_audio).boolean()
 				  , globals(Globals::app_sound_channels).integer()
-				  , title.c_str()
+				  , globals(Globals::app_window_title).string_view()
 				  , sdl_initialized
 				  };
 
@@ -171,8 +169,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 			return -1;
 		}
 
-		globals(Globals::app_resolution_x) = CommandValue{sdl.res_width(), 0};
-		globals(Globals::app_resolution_y) = CommandValue{sdl.res_height(), 0};
+		globals(Globals::app_resolution_x) = CommandValue{sdl.res_width()};
+		globals(Globals::app_resolution_y) = CommandValue{sdl.res_height()};
 
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
