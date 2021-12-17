@@ -20,7 +20,7 @@ public:
     CommandValue operator()() const
 	{
 		resource_system.clear_textures();
-		return CommandValue{0.0};
+		return CommandValue{0};
 	}
 };
 

@@ -27,7 +27,7 @@ public:
     {
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
     	entity_system.remove_entity(selected_entity);
-		return CommandValue{0.0};
+		return globals(Globals::selected_entity);
     }
 };
 

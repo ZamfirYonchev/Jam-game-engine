@@ -31,7 +31,7 @@ public:
 		Position& position = entity_system.template entity_component<Position>(EntityID{0});
 		position.set_w(int(position.h()*globals(Globals::app_resolution_x).real()/globals(Globals::app_resolution_y).real()));
 
-    	return CommandValue{0.0};
+    	return CommandValue{0};
 	}
 };
 

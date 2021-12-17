@@ -36,7 +36,7 @@ public:
     	if(font_id < 0)
     	{
 			std::cerr << "AddTextureFromStringCommand: font id " << font_id << " must be >= 0\n";
-			return CommandValue{-1.0};
+			return CommandValue{-1};
     	}
     	else
     	{

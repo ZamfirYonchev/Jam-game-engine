@@ -21,7 +21,7 @@ public:
     CommandValue operator()() const
 	{
 		resource_system.clear_animations();
-		return CommandValue{0.0};
+		return CommandValue{0};
 	}
 };
 

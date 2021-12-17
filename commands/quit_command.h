@@ -19,8 +19,8 @@ public:
 
     CommandValue operator()() const
     {
-    	globals(Globals::app_running) = CommandValue{0.0};
-        return CommandValue{0.0};
+    	globals(Globals::app_running) = CommandValue{false};
+        return globals(Globals::app_running);
     }
 };
 

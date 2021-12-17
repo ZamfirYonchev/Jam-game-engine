@@ -45,7 +45,7 @@ public:
     		std::cout << text << std::endl;
     	}
 
-    	return CommandValue{0.0};
+    	return CommandValue{text};
     }
 };
 

@@ -30,12 +30,12 @@ public:
     	{
     		std::cout << "Parsing file " << file_name << std::endl;
     		command_system.parse(file);
-    		return CommandValue{0.0};
+    		return CommandValue{file_name};
     	}
     	else
     	{
     		std::cerr << "File \"" << file_name << "\" cannot be opened!" << std::endl;
-    		return CommandValue{-1.0};
+    		return CommandValue{-1};
     	}
     }
 };

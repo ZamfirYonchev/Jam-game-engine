@@ -56,7 +56,7 @@ public:
 			else
 			{
 				//error m_sound_id
-				return CommandValue{-1.0};
+				return CommandValue{-1};
 			}
 		}
     }

@@ -46,7 +46,7 @@ public:
 
 		all_systems.component_updated(component, selected_entity, change);
 
-		return CommandValue{0.0};
+		return globals(Globals::selected_entity);
 	}
 };
 

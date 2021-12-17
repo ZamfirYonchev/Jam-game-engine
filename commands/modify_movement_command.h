@@ -82,12 +82,12 @@ public:
 			else
 				movement.set_gravity_affected(gravity_affected.boolean() ^ movement.gravity_affected());
 
-			return CommandValue{0.0};
+			return globals(Globals::selected_entity);
 		}
 		else
 		{
 			//error selected_entity
-			return CommandValue{-1.0};
+			return CommandValue{-1};
 		}
 	}
 };

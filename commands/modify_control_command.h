@@ -58,12 +58,12 @@ public:
 			else
 				control.set_look_dir(LookDir(look_dir.boolean() ^ bool(control.look_dir())));
 
-			return CommandValue{0.0};
+			return globals(Globals::selected_entity);
 		}
 		else
 		{
 			//error selected_entity
-			return CommandValue{-1.0};
+			return CommandValue{-1};
 		}
 	}
 };

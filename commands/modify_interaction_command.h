@@ -68,12 +68,12 @@ public:
 			else
 				interaction.set_on_exit_proc_id_self(ProcedureID(interaction.on_exit_proc_id_self() + on_exit_proc_id_self.integer()));
 
-			return CommandValue{0.0};
+			return globals(Globals::selected_entity);
 		}
 		else
 		{
 			//error selected_entity
-			return CommandValue{-1.0};
+			return CommandValue{-1};
 		}
 	}
 };

@@ -22,7 +22,7 @@ public:
     CommandValue operator()() const
     {
     	command_system.clear_procedures();
-    	return CommandValue{0.0};
+    	return CommandValue{0};
     }
 };
 

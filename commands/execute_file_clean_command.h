@@ -35,7 +35,7 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next().string();
+    	const auto file_name = command_system.exec_next();
     	command_system.flush_commands();
     	command_system.clear_procedures();
     	resource_system.clear();
@@ -43,9 +43,9 @@ public:
     	all_systems.clear();
     	entity_system.clear();
     	command_system.push(ExecuteFileCommand{command_system});
-    	command_system.push(LiteralValueCommand{file_name});
+    	command_system.push(LiteralValueCommand{file_name.string_view()});
 
-    	return CommandValue{0.0};
+    	return file_name;
     }
 };
 

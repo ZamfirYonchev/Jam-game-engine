@@ -17,7 +17,7 @@ public:
 
     CommandValue operator()() const
     {
-    	return CommandValue{0.0};
+    	return CommandValue{0};
     }
 };
 

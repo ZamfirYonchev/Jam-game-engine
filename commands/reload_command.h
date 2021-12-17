@@ -21,7 +21,7 @@ public:
     {
     	globals(Globals::app_needs_reload) = CommandValue{1};
         std::cout << "Issuing a game reload\n";
-        return CommandValue{0.0};
+        return globals(Globals::app_needs_reload);
     }
 };
 

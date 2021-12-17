@@ -14,7 +14,7 @@ void InputSystem::process_input(Globals& globals, std::stringstream& external_co
         switch(m_event.type)
         {
             case SDL_QUIT:
-            	globals(Globals::app_running) = CommandValue{0.0};
+            	globals(Globals::app_running) = CommandValue{false};
             break;
 
             case SDL_KEYDOWN:
@@ -37,7 +37,7 @@ void InputSystem::process_input(Globals& globals, std::stringstream& external_co
                 else if(m_event.key.keysym.sym == m_keyselect)
                     m_select_pressed = true;
                 else if(m_event.key.keysym.sym == m_keyquit || m_event.key.keysym.sym == SDLK_F10)
-                	globals(Globals::app_running) = CommandValue{0.0};
+                	globals(Globals::app_running) = CommandValue{false};
                 else if(m_event.key.keysym.sym == SDLK_r)
                 	globals(Globals::app_needs_reload) = CommandValue{true};
                 else if(m_event.key.keysym.sym == m_keypause)

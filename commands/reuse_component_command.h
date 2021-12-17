@@ -26,15 +26,15 @@ public:
 
     CommandValue operator()() const
 	{
-    	const auto source_id = command_system.exec_next().integer();
+    	const auto source_id = command_system.exec_next();
 
-    	const ComponentT& component = entity_system.template entity_component<ComponentT>(source_id);
+    	const ComponentT& component = entity_system.template entity_component<ComponentT>(source_id.integer());
     	//TODO use set_entity_component instead
 		std::stringstream ss;
 		ss << component;
 		command_system.parse(ss);
 
-    	return CommandValue{0.0};
+    	return source_id;
 	}
 };
 

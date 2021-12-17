@@ -66,12 +66,12 @@ public:
 				}
 			}
 
-			return CommandValue{0.0};
+			return globals(Globals::selected_entity);
 		}
 		else
 		{
 			//error selected_entity
-			return CommandValue{-1.0};
+			return CommandValue{-1};
 		}
 	}
 };

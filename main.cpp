@@ -122,18 +122,18 @@
 int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
 	Globals globals;
-	globals(Globals::app_resolution_x) = CommandValue{800.0};
-	globals(Globals::app_resolution_y) = CommandValue{600.0};
-	globals(Globals::app_fullscreen) = CommandValue{0.0};
-	globals(Globals::app_enable_audio) = CommandValue{0.0};
-	globals(Globals::app_sound_channels) = CommandValue{2.0};
+	globals(Globals::app_resolution_x) = CommandValue{800};
+	globals(Globals::app_resolution_y) = CommandValue{600};
+	globals(Globals::app_fullscreen) = CommandValue{false};
+	globals(Globals::app_enable_audio) = CommandValue{false};
+	globals(Globals::app_sound_channels) = CommandValue{2};
 	globals(Globals::app_window_title) = CommandValue{"Jam engine"};
-	globals(Globals::app_running) = CommandValue{1.0};
-	globals(Globals::app_paused) = CommandValue{0.0};
-	globals(Globals::app_needs_reload) = CommandValue{0.0};
-	globals(Globals::app_show_hitboxes) = CommandValue{0.0};
+	globals(Globals::app_running) = CommandValue{true};
+	globals(Globals::app_paused) = CommandValue{false};
+	globals(Globals::app_needs_reload) = CommandValue{false};
+	globals(Globals::app_show_hitboxes) = CommandValue{false};
 	globals(Globals::app_current_level) = CommandValue{"init.jel"};
-	globals(Globals::app_debug_level) = CommandValue{0.0};
+	globals(Globals::app_debug_level) = CommandValue{0};
 
 	do
 	{
@@ -349,7 +349,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		} while(globals(Globals::app_running).boolean() && globals(Globals::app_needs_reload).boolean() == false);
 
 		std::cout << "FPS = " << 1000.0*number_of_frames / (SDL_GetTicks()-start_frame_time) << std::endl;
-		globals(Globals::app_needs_reload) = CommandValue{0.0};
+		globals(Globals::app_needs_reload) = CommandValue{false};
 
 	} while(globals(Globals::app_running).boolean());
 

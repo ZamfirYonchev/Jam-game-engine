@@ -26,7 +26,7 @@ public:
 	{
     	all_systems.clear();
 		entity_system.clear();
-		return CommandValue{0.0};
+		return CommandValue{0};
 	}
 };
 

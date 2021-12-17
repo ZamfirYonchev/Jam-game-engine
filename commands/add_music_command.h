@@ -29,7 +29,7 @@ public:
     {
     	const auto file_name = command_system.exec_next().string();
 
-    	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1.0};
+    	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1};
 
     	return CommandValue{resource_system.addNewMusic(file_name)};
     }
