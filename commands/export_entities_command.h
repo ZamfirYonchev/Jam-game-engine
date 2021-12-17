@@ -42,7 +42,7 @@ public:
 		}
 		else
 		{
-			std::cerr << "Could not open file \"" << std::string_view{file_name} << "\" for write." << std::endl;
+			std::cerr << "Could not open file \"" << file_name << "\" for write." << std::endl;
 	    	return CommandValue{-1.0};
 		}
 	}
