@@ -1,17 +1,17 @@
 /*
- * procedure_command.h
+ * procedure.h
  *
- *  Created on: Nov 24, 2019
+ *  Created on: Dec 17, 2021
  *      Author: zamfi
  */
 
-#ifndef COMMANDS_PROCEDURE_COMMAND_H_
-#define COMMANDS_PROCEDURE_COMMAND_H_
+#ifndef COMMANDS_PROCEDURE_H_
+#define COMMANDS_PROCEDURE_H_
 
-#include <list>
+#include <vector>
 
 template<typename CommandSystemT>
-class ProcedureCommand
+class Procedure
 {
 public:
 	using CommandT = typename CommandSystemT::CommandT;
@@ -25,7 +25,7 @@ public:
         m_commands.clear();
     }
 
-    std::list<CommandT>& commands()
+    std::vector<CommandT>& commands()
 	{
     	return m_commands;
 	}
@@ -37,9 +37,7 @@ public:
     }
 
 private:
-    std::list<CommandT> m_commands;
+    std::vector<CommandT> m_commands;
 };
 
-
-
-#endif /* COMMANDS_PROCEDURE_COMMAND_H_ */
+#endif /* COMMANDS_PROCEDURE_H_ */

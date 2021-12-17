@@ -17,7 +17,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "../commands/procedure_command.h"
+#include "../commands/procedure.h"
 #include "../commands/debug_message_command.h"
 #include "../commands/select_entity_command.h"
 #include "../commands/call_procedure_command.h"
@@ -274,7 +274,7 @@ public:
     		m_command_prototypes.erase(it);
     }
 
-    ProcedureCommand<CommandSystem>& procedure(const ProcedureID id)
+    Procedure<CommandSystem>& procedure(const ProcedureID id)
     {
     	const ProcedureID proc_id = std::max(0, id*(1 - (id >= static_cast<ProcedureID>(m_procedures.size()))));
 		return m_procedures[proc_id];
@@ -300,7 +300,7 @@ private:
     std::stringstream m_external_commands;
     std::list<CommandT> m_commands;
     std::unordered_map<HashT, CommandT> m_command_prototypes;
-    std::vector<ProcedureCommand<CommandSystem>> m_procedures;
+    std::vector<Procedure<CommandSystem>> m_procedures;
 
     Globals& m_globals;
 };
