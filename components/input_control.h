@@ -23,7 +23,7 @@ public:
 	   , const bool stability_control
 	   , InputSystem& input_system
 	   , const EntityID self_id
-	   , const ComponentAccess<const MovementT>& movement_accessor
+	   , ComponentAccess<const MovementT> movement_accessor
 	   )
     : m_self_id(self_id)
 	, m_walk_dir(0)
@@ -35,7 +35,7 @@ public:
 	, m_look_dir(LookDir::RIGHT)
 	, m_stability_control(stability_control)
 	, m_input_system(input_system)
-	, m_movement_accessor{movement_accessor}
+	, m_movement_accessor{std::move(movement_accessor)}
     {}
 
     template<typename ExtractorF, typename SelfIDObtainerF>
@@ -43,7 +43,7 @@ public:
 	( ExtractorF&& extract
 	, InputSystem& input_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const MovementT>& movement_accessor
+	, ComponentAccess<const MovementT> movement_accessor
 	)
 	: InputControl
 	  { extract().integer() //shoot_proc_id
@@ -51,7 +51,7 @@ public:
 	  , extract().boolean() //stability control
 	  , input_system
 	  , obtain_self_id()
-	  , movement_accessor
+	  , std::move(movement_accessor)
 	  }
     {}
 

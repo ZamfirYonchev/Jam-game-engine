@@ -19,24 +19,24 @@ public:
 	( const EntityID attached_id
 	, const double offset_hp
 	, const double offset_max_hp
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
 	: m_attached_id(attached_id)
 	, m_offset_hp(offset_hp)
 	, m_offset_max_hp(offset_max_hp)
-	, m_health_accessor{health_accessor}
+	, m_health_accessor{std::move(health_accessor)}
 	{}
 
     template<typename ExtractorF>
 	AttachedHealth
 	( ExtractorF&& extract
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
 	: AttachedHealth
 	  { extract().integer()
 	  , extract().real()
 	  , extract().real()
-	  , health_accessor
+	  , std::move(health_accessor)
 	  }
 	{}
 

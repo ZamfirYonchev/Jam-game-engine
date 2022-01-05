@@ -22,27 +22,27 @@ public:
     , const double offset_y
     , const double offset_w
     , const double offset_h
-    , const ComponentAccess<const PositionT>& position_accessor
+    , ComponentAccess<const PositionT> position_accessor
     )
     : m_attached_id(attached_id)
     , m_offset_x(offset_x)
     , m_offset_y(offset_y)
     , m_offset_w(offset_w)
     , m_offset_h(offset_h)
-    , m_position_accessor{position_accessor}
+    , m_position_accessor{std::move(position_accessor)}
     {}
 
     template<typename ExtractorF>
 	AttachedPosition
 	( ExtractorF&& extract
-	, const ComponentAccess<const PositionT>& position_accessor
+	, ComponentAccess<const PositionT> position_accessor
 	)
 	: m_attached_id{extract().integer()}
 	, m_offset_x{extract().real()}
 	, m_offset_y{extract().real()}
 	, m_offset_w{extract().real()}
 	, m_offset_h{extract().real()}
-	, m_position_accessor{position_accessor}
+	, m_position_accessor{std::move(position_accessor)}
 	{}
 
     template<typename InserterF>

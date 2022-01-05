@@ -20,26 +20,26 @@ public:
     , const int offset_proc_id_self
     , const int offset_proc_id_other
     , const int offset_proc_id_on_exit_self
-    , const ComponentAccess<InteractionT>& interaction_accessor
+    , ComponentAccess<InteractionT> interaction_accessor
     )
     : m_attached_id{attached_id}
-    , m_interaction_accessor{interaction_accessor}
     , m_offset_proc_id_self{offset_proc_id_self}
     , m_offset_proc_id_other{offset_proc_id_other}
     , m_offset_proc_id_on_exit_self{offset_proc_id_on_exit_self}
+    , m_interaction_accessor{std::move(interaction_accessor)}
     {}
 
     template<typename ExtractorF>
     AttachedInteraction
 	( ExtractorF&& extract
-	, const ComponentAccess<InteractionT>& interaction_accessor
+	, ComponentAccess<InteractionT> interaction_accessor
 	)
 	: AttachedInteraction
 	  { extract().integer()
 	  , extract().integer()
 	  , extract().integer()
 	  , extract().integer()
-	  , interaction_accessor
+	  , std::move(interaction_accessor)
 	  }
 	{}
 
@@ -115,10 +115,10 @@ public:
 
 private:
 	EntityID m_attached_id;
-	ComponentAccess<InteractionT> m_interaction_accessor;
 	int m_offset_proc_id_self;
 	int m_offset_proc_id_other;
 	int m_offset_proc_id_on_exit_self;
+	ComponentAccess<InteractionT> m_interaction_accessor;
 };
 
 #endif /* COMPONENTS_ATTACHED_INTERACTION_H_ */

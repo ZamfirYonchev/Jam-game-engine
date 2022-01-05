@@ -22,23 +22,23 @@ public:
     , const double offset_y
     , const double w
     , const double h
-    , const ComponentAccess<const PositionT>& position_accessor
-    , const ComponentAccess<const ControlT>& control_accessor
+    , ComponentAccess<const PositionT> position_accessor
+    , ComponentAccess<const ControlT> control_accessor
     )
 	: m_attached_id{attached_id}
 	, m_offset_x{offset_x}
 	, m_offset_y{offset_y}
 	, m_w{w}
 	, m_h{h}
-	, m_position_accessor{position_accessor}
-	, m_control_accessor{control_accessor}
+	, m_position_accessor{std::move(position_accessor)}
+	, m_control_accessor{std::move(control_accessor)}
 	{}
 
     template<typename ExtractorF>
 	AttachedDirectionalPosition
 	( ExtractorF&& extract
-	, const ComponentAccess<const PositionT>& position_accessor
-	, const ComponentAccess<const ControlT>& control_accessor
+	, ComponentAccess<const PositionT> position_accessor
+	, ComponentAccess<const ControlT> control_accessor
 	)
 	: AttachedDirectionalPosition
 	  { extract().integer()
@@ -46,8 +46,8 @@ public:
 	  , extract().real()
 	  , extract().real()
 	  , extract().real()
-	  , position_accessor
-	  , control_accessor
+	  , std::move(position_accessor)
+	  , std::move(control_accessor)
 	  }
 	{}
 

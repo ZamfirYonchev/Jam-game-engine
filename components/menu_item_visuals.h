@@ -22,7 +22,7 @@ public:
 	, const AnimationID select_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const ControlT>& control_accessor
+	, ComponentAccess<const ControlT> control_accessor
 	)
 	: m_self_id{self_id}
 	, m_inactive_anim_id{inactive_anim_id}
@@ -37,7 +37,7 @@ public:
     , m_inactive_anim_time{0}
     , m_focus_anim_time{0}
     , m_select_anim_time{0}
-	, m_control_accessor{control_accessor}
+	, m_control_accessor{std::move(control_accessor)}
 	{
 		const auto& inactive_anim_opt = resource_system.animation(m_inactive_anim_id);
 
@@ -75,7 +75,7 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const ControlT>& control_accessor
+	, ComponentAccess<const ControlT> control_accessor
 	)
 	: MenuItemVisuals
 	  { extract().integer()
@@ -83,7 +83,7 @@ public:
 	  , extract().integer()
 	  , resource_system
 	  , obtain_self_id()
-	  , control_accessor
+	  , std::move(control_accessor)
 	  }
 	{}
 

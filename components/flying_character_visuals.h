@@ -31,9 +31,9 @@ public:
 	, const AnimationID dead_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const ControlT>& control_accessor
-	, const ComponentAccess<const CollisionT>& collision_accessor
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const ControlT> control_accessor
+	, ComponentAccess<const CollisionT> collision_accessor
+	, ComponentAccess<const HealthT> health_accessor
   )
 	: m_current_state(RenderStates::LAND_IDLE)
 	, m_current_anim_id{land_idle_anim_id}
@@ -67,9 +67,9 @@ public:
 	, m_last_frame{false}
 	, m_layer{VisualLayer::ACTION}
 	, m_self_id{self_id}
-	, m_control_accessor{control_accessor}
-	, m_collision_accessor{collision_accessor}
-	, m_health_accessor{health_accessor}
+	, m_control_accessor{std::move(control_accessor)}
+	, m_collision_accessor{std::move(collision_accessor)}
+	, m_health_accessor{std::move(health_accessor)}
 	{
 		const auto& land_idle_anim_opt = resource_system.animation(land_idle_anim_id);
 
@@ -159,9 +159,9 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const ControlT>& control_accessor
-	, const ComponentAccess<const CollisionT>& collision_accessor
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const ControlT> control_accessor
+	, ComponentAccess<const CollisionT> collision_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
 	: FlyingCharacterVisuals
 	  { extract().integer()
@@ -174,9 +174,9 @@ public:
 	  , extract().integer()
 	  , resource_system
 	  , obtain_self_id()
-	  , control_accessor
-	  , collision_accessor
-	  , health_accessor
+	  , std::move(control_accessor)
+	  , std::move(collision_accessor)
+	  , std::move(health_accessor)
 	  }
 	{}
 

@@ -31,10 +31,10 @@ public:
 	, const SoundID dead_id
 	, const double volume
 	, const EntityID self_id
-	, const ComponentAccess<const ControlT>& control_accessor
-	, const ComponentAccess<const MovementT>& movement_accessor
-	, const ComponentAccess<const CollisionT>& collision_accessor
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const ControlT> control_accessor
+	, ComponentAccess<const MovementT> movement_accessor
+	, ComponentAccess<const CollisionT> collision_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
     : m_self_id(self_id)
     , m_play_new_sound(false)
@@ -49,20 +49,20 @@ public:
     , m_dead_id(dead_id)
     , m_volume(volume)
     , m_state(State::IDLE)
-	, m_control_accessor{control_accessor}
-	, m_movement_accessor{movement_accessor}
-	, m_collision_accessor{collision_accessor}
-	, m_health_accessor{health_accessor}
+	, m_control_accessor{std::move(control_accessor)}
+	, m_movement_accessor{std::move(movement_accessor)}
+	, m_collision_accessor{std::move(collision_accessor)}
+	, m_health_accessor{std::move(health_accessor)}
     {}
 
     template<typename ExtractorF, typename SelfIDObtainerF>
     CharacterSounds
 	( ExtractorF&& extract
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const ControlT>& control_accessor
-	, const ComponentAccess<const MovementT>& movement_accessor
-	, const ComponentAccess<const CollisionT>& collision_accessor
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const ControlT> control_accessor
+	, ComponentAccess<const MovementT> movement_accessor
+	, ComponentAccess<const CollisionT> collision_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
 	: CharacterSounds
 	  { extract().integer()
@@ -75,10 +75,10 @@ public:
 	  , extract().integer()
 	  , extract().real()
 	  , obtain_self_id()
-	  , control_accessor
-	  , movement_accessor
-	  , collision_accessor
-	  , health_accessor
+	  , std::move(control_accessor)
+	  , std::move(movement_accessor)
+	  , std::move(collision_accessor)
+	  , std::move(health_accessor)
 	  }
 	{}
 

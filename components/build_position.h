@@ -20,24 +20,24 @@ public:
 	( const EntityID attached_id
 	, const double origin_x
 	, const double origin_y
-	, const ComponentAccess<const PositionT>& position_accessor
+	, ComponentAccess<const PositionT> position_accessor
 	)
 	: m_attached_id(attached_id)
 	, m_origin_x(origin_x)
 	, m_origin_y(origin_y)
-	, m_position_accessor(position_accessor)
+	, m_position_accessor{std::move(position_accessor)}
 	{}
 
     template<typename ExtractorF>
 	BuildPosition
 	( ExtractorF&& extract
-	, const ComponentAccess<const PositionT>& position_accessor
+	, ComponentAccess<const PositionT> position_accessor
 	)
 	: BuildPosition
 	  { extract().integer()
 	  , extract().real()
 	  , extract().real()
-	  , position_accessor
+	  , std::move(position_accessor)
 	  }
 	{}
 

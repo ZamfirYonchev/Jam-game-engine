@@ -22,7 +22,7 @@ public:
 	, const int repeat_x
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
 	: m_active_anim_id{active_id}
 	, m_inactive_anim_id{inactive_id}
@@ -34,7 +34,7 @@ public:
 	, m_inactive_animation_time{0}
 	, m_repeat_x{repeat_x}
 	, m_self_id{self_id}
-	, m_health_accessor(health_accessor)
+	, m_health_accessor(std::move(health_accessor))
 	{
 		const auto& active_anim_opt = resource_system.animation(active_id);
 
@@ -62,7 +62,7 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const HealthT>& health_accessor
+	, ComponentAccess<const HealthT> health_accessor
 	)
 	: HealthVisuals
 	  { extract().integer()
@@ -70,7 +70,7 @@ public:
 	  , extract().integer()
 	  , resource_system
 	  , obtain_self_id()
-	  , health_accessor
+	  , std::move(health_accessor)
 	  }
 	{}
 

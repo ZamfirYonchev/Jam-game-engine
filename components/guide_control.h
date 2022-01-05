@@ -21,7 +21,7 @@ public:
 		(const EntityID self_id
 	   , const EntityID target_id
 	   , const double range
-	   , const ComponentAccess<const PositionT>& position_accessor
+	   , ComponentAccess<const PositionT> position_accessor
 	   )
 	: m_self_id(self_id)
 	, m_target_id(target_id)
@@ -29,20 +29,20 @@ public:
 	, m_vertical(0)
 	, m_look_dir(LookDir::RIGHT)
 	, m_range(range)
-	, m_position_accessor(position_accessor)
+	, m_position_accessor(std::move(position_accessor))
 	{}
 
     template<typename ExtractorF, typename SelfIDObtainerF>
 	GuideControl
 	( ExtractorF&& extract
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const PositionT>& position_accessor
+	, ComponentAccess<const PositionT> position_accessor
 	)
 	: GuideControl
 	  { obtain_self_id()
 	  , extract().integer()
 	  , extract().real()
-	  , position_accessor
+	  , std::move(position_accessor)
 	  }
 	{}
 

@@ -23,7 +23,7 @@ public:
 	   , const ProcedureID attack_proc_id
 	   , const int attack_cooldown
 	   , const double attack_range
-	   , const ComponentAccess<const PositionT>& position_accessor
+	   , ComponentAccess<const PositionT> position_accessor
 	   )
 	: m_self_id(self_id)
 	, m_target_id(target_id)
@@ -41,7 +41,7 @@ public:
 	ChaseAIControl
 	( ExtractorF&& extract
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const PositionT>& position_accessor
+	, ComponentAccess<const PositionT> position_accessor
 	)
 	: ChaseAIControl
 	  { obtain_self_id()
@@ -49,7 +49,7 @@ public:
 	  , extract().integer()
 	  , extract().integer()
 	  , extract().real()
-	  , position_accessor
+	  , std::move(position_accessor)
 	  }
 	{}
 
