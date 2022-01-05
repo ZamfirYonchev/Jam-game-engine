@@ -56,8 +56,7 @@ struct UseComponentCommandGenerator
 																			  );
 
 					all_systems.component_updated(component, selected_entity, change);
-					if constexpr(std::is_same_v<ComponentT, Visuals>)
-						rendering_system.component_updated(component, selected_entity, change);
+					rendering_system.component_updated(component, selected_entity, change);
 
 			    	return CommandValue{selected_entity};
 			   };
