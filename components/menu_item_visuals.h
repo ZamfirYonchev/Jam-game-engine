@@ -12,8 +12,7 @@
 #include "../systems/resource_system.h"
 #include "../types.h"
 
-class Control;
-
+template<typename ControlT>
 class MenuItemVisuals
 {
 public:
@@ -23,7 +22,7 @@ public:
 	, const AnimationID select_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
 	)
 	: m_self_id{self_id}
 	, m_inactive_anim_id{inactive_anim_id}
@@ -76,7 +75,7 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
 	)
 	: MenuItemVisuals
 	  { extract().integer()
@@ -87,6 +86,15 @@ public:
 	  , control_accessor
 	  }
 	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseMenuItemVisuals");
+    	insert(m_inactive_anim_id);
+    	insert(m_focus_anim_id);
+    	insert(m_select_anim_id);
+    }
 
     void print(std::ostream& to) const
     {
@@ -103,7 +111,19 @@ public:
     	m_select_anim_time = (m_select_anim_time+int(time_diff))%m_select_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const int rx, const int ry) const;
+    AnimationFrame animation_frame(const int rx, const int ry) const
+    {
+    	const auto& control = m_control_accessor(m_self_id);
+    	return {control.decision_attack() ? m_select_anim_id
+    		 : (control.decision_vertical() != 0) ? m_focus_anim_id
+    		 : m_inactive_anim_id
+    		 ,
+    		   control.decision_attack() ? m_select_anim_time/m_select_animation_frame_delay
+    		 : (control.decision_vertical() != 0) ? m_focus_anim_time/m_focus_animation_frame_delay
+    		 : m_inactive_anim_time/m_inactive_animation_frame_delay,
+    		   };
+    }
+
     int repeat_x() const { return 1; }
     int repeat_y() const { return 1; }
     void set_repeat_x(const int) {}
@@ -125,7 +145,7 @@ private:
     int m_inactive_anim_time;
     int m_focus_anim_time;
     int m_select_anim_time;
-    ComponentAccess<const Control> m_control_accessor;
+    ComponentAccess<const ControlT> m_control_accessor;
 };
 
 #endif /* COMPONENTS_MENU_ITEM_VISUALS_H_ */

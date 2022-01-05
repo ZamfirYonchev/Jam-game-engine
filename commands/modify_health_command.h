@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename HealthT>
 class ModifyHealthCommand
 {
 public:
@@ -34,7 +34,7 @@ public:
     	const auto proc_id = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Health& health = entity_system.template entity_component<Health>(selected_entity);
+    	auto& health = entity_system.template entity_component<HealthT>(selected_entity);
 
 		if(health)
 		{

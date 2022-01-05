@@ -14,14 +14,12 @@
 
 #include "component.h"
 #include "collision_enums.h"
-#include "null_collision.h"
-#include "basic_collision.h"
-#include "damage_collision.h"
 
-class Collision
+template<typename... Ts>
+class CollisionVariant
 {
 public:
-	using Variant = std::variant<NullCollision, BasicCollision, DamageCollision>;
+	using Variant = std::variant<Ts...>;
 	Variant variant;
 
     bool solid() const { return std::visit([](const auto& col){ return col.solid(); }, variant); }
@@ -36,7 +34,8 @@ public:
 
     operator bool() const { return variant.index() != 0; }
 
-    friend std::ostream& operator<< (std::ostream& out, const Collision& component)
+    template<typename... Tps>
+    friend std::ostream& operator<< (std::ostream& out, const CollisionVariant<Tps...>& component)
     {
 		print(out, component.variant);
         out << std::endl;

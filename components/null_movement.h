@@ -11,6 +11,12 @@
 class NullMovement
 {
 public:
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullMovement");
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNullMovement ";

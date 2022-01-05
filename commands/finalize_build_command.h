@@ -13,7 +13,7 @@
 #include "../types.h"
 #include "../components/absolute_position.h"
 
-template<typename EntitySystemT, typename AllSystemsT>
+template<typename EntitySystemT, typename AllSystemsT, typename PositionT>
 class FinalizeBuildCommand
 {
 public:
@@ -30,10 +30,10 @@ public:
     CommandValue operator()() const
 	{
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-		const auto& position = entity_system.template entity_component<Position>(selected_entity);
+		const auto& position = entity_system.template entity_component<PositionT>(selected_entity);
 		int8_t change;
 		const auto& component = entity_system.set_entity_component( selected_entity
-												  	  	  	  	  , Position
+												  	  	  	  	  , PositionT
 																	{ AbsolutePosition
 																	  { position.x()
 																	  , position.y()

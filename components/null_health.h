@@ -13,6 +13,12 @@
 class NullHealth
 {
 public:
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullHealth");
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNullHealth ";

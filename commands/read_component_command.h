@@ -20,7 +20,7 @@
 #include "../components/sounds.h"
 #include "../components/visuals.h"
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename PositionT>
 class ReadPositionCommand
 {
 public:
@@ -40,7 +40,7 @@ public:
 		const auto w_modifier = command_system.exec_next().real();
 		const auto h_modifier = command_system.exec_next().real();
 
-		const Position& position = entity_system.template entity_component<Position>(source_id);
+		const auto& position = entity_system.template entity_component<PositionT>(source_id);
 
 		return CommandValue
 				{position.x()*x_modifier
@@ -51,7 +51,7 @@ public:
 	}
 };
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename ControlT>
 class ReadControlCommand
 {
 public:
@@ -72,7 +72,7 @@ public:
 		const auto look_dir_modifier = command_system.exec_next().real();
 		const auto proc_id_modifier = command_system.exec_next().real();
 
-		const Control& control = entity_system.template entity_component<Control>(source_id);
+		const auto& control = entity_system.template entity_component<ControlT>(source_id);
 
 		return CommandValue
 				{control.decision_walk()*dec_x_modifier
@@ -84,7 +84,7 @@ public:
 	}
 };
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename MovementT>
 class ReadMovementCommand
 {
 public:
@@ -108,7 +108,7 @@ public:
 		const auto fy_modifier = command_system.exec_next().real();
 		const auto gravity_modifier = command_system.exec_next().real();
 
-		const Movement& movement = entity_system.template entity_component<Movement>(source_id);
+		const auto& movement = entity_system.template entity_component<MovementT>(source_id);
 
 		return CommandValue
 				{movement.mass()*mass_modifier
@@ -123,7 +123,7 @@ public:
 	}
 };
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename CollisionT>
 class ReadCollisionCommand
 {
 public:
@@ -143,7 +143,7 @@ public:
 		const auto damage_modifier = command_system.exec_next().real();
 		const auto elasticity_modifier = command_system.exec_next().real();
 
-		const Collision& collision = entity_system.template entity_component<Collision>(source_id);
+		const auto& collision = entity_system.template entity_component<CollisionT>(source_id);
 
 		return CommandValue
 				{double(collision.solid())*state_modifier
@@ -154,7 +154,7 @@ public:
 	}
 };
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename InteractionT>
 class ReadInteractionCommand
 {
 public:
@@ -175,7 +175,7 @@ public:
 		const auto proc_id_other_modifier = command_system.exec_next().real();
 		const auto on_exit_proc_id_self_modifier = command_system.exec_next().real();
 
-		const Interaction& interaction = entity_system.template entity_component<Interaction>(source_id);
+		const auto& interaction = entity_system.template entity_component<InteractionT>(source_id);
 
 		return (group_vector_modifier == 1.0
 			 && trigger_group_modifier == 0.0
@@ -195,7 +195,7 @@ public:
 	}
 };
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename HealthT>
 class ReadHealthCommand
 {
 public:
@@ -214,7 +214,7 @@ public:
 		const auto max_hp_modifier = command_system.exec_next().real();
 		const auto proc_id_modifier = command_system.exec_next().real();
 
-		const Health& health = entity_system.template entity_component<Health>(source_id);
+		const auto& health = entity_system.template entity_component<HealthT>(source_id);
 
 		return CommandValue
 				{health.hp()*hp_modifier
@@ -225,7 +225,7 @@ public:
 };
 
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename SoundsT>
 class ReadSoundsCommand
 {
 public:
@@ -243,7 +243,7 @@ public:
 		const auto sound_id_modifier = command_system.exec_next().real();
 		const auto changed_modifier = command_system.exec_next().real();
 
-		const Sounds& sounds = entity_system.template entity_component<Sounds>(source_id);
+		const auto& sounds = entity_system.template entity_component<SoundsT>(source_id);
 
 		return CommandValue
 				{sounds.id()*sound_id_modifier
@@ -252,7 +252,7 @@ public:
 	}
 };
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename VisualsT>
 class ReadVisualsCommand
 {
 public:
@@ -271,7 +271,7 @@ public:
 		const auto repeat_y_modifier = command_system.exec_next().real();
 		const auto layer_modifier = command_system.exec_next().real();
 
-		const Visuals& visuals = entity_system.template entity_component<Visuals>(source_id);
+		const auto& visuals = entity_system.template entity_component<VisualsT>(source_id);
 
 		return CommandValue
 				{visuals.repeat_x()*repeat_x_modifier

@@ -29,6 +29,14 @@ public:
 	  }
 	{}
 
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseStaticVisuals");
+    	insert(m_anim_id);
+    	insert(m_sprite);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseStaticVisuals "

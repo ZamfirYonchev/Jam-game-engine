@@ -45,6 +45,13 @@ public:
 	  }
     {}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseAnimationVisuals");
+    	insert(m_anim_id);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseAnimationVisuals "

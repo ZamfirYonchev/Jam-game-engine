@@ -25,7 +25,7 @@
 #include "../components/visuals_enums.h"
 #include "../globals.h"
 
-template<typename EntitySystemT, typename ResourceSystemT>
+template<typename EntitySystemT, typename ResourceSystemT, typename PositionT, typename ControlT, typename VisualsT>
 class RenderingSystem
 {
 public:
@@ -54,17 +54,25 @@ public:
     		entities[layer].clear();
     }
 
-    void component_updated(const Visuals& visuals, const EntityID id, const int8_t change)
+    template<typename T>
+    void component_updated
+	( [[maybe_unused]] const T& component
+	, [[maybe_unused]] const EntityID id
+	, [[maybe_unused]] const int8_t change
+	)
     {
-    	//1 = find=end
-    	//0 = find!=end layer=layer
-    	//-1 = find!=end layer!=layer
-    	const int8_t layer_change = entity_layer.find(id) == cend(entity_layer) ? 1 : -(visuals.layer() != entity_layer[id]);
+    	if constexpr(std::is_same<T, VisualsT>::value)
+		{
+			//1 = find=end
+			//0 = find!=end layer=layer
+			//-1 = find!=end layer!=layer
+			const int8_t layer_change = entity_layer.find(id) == cend(entity_layer) ? 1 : -(component.layer() != entity_layer[id]);
 
-    	if(change < 0 || layer_change < 0)
-    		remove_id(id, entity_layer[id]);
-    	if(change > 0 || layer_change != 0)
-    		add_id(id, visuals.layer());
+			if(change < 0 || layer_change < 0)
+				remove_id(id, entity_layer[id]);
+			if(change > 0 || layer_change != 0)
+				add_id(id, component.layer());
+		}
     }
 
     void update(const Time time_diff)
@@ -72,7 +80,7 @@ public:
         SDL_SetRenderDrawColor(sdl_window.renderer(), 255, 255, 255, 255);
         SDL_RenderClear(sdl_window.renderer());
 
-        const auto& screen_zone_position = entity_system.template entity_component<Position>(EntityID{0});
+        const auto& screen_zone_position = entity_system.template entity_component<PositionT>(EntityID{0});
 
         const double m_screen_to_view_scale = screen_zone_position.h() ? 1.0*sdl_window.res_height()/screen_zone_position.h() : 1.0;
 
@@ -80,11 +88,11 @@ public:
         {
     		for(const EntityID id : entities[layer])
     		{
-    			auto& visuals = entity_system.template entity_component<Visuals>(id);
+    			auto& visuals = entity_system.template entity_component<VisualsT>(id);
     			if(visuals)
     			{
-    				const auto& position = entity_system.template entity_component<Position>(id);
-    				const auto& control = entity_system.template entity_component<Control>(id);
+    				const auto& position = entity_system.template entity_component<PositionT>(id);
+    				const auto& control = entity_system.template entity_component<ControlT>(id);
 
 					if(globals(Globals::app_paused).integer() == false)
     					visuals.update_animation(time_diff);

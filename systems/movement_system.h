@@ -19,7 +19,7 @@
 #include <utility>
 #include <type_traits>
 
-template<typename EntitySystemT>
+template<typename EntitySystemT, typename PositionT, typename ControlT, typename MovementT, typename CollisionT>
 class MovementSystem : public SystemBase
 {
 public:
@@ -36,12 +36,12 @@ public:
 
 		for(const auto id : entities)
     	{
-    		auto& movement = m_entity_system.template entity_component<Movement>(id);
+    		auto& movement = m_entity_system.template entity_component<MovementT>(id);
         	if(movement)
         	{
-    			const auto& control = m_entity_system.template entity_component<Control>(id);
-    			const auto& collision = m_entity_system.template entity_component<Collision>(id);
-    			auto& position  = m_entity_system.template entity_component<Position>(id);
+    			const auto& control = m_entity_system.template entity_component<ControlT>(id);
+    			const auto& collision = m_entity_system.template entity_component<CollisionT>(id);
+    			auto& position  = m_entity_system.template entity_component<PositionT>(id);
 
     			if(movement.gravity_affected())
     			{
@@ -79,7 +79,7 @@ public:
 	, [[maybe_unused]] const int8_t change
 	)
     {
-    	if constexpr(std::is_same<T, Movement>::value)
+    	if constexpr(std::is_same<T, MovementT>::value)
 		{
     		if(change < 0)
     			remove_id(id);

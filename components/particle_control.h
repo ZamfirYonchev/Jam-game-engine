@@ -45,6 +45,15 @@ public:
 	  }
 	{}
 
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseParticleControl");
+    	insert(m_random_factor);
+    	insert(std::sqrt(m_directed_x*m_directed_x + m_directed_y*m_directed_y));
+    	insert(std::atan2(m_directed_y, m_directed_x));
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseParticleControl "

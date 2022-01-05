@@ -13,7 +13,14 @@
 class NullControl
 {
 public:
-    void print(std::ostream& to) const
+
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullControl");
+    }
+
+	void print(std::ostream& to) const
     {
     	to << "UseNullControl ";
     }

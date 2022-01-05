@@ -13,6 +13,12 @@
 class NullVisuals
 {
 public:
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullVisuals");
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNullVisuals ";

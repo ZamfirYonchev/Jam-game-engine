@@ -11,8 +11,7 @@
 #include "../types.h"
 #include <ostream>
 
-class Health;
-
+template<typename HealthT>
 class AttachedHealth
 {
 public:
@@ -20,7 +19,7 @@ public:
 	( const EntityID attached_id
 	, const double offset_hp
 	, const double offset_max_hp
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: m_attached_id(attached_id)
 	, m_offset_hp(offset_hp)
@@ -31,7 +30,7 @@ public:
     template<typename ExtractorF>
 	AttachedHealth
 	( ExtractorF&& extract
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: AttachedHealth
 	  { extract().integer()
@@ -40,6 +39,15 @@ public:
 	  , health_accessor
 	  }
 	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseAttachedHealth");
+    	insert(m_attached_id);
+    	insert(m_offset_hp);
+    	insert(m_offset_max_hp);
+    }
 
     void print(std::ostream& to) const
     {
@@ -54,8 +62,16 @@ public:
     void set_hp_change(double) {}
     void mod_hp_change(double) {}
     void update_health(const Time) {}
-    double hp() const;
-    double max_hp() const;
+    double hp() const
+    {
+    	return m_health_accessor(m_attached_id).hp() + m_offset_hp;
+    }
+
+    double max_hp() const
+    {
+    	return m_health_accessor(m_attached_id).max_hp() + m_offset_max_hp;
+    }
+
     bool alive() const { return hp() > 0; }
     ProcedureID on_death_exec() const { return ProcedureID(0); }
     void set_on_death_exec(ProcedureID) {}
@@ -64,7 +80,7 @@ public:
     EntityID m_attached_id;
 private:
     double m_offset_hp, m_offset_max_hp;
-    ComponentAccess<const Health> m_health_accessor;
+    ComponentAccess<const HealthT> m_health_accessor;
 };
 
 #endif /* COMPONENTS_ATTACHED_HEALTH_H_ */

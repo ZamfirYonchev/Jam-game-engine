@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename ControlT>
 class ModifyControlCommand
 {
 public:
@@ -34,7 +34,7 @@ public:
     	const auto look_dir = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Control& control = entity_system.template entity_component<Control>(selected_entity);
+    	auto& control = entity_system.template entity_component<ControlT>(selected_entity);
 
 		if(control)
 		{

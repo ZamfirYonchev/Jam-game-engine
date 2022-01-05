@@ -51,6 +51,18 @@ public:
     FullMovement(bool gravity_affected) : FullMovement(1, 0, 0, 0, 0, gravity_affected) {}
     FullMovement() : FullMovement(false) {}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseFullMovement");
+    	insert(m_mass);
+    	insert(m_friction_x);
+    	insert(m_friction_y);
+    	insert(m_move_force);
+    	insert(m_jump_force);
+    	insert(m_gravity_affected);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseFullMovement "

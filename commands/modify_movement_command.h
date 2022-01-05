@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename MovementT>
 class ModifyMovementCommand
 {
 public:
@@ -38,7 +38,7 @@ public:
     	const auto gravity_affected = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Movement& movement = entity_system.template entity_component<Movement>(selected_entity);
+    	auto& movement = entity_system.template entity_component<MovementT>(selected_entity);
 
 		if(movement)
 		{

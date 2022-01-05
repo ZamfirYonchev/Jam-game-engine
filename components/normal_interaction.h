@@ -28,6 +28,13 @@ public:
 
 	NormalInteraction() : NormalInteraction(0) {}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNormalInteraction");
+    	insert(m_group_vec);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNormalInteraction "

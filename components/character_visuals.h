@@ -11,12 +11,9 @@
 #include "visuals_enums.h"
 #include "../systems/resource_system.h"
 #include "../types.h"
+#include "collision_enums.h"
 
-class Control;
-class Movement;
-class Collision;
-class Health;
-
+template<typename ControlT, typename MovementT, typename CollisionT, typename HealthT>
 class CharacterVisuals
 {
 public:
@@ -32,10 +29,10 @@ public:
 	, const AnimationID dead_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const Control>& control_accessor
-	, const ComponentAccess<const Movement>& movement_accessor
-	, const ComponentAccess<const Collision>& collision_accessor
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
+	, const ComponentAccess<const MovementT>& movement_accessor
+	, const ComponentAccess<const CollisionT>& collision_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: m_current_state(RenderStates::IDLE)
 	, m_current_anim_id{idle_anim_id}
@@ -149,10 +146,10 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Control>& control_accessor
-	, const ComponentAccess<const Movement>& movement_accessor
-	, const ComponentAccess<const Collision>& collision_accessor
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
+	, const ComponentAccess<const MovementT>& movement_accessor
+	, const ComponentAccess<const CollisionT>& collision_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: CharacterVisuals
 	  { extract().integer()
@@ -171,6 +168,19 @@ public:
 	  }
 	{}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseCharacterVisuals");
+    	insert(m_idle_anim_id);
+    	insert(m_walk_anim_id);
+    	insert(m_jump_anim_id);
+    	insert(m_fall_anim_id);
+    	insert(m_attack_anim_id);
+    	insert(m_hit_anim_id);
+    	insert(m_dead_anim_id);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseCharacterVisuals "
@@ -183,7 +193,83 @@ public:
 		   << m_dead_anim_id << " ";
     }
 
-    void update_animation(const Time time_diff);
+    void update_animation(const Time time_diff)
+    {
+    	const auto& control = m_control_accessor(m_self_id);
+    	const auto& movement = m_movement_accessor(m_self_id);
+    	const auto& collision = m_collision_accessor(m_self_id);
+    	const auto& health = m_health_accessor(m_self_id);
+
+    	switch(m_current_state)
+    	{
+    		default:
+    		case RenderStates::IDLE:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(collision.standing_on()!=SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::WALK:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(collision.standing_on()!=SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(RenderStates::IDLE);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::JUMP:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(RenderStates::WALK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(RenderStates::IDLE);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < 0 && m_last_frame) set_new_state(RenderStates::FALL);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::FALL:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(RenderStates::WALK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(RenderStates::IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::ATTACK:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
+    			else if(m_last_frame) set_new_state(RenderStates::IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::HIT:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(m_last_frame && control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::AIR && movement.vy() < 0) set_new_state(RenderStates::FALL);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(RenderStates::JUMP);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(RenderStates::WALK);
+    			else if(m_last_frame && collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(RenderStates::IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::DEAD:
+    			if(m_last_frame == false)
+    				advance_animation(time_diff);
+    			//else do nothing
+    		break;
+    	}
+    }
+
     AnimationFrame animation_frame(const int, const int) const
     {
     	return {m_current_anim_id, m_anim_time/m_current_anim_frame_delay};
@@ -226,10 +312,10 @@ private:
     bool m_last_frame;
     VisualLayer m_layer;
     EntityID m_self_id;
-    ComponentAccess<const Control> m_control_accessor;
-    ComponentAccess<const Movement> m_movement_accessor;
-    ComponentAccess<const Collision> m_collision_accessor;
-    ComponentAccess<const Health> m_health_accessor;
+    ComponentAccess<const ControlT> m_control_accessor;
+    ComponentAccess<const MovementT> m_movement_accessor;
+    ComponentAccess<const CollisionT> m_collision_accessor;
+    ComponentAccess<const HealthT> m_health_accessor;
 
     void set_new_state(RenderStates new_state)
     {

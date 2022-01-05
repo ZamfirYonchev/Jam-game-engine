@@ -101,6 +101,7 @@
 #include "components/menu_item_visuals.h"
 #include "components/static_visuals.h"
 #include "components/tiled_visuals.h"
+#include "components/animation_visuals.h"
 #include "components/null_visuals.h"
 #include "components/character_sounds.h"
 #include "components/null_sounds.h"
@@ -172,18 +173,36 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		globals(Globals::app_resolution_x) = CommandValue{sdl.res_width()};
 		globals(Globals::app_resolution_y) = CommandValue{sdl.res_height()};
 
+		struct Position;
+		struct Control;
+		struct Movement;
+		struct Collision;
+		struct Interaction;
+		struct Health;
+		struct Sounds;
+		struct Visuals;
+
+		struct Position : public PositionVariant<NullPosition, AbsolutePosition, AttachedPosition<Position>, AttachedDirectionalPosition<Position, Control>, BuildPosition<Position>> {};
+		struct Control : public ControlVariant<NullControl, ConstantControl, ChaseAIControl<Position>, GuideControl<Position>, InputControl<Movement>, InputSelectControl, ParticleControl, TimedControl> {};
+		struct Movement : public MovementVariant<NullMovement, InstantMovement, FullMovement> {};
+		struct Collision : public CollisionVariant<NullCollision, BasicCollision, DamageCollision> {};
+		struct Interaction : public InteractionVariant<NullInteraction, NormalInteraction, TriggerInteraction, FullInteraction, AttachedInteraction<Interaction>> {};
+		struct Health : public HealthVariant<NullHealth, CharacterHealth, AttachedHealth<Health>, TimedHealth> {};
+		struct Sounds : public SoundsVariant<NullSounds, CharacterSounds<Control, Movement, Collision, Health>> {};
+		struct Visuals : public VisualsVariant<NullVisuals, CharacterVisuals<Control, Movement, Collision, Health>, FlyingCharacterVisuals<Control, Collision, Health>, HealthVisuals<Health>, MenuItemVisuals<Control>, StaticVisuals, TiledVisuals<Position>, AnimationVisuals> {};
+
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
 		ResourceSystem resource_system;
 		InputSystem input_system;
 
-		ControlSystem<ES> control_system {entity_system, globals, command_system.external_commands()};
-		MovementSystem<ES> movement_system {entity_system, globals};
-		CollisionSystem<ES> collision_system {entity_system, globals, command_system.external_commands()};
+		ControlSystem<ES, Control, Health> control_system {entity_system, globals, command_system.external_commands()};
+		MovementSystem<ES, Position, Control, Movement, Collision> movement_system {entity_system, globals};
+		CollisionSystem<ES, Position, Movement, Collision, Interaction, Health> collision_system {entity_system, globals, command_system.external_commands()};
 		//MovementCollisionSystem<ES> movement_collision_system {entity_system, globals, command_system.external_commands()};
-		DamageSystem<ES> damage_system {entity_system, globals, command_system.external_commands()};
-		SoundSystem<ES> sound_system {entity_system, resource_system, globals};
-		RenderingSystem<ES, ResourceSystem> rendering_system
+		DamageSystem<ES, Health> damage_system {entity_system, globals, command_system.external_commands()};
+		SoundSystem<ES, Sounds> sound_system {entity_system, resource_system, globals};
+		RenderingSystem<ES, ResourceSystem, Position, Control, Visuals> rendering_system
 			{ entity_system
 			, resource_system
 			, globals
@@ -228,7 +247,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
 	    command_system.register_command("Val", GetVariableCommand{command_system, globals});
 	    command_system.register_command("DebugMessage", DebugMessageCommand{command_system, globals});
-		command_system.register_command("FixViewWidth", FixViewWidthCommand{entity_system, command_system, globals});
+		command_system.register_command("FixViewWidth", FixViewWidthCommand<ES, CS, Position>{entity_system, command_system, globals});
 		command_system.register_command("SelectEntity", SelectEntityCommand{command_system, globals});
 		command_system.register_command("Select", SelectEntityCommand{command_system, globals});
 		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{command_system});
@@ -252,24 +271,24 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("AddMusic", AddMusicCommand{command_system, resource_system, globals});
 		command_system.register_command("AddEntity", AddEntityCommand{entity_system, globals});
 		command_system.register_command("RemoveEntity", RemoveEntityCommand{entity_system, globals});
-		command_system.register_command("ModifyPosition", ModifyPositionCommand{command_system, entity_system, globals});
-		command_system.register_command("ModifyControl", ModifyControlCommand{command_system, entity_system, globals});
-		command_system.register_command("ModifyMovement", ModifyMovementCommand{command_system, entity_system, globals});
-		command_system.register_command("ModifyCollision", ModifyCollisionCommand{command_system, entity_system, globals});
-		command_system.register_command("ModifyInteraction", ModifyInteractionCommand{command_system, entity_system, globals});
-		command_system.register_command("ModifyHealth", ModifyHealthCommand{command_system, entity_system, globals});
-		command_system.register_command("ModifyVisuals", ModifyVisualsCommand{command_system, entity_system, rendering_system, globals});
+		command_system.register_command("ModifyPosition", ModifyPositionCommand<CS, ES, Position>{command_system, entity_system, globals});
+		command_system.register_command("ModifyControl", ModifyControlCommand<CS, ES, Control>{command_system, entity_system, globals});
+		command_system.register_command("ModifyMovement", ModifyMovementCommand<CS, ES, Movement>{command_system, entity_system, globals});
+		command_system.register_command("ModifyCollision", ModifyCollisionCommand<CS, ES, Collision>{command_system, entity_system, globals});
+		command_system.register_command("ModifyInteraction", ModifyInteractionCommand<CS, ES, Interaction>{command_system, entity_system, globals});
+		command_system.register_command("ModifyHealth", ModifyHealthCommand<CS, ES, Health>{command_system, entity_system, globals});
+		command_system.register_command("ModifyVisuals", ModifyVisualsCommand<CS, ES, RS, Visuals>{command_system, entity_system, rendering_system, globals});
 		command_system.register_command("UseNullPosition", use_command_gen.make<Position, NullPosition>());
 		command_system.register_command("UseAbsolutePosition", use_command_gen.make<Position, AbsolutePosition>(command_value_extractor));
-		command_system.register_command("UseAttachedPosition", use_command_gen.make<Position, AttachedPosition>(command_value_extractor, position_accessor));
-		command_system.register_command("UseBuildPosition", use_command_gen.make<Position, BuildPosition>(command_value_extractor, position_accessor));
-		command_system.register_command("UseAttachedDirectionalPosition", use_command_gen.make<Position, AttachedDirectionalPosition>(command_value_extractor, position_accessor, control_accessor));
+		command_system.register_command("UseAttachedPosition", use_command_gen.make<Position, AttachedPosition<Position>>(command_value_extractor, position_accessor));
+		command_system.register_command("UseBuildPosition", use_command_gen.make<Position, BuildPosition<Position>>(command_value_extractor, position_accessor));
+		command_system.register_command("UseAttachedDirectionalPosition", use_command_gen.make<Position, AttachedDirectionalPosition<Position, Control>>(command_value_extractor, position_accessor, control_accessor));
 		command_system.register_command("UseNullControl", use_command_gen.make<Control, NullControl>());
 		command_system.register_command("UseConstantControl", use_command_gen.make<Control, ConstantControl>(command_value_extractor));
-		command_system.register_command("UseInputControl", use_command_gen.make<Control, InputControl>(command_value_extractor, input_system, current_id_accessor, movement_accessor));
+		command_system.register_command("UseInputControl", use_command_gen.make<Control, InputControl<Movement>>(command_value_extractor, input_system, current_id_accessor, movement_accessor));
 		command_system.register_command("UseInputSelectControl", use_command_gen.make<Control, InputSelectControl>(command_value_extractor, input_system));
-		command_system.register_command("UseChaseAIControl", use_command_gen.make<Control, ChaseAIControl>(command_value_extractor, current_id_accessor, position_accessor));
-		command_system.register_command("UseGuideControl", use_command_gen.make<Control, GuideControl>(command_value_extractor, current_id_accessor, position_accessor));
+		command_system.register_command("UseChaseAIControl", use_command_gen.make<Control, ChaseAIControl<Position>>(command_value_extractor, current_id_accessor, position_accessor));
+		command_system.register_command("UseGuideControl", use_command_gen.make<Control, GuideControl<Position>>(command_value_extractor, current_id_accessor, position_accessor));
 		command_system.register_command("UseParticleControl", use_command_gen.make<Control, ParticleControl>(command_value_extractor, rand_gen));
 		command_system.register_command("UseTimedControl", use_command_gen.make<Control, TimedControl>(command_value_extractor));
 		command_system.register_command("UseNullMovement", use_command_gen.make<Movement, NullMovement>());
@@ -282,20 +301,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("UseNormalInteraction", use_command_gen.make<Interaction, NormalInteraction>(command_value_extractor));
 		command_system.register_command("UseTriggerInteraction", use_command_gen.make<Interaction, TriggerInteraction>(command_value_extractor));
 		command_system.register_command("UseFullInteraction", use_command_gen.make<Interaction, FullInteraction>(command_value_extractor));
-		command_system.register_command("UseAttachedInteraction", use_command_gen.make<Interaction, AttachedInteraction>(command_value_extractor, interaction_accessor));
+		command_system.register_command("UseAttachedInteraction", use_command_gen.make<Interaction, AttachedInteraction<Interaction>>(command_value_extractor, interaction_accessor));
 		command_system.register_command("UseNullHealth", use_command_gen.make<Health, NullHealth>());
-		command_system.register_command("UseAttachedHealth", use_command_gen.make<Health, AttachedHealth>(command_value_extractor, health_accessor));
+		command_system.register_command("UseAttachedHealth", use_command_gen.make<Health, AttachedHealth<Health>>(command_value_extractor, health_accessor));
 		command_system.register_command("UseCharacterHealth", use_command_gen.make<Health, CharacterHealth>(command_value_extractor));
 		command_system.register_command("UseTimedHealth", use_command_gen.make<Health, TimedHealth>(command_value_extractor));
 		command_system.register_command("UseNullSounds", use_command_gen.make<Sounds, NullSounds>());
-		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds>(command_value_extractor, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds<Control, Movement, Collision, Health>>(command_value_extractor, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
 		command_system.register_command("UseNullVisuals", use_command_gen.make<Visuals, NullVisuals>());
-		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals>(command_value_extractor, resource_system, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
-		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals>(command_value_extractor, resource_system, current_id_accessor, control_accessor, collision_accessor, health_accessor));
-		command_system.register_command("UseTiledVisuals", use_command_gen.make<Visuals, TiledVisuals>(command_value_extractor, resource_system, current_id_accessor, position_accessor));
+		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals<Control, Movement, Collision, Health>>(command_value_extractor, resource_system, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals<Control, Collision, Health>>(command_value_extractor, resource_system, current_id_accessor, control_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseTiledVisuals", use_command_gen.make<Visuals, TiledVisuals<Position>>(command_value_extractor, resource_system, current_id_accessor, position_accessor));
 		command_system.register_command("UseStaticVisuals", use_command_gen.make<Visuals, StaticVisuals>(command_value_extractor));
-		command_system.register_command("UseHealthVisuals", use_command_gen.make<Visuals, HealthVisuals>(command_value_extractor, resource_system, current_id_accessor, health_accessor));
-		command_system.register_command("UseMenuItemVisuals", use_command_gen.make<Visuals, MenuItemVisuals>(command_value_extractor, resource_system, current_id_accessor, control_accessor));
+		command_system.register_command("UseHealthVisuals", use_command_gen.make<Visuals, HealthVisuals<Health>>(command_value_extractor, resource_system, current_id_accessor, health_accessor));
+		command_system.register_command("UseMenuItemVisuals", use_command_gen.make<Visuals, MenuItemVisuals<Control>>(command_value_extractor, resource_system, current_id_accessor, control_accessor));
 		command_system.register_command("UseAnimationVisuals", use_command_gen.make<Visuals, AnimationVisuals>(command_value_extractor, resource_system));
 		command_system.register_command("ReusePosition", ReuseComponentCommand<Position, CommandSystem, ES>{command_system, entity_system});
 		command_system.register_command("ReuseControl", ReuseComponentCommand<Control, CommandSystem, ES>{command_system, entity_system});
@@ -306,18 +325,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("ReuseSounds", ReuseComponentCommand<Sounds, CommandSystem, ES>{command_system, entity_system});
 		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals, CommandSystem, ES>{command_system, entity_system});
 		command_system.register_command("ExportEntities", ExportEntitiesCommand{command_system, entity_system});
-		command_system.register_command("FinalizeBuild", FinalizeBuildCommand{entity_system, all_systems, globals});
+		command_system.register_command("FinalizeBuild", FinalizeBuildCommand<ES, AS, Position>{entity_system, all_systems, globals});
 		command_system.register_command("PlaySound", PlaySoundCommand{command_system, resource_system, globals});
 		command_system.register_command("PlayMusic", PlayMusicCommand{command_system, resource_system, globals});
 		command_system.register_command("PauseAllSounds", PauseAllSoundsCommand{command_system, globals});
-		command_system.register_command("ReadPosition", ReadPositionCommand{command_system, entity_system});
-		command_system.register_command("ReadControl", ReadControlCommand{command_system, entity_system});
-		command_system.register_command("ReadMovement", ReadMovementCommand{command_system, entity_system});
-		command_system.register_command("ReadCollision", ReadCollisionCommand{command_system, entity_system});
-		command_system.register_command("ReadInteraction", ReadInteractionCommand{command_system, entity_system});
-		command_system.register_command("ReadHealth", ReadHealthCommand{command_system, entity_system});
-		command_system.register_command("ReadSounds", ReadSoundsCommand{command_system, entity_system});
-		command_system.register_command("ReadVisuals", ReadVisualsCommand{command_system, entity_system});
+		command_system.register_command("ReadPosition", ReadPositionCommand<CS, ES, Position>{command_system, entity_system});
+		command_system.register_command("ReadControl", ReadControlCommand<CS, ES, Control>{command_system, entity_system});
+		command_system.register_command("ReadMovement", ReadMovementCommand<CS, ES, Movement>{command_system, entity_system});
+		command_system.register_command("ReadCollision", ReadCollisionCommand<CS, ES, Collision>{command_system, entity_system});
+		command_system.register_command("ReadInteraction", ReadInteractionCommand<CS, ES, Interaction>{command_system, entity_system});
+		command_system.register_command("ReadHealth", ReadHealthCommand<CS, ES, Health>{command_system, entity_system});
+		command_system.register_command("ReadSounds", ReadSoundsCommand<CS, ES, Sounds>{command_system, entity_system});
+		command_system.register_command("ReadVisuals", ReadVisualsCommand<CS, ES, Visuals>{command_system, entity_system});
 
 		const Time update_time_delta = 10; //100 Updates per second
 		int32_t number_of_frames = 0;

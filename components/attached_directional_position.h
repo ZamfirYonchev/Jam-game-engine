@@ -9,11 +9,10 @@
 #define COMPONENTS_ATTACHED_DIRECTIONAL_POSITION_H_
 
 #include "../types.h"
+#include "../components/control_enums.h"
 #include <ostream>
 
-class Position;
-class Control;
-
+template<typename PositionT, typename ControlT>
 class AttachedDirectionalPosition
 {
 public:
@@ -23,8 +22,8 @@ public:
     , const double offset_y
     , const double w
     , const double h
-    , const ComponentAccess<const Position>& position_accessor
-    , const ComponentAccess<const Control>& control_accessor
+    , const ComponentAccess<const PositionT>& position_accessor
+    , const ComponentAccess<const ControlT>& control_accessor
     )
 	: m_attached_id{attached_id}
 	, m_offset_x{offset_x}
@@ -38,8 +37,8 @@ public:
     template<typename ExtractorF>
 	AttachedDirectionalPosition
 	( ExtractorF&& extract
-	, const ComponentAccess<const Position>& position_accessor
-	, const ComponentAccess<const Control>& control_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
 	)
 	: AttachedDirectionalPosition
 	  { extract().integer()
@@ -71,9 +70,23 @@ public:
 		   << m_h << " ";
     }
 
-    double x() const;
+    double x() const
+    {
+    	const auto& attached_position = m_position_accessor(m_attached_id);
+    	return attached_position.x()
+    		 + attached_position.w()/2
+    		 + m_offset_x * (1 - 2*(m_control_accessor(m_attached_id).look_dir() == LookDir::LEFT))
+    		 - m_w/2;
+    }
 
-    double y() const;
+    double y() const
+    {
+    	const auto& attached_position = m_position_accessor(m_attached_id);
+    	return attached_position.y()
+    		 + attached_position.h()/2
+    		 + m_offset_y
+    		 - m_h/2;
+    }
 
     double w() const { return m_w; }
 
@@ -93,8 +106,8 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_w, m_h;
-    ComponentAccess<const Position> m_position_accessor;
-    ComponentAccess<const Control> m_control_accessor;
+    ComponentAccess<const PositionT> m_position_accessor;
+    ComponentAccess<const ControlT> m_control_accessor;
 };
 
 

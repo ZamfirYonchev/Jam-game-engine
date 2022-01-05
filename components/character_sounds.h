@@ -10,12 +10,9 @@
 
 #include <iostream>
 #include "../types.h"
+#include "collision_enums.h"
 
-class Control;
-class Movement;
-class Collision;
-class Health;
-
+template<typename ControlT, typename MovementT, typename CollisionT, typename HealthT>
 class CharacterSounds
 {
 public:
@@ -34,10 +31,10 @@ public:
 	, const SoundID dead_id
 	, const double volume
 	, const EntityID self_id
-	, const ComponentAccess<const Control>& control_accessor
-	, const ComponentAccess<const Movement>& movement_accessor
-	, const ComponentAccess<const Collision>& collision_accessor
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
+	, const ComponentAccess<const MovementT>& movement_accessor
+	, const ComponentAccess<const CollisionT>& collision_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
     : m_self_id(self_id)
     , m_play_new_sound(false)
@@ -62,10 +59,10 @@ public:
     CharacterSounds
 	( ExtractorF&& extract
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Control>& control_accessor
-	, const ComponentAccess<const Movement>& movement_accessor
-	, const ComponentAccess<const Collision>& collision_accessor
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
+	, const ComponentAccess<const MovementT>& movement_accessor
+	, const ComponentAccess<const CollisionT>& collision_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: CharacterSounds
 	  { extract().integer()
@@ -84,6 +81,21 @@ public:
 	  , health_accessor
 	  }
 	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseCharacterSounds");
+    	insert(m_idle_id);
+    	insert(m_walk_id);
+    	insert(m_jump_id);
+    	insert(m_fall_id);
+    	insert(m_land_id);
+    	insert(m_attack_id);
+    	insert(m_hit_id);
+    	insert(m_dead_id);
+    	insert(m_volume);
+    }
 
     void print(std::ostream& to) const
     {
@@ -134,7 +146,79 @@ public:
     	}
     }
 
-    void update(const Time time_diff);
+    void update(const Time time_diff)
+    {
+    	m_play_new_sound = false;
+
+    	const auto& control = m_control_accessor(m_self_id);
+    	const auto& movement = m_movement_accessor(m_self_id);
+    	const auto& collision = m_collision_accessor(m_self_id);
+    	const auto& health = m_health_accessor(m_self_id);
+
+    	switch(m_state)
+    	{
+    		case State::IDLE:
+    			if(health.alive() == false) set_new_state(State::DEAD);
+    			else if(health.stunned()) set_new_state(State::HIT);
+    			else if(control.decision_attack()) set_new_state(State::ATTACK);
+    			else if(collision.standing_on()!=SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(State::WALK);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
+    		break;
+
+    		case State::WALK:
+    			if(health.alive() == false) set_new_state(State::DEAD);
+    			else if(health.stunned()) set_new_state(State::HIT);
+    			else if(control.decision_attack()) set_new_state(State::ATTACK);
+    			else if(collision.standing_on()!=SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(State::IDLE);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
+    		break;
+
+    		case State::JUMP:
+    			if(health.alive() == false) set_new_state(State::DEAD);
+    			else if(health.stunned()) set_new_state(State::HIT);
+    			else if(control.decision_attack()) set_new_state(State::ATTACK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(State::WALK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(State::IDLE);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
+    		break;
+
+    		case State::FALL:
+    			if(health.alive() == false) set_new_state(State::DEAD);
+    			else if(health.stunned()) set_new_state(State::HIT);
+    			else if(control.decision_attack()) set_new_state(State::ATTACK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() != 0) set_new_state(State::WALK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && control.decision_walk() == 0) set_new_state(State::IDLE);
+    		break;
+
+    		case State::ATTACK:
+    			if(health.alive() == false) set_new_state(State::DEAD);
+    			else if(health.stunned()) set_new_state(State::HIT);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(State::WALK);
+    			else set_new_state(State::IDLE);
+    		break;
+
+    		case State::HIT:
+    			if(health.alive() == false) set_new_state(State::DEAD);
+    			else if(control.decision_attack()) set_new_state(State::ATTACK);
+    			else if(collision.standing_on()==SurfaceType::AIR && movement.vy() < -1) set_new_state(State::FALL);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_vertical() > 0)) set_new_state(State::JUMP);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() != 0)) set_new_state(State::WALK);
+    			else if(collision.standing_on()==SurfaceType::GROUND && (control.decision_walk() == 0)) set_new_state(State::IDLE);
+    		break;
+
+    		case State::DEAD:
+    			//no new state
+    		break;
+
+    		default:
+    		break;
+    	}
+    }
+
     SoundID id() const { return m_current_sound_id; }
     bool changed() const { return m_play_new_sound; }
     double volume() const { return m_volume; }
@@ -148,10 +232,10 @@ private:
     double m_volume;
 
     State m_state;
-    ComponentAccess<const Control> m_control_accessor;
-    ComponentAccess<const Movement> m_movement_accessor;
-    ComponentAccess<const Collision> m_collision_accessor;
-    ComponentAccess<const Health> m_health_accessor;
+    ComponentAccess<const ControlT> m_control_accessor;
+    ComponentAccess<const MovementT> m_movement_accessor;
+    ComponentAccess<const CollisionT> m_collision_accessor;
+    ComponentAccess<const HealthT> m_health_accessor;
 };
 
 #endif /* COMPONENTS_CHARACTER_SOUNDS_H_ */

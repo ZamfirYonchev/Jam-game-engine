@@ -13,19 +13,12 @@
 #include <ostream>
 
 #include "component.h"
-#include "null_control.h"
-#include "constant_control.h"
-#include "chase_ai_control.h"
-#include "guide_control.h"
-#include "input_control.h"
-#include "input_select_control.h"
-#include "particle_control.h"
-#include "timed_control.h"
 #include "control_enums.h"
 
-struct Control
+template<typename... Ts>
+struct ControlVariant
 {
-	using Variant  = std::variant<NullControl, ConstantControl, ChaseAIControl, GuideControl, InputControl, InputSelectControl, ParticleControl, TimedControl>;
+	using Variant  = std::variant<Ts...>;
 	Variant variant;
 
     double decision_vertical() const { return std::visit([](const auto& ctrl){ return ctrl.decision_vertical(); }, variant); }
@@ -47,7 +40,8 @@ struct Control
 
     operator bool() const { return variant.index() != 0; }
 
-	friend std::ostream& operator<< (std::ostream& out, const Control& component)
+    template<typename... Tps>
+	friend std::ostream& operator<< (std::ostream& out, const ControlVariant<Tps...>& component)
 	{
 		print(out, component.variant);
 	    out << '\n';

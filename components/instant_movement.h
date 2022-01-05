@@ -42,6 +42,16 @@ public:
 
     InstantMovement() : InstantMovement(1, 0, 0, 0) {}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseInstantMovement");
+    	insert(m_mass);
+    	insert(m_friction_x);
+    	insert(m_friction_y);
+    	insert(m_move_force);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseInstantMovement "

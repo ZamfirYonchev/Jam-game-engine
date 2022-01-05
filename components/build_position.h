@@ -10,9 +10,9 @@
 
 #include "../types.h"
 #include <iostream>
+#include "../math_ext.h"
 
-class Position;
-
+template<typename PositionT>
 class BuildPosition
 {
 public:
@@ -20,7 +20,7 @@ public:
 	( const EntityID attached_id
 	, const double origin_x
 	, const double origin_y
-	, const ComponentAccess<const Position>& position_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
 	)
 	: m_attached_id(attached_id)
 	, m_origin_x(origin_x)
@@ -31,7 +31,7 @@ public:
     template<typename ExtractorF>
 	BuildPosition
 	( ExtractorF&& extract
-	, const ComponentAccess<const Position>& position_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
 	)
 	: BuildPosition
 	  { extract().integer()
@@ -54,10 +54,26 @@ public:
 		   << m_attached_id << " ";
     }
 
-    double x() const;
-    double y() const;
-    double w() const;
-    double h() const;
+    double x() const
+    {
+    	return min(m_origin_x, m_position_accessor(m_attached_id).x());
+    }
+
+    double y() const
+    {
+    	return min(m_origin_y, m_position_accessor(m_attached_id).y());
+    }
+
+    double w() const
+    {
+    	return abs(m_origin_x - m_position_accessor(m_attached_id).x());
+    }
+
+    double h() const
+    {
+    	return abs(m_origin_y - m_position_accessor(m_attached_id).y());
+    }
+
     void set_x(double) {}
     void set_y(double) {}
     void set_w(double) {}
@@ -72,7 +88,7 @@ public:
     double m_origin_x, m_origin_y;
 
 private:
-    ComponentAccess<const Position> m_position_accessor;
+    ComponentAccess<const PositionT> m_position_accessor;
 };
 
 #endif /* COMPONENTS_BUILD_POSITION_H_ */

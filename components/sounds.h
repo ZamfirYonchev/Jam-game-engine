@@ -11,13 +11,12 @@
 #include <ostream>
 
 #include "component.h"
-#include "null_sounds.h"
-#include "character_sounds.h"
 
-class Sounds
+template<typename... Ts>
+class SoundsVariant
 {
 public:
-	using Variant = std::variant<NullSounds, CharacterSounds>;
+	using Variant = std::variant<Ts...>;
 	Variant variant;
 
     void update(const Time time_diff) { std::visit([&](auto& snd){ return snd.update(time_diff); }, variant); }
@@ -29,7 +28,8 @@ public:
 
     operator bool() const { return variant.index() != 0; }
 
-	friend std::ostream& operator<< (std::ostream& out, const Sounds& component)
+    template<typename... Tps>
+	friend std::ostream& operator<< (std::ostream& out, const SoundsVariant<Tps...>& component)
 	{
 		print(out, component.variant);
 	    out << '\n';

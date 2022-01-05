@@ -13,16 +13,12 @@
 #include <variant>
 
 #include "component.h"
-#include "null_interaction.h"
-#include "normal_interaction.h"
-#include "trigger_interaction.h"
-#include "full_interaction.h"
-#include "attached_interaction.h"
 
-class Interaction
+template<typename... Ts>
+class InteractionVariant
 {
 public:
-	using Variant  = std::variant<NullInteraction, NormalInteraction, TriggerInteraction, FullInteraction, AttachedInteraction>;
+	using Variant  = std::variant<Ts...>;
 	Variant variant;
 
 	bool is_in_group(int group_id) const { return std::visit([&](const auto& inter){ return inter.is_in_group(group_id); }, variant); }
@@ -46,7 +42,8 @@ public:
 
     operator bool() const { return variant.index() != 0; }
 
-    friend std::ostream& operator<< (std::ostream& out, const Interaction& component)
+    template<typename... Tps>
+    friend std::ostream& operator<< (std::ostream& out, const InteractionVariant<Tps...>& component)
     {
 		print(out, component.variant);
         out << std::endl;

@@ -13,6 +13,13 @@
 class NullCollision
 {
 public:
+
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullCollision");
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNullCollision ";

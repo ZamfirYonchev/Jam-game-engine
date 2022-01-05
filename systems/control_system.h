@@ -15,7 +15,7 @@
 #include <utility>
 #include <type_traits>
 
-template<typename EntitySystemT>
+template<typename EntitySystemT, typename ControlT, typename HealthT>
 class ControlSystem : public SystemBase
 {
 public:
@@ -31,10 +31,10 @@ public:
 
 		for(const auto id : entities)
 		{
-			auto& control = m_entity_system.template entity_component<Control>(id);
+			auto& control = m_entity_system.template entity_component<ControlT>(id);
 	    	if(control)
 	    	{
-				const auto& health = m_entity_system.template entity_component<Health>(id);
+				const auto& health = m_entity_system.template entity_component<HealthT>(id);
 
 				if(health.alive())
 				{
@@ -83,7 +83,7 @@ public:
 	, [[maybe_unused]] const int8_t change
 	)
     {
-    	if constexpr(std::is_same<T, Control>::value)
+    	if constexpr(std::is_same<T, ControlT>::value)
 		{
     		if(change < 0)
     			remove_id(id);

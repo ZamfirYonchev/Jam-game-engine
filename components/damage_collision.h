@@ -29,6 +29,14 @@ public:
 	  }
 	{}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseDamageCollision");
+    	insert(m_solid);
+    	insert(m_damage);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseDamageCollision "

@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename CollisionT>
 class ModifyCollisionCommand
 {
 public:
@@ -34,7 +34,7 @@ public:
     	const auto elasticity = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Collision& collision = entity_system.template entity_component<Collision>(selected_entity);
+    	auto& collision = entity_system.template entity_component<CollisionT>(selected_entity);
 
 		if(collision)
 		{

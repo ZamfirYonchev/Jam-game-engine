@@ -31,6 +31,14 @@ public:
 	  }
 	{}
 
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseTimedHealth");
+    	insert(m_time_to_live);
+    	insert(m_proc_id);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseTimedHealth "

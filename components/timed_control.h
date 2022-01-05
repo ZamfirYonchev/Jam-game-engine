@@ -44,6 +44,14 @@ public:
 	  }
 	{}
 
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseTimedControl");
+    	insert(m_max_duration);
+    	insert(m_repeats);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseTimedControl "

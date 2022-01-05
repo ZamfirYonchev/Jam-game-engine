@@ -38,6 +38,16 @@ public:
 	  }
 	{}
 
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseTriggerInteraction");
+    	insert(m_trigger_group);
+    	insert(m_proc_id_self);
+    	insert(m_proc_id_other);
+    	insert(m_on_exit_proc_id_self);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseTriggerInteraction "

@@ -10,9 +10,9 @@
 
 #include "../types.h"
 #include <ostream>
+#include "../utilities.h"
 
-class Position;
-
+template<typename PositionT>
 class AttachedPosition
 {
 public:
@@ -22,7 +22,7 @@ public:
     , const double offset_y
     , const double offset_w
     , const double offset_h
-    , const ComponentAccess<const Position>& position_accessor
+    , const ComponentAccess<const PositionT>& position_accessor
     )
     : m_attached_id(attached_id)
     , m_offset_x(offset_x)
@@ -35,7 +35,7 @@ public:
     template<typename ExtractorF>
 	AttachedPosition
 	( ExtractorF&& extract
-	, const std::function<const Position&(const EntityID id)>& position_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
 	)
 	: m_attached_id{extract().integer()}
 	, m_offset_x{extract().real()}
@@ -64,10 +64,29 @@ public:
 		   << m_offset_h << " ";
     }
 
-    double x() const;
-    double y() const;
-    double w() const;
-    double h() const;
+    double x() const
+    {
+    	return m_position_accessor(m_attached_id).x()
+    		+ absolute_or_scaled(m_offset_x, m_position_accessor(m_attached_id).w());
+    }
+
+    double y() const
+    {
+    	return m_position_accessor(m_attached_id).y()
+    		+ absolute_or_scaled(m_offset_y, m_position_accessor(m_attached_id).h());
+    }
+
+    double w() const
+    {
+    	return m_position_accessor(m_attached_id).w()
+    		 + absolute_or_scaled(m_offset_w, m_position_accessor(m_attached_id).w());
+    }
+
+    double h() const
+    {
+    	return m_position_accessor(m_attached_id).h()
+    		 + absolute_or_scaled(m_offset_h, m_position_accessor(m_attached_id).h());
+    }
 
     void set_x(double) {}
     void set_y(double) {}
@@ -83,7 +102,7 @@ public:
 
 private:
     double m_offset_x, m_offset_y, m_offset_w, m_offset_h;
-    ComponentAccess<const Position> m_position_accessor;
+    ComponentAccess<const PositionT> m_position_accessor;
 };
 
 

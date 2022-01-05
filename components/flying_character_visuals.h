@@ -12,11 +12,9 @@
 #include "visuals_enums.h"
 #include "../systems/resource_system.h"
 #include "../types.h"
+#include "collision_enums.h"
 
-class Control;
-class Collision;
-class Health;
-
+template<typename ControlT, typename CollisionT, typename HealthT>
 class FlyingCharacterVisuals
 {
 public:
@@ -33,9 +31,9 @@ public:
 	, const AnimationID dead_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const Control>& control_accessor
-	, const ComponentAccess<const Collision>& collision_accessor
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
+	, const ComponentAccess<const CollisionT>& collision_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
   )
 	: m_current_state(RenderStates::LAND_IDLE)
 	, m_current_anim_id{land_idle_anim_id}
@@ -161,9 +159,9 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Control>& control_accessor
-	, const ComponentAccess<const Collision>& collision_accessor
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const ControlT>& control_accessor
+	, const ComponentAccess<const CollisionT>& collision_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: FlyingCharacterVisuals
 	  { extract().integer()
@@ -182,10 +180,23 @@ public:
 	  }
 	{}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseFlyingCharacterVisuals");
+    	insert(m_land_idle_anim_id);
+    	insert(m_fly_idle_anim_id);
+    	insert(m_fly_side_anim_id);
+    	insert(m_fly_up_anim_id);
+    	insert(m_fly_down_anim_id);
+    	insert(m_attack_anim_id);
+    	insert(m_hit_anim_id);
+    	insert(m_dead_anim_id);
+    }
 
     void print(std::ostream& to) const
     {
-    	to << "UseCharacterVisuals "
+    	to << "UseFlyingCharacterVisuals "
     	   << m_land_idle_anim_id << " "
 		   << m_fly_idle_anim_id << " "
 		   << m_fly_side_anim_id << " "
@@ -196,7 +207,100 @@ public:
 		   << m_dead_anim_id << " ";
     }
 
-    void update_animation(const Time time_diff);
+    void update_animation(const Time time_diff)
+    {
+    	const auto& control = m_control_accessor(m_self_id);
+    	const auto& collision = m_collision_accessor(m_self_id);
+    	const auto& health = m_health_accessor(m_self_id);
+
+    	switch(m_current_state)
+    	{
+    		default:
+    		case RenderStates::LAND_IDLE:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(control.decision_walk() != 0) set_new_state(RenderStates::FLY_SIDE);
+    			else if(control.decision_vertical() > 0) set_new_state(RenderStates::FLY_UP);
+    			else if(control.decision_vertical() < 0) set_new_state(RenderStates::FLY_DOWN);
+    			else if(collision.standing_on()==SurfaceType::AIR) set_new_state(RenderStates::FLY_IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::FLY_IDLE:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(control.decision_walk() != 0) set_new_state(RenderStates::FLY_SIDE);
+    			else if(control.decision_vertical() > 0) set_new_state(RenderStates::FLY_UP);
+    			else if(control.decision_vertical() < 0) set_new_state(RenderStates::FLY_DOWN);
+    			else if(collision.standing_on()==SurfaceType::GROUND) set_new_state(RenderStates::LAND_IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::FLY_SIDE:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(control.decision_walk() != 0) advance_animation(time_diff);
+    			else if(control.decision_vertical() > 0) set_new_state(RenderStates::FLY_UP);
+    			else if(control.decision_vertical() < 0) set_new_state(RenderStates::FLY_DOWN);
+    			else if(collision.standing_on()==SurfaceType::AIR) set_new_state(RenderStates::FLY_IDLE);
+    			else set_new_state(RenderStates::LAND_IDLE);
+    		break;
+
+    		case RenderStates::FLY_UP:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(control.decision_walk() != 0) set_new_state(RenderStates::FLY_SIDE);
+    			else if(control.decision_vertical() > 0) advance_animation(time_diff);
+    			else if(control.decision_vertical() < 0) set_new_state(RenderStates::FLY_DOWN);
+    			else if(collision.standing_on()==SurfaceType::AIR) set_new_state(RenderStates::FLY_IDLE);
+    			else set_new_state(RenderStates::LAND_IDLE);
+    		break;
+
+    		case RenderStates::FLY_DOWN:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(control.decision_walk() != 0) set_new_state(RenderStates::FLY_SIDE);
+    			else if(control.decision_vertical() > 0) set_new_state(RenderStates::FLY_UP);
+    			else if(control.decision_vertical() < 0) advance_animation(time_diff);
+    			else if(collision.standing_on()==SurfaceType::AIR) set_new_state(RenderStates::FLY_IDLE);
+    			else set_new_state(RenderStates::LAND_IDLE);
+    		break;
+
+    		case RenderStates::ATTACK:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(health.stunned()) set_new_state(RenderStates::HIT);
+    			else if(m_last_frame && (control.decision_walk() != 0)) set_new_state(RenderStates::FLY_SIDE);
+    			else if(m_last_frame && (control.decision_vertical() > 0)) set_new_state(RenderStates::FLY_UP);
+    			else if(m_last_frame && (control.decision_vertical() < 0)) set_new_state(RenderStates::FLY_DOWN);
+    			else if(m_last_frame && (collision.standing_on()==SurfaceType::AIR)) set_new_state(RenderStates::FLY_IDLE);
+    			else if(m_last_frame) set_new_state(RenderStates::LAND_IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::HIT:
+    			if(health.alive() == false) set_new_state(RenderStates::DEAD);
+    			else if(m_last_frame && control.decision_attack()) set_new_state(RenderStates::ATTACK);
+    			else if(m_last_frame && (control.decision_walk() != 0)) set_new_state(RenderStates::FLY_SIDE);
+    			else if(m_last_frame && (control.decision_vertical() > 0)) set_new_state(RenderStates::FLY_UP);
+    			else if(m_last_frame && (control.decision_vertical() < 0)) set_new_state(RenderStates::FLY_DOWN);
+    			else if(m_last_frame && (collision.standing_on()==SurfaceType::AIR)) set_new_state(RenderStates::FLY_IDLE);
+    			else if(m_last_frame) set_new_state(RenderStates::LAND_IDLE);
+    			else advance_animation(time_diff);
+    		break;
+
+    		case RenderStates::DEAD:
+    			if(m_last_frame == false)
+    				advance_animation(time_diff);
+    			//else do nothing
+    		break;
+    	}
+    }
+
     AnimationFrame animation_frame(const int, const int) const
     {
     	return {m_current_anim_id, m_anim_time/m_current_anim_frame_delay};
@@ -242,9 +346,9 @@ private:
     bool m_last_frame;
     VisualLayer m_layer;
     EntityID m_self_id;
-    ComponentAccess<const Control> m_control_accessor;
-    ComponentAccess<const Collision> m_collision_accessor;
-    ComponentAccess<const Health> m_health_accessor;
+    ComponentAccess<const ControlT> m_control_accessor;
+    ComponentAccess<const CollisionT> m_collision_accessor;
+    ComponentAccess<const HealthT> m_health_accessor;
 
     void set_new_state(RenderStates new_state)
     {

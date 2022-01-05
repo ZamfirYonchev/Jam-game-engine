@@ -20,7 +20,7 @@
 #include <utility>
 #include <type_traits>
 
-template<typename EntitySystemT>
+template<typename EntitySystemT, typename PositionT, typename MovementT, typename CollisionT, typename InteractionT, typename HealthT>
 class CollisionSystem : public SystemBase
 {
 	struct RegionLocation
@@ -55,14 +55,14 @@ public:
 
 		for(const auto entity_id : entities)
 		{
-			Interaction& interaction = m_entity_system.template entity_component<Interaction>(entity_id);
+			auto& interaction = m_entity_system.template entity_component<InteractionT>(entity_id);
 			interaction.update_last_triggered_groups();
 		}
 
 		//register+unregister entities from regions
 		for(const auto entity_id : entities)
 		{
-			const Position& position = m_entity_system.template entity_component<Position>(entity_id);
+			const auto& position = m_entity_system.template entity_component<PositionT>(entity_id);
 			if(position)
 			{
 				const RegionLocation& old_location = regions_per_entity[entity_id];
@@ -100,11 +100,11 @@ public:
 
 		for(const auto id0 : entities)
 		{
-			auto& collision0 = m_entity_system.template entity_component<Collision>(id0);
+			auto& collision0 = m_entity_system.template entity_component<CollisionT>(id0);
 			if(collision0)
 			{
-				auto& interaction0 = m_entity_system.template entity_component<Interaction>(id0);
-				const auto& position0 = m_entity_system.template entity_component<Position>(id0);
+				auto& interaction0 = m_entity_system.template entity_component<InteractionT>(id0);
+				const auto& position0 = m_entity_system.template entity_component<PositionT>(id0);
 
 				collision0.set_standing_on(SurfaceType::AIR);
 
@@ -119,15 +119,15 @@ public:
 
 				near_entities.erase(id0); //remove self from the set
 
-				const auto& movement0 = m_entity_system.template entity_component<Movement>(id0);
+				const auto& movement0 = m_entity_system.template entity_component<MovementT>(id0);
 				CorrectionValues& correction_values = collision_correction[id0];
 
 				for(const auto id1 : near_entities)
 				{
-					const auto& collision1 = m_entity_system.template entity_component<Collision>(id1);
+					const auto& collision1 = m_entity_system.template entity_component<CollisionT>(id1);
 					if(collision1 && id1 != id0)
 					{
-						const auto& position1 = m_entity_system.template entity_component<Position>(id1);
+						const auto& position1 = m_entity_system.template entity_component<PositionT>(id1);
 
 						if(objects_collide(position0.x(), position0.y(), position0.w(), position0.h()
 										 , position1.x(), position1.y(), position1.w(), position1.h()
@@ -135,7 +135,7 @@ public:
 						  )
 						{
 							//entities collide
-							const auto& interaction1 = m_entity_system.template entity_component<Interaction>(id1);
+							const auto& interaction1 = m_entity_system.template entity_component<InteractionT>(id1);
 
 							interaction0.set_triggered_groups(interaction1.group_vector());
 
@@ -151,13 +151,13 @@ public:
 									external_commands << "Select " << id0 <<  " Call " << interaction1.proc_id_other() << '\n';
 							}
 
-							m_entity_system.template entity_component<Health>(id0).mod_hp_change(-collision1.on_collision_damage()*time_diff);
+							m_entity_system.template entity_component<HealthT>(id0).mod_hp_change(-collision1.on_collision_damage()*time_diff);
 
 							const bool entity0_correctable = movement0 && collision0.solid() && collision1.solid();
 
 							if(entity0_correctable)
 							{
-								const auto& movement1 = m_entity_system.template entity_component<Movement>(id1);
+								const auto& movement1 = m_entity_system.template entity_component<MovementT>(id1);
 								const double weight_coeff = movement1.mass()/(movement0.mass()+movement1.mass());
 
 								const double dx = movement1.dx() - movement0.dx();
@@ -251,8 +251,8 @@ public:
 
 		for(const auto& entity_pair : collision_correction)
 		{
-			auto& movement = m_entity_system.template entity_component<Movement>(entity_pair.first);
-			auto& position = m_entity_system.template entity_component<Position>(entity_pair.first);
+			auto& movement = m_entity_system.template entity_component<MovementT>(entity_pair.first);
+			auto& position = m_entity_system.template entity_component<PositionT>(entity_pair.first);
 			position.mod_x(entity_pair.second.x);
 			position.mod_y(entity_pair.second.y);
 			movement.mod_dx(entity_pair.second.x);
@@ -263,7 +263,7 @@ public:
 
 		for(const auto id : entities)
 		{
-			const Interaction& interaction = m_entity_system.template entity_component<Interaction>(id);
+			const auto& interaction = m_entity_system.template entity_component<InteractionT>(id);
 			if(interaction)
 			{
 				const bool last_triggered = (interaction.last_triggered_groups() >> interaction.trigger_group())%2;
@@ -286,7 +286,7 @@ public:
 	, [[maybe_unused]] const int8_t change
 	)
     {
-    	if constexpr(std::is_same<T, Collision>::value)
+    	if constexpr(std::is_same<T, CollisionT>::value)
 		{
     		if(change < 0)
     			remove_id(id);

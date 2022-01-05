@@ -45,6 +45,17 @@ public:
 	: FullInteraction(0, trigger_group, proc_id_self, on_exit_proc_id_self, proc_id_other)
 	{}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseFullInteraction");
+    	insert(m_group_vec);
+    	insert(m_trigger_group);
+    	insert(m_proc_id_self);
+    	insert(m_proc_id_other);
+    	insert(m_on_exit_proc_id_self);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseFullInteraction "

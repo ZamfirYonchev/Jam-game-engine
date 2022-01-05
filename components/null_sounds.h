@@ -11,6 +11,12 @@
 class NullSounds
 {
 public:
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullSounds");
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNullSounds ";

@@ -13,7 +13,7 @@
 #include "../math_ext.h"
 #include "../components/position.h"
 
-template<typename CommandSystemT, typename EntitySystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename PositionT>
 class ModifyPositionCommand
 {
 public:
@@ -35,7 +35,7 @@ public:
     	const auto h = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Position& position = entity_system.template entity_component<Position>(selected_entity);
+    	auto& position = entity_system.template entity_component<PositionT>(selected_entity);
 
 		if(position)
 		{

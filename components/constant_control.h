@@ -31,6 +31,15 @@ public:
 	  }
 	{}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseConstantControl");
+    	insert(m_move_decision);
+    	insert(m_vertical_decision);
+    	insert(int(m_look_dir));
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseConstantControl "

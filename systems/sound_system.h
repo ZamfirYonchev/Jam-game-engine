@@ -15,7 +15,7 @@
 #include "../components/sounds.h"
 #include <vector>
 
-template<typename EntitySystemT>
+template<typename EntitySystemT, typename SoundsT>
 class SoundSystem : public SystemBase
 {
 public:
@@ -58,7 +58,7 @@ public:
 		{
 			for(const auto id : entities)
 			{
-				auto& sounds = m_entity_system.template entity_component<Sounds>(id);
+				auto& sounds = m_entity_system.template entity_component<SoundsT>(id);
 				if(sounds)
 				{
 					sounds.update(time_diff);
@@ -103,7 +103,7 @@ public:
 	, [[maybe_unused]] const int8_t change
 	)
     {
-    	if constexpr(std::is_same<T, Sounds>::value)
+    	if constexpr(std::is_same<T, SoundsT>::value)
 		{
     		if(change < 0)
     			remove_id(id);

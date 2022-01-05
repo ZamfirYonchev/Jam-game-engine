@@ -12,21 +12,17 @@
 #include <variant>
 
 #include "component.h"
-#include "null_position.h"
-#include "absolute_position.h"
-#include "attached_position.h"
-#include "attached_directional_position.h"
-#include "build_position.h"
 
-struct Position
+template<typename... Ts>
+struct PositionVariant
 {
-	using Variant = std::variant<NullPosition, AbsolutePosition, AttachedPosition, BuildPosition, AttachedDirectionalPosition>;
+	using Variant = std::variant<Ts...>;
 	Variant variant;
 
     template<typename InserterF>
     void obtain(InserterF&& inserter) const
 	{
-		std::visit([&](const auto& pos){ return pos.obtain(std::forward<InserterF>(inserter)); }, variant);
+		std::visit([&](const auto& component){ return component.obtain(std::forward<InserterF>(inserter)); }, variant);
 	}
 
 	double x() const { return std::visit([](const auto& pos){ return pos.x(); }, variant); }
@@ -47,7 +43,8 @@ struct Position
     operator bool() const { return variant.index() != 0; }
 
 private:
-	friend std::ostream& operator<< (std::ostream& out, const Position& component)
+    template<typename... Tps>
+	friend std::ostream& operator<< (std::ostream& out, const PositionVariant<Tps...>& component)
 	{
 		print(out, component.variant);
 	    out << '\n';

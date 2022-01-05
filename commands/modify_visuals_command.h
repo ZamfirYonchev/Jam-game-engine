@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../math_ext.h"
 
-template<typename CommandSystemT, typename EntitySystemT, typename RenderingSystemT>
+template<typename CommandSystemT, typename EntitySystemT, typename RenderingSystemT, typename VisualsT>
 class ModifyVisualsCommand
 {
 public:
@@ -35,7 +35,7 @@ public:
     	const auto layer = command_system.exec_next();
 
     	const EntityID selected_entity = globals(Globals::selected_entity).integer();
-    	Visuals& visuals = entity_system.template entity_component<Visuals>(selected_entity);
+    	auto& visuals = entity_system.template entity_component<VisualsT>(selected_entity);
 
 		if(visuals)
 		{

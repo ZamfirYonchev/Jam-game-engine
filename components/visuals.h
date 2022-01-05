@@ -12,22 +12,14 @@
 #include <ostream>
 
 #include "component.h"
-#include "null_visuals.h"
-#include "character_visuals.h"
-#include "flying_character_visuals.h"
-#include "health_visuals.h"
-#include "menu_item_visuals.h"
-#include "static_visuals.h"
-#include "tiled_visuals.h"
-#include "animation_visuals.h"
-
 #include "visuals_enums.h"
 
-class Visuals
+template<typename... Ts>
+class VisualsVariant
 {
 public:
 
-	using Variant = std::variant<NullVisuals, CharacterVisuals, FlyingCharacterVisuals, HealthVisuals, MenuItemVisuals, StaticVisuals, TiledVisuals, AnimationVisuals>;
+	using Variant = std::variant<Ts...>;
 	Variant variant;
 
     AnimationFrame animation_frame(const int rx, const int ry) const { return std::visit([&](const auto& vis){ return vis.animation_frame(rx, ry); }, variant); }
@@ -42,7 +34,8 @@ public:
 
     operator bool() const { return variant.index() != 0; }
 
-    friend std::ostream& operator<< (std::ostream& out, const Visuals& component)
+    template<typename... Tps>
+    friend std::ostream& operator<< (std::ostream& out, const VisualsVariant<Tps...>& component)
     {
 		print(out, component.variant);
         out << std::endl;

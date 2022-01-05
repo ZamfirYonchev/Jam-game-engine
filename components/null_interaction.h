@@ -11,6 +11,12 @@
 class NullInteraction
 {
 public:
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseNullInteraction");
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseNullInteraction ";

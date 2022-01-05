@@ -12,7 +12,7 @@
 #include "../globals.h"
 #include "../utilities.h"
 
-template<typename EntitySystemT, typename CommandSystemT>
+template<typename EntitySystemT, typename CommandSystemT, typename PositionT>
 class FixViewWidthCommand
 {
 public:
@@ -28,7 +28,7 @@ public:
 
     CommandValue operator()() const
 	{
-		Position& position = entity_system.template entity_component<Position>(EntityID{0});
+		auto& position = entity_system.template entity_component<PositionT>(EntityID{0});
 		position.set_w(int(position.h()*globals(Globals::app_resolution_x).real()/globals(Globals::app_resolution_y).real()));
 
     	return CommandValue{0};

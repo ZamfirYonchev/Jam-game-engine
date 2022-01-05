@@ -13,8 +13,7 @@
 #include "../types.h"
 #include <ostream>
 
-class Position;
-
+template<typename PositionT>
 class GuideControl
 {
 public:
@@ -22,7 +21,7 @@ public:
 		(const EntityID self_id
 	   , const EntityID target_id
 	   , const double range
-	   , const ComponentAccess<const Position>& position_accessor
+	   , const ComponentAccess<const PositionT>& position_accessor
 	   )
 	: m_self_id(self_id)
 	, m_target_id(target_id)
@@ -37,7 +36,7 @@ public:
 	GuideControl
 	( ExtractorF&& extract
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Position>& position_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
 	)
 	: GuideControl
 	  { obtain_self_id()
@@ -46,6 +45,14 @@ public:
 	  , position_accessor
 	  }
 	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseGuideControl");
+    	insert(m_target_id);
+    	insert(m_range);
+    }
 
     void print(std::ostream& to) const
     {
@@ -68,7 +75,27 @@ public:
     void set_attack_proc_id(ProcedureID) {}
     void set_look_dir(LookDir val) { m_look_dir = val; }
 
-    void update_decisions(const Time time_diff);
+    void update_decisions(const Time time_diff)
+    {
+    	const auto& self_position = m_position_accessor(m_self_id);
+    	const auto& target_position = m_position_accessor(m_target_id);
+
+    	if(target_position)
+    	{
+    		const double distance_x = target_position.x() - self_position.x() + (target_position.w() - self_position.w())/2.0;
+    		const double distance_y = target_position.y() - self_position.y() + (target_position.h() - self_position.h())/2.0;
+
+    		m_walk_dir = sign(distance_x) * (abs(distance_x) > m_range);
+    		m_look_dir = distance_x > 0 ? LookDir::RIGHT : distance_x < 0 ? LookDir::LEFT : m_look_dir;
+
+    		m_vertical = distance_y > 100 && distance_y < 200 && abs(distance_x) < 200;
+    	}
+    	else
+    	{
+    		//error m_target_id
+    	}
+    }
+
     void clear_decisions()
     {
         m_walk_dir = 0.0;
@@ -81,7 +108,7 @@ private:
     double m_walk_dir, m_vertical;
     LookDir m_look_dir;
     double m_range;
-    ComponentAccess<const Position> m_position_accessor;
+    ComponentAccess<const PositionT> m_position_accessor;
 };
 
 

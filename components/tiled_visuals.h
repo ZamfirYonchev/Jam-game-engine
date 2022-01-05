@@ -14,8 +14,7 @@
 #include "../math_ext.h"
 #include "../systems/resource_system.h"
 
-class Position;
-
+template<typename PositionT>
 class TiledVisuals
 {
 public:
@@ -33,7 +32,7 @@ public:
 	, const AnimationID top_right_anim_id
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const Position>& position_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
 	)
     : m_tile_w{tile_w}
     , m_tile_h{tile_h}
@@ -71,7 +70,7 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Position>& position_accessor
+	, const ComponentAccess<const PositionT>& position_accessor
 	)
 	: TiledVisuals
 	  { extract().real()
@@ -90,6 +89,23 @@ public:
 	  , position_accessor
 	  }
 	{}
+
+	template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseTiledVisuals");
+    	insert(m_tile_w);
+    	insert(m_tile_h);
+    	insert(m_animation_id[0]);
+    	insert(m_animation_id[1]);
+    	insert(m_animation_id[2]);
+    	insert(m_animation_id[3]);
+    	insert(m_animation_id[4]);
+    	insert(m_animation_id[5]);
+    	insert(m_animation_id[6]);
+    	insert(m_animation_id[7]);
+    	insert(m_animation_id[8]);
+    }
 
     void print(std::ostream& to) const
     {
@@ -117,11 +133,28 @@ public:
     	return {m_animation_id[anim_index(rx, ry)], m_anim_time/m_animation_frame_delay};
     }
 
-    int repeat_x() const;
-    int repeat_y() const;
+    int repeat_x() const
+    {
+    	return std::ceil(m_position_accessor(m_self_id).w()/m_tile_w);
+    }
+
+    int repeat_y() const
+    {
+    	return std::ceil(m_position_accessor(m_self_id).h()/m_tile_h);
+    }
+
     VisualLayer layer() const { return m_layer; }
-    void set_repeat_x(const int val);
-    void set_repeat_y(const int val);
+
+    void set_repeat_x(const int val)
+    {
+    	m_tile_w = m_position_accessor(m_self_id).w()/val;
+    }
+
+    void set_repeat_y(const int val)
+    {
+    	m_tile_h = m_position_accessor(m_self_id).h()/val;
+    }
+
     void set_layer(const VisualLayer val) { m_layer = val; }
 
 private:
@@ -132,7 +165,7 @@ private:
     int m_anim_time;
     VisualLayer m_layer;
     EntityID m_self_id;
-    ComponentAccess<const Position> m_position_accessor;
+    ComponentAccess<const PositionT> m_position_accessor;
 
     int anim_index(const int rx, const int ry) const
     {

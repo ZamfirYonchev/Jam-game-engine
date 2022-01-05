@@ -14,15 +14,12 @@
 #include <variant>
 
 #include "component.h"
-#include "null_health.h"
-#include "character_health.h"
-#include "attached_health.h"
-#include "timed_health.h"
 
-class Health
+template<typename... Ts>
+class HealthVariant
 {
 public:
-	using Variant  = std::variant<NullHealth, CharacterHealth, AttachedHealth, TimedHealth>;
+	using Variant  = std::variant<Ts...>;
 	Variant variant;
 
     double hp() const { return std::visit([](const auto& health){ return health.hp(); }, variant); }
@@ -42,7 +39,8 @@ public:
 
     operator bool() const { return variant.index() != 0; }
 
-    friend std::ostream& operator<< (std::ostream& out, const Health& component)
+    template<typename... Tps>
+    friend std::ostream& operator<< (std::ostream& out, const HealthVariant<Tps...>& component)
     {
 		print(out, component.variant);
         out << std::endl;

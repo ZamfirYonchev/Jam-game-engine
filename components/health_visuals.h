@@ -12,8 +12,7 @@
 #include "../systems/resource_system.h"
 #include "../types.h"
 
-class Health;
-
+template<typename HealthT>
 class HealthVisuals
 {
 public:
@@ -23,7 +22,7 @@ public:
 	, const int repeat_x
 	, const ResourceSystem& resource_system
 	, const EntityID self_id
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: m_active_anim_id{active_id}
 	, m_inactive_anim_id{inactive_id}
@@ -63,7 +62,7 @@ public:
 	( ExtractorF&& extract
 	, const ResourceSystem& resource_system
 	, SelfIDObtainerF&& obtain_self_id
-	, const ComponentAccess<const Health>& health_accessor
+	, const ComponentAccess<const HealthT>& health_accessor
 	)
 	: HealthVisuals
 	  { extract().integer()
@@ -74,6 +73,15 @@ public:
 	  , health_accessor
 	  }
 	{}
+
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseHealthVisuals");
+    	insert(m_active_anim_id);
+    	insert(m_inactive_anim_id);
+    	insert(m_repeat_x);
+    }
 
     void print(std::ostream& to) const
     {
@@ -89,7 +97,15 @@ public:
     	m_inactive_animation_time = (m_inactive_animation_time + int(time_diff)) % m_inactive_animation_time_max;
     }
 
-    AnimationFrame animation_frame(const int rx, const int ry) const;
+    AnimationFrame animation_frame(const int rx, const int ry) const
+    {
+    	const auto& health = m_health_accessor(m_self_id);
+    	const bool active_animation = (m_repeat_x != 0) && (health.max_hp() != 0) && (health.max_hp()*rx < health.hp()*m_repeat_x);
+    	return {active_animation ? m_active_anim_id : m_inactive_anim_id
+    		  , active_animation ? m_active_animation_time/m_active_animation_frame_delay
+    							 : m_inactive_animation_time/m_inactive_animation_frame_delay};
+    }
+
     int repeat_x() const { return m_repeat_x; }
     int repeat_y() const { return 1; }
     void set_repeat_x(const int val) { m_repeat_x = val; }
@@ -107,7 +123,7 @@ private:
     int m_inactive_animation_time;
     int m_repeat_x;
     EntityID m_self_id;
-    ComponentAccess<const Health> m_health_accessor;
+    ComponentAccess<const HealthT> m_health_accessor;
 };
 
 #endif /* COMPONENTS_HEALTH_VISUALS_H_ */

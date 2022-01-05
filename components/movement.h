@@ -14,13 +14,11 @@
 #include <utility>
 
 #include "component.h"
-#include "null_movement.h"
-#include "instant_movement.h"
-#include "full_movement.h"
 
-struct Movement
+template<typename... Ts>
+struct MovementVariant
 {
-	using Variant = std::variant<NullMovement, InstantMovement, FullMovement>;
+	using Variant = std::variant<Ts...>;
 	Variant variant;
 
     double fx() const { return std::visit([](const auto& mov){ return mov.fx(); }, variant); }
@@ -58,7 +56,8 @@ struct Movement
 
     operator bool() const { return variant.index() != 0; }
 
-	friend std::ostream& operator<< (std::ostream& out, const Movement& component)
+    template<typename... Tps>
+	friend std::ostream& operator<< (std::ostream& out, const MovementVariant<Tps...>& component)
 	{
 		print(out, component.variant);
 	    out << '\n';

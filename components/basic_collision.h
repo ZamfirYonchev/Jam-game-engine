@@ -19,6 +19,8 @@ public:
     , m_solid(solid)
     {}
 
+    BasicCollision() : BasicCollision(false, 1) {}
+
     template<typename ExtractorF>
     BasicCollision
 	( ExtractorF&& extract
@@ -29,7 +31,12 @@ public:
 	  }
 	{}
 
-    BasicCollision() : BasicCollision(false, 1) {}
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseBasicCollision");
+    	insert(m_solid);
+    }
 
     void print(std::ostream& to) const
     {

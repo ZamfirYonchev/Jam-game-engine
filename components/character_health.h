@@ -34,6 +34,14 @@ public:
 
     CharacterHealth() : CharacterHealth(0, 0) {}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseCharacterHealth");
+    	insert(m_hit_points);
+    	insert(m_max_hit_points);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseCharacterHealth "

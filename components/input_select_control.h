@@ -42,6 +42,15 @@ public:
 	  }
     {}
 
+    template<typename InserterF>
+    void obtain(InserterF&& insert) const
+    {
+    	insert("UseInputSelectControl");
+    	insert(m_select);
+    	insert(m_max);
+    	insert(m_proc_id);
+    }
+
     void print(std::ostream& to) const
     {
     	to << "UseInputSelectControl "
