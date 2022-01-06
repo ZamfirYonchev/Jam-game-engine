@@ -18,10 +18,10 @@ public:
     template<typename ExtractorF>
     AbsolutePosition(ExtractorF&& extract)
     : AbsolutePosition
-	  { extract().real()
-      , extract().real()
-	  , extract().real()
-	  , extract().real()
+	  { extract()
+      , extract()
+	  , extract()
+	  , extract()
 	  }
     {}
 

@@ -33,9 +33,9 @@ public:
 	, ComponentAccess<const HealthT> health_accessor
 	)
 	: AttachedHealth
-	  { extract().integer()
-	  , extract().real()
-	  , extract().real()
+	  { extract()
+	  , extract()
+	  , extract()
 	  , std::move(health_accessor)
 	  }
 	{}

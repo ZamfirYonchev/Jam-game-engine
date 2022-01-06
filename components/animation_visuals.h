@@ -14,14 +14,18 @@
 class AnimationVisuals
 {
 public:
-	AnimationVisuals(const AnimationID anim_id, const ResourceSystem& resource_system)
-	: m_anim_id{anim_id}
+    template<typename ExtractorF>
+	AnimationVisuals
+	( ExtractorF&& extract
+	, const ResourceSystem& resource_system
+	)
+	: m_anim_id{extract()}
 	, m_layer{VisualLayer::FAR_BACKGROUND}
 	, m_anim_frame_delay{1}
 	, m_anim_time{0}
 	, m_anim_time_max{1}
 	{
-		const auto& anim_opt = resource_system.animation(anim_id);
+		const auto& anim_opt = resource_system.animation(m_anim_id);
 
 		if(anim_opt)
 		{
@@ -33,17 +37,6 @@ public:
 			//error anim_id
 		}
 	}
-
-    template<typename ExtractorF>
-	AnimationVisuals
-	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
-	)
-	: AnimationVisuals
-	  { extract().integer()
-	  , resource_system
-	  }
-    {}
 
     template<typename InserterF>
     void obtain(InserterF&& insert) const

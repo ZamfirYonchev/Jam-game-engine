@@ -25,9 +25,9 @@ public:
 	( ExtractorF&& extract
 	)
 	: ConstantControl
-	  { extract().real()
-	  , extract().real()
-	  , LookDir(extract().integer())
+	  { extract()
+	  , extract()
+	  , LookDir(int32_t(extract()))
 	  }
 	{}
 

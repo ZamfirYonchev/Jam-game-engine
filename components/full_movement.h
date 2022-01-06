@@ -39,12 +39,12 @@ public:
 	( ExtractorF&& extract
 	)
 	: FullMovement
-	  { extract().real()
-	  , extract().real()
-	  , extract().real()
-	  , extract().real()
-	  , extract().real()
-	  , extract().boolean()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  }
 	{}
 

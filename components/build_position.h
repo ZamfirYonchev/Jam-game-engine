@@ -34,9 +34,9 @@ public:
 	, ComponentAccess<const PositionT> position_accessor
 	)
 	: BuildPosition
-	  { extract().integer()
-	  , extract().real()
-	  , extract().real()
+	  { extract()
+	  , extract()
+	  , extract()
 	  , std::move(position_accessor)
 	  }
 	{}

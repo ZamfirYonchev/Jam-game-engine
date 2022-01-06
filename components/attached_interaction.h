@@ -35,10 +35,10 @@ public:
 	, ComponentAccess<InteractionT> interaction_accessor
 	)
 	: AttachedInteraction
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  , std::move(interaction_accessor)
 	  }
 	{}

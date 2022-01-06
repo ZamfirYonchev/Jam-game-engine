@@ -27,8 +27,8 @@ public:
 	( ExtractorF&& extract
 	)
 	: CharacterHealth
-	  { extract().real()
-	  , extract().real()
+	  { extract()
+	  , extract()
 	  }
 	{}
 

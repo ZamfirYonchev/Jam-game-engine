@@ -24,8 +24,8 @@ public:
 	( ExtractorF&& extract
 	)
 	: DamageCollision
-	  { extract().boolean()
-	  , extract().real()
+	  { extract()
+	  , extract()
 	  }
 	{}
 

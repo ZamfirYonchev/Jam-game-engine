@@ -26,8 +26,8 @@ public:
 	( ExtractorF&& extract
 	)
 	: BasicCollision
-	  { extract().boolean()
-	  , extract().real()
+	  { extract()
+	  , extract()
 	  }
 	{}
 

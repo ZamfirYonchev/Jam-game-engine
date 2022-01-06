@@ -78,9 +78,9 @@ public:
 	, ComponentAccess<const ControlT> control_accessor
 	)
 	: MenuItemVisuals
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
 	  , resource_system
 	  , obtain_self_id()
 	  , std::move(control_accessor)

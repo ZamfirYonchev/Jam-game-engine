@@ -24,8 +24,8 @@ public:
 	( ExtractorF&& extract
 	)
 	: StaticVisuals
-	  { extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
 	  }
 	{}
 

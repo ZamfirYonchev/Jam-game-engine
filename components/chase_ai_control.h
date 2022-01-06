@@ -18,15 +18,14 @@ class ChaseAIControl
 {
 public:
 	ChaseAIControl
-		(const EntityID self_id
-	   , const EntityID target_id
+		(const EntityID target_id
 	   , const ProcedureID attack_proc_id
 	   , const int attack_cooldown
 	   , const double attack_range
+	   , const EntityID self_id
 	   , ComponentAccess<const PositionT> position_accessor
 	   )
-	: m_self_id(self_id)
-	, m_target_id(target_id)
+	: m_target_id(target_id)
 	, m_walk_dir(0)
 	, m_attack(false)
 	, m_attack_proc_id(attack_proc_id)
@@ -34,6 +33,7 @@ public:
 	, m_current_attack_cooldown(0)
 	, m_look_dir(LookDir::RIGHT)
 	, m_attack_range(attack_range)
+	, m_self_id(self_id)
 	, m_position_accessor(std::move(position_accessor))
 	{}
 
@@ -44,11 +44,11 @@ public:
 	, ComponentAccess<const PositionT> position_accessor
 	)
 	: ChaseAIControl
-	  { obtain_self_id()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().real()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , obtain_self_id()
 	  , std::move(position_accessor)
 	  }
 	{}
@@ -117,9 +117,8 @@ public:
         m_attack = false;
     }
 
-    EntityID m_self_id, m_target_id;
-
 private:
+    EntityID m_target_id;
     int8_t m_walk_dir;
     bool m_attack;
     ProcedureID m_attack_proc_id;
@@ -127,6 +126,7 @@ private:
     int m_current_attack_cooldown;
     LookDir m_look_dir;
     double m_attack_range;
+    EntityID m_self_id;
     ComponentAccess<const PositionT> m_position_accessor;
 };
 

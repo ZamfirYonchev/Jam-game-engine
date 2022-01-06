@@ -39,9 +39,9 @@ public:
 	)
 	: ParticleControl
 	  { gen
-	  , extract().real()
-	  , extract().real()
-	  , extract().real()
+	  , extract()
+	  , extract()
+	  , extract()
 	  }
 	{}
 

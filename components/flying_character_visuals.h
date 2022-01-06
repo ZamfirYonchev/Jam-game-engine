@@ -164,14 +164,14 @@ public:
 	, ComponentAccess<const HealthT> health_accessor
 	)
 	: FlyingCharacterVisuals
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  , resource_system
 	  , obtain_self_id()
 	  , std::move(control_accessor)

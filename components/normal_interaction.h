@@ -13,20 +13,12 @@
 class NormalInteraction
 {
 public:
-	NormalInteraction(const int32_t group_vec)
-	: m_group_vec(group_vec)
-	{}
-
     template<typename ExtractorF>
 	NormalInteraction
 	( ExtractorF&& extract
 	)
-	: NormalInteraction
-	  { extract().integer()
-	  }
+	: m_group_vec { extract() }
 	{}
-
-	NormalInteraction() : NormalInteraction(0) {}
 
     template<typename InserterF>
     void obtain(InserterF&& insert) const

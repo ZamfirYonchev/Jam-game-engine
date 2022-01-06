@@ -35,9 +35,9 @@ public:
 	, const InputSystem& input_system
 	)
 	: InputSelectControl
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
 	  , input_system
 	  }
     {}

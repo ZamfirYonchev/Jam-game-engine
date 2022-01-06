@@ -33,11 +33,11 @@ public:
 	( ExtractorF&& extract
 	)
 	: FullInteraction
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  }
 	{}
 

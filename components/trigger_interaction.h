@@ -31,10 +31,10 @@ public:
 	( ExtractorF&& extract
 	)
 	: TriggerInteraction
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  }
 	{}
 

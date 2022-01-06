@@ -26,8 +26,8 @@ public:
 	( ExtractorF&& extract
 	)
 	: TimedHealth
-	  { extract().real()
-	  , extract().integer()
+	  { extract()
+	  , extract()
 	  }
 	{}
 

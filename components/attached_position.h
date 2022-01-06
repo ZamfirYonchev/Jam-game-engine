@@ -37,11 +37,11 @@ public:
 	( ExtractorF&& extract
 	, ComponentAccess<const PositionT> position_accessor
 	)
-	: m_attached_id{extract().integer()}
-	, m_offset_x{extract().real()}
-	, m_offset_y{extract().real()}
-	, m_offset_w{extract().real()}
-	, m_offset_h{extract().real()}
+	: m_attached_id{extract()}
+	, m_offset_x{extract()}
+	, m_offset_y{extract()}
+	, m_offset_w{extract()}
+	, m_offset_h{extract()}
 	, m_position_accessor{std::move(position_accessor)}
 	{}
 

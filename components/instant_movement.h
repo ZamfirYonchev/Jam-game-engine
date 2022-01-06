@@ -33,10 +33,10 @@ public:
 	( ExtractorF&& extract
 	)
 	: InstantMovement
-	  { extract().real()
-	  , extract().real()
-	  , extract().real()
-	  , extract().real()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  }
     {}
 

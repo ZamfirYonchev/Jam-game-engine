@@ -36,11 +36,11 @@ public:
 	( ExtractorF&& extract
 	)
 	: TimedControl
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().real()
-	  , extract().real()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  }
 	{}
 

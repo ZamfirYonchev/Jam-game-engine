@@ -65,9 +65,9 @@ public:
 	, ComponentAccess<const HealthT> health_accessor
 	)
 	: HealthVisuals
-	  { extract().integer()
-	  , extract().integer()
-	  , extract().integer()
+	  { extract()
+	  , extract()
+	  , extract()
 	  , resource_system
 	  , obtain_self_id()
 	  , std::move(health_accessor)

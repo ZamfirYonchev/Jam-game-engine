@@ -18,17 +18,17 @@ class GuideControl
 {
 public:
 	GuideControl
-		(const EntityID self_id
-	   , const EntityID target_id
+		(const EntityID target_id
 	   , const double range
+	   , const EntityID self_id
 	   , ComponentAccess<const PositionT> position_accessor
 	   )
-	: m_self_id(self_id)
-	, m_target_id(target_id)
+	: m_target_id(target_id)
 	, m_walk_dir(0)
 	, m_vertical(0)
 	, m_look_dir(LookDir::RIGHT)
 	, m_range(range)
+	, m_self_id(self_id)
 	, m_position_accessor(std::move(position_accessor))
 	{}
 
@@ -39,9 +39,9 @@ public:
 	, ComponentAccess<const PositionT> position_accessor
 	)
 	: GuideControl
-	  { obtain_self_id()
-	  , extract().integer()
-	  , extract().real()
+	  { extract()
+	  , extract()
+	  , obtain_self_id()
 	  , std::move(position_accessor)
 	  }
 	{}
@@ -102,12 +102,12 @@ public:
         m_vertical = 0.0;
     }
 
-    EntityID m_self_id, m_target_id;
-
 private:
+    EntityID m_target_id;
     double m_walk_dir, m_vertical;
     LookDir m_look_dir;
     double m_range;
+    EntityID m_self_id;
     ComponentAccess<const PositionT> m_position_accessor;
 };
 

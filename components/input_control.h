@@ -46,9 +46,9 @@ public:
 	, ComponentAccess<const MovementT> movement_accessor
 	)
 	: InputControl
-	  { extract().integer() //shoot_proc_id
-	  , extract().integer() //shoot cooldown
-	  , extract().boolean() //stability control
+	  { extract()
+	  , extract()
+	  , extract()
 	  , input_system
 	  , obtain_self_id()
 	  , std::move(movement_accessor)

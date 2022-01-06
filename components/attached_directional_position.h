@@ -41,11 +41,11 @@ public:
 	, ComponentAccess<const ControlT> control_accessor
 	)
 	: AttachedDirectionalPosition
-	  { extract().integer()
-	  , extract().real()
-	  , extract().real()
-	  , extract().real()
-	  , extract().real()
+	  { extract()
+	  , extract()
+	  , extract()
+	  , extract()
+	  , extract()
 	  , std::move(position_accessor)
 	  , std::move(control_accessor)
 	  }
