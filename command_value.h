@@ -82,7 +82,7 @@ struct CommandValue
     }
 
     operator bool() const { return boolean(); }
-    operator int() const { return integer(); }
+    operator int32_t() const { return integer(); }
     operator double() const { return real(); }
     operator std::string_view() const & { return string_view(); }
 
