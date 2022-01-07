@@ -54,14 +54,6 @@ public:
     	insert(std::atan2(m_directed_y, m_directed_x));
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseParticleControl "
-    	   << m_random_factor << " "
-    	   << std::sqrt(m_directed_x*m_directed_x + m_directed_y*m_directed_y) << " "
-    	   << std::atan2(m_directed_y, m_directed_x) << " ";
-    }
-
     double decision_vertical() const { return m_decision_y; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_decision_x; }

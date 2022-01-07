@@ -37,13 +37,6 @@ public:
     	insert(m_damage);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseDamageCollision "
-    	   << m_solid << " "
-    	   << m_damage << " ";
-    }
-
     bool solid() const { return m_solid; }
     void set_solid(const bool val) { m_solid = val; }
     SurfaceType standing_on() const { return SurfaceType::AIR; }

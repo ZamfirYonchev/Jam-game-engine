@@ -63,15 +63,6 @@ public:
     	insert(m_attack_range);
     }
 
-	void print(std::ostream& to) const
-    {
-    	to << "UseChaseAIControl "
-    	   << m_target_id << " "
-    	   << m_attack_proc_id << " "
-    	   << m_attack_cooldown << " "
-    	   << m_attack_range << " ";
-    }
-
     double decision_vertical() const { return 0; }
     bool decision_attack() const { return m_attack; }
     double decision_walk() const { return m_walk_dir; }

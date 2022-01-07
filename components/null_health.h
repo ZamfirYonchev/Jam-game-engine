@@ -19,11 +19,6 @@ public:
     	insert("UseNullHealth");
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseNullHealth ";
-    }
-
     void set_max_hp(double) {}
     void set_hp(double) {}
     void set_hp_change(double) {}

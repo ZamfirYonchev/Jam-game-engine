@@ -55,15 +55,6 @@ public:
     	insert(m_offset_h);
 	}
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseAttachedPosition "
-    	   << m_offset_x << " "
-		   << m_offset_y << " "
-		   << m_offset_w << " "
-		   << m_offset_h << " ";
-    }
-
     double x() const
     {
     	return m_position_accessor(m_attached_id).x()

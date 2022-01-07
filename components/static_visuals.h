@@ -37,13 +37,6 @@ public:
     	insert(m_sprite);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseStaticVisuals "
-    	   << m_anim_id << " "
-    	   << m_sprite << " ";
-    }
-
     void update_animation(const Time) {}
 
     AnimationFrame animation_frame(const int, const int) const

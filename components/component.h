@@ -12,11 +12,20 @@
 #include <variant>
 #include <ostream>
 
-template<typename Variant>
-void print(std::ostream& to, const Variant& variant)
+template<typename... Ts>
+class ComponentVariant
 {
-	std::visit([&](const auto& comp){ comp.print(to); }, variant);
-}
+public:
+	std::variant<Ts...> data;
+
+    template<typename InserterF>
+    void obtain(InserterF&& inserter) const
+	{
+		std::visit([&](const auto& component){ return component.obtain(std::forward<InserterF>(inserter)); }, data);
+	}
+
+    operator bool() const { return data.index() != 0; }
+};
 
 template<typename Component>
 Component& null()

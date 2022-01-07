@@ -45,12 +45,6 @@ public:
     	insert(m_anim_id);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseAnimationVisuals "
-    	   << m_anim_id << " ";
-    }
-
     void update_animation(const Time time_diff)
     {
     	m_anim_time = (m_anim_time+int(time_diff))%m_anim_time_max;

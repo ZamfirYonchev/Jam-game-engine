@@ -97,20 +97,6 @@ public:
     	insert(m_volume);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseCharacterSounds "
-		   << m_idle_id << " "
-		   << m_walk_id << " "
-		   << m_jump_id << " "
-		   << m_fall_id << " "
-		   << m_land_id << " "
-		   << m_attack_id << " "
-		   << m_hit_id << " "
-		   << m_dead_id << " "
-		   << m_volume << " ";
-    }
-
     void set_new_state(const State new_state)
     {
     	m_play_new_sound = true;

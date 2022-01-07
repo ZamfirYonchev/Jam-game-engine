@@ -83,14 +83,6 @@ public:
     	insert(m_repeat_x);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseHealthVisuals "
-    	   << m_active_anim_id << " "
-    	   << m_inactive_anim_id << " "
-		   << m_repeat_x << " ";
-    }
-
     void update_animation(const Time time_diff)
     {
     	m_active_animation_time = (m_active_animation_time + int(time_diff)) % m_active_animation_time_max;

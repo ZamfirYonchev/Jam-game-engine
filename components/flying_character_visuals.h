@@ -194,19 +194,6 @@ public:
     	insert(m_dead_anim_id);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseFlyingCharacterVisuals "
-    	   << m_land_idle_anim_id << " "
-		   << m_fly_idle_anim_id << " "
-		   << m_fly_side_anim_id << " "
-		   << m_fly_up_anim_id << " "
-		   << m_fly_down_anim_id << " "
-		   << m_attack_anim_id << " "
-		   << m_hit_anim_id << " "
-		   << m_dead_anim_id << " ";
-    }
-
     void update_animation(const Time time_diff)
     {
     	const auto& control = m_control_accessor(m_self_id);

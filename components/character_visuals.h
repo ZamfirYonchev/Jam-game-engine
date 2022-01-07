@@ -181,18 +181,6 @@ public:
     	insert(m_dead_anim_id);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseCharacterVisuals "
-    	   << m_idle_anim_id << " "
-		   << m_walk_anim_id << " "
-		   << m_jump_anim_id << " "
-		   << m_fall_anim_id << " "
-		   << m_attack_anim_id << " "
-		   << m_hit_anim_id << " "
-		   << m_dead_anim_id << " ";
-    }
-
     void update_animation(const Time time_diff)
     {
     	const auto& control = m_control_accessor(m_self_id);

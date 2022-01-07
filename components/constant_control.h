@@ -40,14 +40,6 @@ public:
     	insert(int(m_look_dir));
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseConstantControl "
-    	   << m_move_decision << " "
-    	   << m_vertical_decision << " "
-    	   << int(m_look_dir) << " ";
-    }
-
     double decision_vertical() const { return m_vertical_decision; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_move_decision; }

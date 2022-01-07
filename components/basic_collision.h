@@ -38,12 +38,6 @@ public:
     	insert(m_solid);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseBasicCollision "
-    	   << m_solid << " ";
-    }
-
     bool solid() const { return m_solid; }
     void set_solid(const bool val) { m_solid = val; }
     SurfaceType standing_on() const { return m_standing_on; }

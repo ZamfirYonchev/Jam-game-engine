@@ -16,31 +16,20 @@
 #include "collision_enums.h"
 
 template<typename... Ts>
-class CollisionVariant
+class CollisionVariant : public ComponentVariant<Ts...>
 {
 public:
-	using Variant = std::variant<Ts...>;
-	Variant variant;
+	using Variant = ComponentVariant<Ts...>;
 
-    bool solid() const { return std::visit([](const auto& col){ return col.solid(); }, variant); }
-    SurfaceType standing_on() const { return std::visit([](const auto& col){ return col.standing_on(); }, variant); }
-    double on_collision_damage() const { return std::visit([](const auto& col){ return col.on_collision_damage(); }, variant); }
-    double elasticity() const { return std::visit([](const auto& col){ return col.elasticity(); }, variant); }
+    bool solid() const { return std::visit([](const auto& col){ return col.solid(); }, Variant::data); }
+    SurfaceType standing_on() const { return std::visit([](const auto& col){ return col.standing_on(); }, Variant::data); }
+    double on_collision_damage() const { return std::visit([](const auto& col){ return col.on_collision_damage(); }, Variant::data); }
+    double elasticity() const { return std::visit([](const auto& col){ return col.elasticity(); }, Variant::data); }
 
-    void set_solid(const bool val) { std::visit([&](auto& col){ col.set_solid(val); }, variant); }
-    void set_standing_on(SurfaceType surface) { std::visit([&](auto& col){ return col.set_standing_on(surface); }, variant); }
-    void set_collision_damage(double val) { std::visit([&](auto& col){ return col.set_collision_damage(val); }, variant); }
-    void set_elasticity(double val) { std::visit([&](auto& col){ return col.set_elasticity(val); }, variant); }
-
-    operator bool() const { return variant.index() != 0; }
-
-    template<typename... Tps>
-    friend std::ostream& operator<< (std::ostream& out, const CollisionVariant<Tps...>& component)
-    {
-		print(out, component.variant);
-        out << std::endl;
-        return out;
-    }
+    void set_solid(const bool val) { std::visit([&](auto& col){ col.set_solid(val); }, Variant::data); }
+    void set_standing_on(SurfaceType surface) { std::visit([&](auto& col){ return col.set_standing_on(surface); }, Variant::data); }
+    void set_collision_damage(double val) { std::visit([&](auto& col){ return col.set_collision_damage(val); }, Variant::data); }
+    void set_elasticity(double val) { std::visit([&](auto& col){ return col.set_elasticity(val); }, Variant::data); }
 };
 
 #endif /* COMPONENTS_COLLISION_H_ */

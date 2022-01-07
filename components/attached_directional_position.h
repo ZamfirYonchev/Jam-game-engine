@@ -61,15 +61,6 @@ public:
     	insert(m_h);
 	}
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseAttachedDirectionalPosition "
-    	   << m_offset_x << " "
-		   << m_offset_y << " "
-		   << m_w << " "
-		   << m_h << " ";
-    }
-
     double x() const
     {
     	const auto& attached_position = m_position_accessor(m_attached_id);

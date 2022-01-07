@@ -64,14 +64,6 @@ public:
     	insert(m_stability_control);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseInputControl "
-    	   << m_shoot_proc_id << " "
-    	   << m_shoot_cooldown << " "
-		   << m_stability_control << " ";
-    }
-
     double decision_vertical() const { return m_vertical_dir; }
     bool decision_attack() const { return m_shoot; }
     double decision_walk() const { return m_walk_dir; }

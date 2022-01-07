@@ -63,17 +63,6 @@ public:
     	insert(m_gravity_affected);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseFullMovement "
-    	   << m_mass << " "
-    	   << m_friction_x << " "
-    	   << m_friction_y << " "
-    	   << m_move_force << " "
-    	   << m_jump_force << " "
-    	   << m_gravity_affected << " ";
-    }
-
     std::pair<double, double> displacement(const Time time_diff) const
 	{
 		const double vx_avg = m_vx + m_fx*time_diff/m_mass/2.0;

@@ -9,7 +9,6 @@
 #define COMPONENTS_ATTACHED_HEALTH_H_
 
 #include "../types.h"
-#include <ostream>
 
 template<typename HealthT>
 class AttachedHealth
@@ -47,14 +46,6 @@ public:
     	insert(m_attached_id);
     	insert(m_offset_hp);
     	insert(m_offset_max_hp);
-    }
-
-    void print(std::ostream& to) const
-    {
-    	to << "UseAttachedHealth "
-    	   << m_attached_id << " "
-		   << m_offset_hp << " "
-		   << m_offset_max_hp << " ";
     }
 
     void set_max_hp(double hp) { m_offset_max_hp = hp; }

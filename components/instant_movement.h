@@ -52,15 +52,6 @@ public:
     	insert(m_move_force);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseInstantMovement "
-    	   << m_mass << " "
-    	   << m_friction_x << " "
-    	   << m_friction_y << " "
-    	   << m_move_force << " ";
-    }
-
     void update(const Time time_diff)
     {
 		const double vx_avg = m_fx*time_diff/m_mass/2.0;

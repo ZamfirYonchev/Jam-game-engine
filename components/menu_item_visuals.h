@@ -96,14 +96,6 @@ public:
     	insert(m_select_anim_id);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseMenuItemVisuals "
-    	   << m_inactive_anim_id << " "
-    	   << m_focus_anim_id << " "
-    	   << m_select_anim_id << " ";
-    }
-
     void update_animation(const Time time_diff)
     {
     	m_inactive_anim_time = (m_inactive_anim_time+int(time_diff))%m_inactive_animation_time_max;

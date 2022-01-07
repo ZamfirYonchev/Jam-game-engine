@@ -19,11 +19,6 @@ public:
     	insert("UseNullVisuals");
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseNullVisuals ";
-    }
-
     void update_animation(const Time) {}
 
     AnimationFrame animation_frame(const int, const int) const { return {}; }

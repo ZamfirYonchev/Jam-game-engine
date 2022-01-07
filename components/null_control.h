@@ -20,11 +20,6 @@ public:
     	insert("UseNullControl");
     }
 
-	void print(std::ostream& to) const
-    {
-    	to << "UseNullControl ";
-    }
-
     double decision_vertical() const { return 0.0; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return 0.0; }

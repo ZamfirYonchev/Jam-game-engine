@@ -17,11 +17,6 @@ public:
     	insert("UseNullMovement");
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseNullMovement ";
-    }
-
     void update(const Time) {}
     void set_force_x(double) {}
     void set_force_y(double) {}

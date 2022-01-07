@@ -52,13 +52,6 @@ public:
     	insert(m_repeats);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseTimedControl "
-    	   << m_max_duration << " "
-    	   << m_repeats << " ";
-    }
-
     double decision_vertical() const { return m_walk * m_vertical; }
     bool decision_attack() const { return m_attack; }
     double decision_walk() const { return m_walk * m_horizontal; }

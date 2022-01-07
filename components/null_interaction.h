@@ -17,11 +17,6 @@ public:
     	insert("UseNullInteraction");
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseNullInteraction ";
-    }
-
     bool is_in_group(int) const { return false; }
 	void set_group(int, bool) {}
 	void clear_groups() {}

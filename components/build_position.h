@@ -48,12 +48,6 @@ public:
     	insert(m_attached_id);
 	}
 
-	void print(std::ostream& to) const
-    {
-    	to << "UseBuildPosition "
-		   << m_attached_id << " ";
-    }
-
     double x() const
     {
     	return min(m_origin_x, m_position_accessor(m_attached_id).x());

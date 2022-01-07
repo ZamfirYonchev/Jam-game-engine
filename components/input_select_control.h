@@ -51,14 +51,6 @@ public:
     	insert(m_proc_id);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseInputSelectControl "
-    	   << m_select << " "
-    	   << m_max << " "
-    	   << m_proc_id << " ";
-    }
-
     double decision_vertical() const { return m_select == m_curr_selection; }
     bool decision_attack() const;
 

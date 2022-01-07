@@ -48,15 +48,6 @@ public:
     	insert(m_on_exit_proc_id_self);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseTriggerInteraction "
-    	   << int(m_trigger_group) << " "
-    	   << m_proc_id_self << " "
-    	   << m_proc_id_other << " "
-    	   << m_on_exit_proc_id_self << " ";
-    }
-
 	bool is_in_group(int) const { return false; }
 	void set_group(int, bool) {}
 	void clear_groups() {}

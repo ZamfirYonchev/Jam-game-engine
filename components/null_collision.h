@@ -20,11 +20,6 @@ public:
     	insert("UseNullCollision");
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseNullCollision ";
-    }
-
     bool solid() const { return false; }
     void set_solid(const bool) {}
     SurfaceType standing_on() const { return SurfaceType::GROUND; }

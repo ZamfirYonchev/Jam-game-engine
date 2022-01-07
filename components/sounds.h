@@ -13,28 +13,15 @@
 #include "component.h"
 
 template<typename... Ts>
-class SoundsVariant
+class SoundsVariant : public ComponentVariant<Ts...>
 {
 public:
-	using Variant = std::variant<Ts...>;
-	Variant variant;
+	using Variant = ComponentVariant<Ts...>;
 
-    void update(const Time time_diff) { std::visit([&](auto& snd){ return snd.update(time_diff); }, variant); }
-
-    SoundID id() const { return std::visit([](const auto& snd){ return snd.id(); }, variant); }
-    bool changed() const { return std::visit([](const auto& snd){ return snd.changed(); }, variant); }
-
-    double volume() const { return std::visit([](const auto& snd){ return snd.volume(); }, variant); }
-
-    operator bool() const { return variant.index() != 0; }
-
-    template<typename... Tps>
-	friend std::ostream& operator<< (std::ostream& out, const SoundsVariant<Tps...>& component)
-	{
-		print(out, component.variant);
-	    out << '\n';
-	    return out;
-	}
+    void update(const Time time_diff) { std::visit([&](auto& snd){ return snd.update(time_diff); }, Variant::data); }
+    SoundID id() const { return std::visit([](const auto& snd){ return snd.id(); }, Variant::data); }
+    bool changed() const { return std::visit([](const auto& snd){ return snd.changed(); }, Variant::data); }
+    double volume() const { return std::visit([](const auto& snd){ return snd.volume(); }, Variant::data); }
 };
 
 #endif /* COMPONENTS_SOUNDS_H_ */

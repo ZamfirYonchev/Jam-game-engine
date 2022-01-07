@@ -53,15 +53,6 @@ public:
     	insert(m_offset_proc_id_on_exit_self);
     }
 
-	void print(std::ostream& to) const
-    {
-    	to << "UseAttachedInteraction "
-    	   << m_attached_id << " "
-    	   << m_offset_proc_id_self << " "
-     	   << m_offset_proc_id_other << " "
-    	   << m_offset_proc_id_on_exit_self << " ";
-    }
-
 	bool is_in_group(int group_id) const
 	{ return m_interaction_accessor(m_attached_id).is_in_group(group_id); }
 

@@ -54,13 +54,6 @@ public:
     	insert(m_range);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseGuideControl "
-    	   << m_target_id << " "
-    	   << m_range << " ";
-    }
-
     double decision_vertical() const { return m_vertical; }
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_walk_dir; }

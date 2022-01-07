@@ -107,22 +107,6 @@ public:
     	insert(m_animation_id[8]);
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseTiledVisuals "
-    	   << m_tile_w << " "
-    	   << m_tile_h << " "
-    	   << m_animation_id[0] << " "
-    	   << m_animation_id[1] << " "
-    	   << m_animation_id[2] << " "
-    	   << m_animation_id[3] << " "
-    	   << m_animation_id[4] << " "
-    	   << m_animation_id[5] << " "
-    	   << m_animation_id[6] << " "
-    	   << m_animation_id[7] << " "
-    	   << m_animation_id[8] << " ";
-    }
-
     void update_animation(const Time time_diff)
     {
     	m_anim_time = (m_anim_time + int(time_diff))%m_animation_time_max;

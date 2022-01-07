@@ -17,11 +17,6 @@ public:
     	insert("UseNullSounds");
     }
 
-    void print(std::ostream& to) const
-    {
-    	to << "UseNullSounds ";
-    }
-
     void update(const Time) {}
     bool changed() const { return false; }
     SoundID id() const { return -1; }
