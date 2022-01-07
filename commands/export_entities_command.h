@@ -32,10 +32,12 @@ public:
 
 		if(file)
 		{
-			entity_system.for_each_component_pack([&](const auto&... components)
+			const auto print_component_field = [&](const auto& field) { file << field << " "; };
+
+			entity_system.for_each_component_pack([&](const auto&... components) mutable
 												  {
 													file << "@e AddEntity\n";
-													(file << ... << components);
+													((components.obtain(print_component_field), file << '\n'), ...);
 													file << '\n';
 												  });
 	    	return file_name;
