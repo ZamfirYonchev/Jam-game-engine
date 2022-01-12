@@ -244,6 +244,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		ES::ComponentAccessor<Visuals> visuals_accessor{entity_system};
 		const auto current_id_accessor = [&](){ return EntityID(globals(Globals::selected_entity).integer()); };
 
+		const auto animation_access = [&](const AnimationID anim_id){ return resource_system.animation(anim_id); };
+
 	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
 	    command_system.register_command("Val", GetVariableCommand{command_system, globals});
 	    command_system.register_command("DebugMessage", DebugMessageCommand{command_system, globals});
@@ -309,13 +311,13 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("UseNullSounds", use_command_gen.make<Sounds, NullSounds>());
 		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds<Control, Movement, Collision, Health>>(command_value_extractor, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
 		command_system.register_command("UseNullVisuals", use_command_gen.make<Visuals, NullVisuals>());
-		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals<Control, Movement, Collision, Health>>(command_value_extractor, resource_system, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
-		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals<Control, Collision, Health>>(command_value_extractor, resource_system, current_id_accessor, control_accessor, collision_accessor, health_accessor));
-		command_system.register_command("UseTiledVisuals", use_command_gen.make<Visuals, TiledVisuals<Position>>(command_value_extractor, resource_system, current_id_accessor, position_accessor));
+		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals<Control, Movement, Collision, Health>>(command_value_extractor, animation_access, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals<Control, Collision, Health>>(command_value_extractor, animation_access, current_id_accessor, control_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseTiledVisuals", use_command_gen.make<Visuals, TiledVisuals<Position>>(command_value_extractor, animation_access, current_id_accessor, position_accessor));
 		command_system.register_command("UseStaticVisuals", use_command_gen.make<Visuals, StaticVisuals>(command_value_extractor));
-		command_system.register_command("UseHealthVisuals", use_command_gen.make<Visuals, HealthVisuals<Health>>(command_value_extractor, resource_system, current_id_accessor, health_accessor));
-		command_system.register_command("UseMenuItemVisuals", use_command_gen.make<Visuals, MenuItemVisuals<Control>>(command_value_extractor, resource_system, current_id_accessor, control_accessor));
-		command_system.register_command("UseAnimationVisuals", use_command_gen.make<Visuals, AnimationVisuals>(command_value_extractor, resource_system));
+		command_system.register_command("UseHealthVisuals", use_command_gen.make<Visuals, HealthVisuals<Health>>(command_value_extractor, animation_access, current_id_accessor, health_accessor));
+		command_system.register_command("UseMenuItemVisuals", use_command_gen.make<Visuals, MenuItemVisuals<Control>>(command_value_extractor, animation_access, current_id_accessor, control_accessor));
+		command_system.register_command("UseAnimationVisuals", use_command_gen.make<Visuals, AnimationVisuals>(command_value_extractor, animation_access));
 		command_system.register_command("ReusePosition", ReuseComponentCommand<Position, CommandSystem, ES>{command_system, entity_system});
 		command_system.register_command("ReuseControl", ReuseComponentCommand<Control, CommandSystem, ES>{command_system, entity_system});
 		command_system.register_command("ReuseMovement", ReuseComponentCommand<Movement, CommandSystem, ES>{command_system, entity_system});
