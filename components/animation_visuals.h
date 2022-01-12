@@ -9,15 +9,14 @@
 #define COMPONENTS_ANIMATION_VISUALS_H_
 
 #include "visuals_enums.h"
-#include "../systems/resource_system.h"
 
 class AnimationVisuals
 {
 public:
-    template<typename ExtractorF>
+    template<typename ExtractorF, typename AnimationAccessorT>
 	AnimationVisuals
 	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
+	, const AnimationAccessorT& animation_access
 	)
 	: m_anim_id{extract()}
 	, m_layer{VisualLayer::FAR_BACKGROUND}
@@ -25,7 +24,7 @@ public:
 	, m_anim_time{0}
 	, m_anim_time_max{1}
 	{
-		const auto& anim_opt = resource_system.animation(m_anim_id);
+		const auto& anim_opt = animation_access(m_anim_id);
 
 		if(anim_opt)
 		{

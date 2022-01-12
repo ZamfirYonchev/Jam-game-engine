@@ -9,7 +9,6 @@
 #define COMPONENTS_CHARACTER_VISUALS_H_
 
 #include "visuals_enums.h"
-#include "../systems/resource_system.h"
 #include "../types.h"
 #include "collision_enums.h"
 
@@ -19,6 +18,7 @@ class CharacterVisuals
 public:
     enum class RenderStates { IDLE, WALK, JUMP, FALL, ATTACK, HIT, DEAD};
 
+    template<typename AnimationAccessorT>
     CharacterVisuals
 	( const AnimationID idle_anim_id
 	, const AnimationID walk_anim_id
@@ -27,7 +27,7 @@ public:
 	, const AnimationID attack_anim_id
 	, const AnimationID hit_anim_id
 	, const AnimationID dead_anim_id
-	, const ResourceSystem& resource_system
+	, const AnimationAccessorT& animation_access
 	, const EntityID self_id
 	, ComponentAccess<const ControlT> control_accessor
 	, ComponentAccess<const MovementT> movement_accessor
@@ -68,7 +68,7 @@ public:
 	, m_collision_accessor{std::move(collision_accessor)}
 	, m_health_accessor{std::move(health_accessor)}
 	{
-		const auto& idle_anim_opt = resource_system.animation(idle_anim_id);
+		const auto& idle_anim_opt = animation_access(idle_anim_id);
 
 		if(idle_anim_opt)
 		{
@@ -78,7 +78,7 @@ public:
 		else
 		{ /*error idle_anim_id*/ }
 
-		const auto& walk_anim_opt = resource_system.animation(walk_anim_id);
+		const auto& walk_anim_opt = animation_access(walk_anim_id);
 
 		if(walk_anim_opt)
 		{
@@ -88,7 +88,7 @@ public:
 		else
 		{ /*error walk_anim_id*/ }
 
-		const auto& jump_anim_opt = resource_system.animation(jump_anim_id);
+		const auto& jump_anim_opt = animation_access(jump_anim_id);
 
 		if(jump_anim_opt)
 		{
@@ -98,7 +98,7 @@ public:
 		else
 		{ /*error jump_anim_id*/ }
 
-		const auto& fall_anim_opt = resource_system.animation(fall_anim_id);
+		const auto& fall_anim_opt = animation_access(fall_anim_id);
 
 		if(fall_anim_opt)
 		{
@@ -108,7 +108,7 @@ public:
 		else
 		{ /*error fall_anim_id*/ }
 
-		const auto& attack_anim_opt = resource_system.animation(attack_anim_id);
+		const auto& attack_anim_opt = animation_access(attack_anim_id);
 
 		if(attack_anim_opt)
 		{
@@ -118,7 +118,7 @@ public:
 		else
 		{ /*error attack_anim_id*/ }
 
-		const auto& hit_anim_opt = resource_system.animation(hit_anim_id);
+		const auto& hit_anim_opt = animation_access(hit_anim_id);
 
 		if(hit_anim_opt)
 		{
@@ -128,7 +128,7 @@ public:
 		else
 		{ /*error hit_anim_id*/ }
 
-		const auto& dead_anim_opt = resource_system.animation(dead_anim_id);
+		const auto& dead_anim_opt = animation_access(dead_anim_id);
 
 		if(dead_anim_opt)
 		{
@@ -141,11 +141,11 @@ public:
 		set_new_state(RenderStates::IDLE);
 	}
 
-    template<typename ExtractorF, typename SelfIDObtainerF>
+    template<typename ExtractorF, typename AnimationAccessorT, typename SelfIDObtainerF>
 	CharacterVisuals
 	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
-	, SelfIDObtainerF&& obtain_self_id
+	, const AnimationAccessorT& animation_access
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const ControlT> control_accessor
 	, ComponentAccess<const MovementT> movement_accessor
 	, ComponentAccess<const CollisionT> collision_accessor
@@ -159,7 +159,7 @@ public:
 	  , extract()
 	  , extract()
 	  , extract()
-	  , resource_system
+	  , animation_access
 	  , obtain_self_id()
 	  , std::move(control_accessor)
 	  , std::move(movement_accessor)

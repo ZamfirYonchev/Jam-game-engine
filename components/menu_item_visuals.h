@@ -9,18 +9,18 @@
 #define COMPONENTS_MENU_ITEM_VISUALS_H_
 
 #include "visuals_enums.h"
-#include "../systems/resource_system.h"
 #include "../types.h"
 
 template<typename ControlT>
 class MenuItemVisuals
 {
 public:
+	template<typename AnimationAccessorT>
 	MenuItemVisuals
 	( const AnimationID inactive_anim_id
 	, const AnimationID focus_anim_id
 	, const AnimationID select_anim_id
-	, const ResourceSystem& resource_system
+	, const AnimationAccessorT& animation_access
 	, const EntityID self_id
 	, ComponentAccess<const ControlT> control_accessor
 	)
@@ -39,7 +39,7 @@ public:
     , m_select_anim_time{0}
 	, m_control_accessor{std::move(control_accessor)}
 	{
-		const auto& inactive_anim_opt = resource_system.animation(m_inactive_anim_id);
+		const auto& inactive_anim_opt = animation_access(m_inactive_anim_id);
 
 		if(inactive_anim_opt)
 		{
@@ -49,7 +49,7 @@ public:
 		else
 		{ /*error idle_anim_id*/ }
 
-		const auto& focus_anim_opt = resource_system.animation(m_focus_anim_id);
+		const auto& focus_anim_opt = animation_access(m_focus_anim_id);
 
 		if(focus_anim_opt)
 		{
@@ -59,7 +59,7 @@ public:
 		else
 		{ /*error idle_anim_id*/ }
 
-		const auto& select_anim_opt = resource_system.animation(m_select_anim_id);
+		const auto& select_anim_opt = animation_access(m_select_anim_id);
 
 		if(select_anim_opt)
 		{
@@ -70,18 +70,18 @@ public:
 		{ /*error idle_anim_id*/ }
 	}
 
-    template<typename ExtractorF, typename SelfIDObtainerF>
+    template<typename ExtractorF, typename AnimationAccessorT, typename SelfIDObtainerF>
 	MenuItemVisuals
 	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
-	, SelfIDObtainerF&& obtain_self_id
+	, const AnimationAccessorT& animation_access
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const ControlT> control_accessor
 	)
 	: MenuItemVisuals
 	  { extract()
 	  , extract()
 	  , extract()
-	  , resource_system
+	  , animation_access
 	  , obtain_self_id()
 	  , std::move(control_accessor)
 	  }

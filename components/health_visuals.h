@@ -9,18 +9,18 @@
 #define COMPONENTS_HEALTH_VISUALS_H_
 
 #include "visuals_enums.h"
-#include "../systems/resource_system.h"
 #include "../types.h"
 
 template<typename HealthT>
 class HealthVisuals
 {
 public:
+	template<typename AnimationAccessorT>
 	HealthVisuals
 	( const AnimationID active_id
 	, const AnimationID inactive_id
 	, const int repeat_x
-	, const ResourceSystem& resource_system
+	, const AnimationAccessorT& animation_access
 	, const EntityID self_id
 	, ComponentAccess<const HealthT> health_accessor
 	)
@@ -36,7 +36,7 @@ public:
 	, m_self_id{self_id}
 	, m_health_accessor(std::move(health_accessor))
 	{
-		const auto& active_anim_opt = resource_system.animation(active_id);
+		const auto& active_anim_opt = animation_access(active_id);
 
 		if(active_anim_opt)
 		{
@@ -46,7 +46,7 @@ public:
 		else
 		{ /*error active_id*/ }
 
-		const auto& inactive_anim_opt = resource_system.animation(inactive_id);
+		const auto& inactive_anim_opt = animation_access(inactive_id);
 
 		if(inactive_anim_opt)
 		{
@@ -57,18 +57,18 @@ public:
 		{ /*error inactive_id*/ }
 	}
 
-    template<typename ExtractorF, typename SelfIDObtainerF>
+    template<typename ExtractorF, typename AnimationAccessorT, typename SelfIDObtainerF>
 	HealthVisuals
 	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
-	, SelfIDObtainerF&& obtain_self_id
+	, const AnimationAccessorT& animation_access
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const HealthT> health_accessor
 	)
 	: HealthVisuals
 	  { extract()
 	  , extract()
 	  , extract()
-	  , resource_system
+	  , animation_access
 	  , obtain_self_id()
 	  , std::move(health_accessor)
 	  }

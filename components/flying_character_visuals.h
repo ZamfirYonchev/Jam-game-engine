@@ -10,7 +10,6 @@
 
 
 #include "visuals_enums.h"
-#include "../systems/resource_system.h"
 #include "../types.h"
 #include "collision_enums.h"
 
@@ -20,6 +19,7 @@ class FlyingCharacterVisuals
 public:
     enum class RenderStates { LAND_IDLE, FLY_IDLE, FLY_SIDE, FLY_UP, FLY_DOWN, ATTACK, HIT, DEAD};
 
+    template<typename AnimationAccessorT>
     FlyingCharacterVisuals
 	( const AnimationID land_idle_anim_id
 	, const AnimationID fly_idle_anim_id
@@ -29,7 +29,7 @@ public:
   	, const AnimationID attack_anim_id
 	, const AnimationID hit_anim_id
 	, const AnimationID dead_anim_id
-	, const ResourceSystem& resource_system
+	, const AnimationAccessorT& animation_access
 	, const EntityID self_id
 	, ComponentAccess<const ControlT> control_accessor
 	, ComponentAccess<const CollisionT> collision_accessor
@@ -71,7 +71,7 @@ public:
 	, m_collision_accessor{std::move(collision_accessor)}
 	, m_health_accessor{std::move(health_accessor)}
 	{
-		const auto& land_idle_anim_opt = resource_system.animation(land_idle_anim_id);
+		const auto& land_idle_anim_opt = animation_access(land_idle_anim_id);
 
 		if(land_idle_anim_opt)
 		{
@@ -81,7 +81,7 @@ public:
 		else
 		{ /*error land_idle_anim_id*/ }
 
-		const auto& fly_idle_anim_opt = resource_system.animation(fly_idle_anim_id);
+		const auto& fly_idle_anim_opt = animation_access(fly_idle_anim_id);
 
 		if(fly_idle_anim_opt)
 		{
@@ -91,7 +91,7 @@ public:
 		else
 		{ /*error fly_idle_anim_id*/ }
 
-		const auto& fly_side_anim_opt = resource_system.animation(fly_side_anim_id);
+		const auto& fly_side_anim_opt = animation_access(fly_side_anim_id);
 
 		if(fly_side_anim_opt)
 		{
@@ -101,7 +101,7 @@ public:
 		else
 		{ /*error fly_side_anim_id*/ }
 
-		const auto& fly_up_anim_opt = resource_system.animation(fly_up_anim_id);
+		const auto& fly_up_anim_opt = animation_access(fly_up_anim_id);
 
 		if(fly_up_anim_opt)
 		{
@@ -111,7 +111,7 @@ public:
 		else
 		{ /*error fly_up_anim_id*/ }
 
-		const auto& fly_down_anim_opt = resource_system.animation(fly_down_anim_id);
+		const auto& fly_down_anim_opt = animation_access(fly_down_anim_id);
 
 		if(fly_down_anim_opt)
 		{
@@ -121,7 +121,7 @@ public:
 		else
 		{ /*error fly_down_anim_id*/ }
 
-		const auto& attack_anim_opt = resource_system.animation(attack_anim_id);
+		const auto& attack_anim_opt = animation_access(attack_anim_id);
 
 		if(attack_anim_opt)
 		{
@@ -131,7 +131,7 @@ public:
 		else
 		{ /*error attack_anim_id*/ }
 
-		const auto& hit_anim_opt = resource_system.animation(hit_anim_id);
+		const auto& hit_anim_opt = animation_access(hit_anim_id);
 
 		if(hit_anim_opt)
 		{
@@ -141,7 +141,7 @@ public:
 		else
 		{ /*error hit_anim_id*/ }
 
-		const auto& dead_anim_opt = resource_system.animation(dead_anim_id);
+		const auto& dead_anim_opt = animation_access(dead_anim_id);
 
 		if(dead_anim_opt)
 		{
@@ -154,11 +154,11 @@ public:
 		set_new_state(RenderStates::LAND_IDLE);
 	}
 
-    template<typename ExtractorF, typename SelfIDObtainerF>
+    template<typename ExtractorF, typename AnimationAccessorT, typename SelfIDObtainerF>
 	FlyingCharacterVisuals
 	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
-	, SelfIDObtainerF&& obtain_self_id
+	, const AnimationAccessorT& animation_access
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const ControlT> control_accessor
 	, ComponentAccess<const CollisionT> collision_accessor
 	, ComponentAccess<const HealthT> health_accessor
@@ -172,7 +172,7 @@ public:
 	  , extract()
 	  , extract()
 	  , extract()
-	  , resource_system
+	  , animation_access
 	  , obtain_self_id()
 	  , std::move(control_accessor)
 	  , std::move(collision_accessor)

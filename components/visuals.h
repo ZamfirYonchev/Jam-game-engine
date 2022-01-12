@@ -8,10 +8,8 @@
 #ifndef COMPONENTS_VISUALS_H_
 #define COMPONENTS_VISUALS_H_
 
-#include "../types.h"
-#include <ostream>
-
 #include "component.h"
+#include "../types.h"
 #include "visuals_enums.h"
 
 template<typename... Ts>

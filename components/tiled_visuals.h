@@ -12,12 +12,13 @@
 #include <array>
 #include "../types.h"
 #include "../math_ext.h"
-#include "../systems/resource_system.h"
 
 template<typename PositionT>
 class TiledVisuals
 {
 public:
+
+	template<typename AnimationAccessorT>
 	TiledVisuals
 	( const double tile_w
 	, const double tile_h
@@ -30,7 +31,7 @@ public:
 	, const AnimationID top_left_anim_id
 	, const AnimationID top_center_anim_id
 	, const AnimationID top_right_anim_id
-	, const ResourceSystem& resource_system
+	, const AnimationAccessorT& animation_access
 	, const EntityID self_id
 	, ComponentAccess<const PositionT> position_accessor
 	)
@@ -54,7 +55,7 @@ public:
     , m_self_id{self_id}
     , m_position_accessor{std::move(position_accessor)}
     {
-			const auto& anim_opt = resource_system.animation(m_animation_id[0]);
+			const auto& anim_opt = animation_access(m_animation_id[0]);
 
 			if(anim_opt)
 			{
@@ -65,11 +66,11 @@ public:
 			{ /*error m_animation_id[0]*/ }
     }
 
-    template<typename ExtractorF, typename SelfIDObtainerF>
+    template<typename ExtractorF, typename AnimationAccessorT, typename SelfIDObtainerF>
     TiledVisuals
 	( ExtractorF&& extract
-	, const ResourceSystem& resource_system
-	, SelfIDObtainerF&& obtain_self_id
+	, const AnimationAccessorT& animation_access
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const PositionT> position_accessor
 	)
 	: TiledVisuals
@@ -84,7 +85,7 @@ public:
 	  , extract()
 	  , extract()
 	  , extract()
-	  , resource_system
+	  , animation_access
 	  , obtain_self_id()
 	  , std::move(position_accessor)
 	  }
