@@ -12,8 +12,6 @@
 #include <vector>
 #include "types.h"
 
-class ResourceSystem;
-
 class Animation
 {
 public:
