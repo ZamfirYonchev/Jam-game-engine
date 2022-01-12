@@ -10,9 +10,7 @@
 
 #include "control_enums.h"
 #include "../types.h"
-#include <ostream>
-
-class InputSystem;
+#include "../systems/input_system.h"
 
 class InputSelectControl
 {
@@ -52,7 +50,10 @@ public:
     }
 
     double decision_vertical() const { return m_select == m_curr_selection; }
-    bool decision_attack() const;
+    bool decision_attack() const
+    {
+    	return m_select == m_curr_selection && m_input_system.get().select();
+    }
 
     double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return m_proc_id; }
@@ -66,7 +67,12 @@ public:
     void set_attack_proc_id(ProcedureID val) { m_proc_id = val; }
     void set_look_dir(LookDir) {}
 
-    void update_decisions(const Time time_diff);
+    void update_decisions(const Time time_diff)
+    {
+    	m_curr_selection += m_input_system.get().down() - m_input_system.get().up() + m_max;
+    	m_curr_selection %= m_max;
+    }
+
     void clear_decisions() {}
 
 private:

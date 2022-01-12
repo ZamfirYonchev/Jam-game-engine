@@ -10,8 +10,8 @@
 
 #include "control_enums.h"
 #include "../math_ext.h"
-#include "../systems/input_system.h"
 #include "../types.h"
+#include "../systems/input_system.h"
 
 template<typename MovementT>
 class InputControl
@@ -21,7 +21,7 @@ public:
 		(const ProcedureID shoot_proc_id
 	   , const int shoot_cooldown
 	   , const bool stability_control
-	   , InputSystem& input_system
+	   , const InputSystem& input_system
 	   , const EntityID self_id
 	   , ComponentAccess<const MovementT> movement_accessor
 	   )
@@ -41,8 +41,8 @@ public:
     template<typename ExtractorF, typename SelfIDObtainerF>
 	InputControl
 	( ExtractorF&& extract
-	, InputSystem& input_system
-	, SelfIDObtainerF&& obtain_self_id
+	, const InputSystem& input_system
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const MovementT> movement_accessor
 	)
 	: InputControl
@@ -116,7 +116,7 @@ private:
     int m_current_shoot_cooldown;
     LookDir m_look_dir;
     bool m_stability_control;
-    std::reference_wrapper<InputSystem> m_input_system;
+    std::reference_wrapper<const InputSystem> m_input_system;
     ComponentAccess<const MovementT> m_movement_accessor;
 };
 

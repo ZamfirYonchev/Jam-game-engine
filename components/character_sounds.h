@@ -8,7 +8,6 @@
 #ifndef COMPONENTS_CHARACTER_SOUNDS_H_
 #define COMPONENTS_CHARACTER_SOUNDS_H_
 
-#include <iostream>
 #include "../types.h"
 #include "collision_enums.h"
 
@@ -58,7 +57,7 @@ public:
     template<typename ExtractorF, typename SelfIDObtainerF>
     CharacterSounds
 	( ExtractorF&& extract
-	, SelfIDObtainerF&& obtain_self_id
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const ControlT> control_accessor
 	, ComponentAccess<const MovementT> movement_accessor
 	, ComponentAccess<const CollisionT> collision_accessor

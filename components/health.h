@@ -8,12 +8,8 @@
 #ifndef COMPONENTS_HEALTH_H_
 #define COMPONENTS_HEALTH_H_
 
-#include "../types.h"
-#include <ostream>
-
-#include <variant>
-
 #include "component.h"
+#include "../types.h"
 
 template<typename... Ts>
 class HealthVariant : public ComponentVariant<Ts...>

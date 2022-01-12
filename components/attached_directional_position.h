@@ -10,7 +10,6 @@
 
 #include "../types.h"
 #include "../components/control_enums.h"
-#include <ostream>
 
 template<typename PositionT, typename ControlT>
 class AttachedDirectionalPosition

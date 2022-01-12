@@ -8,11 +8,8 @@
 #ifndef COMPONENTS_INTERACTION_H_
 #define COMPONENTS_INTERACTION_H_
 
-#include "../types.h"
-#include <ostream>
-#include <variant>
-
 #include "component.h"
+#include "../types.h"
 
 template<typename... Ts>
 class InteractionVariant : public ComponentVariant<Ts...>

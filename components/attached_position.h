@@ -9,7 +9,6 @@
 #define COMPONENTS_ATTACHED_POSITION_H_
 
 #include "../types.h"
-#include <ostream>
 #include "../utilities.h"
 
 template<typename PositionT>

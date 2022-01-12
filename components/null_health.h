@@ -8,8 +8,6 @@
 #ifndef COMPONENTS_NULL_HEALTH_H_
 #define COMPONENTS_NULL_HEALTH_H_
 
-#include <ostream>
-
 class NullHealth
 {
 public:

@@ -9,7 +9,6 @@
 #define COMPONENTS_ATTACHED_INTERACTION_H_
 
 #include "../types.h"
-#include <ostream>
 
 template<typename InteractionT>
 class AttachedInteraction

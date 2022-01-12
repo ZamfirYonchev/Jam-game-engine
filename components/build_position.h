@@ -9,7 +9,6 @@
 #define COMPONENTS_BUILD_POSITION_H_
 
 #include "../types.h"
-#include <iostream>
 #include "../math_ext.h"
 
 template<typename PositionT>

@@ -8,11 +8,8 @@
 #ifndef COMPONENTS_CONTROL_H_
 #define COMPONENTS_CONTROL_H_
 
-#include <cinttypes>
-#include "../types.h"
-#include <ostream>
-
 #include "component.h"
+#include "../types.h"
 #include "control_enums.h"
 
 template<typename... Ts>

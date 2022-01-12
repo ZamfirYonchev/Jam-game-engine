@@ -11,7 +11,6 @@
 #include "control_enums.h"
 #include "../math_ext.h"
 #include "../types.h"
-#include <ostream>
 
 template<typename PositionT>
 class GuideControl
@@ -35,7 +34,7 @@ public:
     template<typename ExtractorF, typename SelfIDObtainerF>
 	GuideControl
 	( ExtractorF&& extract
-	, SelfIDObtainerF&& obtain_self_id
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const PositionT> position_accessor
 	)
 	: GuideControl

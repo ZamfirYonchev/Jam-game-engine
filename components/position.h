@@ -8,9 +8,6 @@
 #ifndef COMPONENTS_POSITION_H_
 #define COMPONENTS_POSITION_H_
 
-#include <ostream>
-#include <variant>
-
 #include "component.h"
 
 template<typename... Ts>

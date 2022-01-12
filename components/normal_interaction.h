@@ -8,7 +8,7 @@
 #ifndef COMPONENTS_NORMAL_INTERACTION_H_
 #define COMPONENTS_NORMAL_INTERACTION_H_
 
-#include <cinttypes>
+#include "../types.h"
 
 class NormalInteraction
 {

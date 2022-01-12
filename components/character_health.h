@@ -8,7 +8,6 @@
 #ifndef COMPONENTS_CHARACTER_HEALTH_H_
 #define COMPONENTS_CHARACTER_HEALTH_H_
 
-#include <ostream>
 #include "../math_ext.h"
 #include "../types.h"
 

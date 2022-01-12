@@ -8,12 +8,8 @@
 #ifndef COMPONENTS_MOVEMENT_H_
 #define COMPONENTS_MOVEMENT_H_
 
-#include "../types.h"
-#include <ostream>
-#include <variant>
-#include <utility>
-
 #include "component.h"
+#include "../types.h"
 
 template<typename... Ts>
 struct MovementVariant : public ComponentVariant<Ts...>

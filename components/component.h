@@ -8,9 +8,7 @@
 #ifndef COMPONENTS_COMPONENT_H_
 #define COMPONENTS_COMPONENT_H_
 
-#include <memory>
 #include <variant>
-#include <ostream>
 
 template<typename... Ts>
 class ComponentVariant

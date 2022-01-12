@@ -8,11 +8,8 @@
 #ifndef COMPONENTS_COLLISION_H_
 #define COMPONENTS_COLLISION_H_
 
-#include "../types.h"
-#include <ostream>
-#include <variant>
-
 #include "component.h"
+#include "../types.h"
 #include "collision_enums.h"
 
 template<typename... Ts>

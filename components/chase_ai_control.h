@@ -10,7 +10,6 @@
 
 #include "control_enums.h"
 #include "../math_ext.h"
-#include <ostream>
 #include "../types.h"
 
 template<typename PositionT>
@@ -40,7 +39,7 @@ public:
     template<typename ExtractorF, typename SelfIDObtainerF>
 	ChaseAIControl
 	( ExtractorF&& extract
-	, SelfIDObtainerF&& obtain_self_id
+	, const SelfIDObtainerF& obtain_self_id
 	, ComponentAccess<const PositionT> position_accessor
 	)
 	: ChaseAIControl
