@@ -21,56 +21,33 @@ class ResourceSystem
 public:
     ResourceSystem() = default;
 
-    TextureID addNewTextureFromFile(std::string_view file, SDL_Renderer* renderer)
+    TextureID addNewTexture(Texture texture)
     {
-    	m_textures.push_back(Texture(file, renderer));
+    	m_textures.push_back(std::move(texture));
         return m_textures.size()-1;
     }
 
-    TextureID addNewTextureFromString
-	(
-		std::string_view text
-	  , const FontID font_id
-	  , const uint8_t r
-	  , const uint8_t g
-	  , const uint8_t b
-	  , SDL_Renderer* renderer
-	)
+    AnimationID addNewAnimation(Animation animation)
     {
-    	if(0 <= font_id && font_id < static_cast<FontID>(m_fonts.size()))
-    	{
-    		m_textures.emplace_back();
-    		m_textures.back().load_from_string(text, m_fonts[font_id], r, g, b, renderer);
-            return m_textures.size()-1;
-    	}
-    	else
-    	{
-    		//error font_id
-    		return -1;
-    	}
-    }
-
-    AnimationID addNewAnimation(const Animation& animation)
-    {
-        m_animations.push_back(animation);
+        m_animations.push_back(std::move(animation));
         return m_animations.size()-1;
     }
 
-    FontID addNewFont(std::string_view font_file, const int size)
+    FontID addNewFont(Font font)
     {
-    	m_fonts.push_back(Font(font_file, size));
+    	m_fonts.push_back(std::move(font));
     	return m_fonts.size()-1;
     }
 
-    SoundID addNewSound(std::string_view sound_file, const int repeat)
+    SoundID addNewSound(SoundChunk chunk)
     {
-    	m_sounds.push_back(SoundChunk(sound_file, repeat));
+    	m_sounds.push_back(std::move(chunk));
     	return m_sounds.size()-1;
     }
 
-    MusicID addNewMusic(std::string_view file)
+    MusicID addNewMusic(Music music)
     {
-    	m_music.push_back(Music(file));
+    	m_music.push_back(std::move(music));
     	return m_music.size()-1;
     }
 

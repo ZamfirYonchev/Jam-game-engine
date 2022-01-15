@@ -26,7 +26,7 @@ public:
     {
     	const auto file_name = command_system.exec_next().string();
     	const auto font_size = command_system.exec_next().integer();
-    	return CommandValue{resource_system.addNewFont(file_name, font_size)};
+    	return CommandValue{resource_system.addNewFont(Font{file_name, font_size})};
     }
 };
 

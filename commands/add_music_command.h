@@ -31,7 +31,7 @@ public:
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1};
 
-    	return CommandValue{resource_system.addNewMusic(file_name)};
+    	return CommandValue{resource_system.addNewMusic(Music{file_name})};
     }
 };
 

@@ -32,7 +32,7 @@ public:
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1};
 
-    	return CommandValue{resource_system.addNewSound(file_name, loops)};
+    	return CommandValue{resource_system.addNewSound(SoundChunk{file_name, loops})};
     }
 };
 
