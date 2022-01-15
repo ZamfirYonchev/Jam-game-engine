@@ -77,8 +77,9 @@ public:
 
     void update(const Time time_diff)
     {
-        SDL_SetRenderDrawColor(sdl_window.renderer(), 255, 255, 255, 255);
-        SDL_RenderClear(sdl_window.renderer());
+    	SDL_Renderer* renderer = &sdl_window.renderer();
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderClear(renderer);
 
         const auto& screen_zone_position = entity_system.template entity_component<PositionT>(EntityID{0});
 
@@ -130,7 +131,7 @@ public:
 
 										if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, sdl_window.res_width(), sdl_window.res_height()))
 										{
-											const int err = SDL_RenderCopyEx(sdl_window.renderer(), texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
+											const int err = SDL_RenderCopyEx(renderer, texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
 											if(err)
 											{
 												std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;
@@ -162,8 +163,8 @@ public:
 							, int(position.w()*m_screen_to_view_scale)
 							, int(position.h()*m_screen_to_view_scale)
 							};
-						SDL_SetRenderDrawColor(sdl_window.renderer(), 0, 0, 0, 255);
-						SDL_RenderDrawRect(sdl_window.renderer(), &hitbox);
+						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+						SDL_RenderDrawRect(renderer, &hitbox);
 					}
     			}
     			else
@@ -173,11 +174,11 @@ public:
         	}
         }
 
-        SDL_RenderPresent(sdl_window.renderer());
+        SDL_RenderPresent(renderer);
 
     }
 
-    SDL_Renderer* renderer() { return sdl_window.renderer(); }
+    SDL_Renderer& renderer() { return sdl_window.renderer(); }
 
 protected:
     EntitySystemT& entity_system;
