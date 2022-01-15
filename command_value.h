@@ -83,8 +83,9 @@ struct CommandValue
 
     operator bool() const { return boolean(); }
     operator int32_t() const { return integer(); }
+    operator uint8_t() const { return integer(); }
     operator double() const { return real(); }
-    operator std::string_view() const & { return string_view(); }
+    operator owning_string_view() const & { return string_view(); }
 
     std::variant<double, int32_t, std::string> value;
 };
