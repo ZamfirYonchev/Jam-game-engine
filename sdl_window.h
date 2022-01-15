@@ -79,7 +79,7 @@ public:
 		return *this;
 	}
 
-	SDL_Renderer* renderer() { return m_renderer; }
+	SDL_Renderer& renderer() { return *m_renderer; }
 	int res_width() const { return m_res_w; }
 	int res_height() const { return m_res_h; }
 
