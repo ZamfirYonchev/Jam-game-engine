@@ -10,19 +10,22 @@
 
 #include "../command_value.h"
 #include "../types.h"
+#include "../texture.h"
 
-template<typename CommandSystemT, typename RenderingSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename RenderingSystemT, typename TextureResourceSystemT, typename FontResourceSystemT>
 class AddTextureFromStringCommand
 {
 public:
 	CommandSystemT& command_system;
 	RenderingSystemT& rendering_system;
-	ResourceSystemT& resource_system;
+	TextureResourceSystemT& textures;
+	FontResourceSystemT& fonts;
 
-	AddTextureFromStringCommand(CommandSystemT& _command_system, RenderingSystemT& _rendering_system, ResourceSystemT& _resource_system)
+	AddTextureFromStringCommand(CommandSystemT& _command_system, RenderingSystemT& _rendering_system, TextureResourceSystemT& _textures, FontResourceSystemT& _fonts)
 	: command_system{_command_system}
 	, rendering_system{_rendering_system}
-	, resource_system{_resource_system}
+	, textures{_textures}
+	, fonts{_fonts}
 	{}
 
     CommandValue operator()() const
@@ -33,18 +36,18 @@ public:
     	const uint8_t b = command_system.exec_next();
     	const auto text = command_system.exec_next().string();
 
-    	const auto font_opt = resource_system.font(font_id);
+    	const auto font_opt = fonts[font_id];
 
     	if(font_opt)
     	{
-    		const auto tex_id = resource_system.addNewTexture(Texture
-    														  { text
-    														  , font_opt->get()
-    														  , r
-    														  , g
-    														  , b
-    														  , rendering_system.renderer()
-    														  });
+    		const auto tex_id = textures.add_new(Texture
+    											 { text
+    											 , font_opt->get()
+												 , r
+												 , g
+												 , b
+												 , rendering_system.renderer()
+    											 });
 	    	return CommandValue{tex_id};
     	}
     	else

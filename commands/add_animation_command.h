@@ -9,24 +9,25 @@
 #define COMMANDS_ADD_ANIMATION_COMMAND_H_
 
 #include "../command_value.h"
+#include "../animation.h"
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename AnimationResourceSystemT>
 class AddAnimationCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	AnimationResourceSystemT& animations;
 
-	AddAnimationCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system)
+	AddAnimationCommand(CommandSystemT& _command_system, AnimationResourceSystemT& _animations)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, animations{_animations}
 	{}
 
     CommandValue operator()() const
     {
     	const auto frame_delay_ms = command_system.exec_next().integer();
     	const auto scale_factor = command_system.exec_next().real();
-    	return CommandValue{resource_system.addNewAnimation(Animation{frame_delay_ms, scale_factor})};
+    	return CommandValue{animations.add_new(Animation{frame_delay_ms, scale_factor})};
     }
 };
 

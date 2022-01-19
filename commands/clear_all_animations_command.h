@@ -10,17 +10,19 @@
 
 #include "../command_value.h"
 
-template<typename ResourceSystemT>
+template<typename AnimationResourceSystemT>
 class ClearAllAnimationsCommand
 {
 public:
-	ResourceSystemT& resource_system;
+	AnimationResourceSystemT& animations;
 
-	ClearAllAnimationsCommand(ResourceSystemT& _resource_system) : resource_system{_resource_system} {}
+	ClearAllAnimationsCommand(AnimationResourceSystemT& _animations)
+	: animations{_animations}
+	{}
 
     CommandValue operator()() const
 	{
-		resource_system.clear_animations();
+    	animations.clear();
 		return CommandValue{0};
 	}
 };

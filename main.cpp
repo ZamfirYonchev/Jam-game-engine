@@ -113,6 +113,12 @@
 #include "utilities.h"
 #include "command_value_extractor.h"
 
+#include "texture.h"
+#include "font.h"
+#include "animation.h"
+#include "sound_chunk.h"
+#include "music.h"
+
 #include <list>
 #include <utility>
 #include <string>
@@ -193,7 +199,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
-		ResourceSystem resource_system;
+		ResourceSystem<Texture> textures;
+		ResourceSystem<Font> fonts;
+		ResourceSystem<Animation> animations;
+		ResourceSystem<SoundChunk> sounds;
+		ResourceSystem<Music> music;
 		InputSystem input_system;
 
 		ControlSystem<ES, Control, Health> control_system {entity_system, globals, command_system.external_commands()};
@@ -201,13 +211,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		CollisionSystem<ES, Position, Movement, Collision, Interaction, Health> collision_system {entity_system, globals, command_system.external_commands()};
 		//MovementCollisionSystem<ES> movement_collision_system {entity_system, globals, command_system.external_commands()};
 		DamageSystem<ES, Health> damage_system {entity_system, globals, command_system.external_commands()};
-		SoundSystem<ES, Sounds> sound_system {entity_system, resource_system, globals};
-		RenderingSystem<ES, ResourceSystem, Position, Control, Visuals> rendering_system
-			{ entity_system
-			, resource_system
-			, globals
-			, sdl
-			};
+		SoundSystem<ES, ResourceSystem<SoundChunk>, Sounds> sound_system {entity_system, sounds, globals};
+		RenderingSystem<ES, ResourceSystem<Animation>, ResourceSystem<Texture>, Position, Control, Visuals> rendering_system
+		{ entity_system
+		, animations
+		, textures
+		, globals
+		, sdl
+		};
 
 		using RS = decltype(rendering_system);
 
@@ -244,7 +255,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		ES::ComponentAccessor<Visuals> visuals_accessor{entity_system};
 		const auto current_id_accessor = [&](){ return EntityID(globals(Globals::selected_entity).integer()); };
 
-		const auto animation_access = [&](const AnimationID anim_id){ return resource_system.animation(anim_id); };
+		const auto animation_access = [&](const AnimationID anim_id){ return animations[anim_id]; };
 
 	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
 	    command_system.register_command("Val", GetVariableCommand{command_system, globals});
@@ -257,20 +268,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("Pause", PauseCommand{command_system, globals});
 		command_system.register_command("Reload", ReloadCommand{globals});
 		command_system.register_command("Quit", QuitCommand{globals});
-		command_system.register_command("ClearAllTextures", ClearAllTexturesCommand{resource_system});
+		command_system.register_command("ClearAllTextures", ClearAllTexturesCommand{textures});
 		command_system.register_command("ClearAllEntities", ClearAllEntitiesCommand{entity_system, all_systems});
-		command_system.register_command("ClearAllAnimations", ClearAllAnimationsCommand{resource_system});
+		command_system.register_command("ClearAllAnimations", ClearAllAnimationsCommand{animations});
 		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{command_system});
-		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{entity_system, command_system, all_systems, rendering_system, resource_system});
+		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{entity_system, command_system, all_systems, rendering_system, textures, animations, fonts, sounds, music});
 		command_system.register_command("CallProcedure", CallProcedureCommand{command_system, globals});
 		command_system.register_command("Call", CallProcedureCommand{command_system, globals});
-		command_system.register_command("AddFont", AddFontCommand{command_system, resource_system});
-		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{command_system, rendering_system, resource_system});
-		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{command_system, rendering_system, resource_system});
-		command_system.register_command("AddAnimation", AddAnimationCommand{command_system, resource_system});
-		command_system.register_command("AddSprite", AddSpriteCommand{command_system, resource_system});
-		command_system.register_command("AddSound", AddSoundCommand{command_system, resource_system, globals});
-		command_system.register_command("AddMusic", AddMusicCommand{command_system, resource_system, globals});
+		command_system.register_command("AddFont", AddFontCommand{command_system, fonts});
+		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{command_system, rendering_system, textures});
+		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{command_system, rendering_system, textures, fonts});
+		command_system.register_command("AddAnimation", AddAnimationCommand{command_system, animations});
+		command_system.register_command("AddSprite", AddSpriteCommand{command_system, textures, animations});
+		command_system.register_command("AddSound", AddSoundCommand{command_system, sounds, globals});
+		command_system.register_command("AddMusic", AddMusicCommand{command_system, music, globals});
 		command_system.register_command("AddEntity", AddEntityCommand{entity_system, globals});
 		command_system.register_command("RemoveEntity", RemoveEntityCommand{entity_system, globals});
 		command_system.register_command("ModifyPosition", ModifyPositionCommand<CS, ES, Position>{command_system, entity_system, globals});
@@ -328,8 +339,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals, CommandSystem, ES>{command_system, entity_system});
 		command_system.register_command("ExportEntities", ExportEntitiesCommand{command_system, entity_system});
 		command_system.register_command("FinalizeBuild", FinalizeBuildCommand<ES, AS, Position>{entity_system, all_systems, globals});
-		command_system.register_command("PlaySound", PlaySoundCommand{command_system, resource_system, globals});
-		command_system.register_command("PlayMusic", PlayMusicCommand{command_system, resource_system, globals});
+		command_system.register_command("PlaySound", PlaySoundCommand{command_system, sounds, globals});
+		command_system.register_command("PlayMusic", PlayMusicCommand{command_system, music, globals});
 		command_system.register_command("PauseAllSounds", PauseAllSoundsCommand{command_system, globals});
 		command_system.register_command("ReadPosition", ReadPositionCommand<CS, ES, Position>{command_system, entity_system});
 		command_system.register_command("ReadControl", ReadControlCommand<CS, ES, Control>{command_system, entity_system});

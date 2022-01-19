@@ -10,130 +10,42 @@
 
 #include <vector>
 #include "../types.h"
-#include "../texture.h"
-#include "../font.h"
-#include "../animation.h"
-#include "../music.h"
-#include "../sound_chunk.h"
 
+template<typename ResourceT>
 class ResourceSystem
 {
 public:
     ResourceSystem() = default;
 
-    TextureID addNewTexture(Texture texture)
+    ResourceID add_new(ResourceT resource)
     {
-    	m_textures.push_back(std::move(texture));
-        return m_textures.size()-1;
+    	m_resources.push_back(std::move(resource));
+        return m_resources.size()-1;
     }
 
-    AnimationID addNewAnimation(Animation animation)
+    optional_ref<ResourceT> operator[](const ResourceID id)
     {
-        m_animations.push_back(std::move(animation));
-        return m_animations.size()-1;
-    }
-
-    FontID addNewFont(Font font)
-    {
-    	m_fonts.push_back(std::move(font));
-    	return m_fonts.size()-1;
-    }
-
-    SoundID addNewSound(SoundChunk chunk)
-    {
-    	m_sounds.push_back(std::move(chunk));
-    	return m_sounds.size()-1;
-    }
-
-    MusicID addNewMusic(Music music)
-    {
-    	m_music.push_back(std::move(music));
-    	return m_music.size()-1;
-    }
-
-    optional_ref<Texture> texture(const TextureID tex_id)
-    {
-        if(0 <= tex_id && tex_id < static_cast<TextureID>(m_textures.size()))
-            return optional_ref<Texture>{m_textures[tex_id]};
+        if(0 <= id && id < static_cast<ResourceID>(m_resources.size()))
+            return optional_ref<ResourceT>{m_resources[id]};
         else
         	return {};
     }
 
-    optional_ref<Animation> animation(const AnimationID anim_id)
+    optional_ref<const ResourceT> operator[](const ResourceID id) const
     {
-        if(0 <= anim_id && anim_id < static_cast<AnimationID>(m_animations.size()))
-        	return optional_ref<Animation>{m_animations[anim_id]};
+        if(0 <= id && id < static_cast<ResourceID>(m_resources.size()))
+            return optional_ref<const ResourceT>{m_resources[id]};
         else
         	return {};
-    }
-
-    optional_ref<const Animation> animation(const AnimationID anim_id) const
-    {
-        if(0 <= anim_id && anim_id < static_cast<AnimationID>(m_animations.size()))
-        	return optional_ref<const Animation>{m_animations[anim_id]};
-        else
-        	return {};
-    }
-
-    optional_ref<Font> font(const FontID id)
-    {
-    	if(0 <= id && id < static_cast<FontID>(m_fonts.size()))
-    		return optional_ref<Font>{m_fonts[id]};
-    	else
-    		return {};
-    }
-
-    optional_ref<SoundChunk> sound(const SoundID id)
-    {
-    	if(0 <= id && id < static_cast<SoundID>(m_sounds.size()))
-    		return optional_ref<SoundChunk>{m_sounds[id]};
-    	else
-    		return {};
-    }
-
-    optional_ref<Music> music(const MusicID id)
-    {
-    	if(0 <= id && id < static_cast<MusicID>(m_music.size()))
-    		return optional_ref<Music>{m_music[id]};
-    	else
-    		return {};
-    }
-
-    void clear_textures()
-    {
-        m_textures.clear();
-    }
-
-    void clear_animations()
-    {
-        m_animations.clear();
-    }
-
-    void clear_fonts()
-    {
-        m_fonts.clear();
-    }
-
-    void clear_sounds()
-    {
-        m_sounds.clear();
-        m_music.clear();
     }
 
     void clear()
     {
-        clear_textures();
-        clear_animations();
-        clear_fonts();
-        clear_sounds();
+        m_resources.clear();
     }
 
 private:
-    std::vector<Texture> m_textures;
-    std::vector<Animation> m_animations;
-    std::vector<Font> m_fonts;
-    std::vector<SoundChunk> m_sounds;
-    std::vector<Music> m_music;
+    std::vector<ResourceT> m_resources;
 };
 
 #endif /* SYSTEMS_RESOURCE_SYSTEM_H_ */

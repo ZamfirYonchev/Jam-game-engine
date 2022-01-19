@@ -12,16 +12,18 @@
 #include "../types.h"
 #include <SDL2/SDL.h>
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename TextureResourceSystemT, typename AnimationResourceSystemT>
 class AddSpriteCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	TextureResourceSystemT& textures;
+	AnimationResourceSystemT& animations;
 
-	AddSpriteCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system)
+	AddSpriteCommand(CommandSystemT& _command_system, TextureResourceSystemT& _textures, AnimationResourceSystemT& _animations)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, textures{_textures}
+	, animations{_animations}
 	{}
 
 	CommandValue operator()() const
@@ -48,8 +50,8 @@ public:
     	int width = 0, height = 0;
     	if(w == 0 || h == 0)
     	{
-    		if(resource_system.texture(tex_id))
-    			SDL_QueryTexture(resource_system.texture(tex_id)->get().texture(), nullptr, nullptr, &width, &height);
+    		if(textures[tex_id])
+    			SDL_QueryTexture(textures[tex_id]->get().texture(), nullptr, nullptr, &width, &height);
     		else
     		{
     			//todo add error message
@@ -60,7 +62,7 @@ public:
     	width = (w == 0) ? width  : w;
     	height = (h == 0) ? height : h;
 
-    	const int sprite_id = resource_system.animation(anim_id)->get().add_sprite({TextureID(tex_id), {x, y, width, height}});
+    	const int sprite_id = animations[anim_id]->get().add_sprite({TextureID(tex_id), {x, y, width, height}});
 
 		return CommandValue{sprite_id};
     }

@@ -14,17 +14,17 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename MusicResourceSystemT>
 class PlayMusicCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	MusicResourceSystemT& music;
 	Globals& globals;
 
-	PlayMusicCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system, Globals& _globals)
+	PlayMusicCommand(CommandSystemT& _command_system, MusicResourceSystemT& _music, Globals& _globals)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, music{_music}
 	, globals{_globals}
 	{}
 
@@ -42,7 +42,7 @@ public:
 		}
 		else
 		{
-			const auto music_optional = resource_system.music(MusicID(music_id));
+			const auto music_optional = music[MusicID(music_id)];
 
 			if(music_optional)
 			{

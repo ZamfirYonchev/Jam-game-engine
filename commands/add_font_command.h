@@ -9,24 +9,25 @@
 #define COMMANDS_ADD_FONT_COMMAND_H_
 
 #include "../command_value.h"
+#include "../font.h"
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename FontResourceSystemT>
 class AddFontCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	FontResourceSystemT& fonts;
 
-	AddFontCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system)
+	AddFontCommand(CommandSystemT& _command_system, FontResourceSystemT& _fonts)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, fonts{_fonts}
 	{}
 
     CommandValue operator()() const
     {
     	const auto file_name = command_system.exec_next().string();
     	const auto font_size = command_system.exec_next().integer();
-    	return CommandValue{resource_system.addNewFont(Font{file_name, font_size})};
+    	return CommandValue{fonts.add_new(Font{file_name, font_size})};
     }
 };
 

@@ -10,16 +10,18 @@
 
 #include "../command_value.h"
 
-template<typename ResourceSystemT>
+template<typename TextureResourceSystemT>
 class ClearAllTexturesCommand
 {
 public:
-	ResourceSystemT& resource_system;
-	ClearAllTexturesCommand(ResourceSystemT& _resource_system) : resource_system{_resource_system} {}
+	TextureResourceSystemT& textures;
+	ClearAllTexturesCommand(TextureResourceSystemT& _textures)
+	: textures{_textures}
+	{}
 
     CommandValue operator()() const
 	{
-		resource_system.clear_textures();
+    	textures.clear();
 		return CommandValue{0};
 	}
 };

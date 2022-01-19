@@ -15,12 +15,15 @@
 using HashT = uint64_t;
 
 using EntityID = int32_t;
-using AnimationID = int32_t;
-using TextureID = int32_t;
-using ProcedureID = int32_t;
-using SoundID = int32_t;
-using MusicID = int32_t;
-using FontID = int32_t;
+
+using ResourceID = int32_t;
+using AnimationID = ResourceID;
+using TextureID = ResourceID;
+using ProcedureID = ResourceID;
+using SoundID = ResourceID;
+using MusicID = ResourceID;
+using FontID = ResourceID;
+
 using Time = int32_t;
 using GroupID = int;
 

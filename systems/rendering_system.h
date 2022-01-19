@@ -13,25 +13,22 @@
 #include <unordered_map>
 #include <SDL2/SDL.h>
 #include "../sdl_window.h"
-#include "../components/visuals.h"
-#include "../components/collision.h"
-#include "../components/movement.h"
-#include "../components/position.h"
-#include "../components/control.h"
-#include "../components/health.h"
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
-#include "resource_system.h"
+#include "../components/control_enums.h"
 #include "../components/visuals_enums.h"
 #include "../globals.h"
+#include "../animation.h"
+#include "../texture.h"
 
-template<typename EntitySystemT, typename ResourceSystemT, typename PositionT, typename ControlT, typename VisualsT>
+template<typename EntitySystemT, typename AnimationResourceSystemT, typename TextureResourceSystemT, typename PositionT, typename ControlT, typename VisualsT>
 class RenderingSystem
 {
 public:
-	RenderingSystem(EntitySystemT& _entity_system, ResourceSystemT& _resource_system, Globals& _globals, SdlWindow& _sdl_window)
+	RenderingSystem(EntitySystemT& _entity_system, AnimationResourceSystemT& _animations, TextureResourceSystemT& _textures, Globals& _globals, SdlWindow& _sdl_window)
 	: entity_system{_entity_system}
-	, resource_system{_resource_system}
+	, animations{_animations}
+	, textures{_textures}
 	, globals{_globals}
 	, sdl_window(_sdl_window)
 	{}
@@ -108,14 +105,14 @@ public:
 						for(int16_t ry = 0; ry < visuals.repeat_y(); ++ry)
 						{
 							const auto animation_frame = visuals.animation_frame(rx, ry);
-							const optional_ref<Animation> anim_opt = resource_system.animation(animation_frame.id);
+							const optional_ref<Animation> anim_opt = animations[animation_frame.id];
 							if(anim_opt)
 							{
 								double scale_factor = anim_opt->get().scale_factor();
 								const optional_ref<Sprite> sprite_opt = anim_opt->get().sprite(animation_frame.frame);
 								if(sprite_opt)
 								{
-									const optional_ref<Texture> texture_opt = resource_system.texture(sprite_opt->get().texture_id);
+									const optional_ref<Texture> texture_opt = textures[sprite_opt->get().texture_id];
 									if(texture_opt)
 									{
 										//TODO: to optimize and add constness
@@ -182,7 +179,8 @@ public:
 
 protected:
     EntitySystemT& entity_system;
-    ResourceSystemT& resource_system;
+    AnimationResourceSystemT& animations;
+    TextureResourceSystemT& textures;
     Globals& globals;
     SdlWindow& sdl_window;
     std::set<EntityID> entities[NUM_OF_LAYERS];

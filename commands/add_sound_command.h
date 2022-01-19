@@ -10,18 +10,19 @@
 
 #include "../command_value.h"
 #include "../globals.h"
+#include "../sound_chunk.h"
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename SoundResourceSystemT>
 class AddSoundCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	SoundResourceSystemT& sounds;
 	Globals& globals;
 
-	AddSoundCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system, Globals& _globals)
+	AddSoundCommand(CommandSystemT& _command_system, SoundResourceSystemT& _sounds, Globals& _globals)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, sounds{_sounds}
 	, globals{_globals}
 	{}
 
@@ -32,7 +33,7 @@ public:
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1};
 
-    	return CommandValue{resource_system.addNewSound(SoundChunk{file_name, loops})};
+    	return CommandValue{sounds.add_new(SoundChunk{file_name, loops})};
     }
 };
 

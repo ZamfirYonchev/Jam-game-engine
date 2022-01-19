@@ -9,19 +9,17 @@
 #define SYSTEMS_SOUND_SYSTEM_H_
 
 #include "system_base.h"
-#include "resource_system.h"
-#include <list>
 #include "../types.h"
-#include "../components/sounds.h"
-#include <vector>
+#include "../globals.h"
+#include <unordered_map>
 
-template<typename EntitySystemT, typename SoundsT>
+template<typename EntitySystemT, typename SoundResourceSystemT, typename SoundsT>
 class SoundSystem : public SystemBase
 {
 public:
-	SoundSystem(EntitySystemT& entity_system, ResourceSystem& resource_system, Globals& _globals)
+	SoundSystem(EntitySystemT& entity_system, SoundResourceSystemT& _sound_chunks, Globals& _globals)
 	: m_entity_system(entity_system)
-	, m_resource_system(resource_system)
+	, sound_chunks(_sound_chunks)
 	, globals{_globals}
 	, m_last_paused(false)
 	, m_channel_activity_per_entity()
@@ -72,19 +70,16 @@ public:
 							channel_activity.second = 0;
 						}
 
-						if(sounds.id() >= 0)
-						{
-							const auto& sound_chunk_optional = m_resource_system.sound(sounds.id());
+						const auto& sound_chunk_optional = sound_chunks[sounds.id()];
 
-							if(sound_chunk_optional)
-							{
-								const int channel = Mix_PlayChannel(-1, sound_chunk_optional->get().sound(), sound_chunk_optional->get().repeat());
-								channel_activity = {channel, sound_chunk_optional->get().repeat()};
-							}
-							else
-							{
-								//error sounds.sound_id()
-							}
+						if(sound_chunk_optional)
+						{
+							const int channel = Mix_PlayChannel(-1, sound_chunk_optional->get().sound(), sound_chunk_optional->get().repeat());
+							channel_activity = {channel, sound_chunk_optional->get().repeat()};
+						}
+						else
+						{
+							//error sounds.sound_id()
 						}
 					}
 				}
@@ -114,7 +109,7 @@ public:
 
 private:
     EntitySystemT& m_entity_system;
-    ResourceSystem& m_resource_system;
+    SoundResourceSystemT& sound_chunks;
     Globals& globals;
     bool m_last_paused;
     std::unordered_map<EntityID, std::pair<int, int>> m_channel_activity_per_entity;

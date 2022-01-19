@@ -14,17 +14,17 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename SoundResourceSystemT>
 class PlaySoundCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	SoundResourceSystemT& sounds;
 	Globals& globals;
 
-	PlaySoundCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system, Globals& _globals)
+	PlaySoundCommand(CommandSystemT& _command_system, SoundResourceSystemT& _sounds, Globals& _globals)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, sounds{_sounds}
 	, globals{_globals}
 	{}
 
@@ -35,7 +35,7 @@ public:
 
 		if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{sound_id};
 
-		const auto sound_optional = resource_system.sound(SoundID(sound_id));
+		const auto sound_optional = sounds[SoundID(sound_id)];
 
     	if(sound_optional)
     	{

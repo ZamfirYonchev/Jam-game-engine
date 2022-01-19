@@ -10,18 +10,19 @@
 
 #include "../command_value.h"
 #include "../globals.h"
+#include "../music.h"
 
-template<typename CommandSystemT, typename ResourceSystemT>
+template<typename CommandSystemT, typename MusicResourceSystemT>
 class AddMusicCommand
 {
 public:
 	CommandSystemT& command_system;
-	ResourceSystemT& resource_system;
+	MusicResourceSystemT& music;
 	Globals& globals;
 
-	AddMusicCommand(CommandSystemT& _command_system, ResourceSystemT& _resource_system, Globals& _globals)
+	AddMusicCommand(CommandSystemT& _command_system, MusicResourceSystemT& _music, Globals& _globals)
 	: command_system{_command_system}
-	, resource_system{_resource_system}
+	, music{_music}
 	, globals{_globals}
 	{}
 
@@ -31,7 +32,7 @@ public:
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1};
 
-    	return CommandValue{resource_system.addNewMusic(Music{file_name})};
+    	return CommandValue{music.add_new(Music{file_name})};
     }
 };
 
