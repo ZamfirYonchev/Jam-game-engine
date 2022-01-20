@@ -19,7 +19,7 @@ public:
 
     CommandValue operator()() const
     {
-    	globals(Globals::app_needs_reload) = CommandValue{1};
+    	globals(Globals::app_needs_reload) = CommandValue{true};
         std::cout << "Issuing a game reload\n";
         return globals(Globals::app_needs_reload);
     }

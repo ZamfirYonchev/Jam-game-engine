@@ -33,7 +33,7 @@ public:
     	const auto hp_change = command_system.exec_next();
     	const auto proc_id = command_system.exec_next();
 
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	auto& health = entity_system.template entity_component<HealthT>(selected_entity);
 
 		if(health)

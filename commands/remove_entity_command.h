@@ -25,7 +25,7 @@ public:
 
 	CommandValue operator()() const
     {
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	entity_system.remove_entity(selected_entity);
 		return globals(Globals::selected_entity);
     }

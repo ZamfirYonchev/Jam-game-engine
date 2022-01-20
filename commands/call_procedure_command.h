@@ -39,18 +39,18 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto proc_id = m_procedure.holds_string() ? globals(m_procedure.string_view()) :
-							(m_procedure.integer() > 0) ? m_procedure
-														: command_system.exec_next();
+    	const ProcedureID proc_id = m_procedure.holds_string() ? globals(m_procedure.string_view()) :
+									(m_procedure.integer() > 0) ? m_procedure
+																: command_system.exec_next();
 
-    	if(proc_id.integer() < 0)
+    	if(proc_id < 0)
     	{
-			std::cerr << "CallProcedure: procedure id " << proc_id.integer() << " must be >= 0\n";
+			std::cerr << "CallProcedure: procedure id " << proc_id << " must be >= 0\n";
 			return CommandValue{-1};
     	}
     	else
     	{
-    		command_system.procedure(ProcedureID(proc_id.integer())).insert_to(command_system);
+    		command_system.procedure(ProcedureID(proc_id)).insert_to(command_system);
 			return command_system.exec_next(); //return the result from the first command
     	}
     }

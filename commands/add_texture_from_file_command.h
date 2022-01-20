@@ -27,8 +27,8 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next().string();
-    	const auto tex_id = textures.add_new(Texture{file_name, rendering_system.renderer()});
+    	const std::string file_name = command_system.exec_next();
+    	const TextureID tex_id = textures.add_new(Texture{file_name, rendering_system.renderer()});
     	return CommandValue{tex_id};
     }
 };

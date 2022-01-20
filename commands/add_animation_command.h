@@ -25,8 +25,8 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto frame_delay_ms = command_system.exec_next().integer();
-    	const auto scale_factor = command_system.exec_next().real();
+    	const Time frame_delay_ms = command_system.exec_next();
+    	const double scale_factor = command_system.exec_next();
     	return CommandValue{animations.add_new(Animation{frame_delay_ms, scale_factor})};
     }
 };

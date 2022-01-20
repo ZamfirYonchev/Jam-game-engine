@@ -34,7 +34,7 @@ public:
     	const auto w = command_system.exec_next();
     	const auto h = command_system.exec_next();
 
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	auto& position = entity_system.template entity_component<PositionT>(selected_entity);
 
 		if(position)

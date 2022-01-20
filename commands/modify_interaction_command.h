@@ -35,7 +35,7 @@ public:
     	const auto proc_id_other = command_system.exec_next();
     	const auto on_exit_proc_id_self = command_system.exec_next();
 
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	auto& interaction = entity_system.template entity_component<InteractionT>(selected_entity);
 
 		if(interaction)

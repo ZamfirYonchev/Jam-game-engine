@@ -28,24 +28,24 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto severity = command_system.exec_next().integer();
-    	const auto text = command_system.exec_next().string();
+    	const Severity severity = Severity(command_system.exec_next().integer());
+    	const auto text = command_system.exec_next();
 
-    	if(severity == int(Severity::FATAL))
+    	if(severity == Severity::FATAL)
     	{
-    		std::cerr << "FATAL: " << text << std::endl;
+    		std::cerr << "FATAL: " << text.string_view() << std::endl;
     		command_system.flush_commands();
     	}
-    	else if(severity == int(Severity::ERROR))
+    	else if(severity == Severity::ERROR)
     	{
-    		std::cerr << "ERROR: " << text << std::endl;
+    		std::cerr << "ERROR: " << text.string_view() << std::endl;
     	}
-    	else if(globals(Globals::app_debug_level).integer() >= severity)
+    	else if(globals(Globals::app_debug_level).integer() >= int(severity))
     	{
-    		std::cout << text << std::endl;
+    		std::cout << text.string_view() << std::endl;
     	}
 
-    	return CommandValue{text};
+    	return text;
     }
 };
 

@@ -161,12 +161,12 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 		bool sdl_initialized;
 		SdlWindow sdl
-				  { globals(Globals::app_resolution_x).integer()
-				  , globals(Globals::app_resolution_y).integer()
-				  , globals(Globals::app_fullscreen).boolean()
-				  , globals(Globals::app_enable_audio).boolean()
-				  , globals(Globals::app_sound_channels).integer()
-				  , globals(Globals::app_window_title).string_view()
+				  { globals(Globals::app_resolution_x)
+				  , globals(Globals::app_resolution_y)
+				  , globals(Globals::app_fullscreen)
+				  , globals(Globals::app_enable_audio)
+				  , globals(Globals::app_sound_channels)
+				  , globals(Globals::app_window_title)
 				  , sdl_initialized
 				  };
 

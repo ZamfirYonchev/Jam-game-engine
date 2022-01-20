@@ -18,22 +18,22 @@ class SelectEntityCommand
 public:
 	CommandSystemT& command_system;
 	Globals& globals;
-	const CommandValue m_entity_id;
+	EntityID m_entity_id;
 
 	SelectEntityCommand(CommandSystemT& _command_system, Globals& _globals, const EntityID entity_id)
 	: command_system{_command_system}
 	, globals{_globals}
-	, m_entity_id{entity_id, 0}
+	, m_entity_id{entity_id}
 	{}
 
 	SelectEntityCommand(CommandSystemT& _command_system, Globals& _globals)
 	: command_system{_command_system}
 	, globals{_globals}
-	, m_entity_id{-1.0} {}
+	, m_entity_id{-1} {}
 
     CommandValue operator()() const
 	{
-    	const auto entity_id = (m_entity_id.integer() >= 0) ? m_entity_id : command_system.exec_next();
+    	const auto entity_id = (m_entity_id >= 0) ? CommandValue{m_entity_id} : command_system.exec_next();
     	globals(Globals::selected_entity) = entity_id;
 		return entity_id;
 	}

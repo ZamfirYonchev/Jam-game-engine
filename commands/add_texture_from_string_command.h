@@ -30,11 +30,11 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto font_id = command_system.exec_next().integer();
+    	const FontID font_id = command_system.exec_next();
     	const uint8_t r = command_system.exec_next();
     	const uint8_t g = command_system.exec_next();
     	const uint8_t b = command_system.exec_next();
-    	const auto text = command_system.exec_next().string();
+    	const std::string text = command_system.exec_next();
 
     	const auto font_opt = fonts[font_id];
 

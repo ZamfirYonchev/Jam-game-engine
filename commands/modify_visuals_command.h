@@ -34,7 +34,7 @@ public:
     	const auto repeat_y = command_system.exec_next();
     	const auto layer = command_system.exec_next();
 
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	auto& visuals = entity_system.template entity_component<VisualsT>(selected_entity);
 
 		if(visuals)

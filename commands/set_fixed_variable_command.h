@@ -27,7 +27,7 @@ public:
 
     CommandValue operator()() const
 	{
-    	const CommandValue result = command_system.exec_next();
+    	const auto result = command_system.exec_next();
     	globals(m_hash) = result;
     	return result;
 	}

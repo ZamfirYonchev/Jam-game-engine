@@ -37,7 +37,7 @@ public:
     	const auto fy = command_system.exec_next();
     	const auto gravity_affected = command_system.exec_next();
 
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	auto& movement = entity_system.template entity_component<MovementT>(selected_entity);
 
 		if(movement)

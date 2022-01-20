@@ -34,11 +34,11 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto x_modifier = command_system.exec_next().real();
-		const auto y_modifier = command_system.exec_next().real();
-		const auto w_modifier = command_system.exec_next().real();
-		const auto h_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double x_modifier = command_system.exec_next();
+		const double y_modifier = command_system.exec_next();
+		const double w_modifier = command_system.exec_next();
+		const double h_modifier = command_system.exec_next();
 
 		const auto& position = entity_system.template entity_component<PositionT>(source_id);
 
@@ -65,12 +65,12 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto dec_x_modifier = command_system.exec_next().real();
-		const auto dec_y_modifier = command_system.exec_next().real();
-		const auto dec_attack_modifier = command_system.exec_next().real();
-		const auto look_dir_modifier = command_system.exec_next().real();
-		const auto proc_id_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double dec_x_modifier = command_system.exec_next();
+		const double dec_y_modifier = command_system.exec_next();
+		const double dec_attack_modifier = command_system.exec_next();
+		const double look_dir_modifier = command_system.exec_next();
+		const double proc_id_modifier = command_system.exec_next();
 
 		const auto& control = entity_system.template entity_component<ControlT>(source_id);
 
@@ -98,15 +98,15 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto mass_modifier = command_system.exec_next().real();
-		const auto fric_x_modifier = command_system.exec_next().real();
-		const auto fric_y_modifier = command_system.exec_next().real();
-		const auto vx_modifier = command_system.exec_next().real();
-		const auto vy_modifier = command_system.exec_next().real();
-		const auto fx_modifier = command_system.exec_next().real();
-		const auto fy_modifier = command_system.exec_next().real();
-		const auto gravity_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double mass_modifier = command_system.exec_next();
+		const double fric_x_modifier = command_system.exec_next();
+		const double fric_y_modifier = command_system.exec_next();
+		const double vx_modifier = command_system.exec_next();
+		const double vy_modifier = command_system.exec_next();
+		const double fx_modifier = command_system.exec_next();
+		const double fy_modifier = command_system.exec_next();
+		const double gravity_modifier = command_system.exec_next();
 
 		const auto& movement = entity_system.template entity_component<MovementT>(source_id);
 
@@ -137,11 +137,11 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto state_modifier = command_system.exec_next().real();
-		const auto standing_on_modifier = command_system.exec_next().real();
-		const auto damage_modifier = command_system.exec_next().real();
-		const auto elasticity_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double state_modifier = command_system.exec_next();
+		const double standing_on_modifier = command_system.exec_next();
+		const double damage_modifier = command_system.exec_next();
+		const double elasticity_modifier = command_system.exec_next();
 
 		const auto& collision = entity_system.template entity_component<CollisionT>(source_id);
 
@@ -168,12 +168,12 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto group_vector_modifier = command_system.exec_next().real();
-		const auto trigger_group_modifier = command_system.exec_next().real();
-		const auto proc_id_self_modifier = command_system.exec_next().real();
-		const auto proc_id_other_modifier = command_system.exec_next().real();
-		const auto on_exit_proc_id_self_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double group_vector_modifier = command_system.exec_next();
+		const double trigger_group_modifier = command_system.exec_next();
+		const double proc_id_self_modifier = command_system.exec_next();
+		const double proc_id_other_modifier = command_system.exec_next();
+		const double on_exit_proc_id_self_modifier = command_system.exec_next();
 
 		const auto& interaction = entity_system.template entity_component<InteractionT>(source_id);
 
@@ -209,10 +209,10 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto hp_modifier = command_system.exec_next().real();
-		const auto max_hp_modifier = command_system.exec_next().real();
-		const auto proc_id_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double hp_modifier = command_system.exec_next();
+		const double max_hp_modifier = command_system.exec_next();
+		const double proc_id_modifier = command_system.exec_next();
 
 		const auto& health = entity_system.template entity_component<HealthT>(source_id);
 
@@ -239,9 +239,9 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto sound_id_modifier = command_system.exec_next().real();
-		const auto changed_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double sound_id_modifier = command_system.exec_next();
+		const double changed_modifier = command_system.exec_next();
 
 		const auto& sounds = entity_system.template entity_component<SoundsT>(source_id);
 
@@ -266,10 +266,10 @@ public:
 
 	CommandValue operator()() const
 	{
-		const auto source_id = command_system.exec_next().integer();
-		const auto repeat_x_modifier = command_system.exec_next().real();
-		const auto repeat_y_modifier = command_system.exec_next().real();
-		const auto layer_modifier = command_system.exec_next().real();
+		const EntityID source_id = command_system.exec_next();
+		const double repeat_x_modifier = command_system.exec_next();
+		const double repeat_y_modifier = command_system.exec_next();
+		const double layer_modifier = command_system.exec_next();
 
 		const auto& visuals = entity_system.template entity_component<VisualsT>(source_id);
 

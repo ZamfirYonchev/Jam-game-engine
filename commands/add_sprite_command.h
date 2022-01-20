@@ -28,12 +28,12 @@ public:
 
 	CommandValue operator()() const
     {
-    	const auto anim_id = command_system.exec_next().integer();
-    	const auto tex_id = command_system.exec_next().integer();
-    	const auto x = command_system.exec_next().integer();
-    	const auto y = command_system.exec_next().integer();
-    	const auto w = command_system.exec_next().real();
-    	const auto h = command_system.exec_next().real();
+    	const AnimationID anim_id = command_system.exec_next();
+    	const TextureID tex_id = command_system.exec_next();
+    	const int x = command_system.exec_next();
+    	const int y = command_system.exec_next();
+    	int w = command_system.exec_next();
+    	int h = command_system.exec_next();
 
     	if(anim_id < 0)
     	{
@@ -47,11 +47,10 @@ public:
 			return CommandValue{-1};
     	}
 
-    	int width = 0, height = 0;
     	if(w == 0 || h == 0)
     	{
     		if(textures[tex_id])
-    			SDL_QueryTexture(textures[tex_id]->get().texture(), nullptr, nullptr, &width, &height);
+    			SDL_QueryTexture(textures[tex_id]->get().texture(), nullptr, nullptr, &w, &h);
     		else
     		{
     			//todo add error message
@@ -59,12 +58,17 @@ public:
     		}
     	}
 
-    	width = (w == 0) ? width  : w;
-    	height = (h == 0) ? height : h;
-
-    	const int sprite_id = animations[anim_id]->get().add_sprite({TextureID(tex_id), {x, y, width, height}});
-
-		return CommandValue{sprite_id};
+    	const auto anim_opt = animations[anim_id];
+    	if(anim_opt)
+    	{
+        	const int sprite_id = anim_opt->get().add_sprite({TextureID(tex_id), {x, y, w, h}});
+    		return CommandValue{sprite_id};
+    	}
+    	else
+    	{
+			//todo add error message
+			return CommandValue{-1};
+    	}
     }
 };
 

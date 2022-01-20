@@ -28,8 +28,8 @@ public:
 
 	CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next().string();
-    	const auto loops = command_system.exec_next().integer();
+    	const std::string file_name = command_system.exec_next();
+    	const int loops = command_system.exec_next();
 
     	if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{-1};
 

@@ -24,9 +24,9 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto proc_id = command_system.exec_next().integer();
-    	command_system.procedure(ProcedureID(proc_id)).clear();
-    	return CommandValue{0};
+    	const auto proc_id = command_system.exec_next();
+    	command_system.procedure(proc_id.integer()).clear();
+    	return proc_id;
     }
 };
 

@@ -33,7 +33,7 @@ public:
     	const auto on_collision_damage = command_system.exec_next();
     	const auto elasticity = command_system.exec_next();
 
-    	const EntityID selected_entity = globals(Globals::selected_entity).integer();
+    	const EntityID selected_entity = globals(Globals::selected_entity);
     	auto& collision = entity_system.template entity_component<CollisionT>(selected_entity);
 
 		if(collision)

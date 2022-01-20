@@ -26,7 +26,7 @@ public:
 
     CommandValue operator()() const
 	{
-		const auto name = command_system.exec_next().string();
+		const std::string name = command_system.exec_next();
 		return globals(name);
 	}
 };

@@ -25,8 +25,8 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto file_name = command_system.exec_next().string();
-    	const auto font_size = command_system.exec_next().integer();
+    	const std::string file_name = command_system.exec_next();
+    	const int font_size = command_system.exec_next();
     	return CommandValue{fonts.add_new(Font{file_name, font_size})};
     }
 };

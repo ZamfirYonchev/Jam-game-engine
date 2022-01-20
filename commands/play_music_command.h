@@ -30,28 +30,28 @@ public:
 
     CommandValue operator()() const
     {
-    	const auto music_id = command_system.exec_next().integer();
-    	const auto loops = command_system.exec_next().integer();
+    	const auto music_id = command_system.exec_next();
+    	const int loops = command_system.exec_next();
 
-		if(globals(Globals::app_enable_audio).boolean() == false) return CommandValue{music_id};
+		if(globals(Globals::app_enable_audio).boolean() == false) return music_id;
 
-		if(music_id == -1)
+		if(music_id.integer() == -1)
 		{
 			Mix_HaltMusic();
-			return CommandValue{music_id};
+			return music_id;
 		}
 		else
 		{
-			const auto music_optional = music[MusicID(music_id)];
+			const auto music_optional = music[MusicID(music_id.integer())];
 
 			if(music_optional)
 			{
 				if(Mix_PlayMusic(music_optional->get().music(), loops) < 0)
 				{
-					std::cerr << "Cannot play music " << music_id << ": " << Mix_GetError() << '\n';
+					std::cerr << "Cannot play music " << music_id.integer() << ": " << Mix_GetError() << '\n';
 				}
 
-				return CommandValue{music_id};
+				return music_id;
 			}
 			else
 			{

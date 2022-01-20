@@ -45,7 +45,7 @@ struct UseComponentCommandGenerator
 	{
 		return [&]()
 			   {
-					const EntityID selected_entity = globals(Globals::selected_entity).integer();
+					const EntityID selected_entity = globals(Globals::selected_entity);
 					int8_t change;
 					const auto& component = entity_system.set_entity_component( selected_entity
 																			  , ComponentT
@@ -58,7 +58,7 @@ struct UseComponentCommandGenerator
 					all_systems.component_updated(component, selected_entity, change);
 					rendering_system.component_updated(component, selected_entity, change);
 
-			    	return CommandValue{selected_entity};
+			    	return globals(Globals::selected_entity);
 			   };
 	}
 };

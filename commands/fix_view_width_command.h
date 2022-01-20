@@ -29,9 +29,10 @@ public:
     CommandValue operator()() const
 	{
 		auto& position = entity_system.template entity_component<PositionT>(EntityID{0});
-		position.set_w(int(position.h()*globals(Globals::app_resolution_x).real()/globals(Globals::app_resolution_y).real()));
+		const int new_width = position.h()*globals(Globals::app_resolution_x).integer()/globals(Globals::app_resolution_y).integer();
+		position.set_w(new_width);
 
-    	return CommandValue{0};
+    	return CommandValue{new_width};
 	}
 };
 
