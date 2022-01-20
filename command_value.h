@@ -86,6 +86,9 @@ struct CommandValue
     operator uint8_t() const { return integer(); }
     operator double() const { return real(); }
     operator owning_string_view() const & { return string_view(); }
+    explicit operator owning_string_view() && { return std::move(*this).string_view(); }
+    operator std::string() const & = delete;
+    operator std::string() && { return std::move(*this).string(); }
 
     std::variant<double, int32_t, std::string> value;
 };
