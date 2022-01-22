@@ -84,6 +84,7 @@ public:
 	int res_height() const { return m_res_h; }
 
 private:
+	//TODO use unique_ptr instead of raw pointers
 	SDL_Window* m_window;
 	SDL_Renderer* m_renderer;
 	bool m_sdl_init;
