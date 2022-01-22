@@ -11,44 +11,14 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <iostream>
+#include <memory>
 
 class Font
 {
 public:
-	Font(std::string_view font_file, int size) : m_font(nullptr)
+	Font(std::string_view font_file, int size)
+	: m_font{TTF_OpenFont(font_file.data(), size)}
 	{
-		set_font(font_file, size);
-	}
-
-	Font() : m_font(nullptr) {}
-
-	~Font()
-	{
-		if(m_font != nullptr)
-			TTF_CloseFont(m_font);
-	}
-
-	Font(const Font&) = delete;
-	Font(Font&& rhs) noexcept : m_font(std::move(rhs.m_font)) { rhs.m_font = nullptr; }
-
-	Font& operator=(const Font&) = delete;
-	Font& operator=(Font&& rhs) noexcept
-	{
-		if(m_font != nullptr)
-			TTF_CloseFont(m_font);
-
-		m_font = rhs.m_font;
-		rhs.m_font = nullptr;
-
-		return *this;
-	}
-
-	void set_font(std::string_view font_file, int size)
-	{
-		if(m_font)
-			TTF_CloseFont(m_font);
-
-		m_font = TTF_OpenFont(font_file.data(), size);
 	    if(m_font == nullptr)
 	    {
 	    	std::cerr << "Failed to load " << font_file << " font: " << TTF_GetError() << std::endl;
@@ -57,11 +27,13 @@ public:
 
 	TTF_Font* font()
 	{
-		return m_font;
+		return m_font.get();
 	}
 
 private:
-	TTF_Font *m_font;
+    struct TTF_Font_Destructor { void operator()(TTF_Font* ptr) { TTF_CloseFont(ptr); } };
+
+    std::unique_ptr<TTF_Font, TTF_Font_Destructor> m_font;
 };
 
 #endif /* FONT_H_ */
