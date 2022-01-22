@@ -16,24 +16,14 @@
 class Music
 {
 public:
-	Music(std::string_view filename) : m_music(nullptr)
+	Music(std::string_view filename)
+	: m_music(Mix_LoadMUS(filename.data()))
 	{
-		load_from_file(filename);
-	}
-
-	Music() : m_music(nullptr) {}
-
-    Music& load_from_file(std::string_view file)
-    {
-        m_music.reset(Mix_LoadMUS(file.data()));
-
         if(m_music == nullptr)
         {
-            std::cerr << "Cannot load music " << file << "! Error: " << Mix_GetError() << std::endl;
+            std::cerr << "Cannot load music " << filename << "! Error: " << Mix_GetError() << std::endl;
         }
-
-        return *this;
-    }
+	}
 
     Mix_Music* music() const
     {
