@@ -9,23 +9,31 @@
 #define COMMANDS_CLEAR_PROCEDURE_COMMAND_H_
 
 #include "../command_value.h"
-#include "../globals.h"
 #include "../types.h"
 
-template<typename CommandSystemT>
+template<typename CommandSystemT, typename ProcedureResourceSystemT>
 class ClearProcedureCommand
 {
 public:
 	CommandSystemT& command_system;
+	ProcedureResourceSystemT& procedures;
 
-	ClearProcedureCommand(CommandSystemT& _command_system)
+	ClearProcedureCommand(CommandSystemT& _command_system, ProcedureResourceSystemT& _procedures)
 	: command_system{_command_system}
+	, procedures{_procedures}
 	{}
 
     CommandValue operator()() const
     {
     	const auto proc_id = command_system.exec_next();
-    	command_system.procedure(proc_id.integer()).clear();
+    	auto procedure_opt = procedures[proc_id.integer()];
+
+    	if(procedure_opt)
+    		procedure_opt->get().clear();
+    	else
+    	{
+    		//todo add an error
+    	}
     	return proc_id;
     }
 };

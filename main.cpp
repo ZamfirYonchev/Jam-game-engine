@@ -42,6 +42,8 @@
 #include "commands/clear_all_animations_command.h"
 #include "commands/clear_all_procedures_command.h"
 #include "commands/call_procedure_command.h"
+#include "commands/call_fixed_procedure_command.h"
+#include "commands/call_named_procedure_command.h"
 #include "commands/add_font_command.h"
 #include "commands/add_sound_command.h"
 #include "commands/add_music_command.h"
@@ -144,7 +146,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	do
 	{
-		CommandSystem command_system {globals};
+		ResourceSystem<Procedure> procedures;
+
+		CommandSystem command_system {procedures, globals};
 		using CS = decltype(command_system);
 
 		command_system.register_command("ExecuteFile", ExecuteFileCommand{command_system});
@@ -243,7 +247,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 													 , globals
 													 };
 
-        CommandValueExtractor<CommandSystem> command_value_extractor{command_system};
+        CommandValueExtractor<CS> command_value_extractor{command_system};
 
 		ES::ComponentAccessor<Position> position_accessor{entity_system};
 		ES::ComponentAccessor<Control> control_accessor{entity_system};
@@ -263,18 +267,18 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("FixViewWidth", FixViewWidthCommand<ES, CS, Position>{entity_system, command_system, globals});
 		command_system.register_command("SelectEntity", SelectEntityCommand{command_system, globals});
 		command_system.register_command("Select", SelectEntityCommand{command_system, globals});
-		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{command_system});
-		command_system.register_command("ClearProcedure", ClearProcedureCommand{command_system});
+		command_system.register_command("ExtendProcedure", ExtendProcedureCommand{command_system, procedures});
+		command_system.register_command("CallProcedure", CallProcedureCommand{command_system, procedures, globals});
+		command_system.register_command("Call", CallProcedureCommand{command_system, procedures, globals});
+		command_system.register_command("ClearProcedure", ClearProcedureCommand{command_system, procedures});
 		command_system.register_command("Pause", PauseCommand{command_system, globals});
 		command_system.register_command("Reload", ReloadCommand{globals});
 		command_system.register_command("Quit", QuitCommand{globals});
 		command_system.register_command("ClearAllTextures", ClearAllTexturesCommand{textures});
 		command_system.register_command("ClearAllEntities", ClearAllEntitiesCommand{entity_system, all_systems});
 		command_system.register_command("ClearAllAnimations", ClearAllAnimationsCommand{animations});
-		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{command_system});
-		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{entity_system, command_system, all_systems, rendering_system, textures, animations, fonts, sounds, music});
-		command_system.register_command("CallProcedure", CallProcedureCommand{command_system, globals});
-		command_system.register_command("Call", CallProcedureCommand{command_system, globals});
+		command_system.register_command("ClearAllProcedures", ClearAllProceduresCommand{procedures});
+		command_system.register_command("ExecuteFileClean", ExecuteFileCleanCommand{entity_system, command_system, all_systems, rendering_system, procedures, textures, animations, fonts, sounds, music});
 		command_system.register_command("AddFont", AddFontCommand{command_system, fonts});
 		command_system.register_command("AddTextureFromFile", AddTextureFromFileCommand{command_system, rendering_system, textures});
 		command_system.register_command("AddTextureFromString", AddTextureFromStringCommand{command_system, rendering_system, textures, fonts});
@@ -329,14 +333,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("UseHealthVisuals", use_command_gen.make<Visuals, HealthVisuals<Health>>(command_value_extractor, animation_access, current_id_accessor, health_accessor));
 		command_system.register_command("UseMenuItemVisuals", use_command_gen.make<Visuals, MenuItemVisuals<Control>>(command_value_extractor, animation_access, current_id_accessor, control_accessor));
 		command_system.register_command("UseAnimationVisuals", use_command_gen.make<Visuals, AnimationVisuals>(command_value_extractor, animation_access));
-		command_system.register_command("ReusePosition", ReuseComponentCommand<Position, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseControl", ReuseComponentCommand<Control, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseMovement", ReuseComponentCommand<Movement, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseCollision", ReuseComponentCommand<Collision, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseInteraction", ReuseComponentCommand<Interaction, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseHealth", ReuseComponentCommand<Health, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseSounds", ReuseComponentCommand<Sounds, CommandSystem, ES>{command_system, entity_system});
-		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals, CommandSystem, ES>{command_system, entity_system});
+		command_system.register_command("ReusePosition", ReuseComponentCommand<Position, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseControl", ReuseComponentCommand<Control, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseMovement", ReuseComponentCommand<Movement, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseCollision", ReuseComponentCommand<Collision, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseInteraction", ReuseComponentCommand<Interaction, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseHealth", ReuseComponentCommand<Health, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseSounds", ReuseComponentCommand<Sounds, CS, ES>{command_system, entity_system});
+		command_system.register_command("ReuseVisuals", ReuseComponentCommand<Visuals, CS, ES>{command_system, entity_system});
 		command_system.register_command("ExportEntities", ExportEntitiesCommand{command_system, entity_system});
 		command_system.register_command("FinalizeBuild", FinalizeBuildCommand<ES, AS, Position>{entity_system, all_systems, globals});
 		command_system.register_command("PlaySound", PlaySoundCommand{command_system, sounds, globals});

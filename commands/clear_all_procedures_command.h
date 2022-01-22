@@ -9,19 +9,20 @@
 #define COMMANDS_CLEAR_ALL_PROCEDURES_COMMAND_H_
 
 #include "../command_value.h"
-#include "../globals.h"
 
-template<typename CommandSystemT>
+template<typename ProcedureResourceSystemT>
 class ClearAllProceduresCommand
 {
 public:
-	CommandSystemT& command_system;
+	ProcedureResourceSystemT& procedures;
 
-    ClearAllProceduresCommand(CommandSystemT& _command_system) : command_system{_command_system} {}
+    ClearAllProceduresCommand(ProcedureResourceSystemT& _procedures)
+	: procedures{_procedures}
+    {}
 
     CommandValue operator()() const
     {
-    	command_system.clear_procedures();
+    	procedures.clear();
     	return CommandValue{0};
     }
 };

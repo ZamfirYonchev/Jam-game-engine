@@ -16,6 +16,8 @@
 #include <memory>
 #include <iostream>
 #include "owning_string_view.h"
+#include <functional>
+#include <vector>
 
 // helper type for the visitor
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -92,5 +94,8 @@ struct CommandValue
 
     std::variant<double, int32_t, std::string> value;
 };
+
+using Command = std::function<CommandValue()>;
+using Procedure = std::vector<Command>;
 
 #endif /* COMMAND_VALUE_H_ */

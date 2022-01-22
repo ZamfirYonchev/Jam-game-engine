@@ -17,10 +17,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "../commands/procedure.h"
 #include "../commands/debug_message_command.h"
 #include "../commands/select_entity_command.h"
-#include "../commands/call_procedure_command.h"
+#include "../commands/call_named_procedure_command.h"
 #include "../commands/set_fixed_variable_command.h"
 #include "../commands/get_fixed_variable_command.h"
 #include "../commands/literal_value_command.h"
@@ -31,13 +30,13 @@
 #include "../globals.h"
 #include <iomanip>
 
+template<typename ProcedureResourceSystemT>
 class CommandSystem
 {
 public:
-	using CommandT = std::function<CommandValue()>;
-
-    CommandSystem(Globals& globals)
-	: m_globals{globals}
+    CommandSystem(ProcedureResourceSystemT& procedures, Globals& globals)
+	: m_procedures{procedures}
+	, m_globals{globals}
 	{
 		initialize_default_procedures();
 	}
@@ -65,14 +64,14 @@ public:
         while(m_commands.size() > 0) exec_next();
     }
 
-    void push(const CommandT& cmd)
+    void push(Command cmd)
     {
-		m_commands.push_back(cmd);
+		m_commands.push_back(std::move(cmd));
     }
 
     void parse(std::istream& input)
     {
-    	std::list<CommandT> commands;
+    	std::list<Command> commands;
     	auto procedure_size_insert_it = end(commands);
 
     	input >> std::ws;
@@ -133,7 +132,7 @@ public:
                 	std::string str;
                 	input.get(); //extract the ( char
                 	std::getline(input, str, ')');
-                	commands.push_back(CallProcedureCommand{*this, m_globals, str});
+                	commands.push_back(CallNamedProcedureCommand{*this, m_procedures, m_globals, str});
 
                 	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                 		std::cout << "PARSER: Calling command \"" << str << "\"\n";
@@ -160,13 +159,13 @@ public:
         		case '{':
         		{
                 	input.get(); //extract the { char
-                	commands.push_back(ExtendProcedureCommand{*this});
+                	commands.push_back(ExtendProcedureCommand{*this, m_procedures});
                 	commands.push_back(LiteralValueCommand{int32_t(m_procedures.size())});
 
                 	//reserve space for procedure size
                 	procedure_size_insert_it = commands.insert(end(commands), NullCommand{});
 
-                	m_procedures.emplace_back();
+                	m_procedures.add_new(Procedure{});
 
                 	if(m_globals(Globals::app_debug_level).integer() >= int(Severity::DEBUG))
                 		std::cout << "PARSER: Declaring new procedure\n";
@@ -216,16 +215,22 @@ public:
         std::copy(cbegin(commands), cend(commands), std::inserter(m_commands, begin(m_commands)));
     }
 
-    void insert_front(const CommandT& cmd)
+    void insert_front(Command cmd)
     {
-		m_commands.push_front(cmd);
+		m_commands.push_front(std::move(cmd));
     }
 
-    CommandT pop_next()
+    void insert(const Procedure& proc)
+    {
+		for(auto it = proc.rbegin(); it != proc.rend(); ++it)
+	       insert_front(*it);
+    }
+
+    Command pop_next()
     {
     	if(m_commands.size() > 0)
     	{
-    		const CommandT cmd {std::move(m_commands.front())};
+    		const Command cmd {std::move(m_commands.front())};
             m_commands.pop_front();
             return cmd;
     	}
@@ -241,7 +246,6 @@ public:
     void clear()
     {
     	flush_commands();
-        clear_procedures();
         m_commands.clear();
         m_command_prototypes.clear();
     }
@@ -252,17 +256,17 @@ public:
         	cmd = NullCommand{};
     }
 
-    void register_command(std::string_view name, const CommandT& function)
+    void register_command(std::string_view name, Command cmd)
     {
     	const auto str_hash = hash(name.data());
     	const auto it = m_command_prototypes.find(str_hash);
     	if(it != cend(m_command_prototypes))
     	{
     		std::cerr << "Command " << name << " already registered. Overwriting...\n";
-    		it->second = function;
+    		it->second = std::move(cmd);
     	}
     	else
-    		m_command_prototypes[str_hash] = function;
+    		m_command_prototypes[str_hash] = std::move(cmd);
     }
 
     void unregister_command(std::string_view name)
@@ -274,18 +278,6 @@ public:
     		m_command_prototypes.erase(it);
     }
 
-    Procedure<CommandSystem>& procedure(const ProcedureID id)
-    {
-    	const ProcedureID proc_id = std::max(0, id*(1 - (id >= static_cast<ProcedureID>(m_procedures.size()))));
-		return m_procedures[proc_id];
-    }
-
-    void clear_procedures()
-    {
-        m_procedures.clear();
-        initialize_default_procedures();
-    }
-
     std::stringstream& external_commands()
 	{
     	return m_external_commands;
@@ -294,13 +286,13 @@ public:
 private:
     void initialize_default_procedures()
     {
-        m_procedures.emplace_back(); //insert an empty procedure at id 0
+        m_procedures.add_new(Procedure{}); //insert an empty procedure at id 0
     }
 
     std::stringstream m_external_commands;
-    std::list<CommandT> m_commands;
-    std::unordered_map<HashT, CommandT> m_command_prototypes;
-    std::vector<Procedure<CommandSystem>> m_procedures;
+    std::list<Command> m_commands;
+    std::unordered_map<HashT, Command> m_command_prototypes;
+    ProcedureResourceSystemT& m_procedures;
 
     Globals& m_globals;
 };

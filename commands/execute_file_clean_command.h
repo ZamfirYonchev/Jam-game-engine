@@ -11,8 +11,6 @@
 #include "../command_value.h"
 #include "../globals.h"
 #include "execute_file_command.h"
-#include "../systems/resource_system.h"
-#include "../systems/rendering_system.h"
 #include "literal_value_command.h"
 #include "../ref_pack.h"
 
@@ -26,7 +24,13 @@ public:
 	RenderingSystemT& rendering_system;
 	mutable RefPack<ResourceSystemsT...> resource_systems_pack;
 
-	ExecuteFileCleanCommand(EntitySystemT& _entity_system, CommandSystemT& _command_system, AllSystemsT& _all_systems, RenderingSystemT& _rendering_system, ResourceSystemsT&... _resource_systems)
+	ExecuteFileCleanCommand
+	( EntitySystemT& _entity_system
+	, CommandSystemT& _command_system
+	, AllSystemsT& _all_systems
+	, RenderingSystemT& _rendering_system
+	, ResourceSystemsT&... _resource_systems
+	)
 	: entity_system{_entity_system}
 	, command_system{_command_system}
 	, all_systems{_all_systems}
@@ -38,7 +42,6 @@ public:
     {
     	const auto file_name = command_system.exec_next();
     	command_system.flush_commands();
-    	command_system.clear_procedures();
     	(resource_systems_pack.template access<ResourceSystemsT>().clear(), ...);
     	rendering_system.clear();
     	all_systems.clear();
