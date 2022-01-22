@@ -10,6 +10,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <memory>
 #include <string>
 #include <iostream>
 #include "font.h"
@@ -17,9 +18,10 @@
 class Texture
 {
 public:
-	Texture(std::string_view filename, SDL_Renderer& renderer) : m_texture{nullptr}
+	Texture(std::string_view filename, SDL_Renderer& renderer)
+	: m_texture{nullptr}
 	{
-        SDL_Surface* surface = IMG_Load(filename.data());
+		const std::unique_ptr<SDL_Surface, SDL_Surface_Destructor> surface { IMG_Load(filename.data()) };
 
         if(surface == nullptr)
         {
@@ -28,16 +30,16 @@ public:
         else
         {
             SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-            m_texture = SDL_CreateTextureFromSurface(&renderer, surface);
+            m_texture.reset(SDL_CreateTextureFromSurface(&renderer, surface.get()));
             if(m_texture == nullptr)
             {
                 std::cerr << "Cannot create texture from " << filename << "! Error: " << SDL_GetError() << std::endl;
             }
-            SDL_FreeSurface(surface);
         }
 	}
 
-	Texture(std::string_view text, Font& font, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer& renderer) : m_texture{nullptr}
+	Texture(std::string_view text, Font& font, uint8_t r, uint8_t g, uint8_t b, SDL_Renderer& renderer)
+	: m_texture{nullptr}
 	{
         SDL_Surface* surface = TTF_RenderText_Solid(font.font(), text.data(), SDL_Color{r, g, b, 0});
 
@@ -47,7 +49,7 @@ public:
         }
         else
         {
-            m_texture = SDL_CreateTextureFromSurface(&renderer, surface);
+            m_texture.reset(SDL_CreateTextureFromSurface(&renderer, surface));
             if(m_texture == nullptr)
             {
                 std::cerr << "Cannot create texture for string '" << text << "'! Error: " << SDL_GetError() << std::endl;
@@ -56,45 +58,16 @@ public:
         }
 	}
 
-	Texture() : m_texture(nullptr) {}
-
-    ~Texture()
-    {
-        unload();
-    }
-
-    Texture(const Texture&) = delete;
-    Texture(Texture&& rhs) noexcept : m_texture(rhs.m_texture)
-    {
-    	rhs.m_texture = nullptr;
-    }
-
-    Texture& operator=(const Texture&) = delete;
-    Texture& operator=(Texture&& rhs) noexcept
-    {
-    	unload();
-    	m_texture = rhs.m_texture;
-    	rhs.m_texture = nullptr;
-
-    	return *this;
-    }
-
-    void unload() noexcept
-    {
-        if(m_texture != nullptr)
-        {
-            SDL_DestroyTexture(m_texture);
-            m_texture = nullptr;
-        }
-    }
-
     SDL_Texture* texture()
     {
-        return m_texture;
+        return m_texture.get();
     }
 
 private:
-    SDL_Texture* m_texture;
+    struct SDL_Texture_Destructor { void operator()(SDL_Texture* ptr) { SDL_DestroyTexture(ptr); } };
+    struct SDL_Surface_Destructor { void operator()(SDL_Surface* ptr) { SDL_FreeSurface(ptr); } };
+
+    std::unique_ptr<SDL_Texture, SDL_Texture_Destructor> m_texture;
 };
 
 #endif /* TEXTURE_H_ */
