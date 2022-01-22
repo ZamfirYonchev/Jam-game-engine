@@ -3,3 +3,14 @@ Release/
 .settings/
 .project
 .cproject
+assets/
+beeyond_assets/
+drone/
+fonts/
+menus_png/
+ninja_girl_png/
+objects_png/
+resources/
+tiles/
+zombie_png/
+sounds/
