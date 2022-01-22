@@ -23,9 +23,11 @@ public:
         return m_resources.size()-1;
     }
 
+    int size() const { return m_resources.size(); }
+
     optional_ref<ResourceT> operator[](const ResourceID id)
     {
-        if(0 <= id && id < static_cast<ResourceID>(m_resources.size()))
+        if(0 <= id && id < static_cast<ResourceID>(size()))
             return optional_ref<ResourceT>{m_resources[id]};
         else
         	return {};
@@ -33,7 +35,7 @@ public:
 
     optional_ref<const ResourceT> operator[](const ResourceID id) const
     {
-        if(0 <= id && id < static_cast<ResourceID>(m_resources.size()))
+        if(0 <= id && id < static_cast<ResourceID>(size()))
             return optional_ref<const ResourceT>{m_resources[id]};
         else
         	return {};
@@ -43,6 +45,7 @@ public:
     {
         m_resources.clear();
     }
+
 
 private:
     std::vector<ResourceT> m_resources;
