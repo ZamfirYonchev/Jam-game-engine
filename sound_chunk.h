@@ -17,28 +17,19 @@
 class SoundChunk
 {
 public:
-	SoundChunk(std::string_view file, const int repeat) : m_sound(nullptr), m_repeat(repeat)
+	SoundChunk(std::string_view file, const int repeat)
+	: m_sound{ Mix_LoadWAV(file.data()) }
+	, m_repeat(repeat)
 	{
-		load_from_wav_file(file);
-	}
-
-	SoundChunk(std::string_view file) : SoundChunk(file, 1) {}
-
-	SoundChunk() : m_sound(nullptr), m_repeat(0) {}
-
-    SoundChunk& load_from_wav_file(std::string_view file)
-    {
-        m_sound.reset(Mix_LoadWAV(file.data()));
-
         if(m_sound == nullptr)
         {
             std::cerr << "Cannot load sound " << file << "! Error: " << Mix_GetError() << std::endl;
         }
+	}
 
-        return *this;
-    }
+	SoundChunk(std::string_view file) : SoundChunk(file, 1) {}
 
-    Mix_Chunk* sound() const
+    Mix_Chunk* sound()
     {
         return m_sound.get();
     }
