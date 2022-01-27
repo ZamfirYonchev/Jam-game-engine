@@ -375,8 +375,8 @@ private:
 
     void advance_animation(const int time_diff)
     {
+    	m_last_frame = (m_anim_time+time_diff) >= m_current_anim_time_max;
     	m_anim_time = (m_anim_time+time_diff)%m_current_anim_time_max;
-    	m_last_frame = ((m_anim_time+time_diff)/m_current_anim_frame_delay) == (m_current_anim_time_max/m_current_anim_frame_delay);
     }
 };
 
