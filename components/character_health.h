@@ -17,7 +17,6 @@ public:
 	constexpr static int STUN_TIME = 100;
     CharacterHealth(const double hp, const double max_hp)
 	: m_max_hit_points(max_hp)
-	, m_hp_change(0)
 	, m_stun_cnt(0)
 	{ set_hp(hp); }
 
@@ -52,25 +51,16 @@ public:
         m_hit_points = clip(hp, 0.0, m_max_hit_points);
     }
 
-    void set_hp_change(double hp_change)
+    void mod_hp(double hp_change)
     {
-        m_hp_change = hp_change;
-    }
+        set_hp(m_hit_points + hp_change);
 
-    void mod_hp_change(double hp_change)
-    {
-        m_hp_change += hp_change;
+        if(hp_change < 0.0) m_stun_cnt = STUN_TIME;
     }
 
     void update_health(const Time time_diff)
     {
-    	if(m_hp_change < 0) //hit
-    		m_stun_cnt = STUN_TIME;
-    	else
-    		m_stun_cnt = max(m_stun_cnt - int(time_diff), 0);
-
-        m_hit_points = clip(m_hit_points + m_hp_change, 0.0, m_max_hit_points);
-        m_hp_change = 0;
+		m_stun_cnt = max(m_stun_cnt - int(time_diff), 0);
     }
 
     double hp() const { return m_hit_points; }
@@ -81,7 +71,7 @@ public:
     bool stunned() const { return m_stun_cnt > 0; }
 
 private:
-    double m_hit_points, m_max_hit_points, m_hp_change;
+    double m_hit_points, m_max_hit_points;
 	int m_stun_cnt;
 };
 

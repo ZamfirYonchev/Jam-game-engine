@@ -185,7 +185,7 @@ public:
 									external_commands << "Select " << id0 <<  " Call " << interaction1.proc_id_other() << '\n';
 							}
 
-							m_entity_system.template entity_component<Health>(id0).mod_hp_change(-collision1.on_collision_damage()*time_diff);
+							m_entity_system.template entity_component<Health>(id0).mod_hp(-collision1.on_collision_damage()*time_diff);
 
 							const bool entity0_correctable = movement0 && collision0.solid() && collision1.solid();
 

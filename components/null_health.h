@@ -19,8 +19,7 @@ public:
 
     void set_max_hp(double) {}
     void set_hp(double) {}
-    void set_hp_change(double) {}
-    void mod_hp_change(double) {}
+    void mod_hp(double) {}
     void update_health(const Time) {}
     double hp() const { return 0; }
     double max_hp() const { return 0; }

@@ -17,7 +17,6 @@ public:
     TimedHealth(const double ttl, const ProcedureID proc_id)
 	: m_time_to_live(ttl)
 	, m_max_ttl(ttl)
-	, m_ttl_change(0.0)
 	, m_proc_id(proc_id)
 	{}
 
@@ -40,13 +39,11 @@ public:
     }
 
     void set_max_hp(double hp) { m_max_ttl = hp; }
-    void set_hp(double hp) { m_time_to_live = hp; }
-    void set_hp_change(double hp_change) { m_ttl_change = hp_change; }
-    void mod_hp_change(double hp_change) { m_ttl_change += hp_change; }
+    void set_hp(double hp) { m_time_to_live = clip(hp, 0.0, m_max_ttl); }
+    void mod_hp(double hp_change) { set_hp(m_time_to_live+hp_change); }
     void update_health(const Time time_diff)
     {
-    	m_time_to_live = clip(m_time_to_live+m_ttl_change-time_diff, 0.0, m_max_ttl);
-    	m_ttl_change = 0;
+    	set_hp(m_time_to_live-time_diff);
     }
 
     double hp() const { return m_time_to_live; }
@@ -59,7 +56,6 @@ public:
 private:
     double m_time_to_live;
     double m_max_ttl;
-    double m_ttl_change; //TODO change from double to Time
     ProcedureID m_proc_id;
 };
 

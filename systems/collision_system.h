@@ -151,7 +151,7 @@ public:
 									external_commands << "Select " << id0 <<  " Call " << interaction1.proc_id_other() << '\n';
 							}
 
-							m_entity_system.template entity_component<HealthT>(id0).mod_hp_change(-collision1.on_collision_damage()*time_diff);
+							m_entity_system.template entity_component<HealthT>(id0).mod_hp(-collision1.on_collision_damage()*time_diff);
 
 							const bool entity0_correctable = movement0 && collision0.solid() && collision1.solid();
 
@@ -167,12 +167,12 @@ public:
 								 *         |                  |
 								 *         |                  |
 								 *      h0 |                  |
-								 *         |_________         |
+								 *         |___w1____         |
 								 *         |         |        |
-								 *     ____|___pxpy  |        |
-								 *    | h1 |   |     |        |
+								 *     ____|___pxpy  | h1     |
+								 *    |    |   |     |        |
 								 *    |    |___|_____|________|
-								 * h0 |  0,0   |w1       w0
+								 * h0 |  0,0   |         w0
 								 *    |________|
 								 * x0y0   w0
 								 */

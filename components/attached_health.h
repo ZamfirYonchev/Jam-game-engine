@@ -48,10 +48,9 @@ public:
     	insert(m_offset_max_hp);
     }
 
-    void set_max_hp(double hp) { m_offset_max_hp = hp; }
-    void set_hp(double hp) { m_offset_hp = hp; }
-    void set_hp_change(double) {}
-    void mod_hp_change(double) {}
+    void set_max_hp(const double hp) { m_offset_max_hp = hp; }
+    void set_hp(const double hp) { m_offset_hp = hp; }
+    void mod_hp(const double hp_change) { m_offset_hp += hp_change; }
     void update_health(const Time) {}
     double hp() const
     {
