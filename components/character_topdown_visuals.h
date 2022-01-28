@@ -46,7 +46,7 @@ public:
 	, ComponentAccess<const ControlT> control_accessor
 	, ComponentAccess<const HealthT> health_accessor
 	)
-	: m_current_state(RenderStates::IDLE_DOWN)
+	: m_current_state{RenderStates::IDLE_DOWN}
 	, m_current_anim_id{idle_down_anim_id}
 	, m_idle_down_anim_id{idle_down_anim_id}
 	, m_idle_up_anim_id{idle_up_anim_id}
@@ -82,6 +82,8 @@ public:
 	, m_dead_anim_time_max{1}
 	, m_anim_time{0}
 	, m_last_frame{false}
+	, m_look_dir_x{0.0}
+	, m_look_dir_y{-1.0}
 	, m_layer{VisualLayer::ACTION}
 	, m_self_id{self_id}
 	, m_control_accessor{std::move(control_accessor)}
@@ -237,6 +239,12 @@ public:
     	const auto& control = m_control_accessor(m_self_id);
     	const auto& health = m_health_accessor(m_self_id);
 
+    	if(control.decision_vertical() != 0 || control.decision_walk() != 0)
+    	{
+    		m_look_dir_x = control.decision_walk();
+    		m_look_dir_y = control.decision_vertical();
+    	}
+
     	switch(m_current_state)
     	{
     		default:
@@ -336,6 +344,9 @@ public:
 
     int repeat_x() const { return 1; }
     int repeat_y() const { return 1; }
+    double look_dir_x() const { return m_look_dir_x; }
+    double look_dir_y() const { return m_look_dir_y; }
+
     void set_repeat_x(const int) {}
     void set_repeat_y(const int) {}
     VisualLayer layer() const { return m_layer; }
@@ -378,6 +389,8 @@ private:
     int m_dead_anim_time_max;
     int m_anim_time;
     bool m_last_frame;
+    double m_look_dir_x;
+    double m_look_dir_y;
     VisualLayer m_layer;
     EntityID m_self_id;
     ComponentAccess<const ControlT> m_control_accessor;

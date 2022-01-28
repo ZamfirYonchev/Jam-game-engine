@@ -25,6 +25,8 @@ public:
     int repeat_x() const { return 0; }
     int repeat_y() const { return 0; }
     VisualLayer layer() const { return VisualLayer::FAR_BACKGROUND; }
+    double look_dir_x() const { return 0.0; }
+    double look_dir_y() const { return 0.0; }
 
     void set_repeat_x(const int) {}
     void set_repeat_y(const int) {}

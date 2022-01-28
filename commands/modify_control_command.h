@@ -53,11 +53,6 @@ public:
 			else
 				control.mod_decision_walk(decision_walk.real());
 
-			if(is_negative_zero(look_dir.real()))
-				control.set_look_dir(LookDir::RIGHT);
-			else
-				control.set_look_dir(LookDir(look_dir.boolean() ^ bool(control.look_dir())));
-
 			return globals(Globals::selected_entity);
 		}
 		else

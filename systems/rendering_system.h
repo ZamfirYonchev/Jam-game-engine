@@ -15,7 +15,6 @@
 #include "../sdl_window.h"
 #include "../math_ext.h"
 #include "../components/absolute_position.h"
-#include "../components/control_enums.h"
 #include "../components/visuals_enums.h"
 #include "../globals.h"
 #include "../animation.h"
@@ -90,12 +89,11 @@ public:
     			if(visuals)
     			{
     				const auto& position = entity_system.template entity_component<PositionT>(id);
-    				const auto& control = entity_system.template entity_component<ControlT>(id);
 
 					if(globals(Globals::app_paused).integer() == false)
     					visuals.update_animation(time_diff);
 
-					const SDL_RendererFlip flip = (control.look_dir()== LookDir::LEFT) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
+					const SDL_RendererFlip flip = (visuals.look_dir_x() < 0.0) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
 					AbsolutePosition screen_pos;
 					SDL_Rect dest;
 					const double pos_x = position.x() + position.w()/visuals.repeat_x()/2.0 - screen_zone_position.x();

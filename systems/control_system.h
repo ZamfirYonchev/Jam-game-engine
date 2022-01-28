@@ -51,22 +51,7 @@ public:
 
 				if(control.decision_attack() && control.attack_proc_id() > 0)
 				{
-					//const auto& position = entity_system.template entity_component<Position>(id);
 					external_commands << "Select " << id << " Call " << control.attack_proc_id() << '\n';
-					/*if(control.look_dir() == LookDir::LEFT)
-					{
-						//command_system.push(ModifyPositionCommand{position.x(), position.y(), 0, 0});
-						//command_system.push(ModifyControlCommand{0, 0, 0, -0.0, -0.0});
-						//command_system.push(ModifyControlCommand{0, 0, 0, -1, double(control.look_dir())});
-					}
-					else // Look dir is right
-					{
-						////command_system.push(new ModifyPositionCommand(-0.0, 0, 0, 0));
-						////command_system.push(new ModifyPositionCommand(position->x()+position->w(), position->y(), 0, 0));
-						//command_system.push(ModifyPositionCommand{position.x(), position.y(), 0, 0});
-						//command_system.push(ModifyControlCommand{0, 0, 0, -0.0, -0.0});
-						//command_system.push(ModifyControlCommand{0, 0, 0, 1, double(control.look_dir())});
-					}*/
 				}
 	    	}
 	    	else

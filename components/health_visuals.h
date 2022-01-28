@@ -100,6 +100,9 @@ public:
 
     int repeat_x() const { return m_repeat_x; }
     int repeat_y() const { return 1; }
+    double look_dir_x() const { return 0.0; }
+    double look_dir_y() const { return 0.0; }
+
     void set_repeat_x(const int val) { m_repeat_x = val; }
     void set_repeat_y(const int) {}
     VisualLayer layer() const { return VisualLayer::CLOSE_BACKGROUND; }

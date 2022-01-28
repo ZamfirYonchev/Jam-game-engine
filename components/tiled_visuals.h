@@ -129,6 +129,8 @@ public:
     }
 
     VisualLayer layer() const { return m_layer; }
+    double look_dir_x() const { return 0.0; }
+    double look_dir_y() const { return 0.0; }
 
     void set_repeat_x(const int val)
     {

@@ -8,7 +8,6 @@
 #ifndef COMPONENTS_PARTICLE_CONTROL_H_
 #define COMPONENTS_PARTICLE_CONTROL_H_
 
-#include "control_enums.h"
 #include "../math_ext.h"
 #include <random>
 
@@ -58,7 +57,6 @@ public:
     bool decision_attack() const { return false; }
     double decision_walk() const { return m_decision_x; }
     ProcedureID attack_proc_id() const { return ProcedureID{0}; }
-    LookDir look_dir() const { return m_decision_x < 0.0 ? LookDir::LEFT : LookDir::RIGHT; }
 
     void set_decision_vertical(double val) { m_offset_y = clip(val, -1.0, 1.0); }
     void set_decision_attack(bool) {}
@@ -66,7 +64,6 @@ public:
     void mod_decision_vertical(double val) { m_offset_y = val; }
     void mod_decision_walk(double val) { m_offset_x = val; }
     void set_attack_proc_id(ProcedureID) {}
-    void set_look_dir(LookDir) {}
 
     void update_decisions(const Time time_diff)
     {

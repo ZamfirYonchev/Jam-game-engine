@@ -9,9 +9,8 @@
 #define COMPONENTS_ATTACHED_DIRECTIONAL_POSITION_H_
 
 #include "../types.h"
-#include "../components/control_enums.h"
 
-template<typename PositionT, typename ControlT>
+template<typename PositionT, typename VisualsT>
 class AttachedDirectionalPosition
 {
 public:
@@ -22,7 +21,7 @@ public:
     , const double w
     , const double h
     , ComponentAccess<const PositionT> position_accessor
-    , ComponentAccess<const ControlT> control_accessor
+    , ComponentAccess<const VisualsT> visuals_accessor
     )
 	: m_attached_id{attached_id}
 	, m_offset_x{offset_x}
@@ -30,14 +29,14 @@ public:
 	, m_w{w}
 	, m_h{h}
 	, m_position_accessor{std::move(position_accessor)}
-	, m_control_accessor{std::move(control_accessor)}
+	, m_visuals_accessor{std::move(visuals_accessor)}
 	{}
 
     template<typename ExtractorF>
 	AttachedDirectionalPosition
 	( ExtractorF&& extract
 	, ComponentAccess<const PositionT> position_accessor
-	, ComponentAccess<const ControlT> control_accessor
+	, ComponentAccess<const VisualsT> visuals_accessor
 	)
 	: AttachedDirectionalPosition
 	  { extract()
@@ -46,7 +45,7 @@ public:
 	  , extract()
 	  , extract()
 	  , std::move(position_accessor)
-	  , std::move(control_accessor)
+	  , std::move(visuals_accessor)
 	  }
 	{}
 
@@ -65,7 +64,7 @@ public:
     	const auto& attached_position = m_position_accessor(m_attached_id);
     	return attached_position.x()
     		 + attached_position.w()/2
-    		 + m_offset_x * (1 - 2*(m_control_accessor(m_attached_id).look_dir() == LookDir::LEFT))
+    		 + m_offset_x * m_visuals_accessor(m_attached_id).look_dir_x()
     		 - m_w/2;
     }
 
@@ -74,7 +73,7 @@ public:
     	const auto& attached_position = m_position_accessor(m_attached_id);
     	return attached_position.y()
     		 + attached_position.h()/2
-    		 + m_offset_y
+    		 + m_offset_y * m_visuals_accessor(m_attached_id).look_dir_y()
     		 - m_h/2;
     }
 
@@ -97,7 +96,7 @@ public:
 private:
     double m_offset_x, m_offset_y, m_w, m_h;
     ComponentAccess<const PositionT> m_position_accessor;
-    ComponentAccess<const ControlT> m_control_accessor;
+    ComponentAccess<const VisualsT> m_visuals_accessor;
 };
 
 

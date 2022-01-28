@@ -8,7 +8,6 @@
 #ifndef COMPONENTS_INPUT_SELECT_CONTROL_H_
 #define COMPONENTS_INPUT_SELECT_CONTROL_H_
 
-#include "control_enums.h"
 #include "../types.h"
 #include "../systems/input_system.h"
 
@@ -57,7 +56,6 @@ public:
 
     double decision_walk() const { return 0.0; }
     ProcedureID attack_proc_id() const { return m_proc_id; }
-    LookDir look_dir() const { return LookDir::RIGHT; }
 
     void set_decision_vertical(double) {}
     void set_decision_attack(bool) {}
@@ -65,7 +63,6 @@ public:
     void mod_decision_vertical(double) {}
     void mod_decision_walk(double) {}
     void set_attack_proc_id(ProcedureID val) { m_proc_id = val; }
-    void set_look_dir(LookDir) {}
 
     void update_decisions(const Time time_diff)
     {

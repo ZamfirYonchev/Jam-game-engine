@@ -8,7 +8,6 @@
 #ifndef COMPONENTS_INPUT_CONTROL_H_
 #define COMPONENTS_INPUT_CONTROL_H_
 
-#include "control_enums.h"
 #include "../math_ext.h"
 #include "../types.h"
 #include "../systems/input_system.h"
@@ -32,7 +31,6 @@ public:
     , m_shoot_proc_id(shoot_proc_id)
     , m_shoot_cooldown(shoot_cooldown)
 	, m_current_shoot_cooldown(shoot_cooldown)
-	, m_look_dir(LookDir::RIGHT)
 	, m_stability_control(stability_control)
 	, m_input_system(input_system)
 	, m_movement_accessor{std::move(movement_accessor)}
@@ -68,7 +66,6 @@ public:
     bool decision_attack() const { return m_shoot; }
     double decision_walk() const { return m_walk_dir; }
     ProcedureID attack_proc_id() const { return m_shoot_proc_id; }
-    LookDir look_dir() const { return m_look_dir; }
 
     void set_decision_vertical(double val) { m_vertical_dir = clip(val, -1.0, 1.0); }
     void set_decision_attack(bool val) { m_shoot = val; }
@@ -76,7 +73,6 @@ public:
     void mod_decision_vertical(double val) { set_decision_vertical(m_vertical_dir+val); }
     void mod_decision_walk(double val) { set_decision_walk(m_walk_dir+val); }
     void set_attack_proc_id(ProcedureID val) { m_shoot_proc_id = val; }
-    void set_look_dir(LookDir val) { m_look_dir = val; }
 
     void update_decisions(const Time time_diff)
     {
@@ -85,8 +81,6 @@ public:
 
     	m_vertical_dir = m_input_system.get().jumping() - m_input_system.get().ducking();
     	m_walk_dir = m_input_system.get().going_right() - m_input_system.get().going_left();
-
-    	m_look_dir = m_walk_dir > 0 ? LookDir::RIGHT : m_walk_dir < 0 ? LookDir::LEFT : m_look_dir;
 
     	if(m_stability_control && m_walk_dir == 0 && abs(movement.vx()) > movement.move_force()/movement.mass())
     	{
@@ -114,7 +108,6 @@ private:
     ProcedureID m_shoot_proc_id;
     int m_shoot_cooldown;
     int m_current_shoot_cooldown;
-    LookDir m_look_dir;
     bool m_stability_control;
     std::reference_wrapper<const InputSystem> m_input_system;
     ComponentAccess<const MovementT> m_movement_accessor;

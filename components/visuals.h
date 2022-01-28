@@ -22,6 +22,8 @@ public:
     int repeat_x() const { return std::visit([](const auto& vis){ return vis.repeat_x(); }, Variant::data); }
     int repeat_y() const { return std::visit([](const auto& vis){ return vis.repeat_y(); }, Variant::data); }
     VisualLayer layer() const { return std::visit([](const auto& vis){ return vis.layer(); }, Variant::data); }
+    double look_dir_x() const { return std::visit([](const auto& vis){ return vis.look_dir_x(); }, Variant::data); }
+    double look_dir_y() const { return std::visit([](const auto& vis){ return vis.look_dir_y(); }, Variant::data); }
 
     void update_animation(const Time time_diff) { std::visit([&](auto& vis){ vis.update_animation(time_diff); }, Variant::data); }
     void set_repeat_x(const int val) { std::visit([&](auto& vis){ vis.set_repeat_x(val); }, Variant::data); }

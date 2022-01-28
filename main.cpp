@@ -107,6 +107,7 @@
 #include "components/null_visuals.h"
 #include "components/character_sounds.h"
 #include "components/null_sounds.h"
+#include "components/character_topdown_visuals.h"
 
 #include "commands/set_variable_command.h"
 #include "commands/get_variable_command.h"
@@ -192,14 +193,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		struct Sounds;
 		struct Visuals;
 
-		struct Position : public PositionVariant<NullPosition, AbsolutePosition, AttachedPosition<Position>, AttachedDirectionalPosition<Position, Control>, BuildPosition<Position>> {};
+		struct Position : public PositionVariant<NullPosition, AbsolutePosition, AttachedPosition<Position>, AttachedDirectionalPosition<Position, Visuals>, BuildPosition<Position>> {};
 		struct Control : public ControlVariant<NullControl, ConstantControl, ChaseAIControl<Position>, GuideControl<Position>, InputControl<Movement>, InputSelectControl, ParticleControl, TimedControl> {};
 		struct Movement : public MovementVariant<NullMovement, InstantMovement, FullMovement> {};
 		struct Collision : public CollisionVariant<NullCollision, BasicCollision, DamageCollision> {};
 		struct Interaction : public InteractionVariant<NullInteraction, NormalInteraction, TriggerInteraction, FullInteraction, AttachedInteraction<Interaction>> {};
 		struct Health : public HealthVariant<NullHealth, CharacterHealth, AttachedHealth<Health>, TimedHealth> {};
 		struct Sounds : public SoundsVariant<NullSounds, CharacterSounds<Control, Movement, Collision, Health>> {};
-		struct Visuals : public VisualsVariant<NullVisuals, CharacterVisuals<Control, Movement, Collision, Health>, FlyingCharacterVisuals<Control, Collision, Health>, HealthVisuals<Health>, MenuItemVisuals<Control>, StaticVisuals, TiledVisuals<Position>, AnimationVisuals> {};
+		struct Visuals : public VisualsVariant<NullVisuals, FlyingCharacterVisuals<Control, Collision, Health>, CharacterTopDownVisuals<Control, Health>, HealthVisuals<Health>, MenuItemVisuals<Control>, StaticVisuals, TiledVisuals<Position>, AnimationVisuals> {};
 
 		EntitySystem<Position,Control,Movement,Collision,Interaction,Health,Visuals,Sounds> entity_system;
 		using ES = decltype(entity_system);
@@ -299,7 +300,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("UseAbsolutePosition", use_command_gen.make<Position, AbsolutePosition>(command_value_extractor));
 		command_system.register_command("UseAttachedPosition", use_command_gen.make<Position, AttachedPosition<Position>>(command_value_extractor, position_accessor));
 		command_system.register_command("UseBuildPosition", use_command_gen.make<Position, BuildPosition<Position>>(command_value_extractor, position_accessor));
-		command_system.register_command("UseAttachedDirectionalPosition", use_command_gen.make<Position, AttachedDirectionalPosition<Position, Control>>(command_value_extractor, position_accessor, control_accessor));
+		command_system.register_command("UseAttachedDirectionalPosition", use_command_gen.make<Position, AttachedDirectionalPosition<Position, Visuals>>(command_value_extractor, position_accessor, visuals_accessor));
 		command_system.register_command("UseNullControl", use_command_gen.make<Control, NullControl>());
 		command_system.register_command("UseConstantControl", use_command_gen.make<Control, ConstantControl>(command_value_extractor));
 		command_system.register_command("UseInputControl", use_command_gen.make<Control, InputControl<Movement>>(command_value_extractor, input_system, current_id_accessor, movement_accessor));
@@ -326,7 +327,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("UseNullSounds", use_command_gen.make<Sounds, NullSounds>());
 		command_system.register_command("UseCharacterSounds", use_command_gen.make<Sounds, CharacterSounds<Control, Movement, Collision, Health>>(command_value_extractor, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
 		command_system.register_command("UseNullVisuals", use_command_gen.make<Visuals, NullVisuals>());
-		command_system.register_command("UseCharacterVisuals", use_command_gen.make<Visuals, CharacterVisuals<Control, Movement, Collision, Health>>(command_value_extractor, animation_access, current_id_accessor, control_accessor, movement_accessor, collision_accessor, health_accessor));
+		command_system.register_command("UseCharacterTopDownVisuals", use_command_gen.make<Visuals, CharacterTopDownVisuals<Control, Health>>(command_value_extractor, animation_access, current_id_accessor, control_accessor, health_accessor));
 		command_system.register_command("UseFlyingCharacterVisuals", use_command_gen.make<Visuals, FlyingCharacterVisuals<Control, Collision, Health>>(command_value_extractor, animation_access, current_id_accessor, control_accessor, collision_accessor, health_accessor));
 		command_system.register_command("UseTiledVisuals", use_command_gen.make<Visuals, TiledVisuals<Position>>(command_value_extractor, animation_access, current_id_accessor, position_accessor));
 		command_system.register_command("UseStaticVisuals", use_command_gen.make<Visuals, StaticVisuals>(command_value_extractor));

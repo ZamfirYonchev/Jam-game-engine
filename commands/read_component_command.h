@@ -69,7 +69,6 @@ public:
 		const double dec_x_modifier = command_system.exec_next();
 		const double dec_y_modifier = command_system.exec_next();
 		const double dec_attack_modifier = command_system.exec_next();
-		const double look_dir_modifier = command_system.exec_next();
 		const double proc_id_modifier = command_system.exec_next();
 
 		const auto& control = entity_system.template entity_component<ControlT>(source_id);
@@ -78,7 +77,6 @@ public:
 				{control.decision_walk()*dec_x_modifier
 			   + control.decision_vertical()*dec_y_modifier
 			   + control.decision_attack()*dec_attack_modifier
-			   + double(control.look_dir())*look_dir_modifier
 			   + control.attack_proc_id()*proc_id_modifier
 				};
 	}
