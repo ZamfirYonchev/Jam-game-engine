@@ -33,6 +33,10 @@ public:
 		app_enable_audio = hash("app_enable_audio"),
 		app_sound_channels = hash("app_sound_channels"),
 		app_window_title = hash("app_window_title"),
+		app_background_r = hash("app_background_r"),
+		app_background_g = hash("app_background_g"),
+		app_background_b = hash("app_background_b"),
+		app_background_a = hash("app_background_a"),
 		selected_entity = hash("selected_entity"),
 	};
 
