@@ -100,6 +100,7 @@ SdlWindow::SdlWindow(
 	if(fullscreen == true) flags |= SDL_WINDOW_FULLSCREEN;
 
 	SDL_CreateWindowAndRenderer(m_res_w, m_res_h, flags, &m_window, &m_renderer);
+	SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 
 	if(!m_window || !m_renderer)
 	{
