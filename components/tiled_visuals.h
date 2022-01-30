@@ -129,17 +129,26 @@ public:
     }
 
     VisualLayer layer() const { return m_layer; }
-    double look_dir_x() const { return 0.0; }
-    double look_dir_y() const { return 0.0; }
+    double look_dir_x() const { return 1.0; }
+    double look_dir_y() const { return 1.0; }
 
     void set_repeat_x(const int val)
     {
-    	m_tile_w = m_position_accessor(m_self_id).w()/val;
+    	if(val > 0) m_tile_w = m_position_accessor(m_self_id).w()/val;
+    	else
+    	{
+    		//it will lead to division by 0
+    	}
     }
 
     void set_repeat_y(const int val)
     {
-    	m_tile_h = m_position_accessor(m_self_id).h()/val;
+    	if(val > 0)
+    		m_tile_h = m_position_accessor(m_self_id).h()/val;
+    	else
+    	{
+    		//it will lead to division by 0
+    	}
     }
 
     void set_layer(const VisualLayer val) { m_layer = val; }
