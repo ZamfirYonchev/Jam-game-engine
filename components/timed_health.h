@@ -15,9 +15,10 @@ class TimedHealth
 {
 public:
     TimedHealth(const double ttl, const ProcedureID proc_id)
-	: m_time_to_live(ttl)
-	, m_max_ttl(ttl)
-	, m_proc_id(proc_id)
+	: m_time_to_live{abs(ttl)}
+	, m_max_ttl{abs(ttl)}
+	, m_proc_id{proc_id}
+	, count_down{ttl >= 0}
 	{}
 
     template<typename ExtractorF>
@@ -34,7 +35,7 @@ public:
     void obtain(InserterF&& insert) const
     {
     	insert("UseTimedHealth");
-    	insert(m_time_to_live);
+    	insert(m_time_to_live * (count_down ? 1 : -1));
     	insert(m_proc_id);
     }
 
@@ -46,7 +47,7 @@ public:
     	set_hp(m_time_to_live-time_diff);
     }
 
-    double hp() const { return m_time_to_live; }
+    double hp() const { return count_down ? m_time_to_live : m_max_ttl-m_time_to_live; }
     double max_hp() const { return m_max_ttl; }
     bool alive() const { return m_time_to_live > 0; }
     ProcedureID on_death_exec() const { return m_proc_id; }
@@ -57,6 +58,7 @@ private:
     double m_time_to_live;
     double m_max_ttl;
     ProcedureID m_proc_id;
+    bool count_down;
 };
 
 #endif /* COMPONENTS_TIMED_HEALTH_H_ */
