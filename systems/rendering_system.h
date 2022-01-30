@@ -74,7 +74,13 @@ public:
     void update(const Time time_diff)
     {
     	SDL_Renderer* renderer = &sdl_window.renderer();
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_SetRenderDrawColor
+		( renderer
+		, globals(Globals::app_background_r).integer()
+		, globals(Globals::app_background_g).integer()
+		, globals(Globals::app_background_b).integer()
+		, globals(Globals::app_background_a).integer()
+		);
         SDL_RenderClear(renderer);
 
         const auto& screen_zone_position = entity_system.template entity_component<PositionT>(EntityID{0});
@@ -94,8 +100,6 @@ public:
     					visuals.update_animation(time_diff);
 
 					const SDL_RendererFlip flip = (visuals.look_dir_x() < 0.0) ? SDL_RendererFlip::SDL_FLIP_HORIZONTAL : SDL_RendererFlip::SDL_FLIP_NONE;
-					AbsolutePosition screen_pos;
-					SDL_Rect dest;
 					const double pos_x = position.x() + position.w()/visuals.repeat_x()/2.0 - screen_zone_position.x();
 					const double pos_y = position.y() + position.h()/visuals.repeat_y()/2.0 - screen_zone_position.y();
 
@@ -106,36 +110,37 @@ public:
 							const optional_ref<Animation> anim_opt = animations[animation_frame.id];
 							if(anim_opt)
 							{
-								double scale_factor = anim_opt->get().scale_factor();
 								const optional_ref<Sprite> sprite_opt = anim_opt->get().sprite(animation_frame.frame);
 								if(sprite_opt)
 								{
-									const optional_ref<Texture> texture_opt = textures[sprite_opt->get().texture_id];
-									if(texture_opt)
-									{
-										//TODO: to optimize and add constness
-										SDL_Texture* texture = texture_opt->get().texture();
-										screen_pos.set_w(sprite_opt->get().clip.w*scale_factor);
-										screen_pos.set_h(sprite_opt->get().clip.h*scale_factor);
-										screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
-										screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
-										dest.w = int(screen_pos.w()*m_screen_to_view_scale + 0.5);
-										dest.h = int(screen_pos.h()*m_screen_to_view_scale + 0.5);
-										dest.x = int(screen_pos.x()*m_screen_to_view_scale + 0.5);
-										dest.y = int(sdl_window.res_height() - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5);
+									const double scale_factor = anim_opt->get().scale_factor();
+									AbsolutePosition screen_pos;
+									screen_pos.set_w(sprite_opt->get().clip.w*scale_factor);
+									screen_pos.set_h(sprite_opt->get().clip.h*scale_factor);
+									screen_pos.set_x(pos_x + rx*screen_pos.w() - screen_pos.w()/2.0);
+									screen_pos.set_y(pos_y + ry*screen_pos.h() - screen_pos.h()/2.0);
+									SDL_Rect dest;
+									dest.w = int(screen_pos.w()*m_screen_to_view_scale + 0.5);
+									dest.h = int(screen_pos.h()*m_screen_to_view_scale + 0.5);
+									dest.x = int(screen_pos.x()*m_screen_to_view_scale + 0.5);
+									dest.y = int(sdl_window.res_height() - dest.h - screen_pos.y()*m_screen_to_view_scale + 0.5);
 
-										if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, sdl_window.res_width(), sdl_window.res_height()))
+									if(objects_collide(dest.x, dest.y, dest.w, dest.h, 0, 0, sdl_window.res_width(), sdl_window.res_height()))
+									{
+										const optional_ref<Texture> texture_opt = textures[sprite_opt->get().texture_id];
+										if(texture_opt)
 										{
+											SDL_Texture* texture = texture_opt->get().texture();
 											const int err = SDL_RenderCopyEx(renderer, texture, &sprite_opt->get().clip, &dest, 0, nullptr, flip);
 											if(err)
 											{
 												std::cerr << "Error when rendering: " << SDL_GetError() << std::endl;
 											}
 										}
-									}
-									else
-									{
-										//error sprite->texture_id
+										else
+										{
+											//error sprite->texture_id
+										}
 									}
 
 								}
@@ -149,18 +154,6 @@ public:
 								//error animation_frame.id
 							}
 						}
-
-					if(globals(Globals::app_show_hitboxes).integer())
-					{
-						const SDL_Rect hitbox
-							{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)
-							, int(sdl_window.res_height() + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
-							, int(position.w()*m_screen_to_view_scale)
-							, int(position.h()*m_screen_to_view_scale)
-							};
-						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-						SDL_RenderDrawRect(renderer, &hitbox);
-					}
     			}
     			else
     			{
@@ -168,6 +161,26 @@ public:
     			}
         	}
         }
+
+		if(globals(Globals::app_show_hitboxes).integer())
+		{
+			for(auto layer = 0; layer < NUM_OF_LAYERS; ++layer)
+			{
+				for(const EntityID id : entities[layer])
+				{
+					const auto& position = entity_system.template entity_component<PositionT>(id);
+
+					const SDL_Rect hitbox
+						{ int((position.x() - screen_zone_position.x())*m_screen_to_view_scale)
+						, int(sdl_window.res_height() + (-position.h() - position.y() + screen_zone_position.y())*m_screen_to_view_scale)
+						, int(position.w()*m_screen_to_view_scale)
+						, int(position.h()*m_screen_to_view_scale)
+						};
+					SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+					SDL_RenderDrawRect(renderer, &hitbox);
+				}
+			}
+		}
 
         SDL_RenderPresent(renderer);
 
