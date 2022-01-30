@@ -105,7 +105,7 @@ public:
 
     void set_repeat_x(const int val) { m_repeat_x = val; }
     void set_repeat_y(const int) {}
-    VisualLayer layer() const { return VisualLayer::CLOSE_BACKGROUND; }
+    VisualLayer layer() const { return VisualLayer::FOREGROUND; }
     void set_layer(VisualLayer) {}
 
 private:
