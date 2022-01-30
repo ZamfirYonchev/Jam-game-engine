@@ -68,16 +68,18 @@
 #include "commands/play_music_command.h"
 #include "commands/read_component_command.h"
 #include "commands/pause_all_sounds_command.h"
+#include "commands/stop_all_sounds_command.h"
 
 #include "components/absolute_position.h"
 #include "components/attached_position.h"
 #include "components/build_position.h"
 #include "components/attached_directional_position.h"
 #include "components/null_position.h"
+#include "components/input_control.h"
+#include "components/attached_control.h"
 #include "components/constant_control.h"
 #include "components/chase_ai_control.h"
 #include "components/guide_control.h"
-#include "components/input_control.h"
 #include "components/input_select_control.h"
 #include "components/particle_control.h"
 #include "components/timed_control.h"
@@ -109,9 +111,10 @@
 #include "components/null_sounds.h"
 #include "components/character_topdown_visuals.h"
 
+#include "commands/literal_value_command.h"
 #include "commands/set_variable_command.h"
 #include "commands/get_variable_command.h"
-#include "commands/literal_value_command.h"
+#include "commands/increment_variable_command.h"
 #include "globals.h"
 #include "utilities.h"
 #include "command_value_extractor.h"
@@ -144,6 +147,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 	globals(Globals::app_show_hitboxes) = CommandValue{false};
 	globals(Globals::app_current_level) = CommandValue{"init.jel"};
 	globals(Globals::app_debug_level) = CommandValue{0};
+	globals(Globals::app_background_r) = CommandValue{255};
+	globals(Globals::app_background_g) = CommandValue{255};
+	globals(Globals::app_background_b) = CommandValue{255};
+	globals(Globals::app_background_a) = CommandValue{255};
 
 	do
 	{
@@ -194,7 +201,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		struct Visuals;
 
 		struct Position : public PositionVariant<NullPosition, AbsolutePosition, AttachedPosition<Position>, AttachedDirectionalPosition<Position, Visuals>, BuildPosition<Position>> {};
-		struct Control : public ControlVariant<NullControl, ConstantControl, ChaseAIControl<Position>, GuideControl<Position>, InputControl<Movement>, InputSelectControl, ParticleControl, TimedControl> {};
+		struct Control : public ControlVariant<NullControl, AttachedControl<Control>, ConstantControl, ChaseAIControl<Position>, GuideControl<Position>, InputControl<Movement>, InputSelectControl, ParticleControl, TimedControl> {};
 		struct Movement : public MovementVariant<NullMovement, InstantMovement, FullMovement> {};
 		struct Collision : public CollisionVariant<NullCollision, BasicCollision, DamageCollision> {};
 		struct Interaction : public InteractionVariant<NullInteraction, NormalInteraction, TriggerInteraction, FullInteraction, AttachedInteraction<Interaction>> {};
@@ -264,6 +271,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 
 	    command_system.register_command("Set", SetVariableCommand{command_system, globals});
 	    command_system.register_command("Val", GetVariableCommand{command_system, globals});
+	    command_system.register_command("Increment", IncrementVariableCommand{command_system, globals});
 	    command_system.register_command("DebugMessage", DebugMessageCommand{command_system, globals});
 		command_system.register_command("FixViewWidth", FixViewWidthCommand<ES, CS, Position>{entity_system, command_system, globals});
 		command_system.register_command("SelectEntity", SelectEntityCommand{command_system, globals});
@@ -302,6 +310,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("UseBuildPosition", use_command_gen.make<Position, BuildPosition<Position>>(command_value_extractor, position_accessor));
 		command_system.register_command("UseAttachedDirectionalPosition", use_command_gen.make<Position, AttachedDirectionalPosition<Position, Visuals>>(command_value_extractor, position_accessor, visuals_accessor));
 		command_system.register_command("UseNullControl", use_command_gen.make<Control, NullControl>());
+		command_system.register_command("UseAttachedControl", use_command_gen.make<Control, AttachedControl<Control>>(command_value_extractor, control_accessor));
 		command_system.register_command("UseConstantControl", use_command_gen.make<Control, ConstantControl>(command_value_extractor));
 		command_system.register_command("UseInputControl", use_command_gen.make<Control, InputControl<Movement>>(command_value_extractor, input_system, current_id_accessor, movement_accessor));
 		command_system.register_command("UseInputSelectControl", use_command_gen.make<Control, InputSelectControl>(command_value_extractor, input_system));
@@ -347,6 +356,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 		command_system.register_command("PlaySound", PlaySoundCommand{command_system, sounds, globals});
 		command_system.register_command("PlayMusic", PlayMusicCommand{command_system, music, globals});
 		command_system.register_command("PauseAllSounds", PauseAllSoundsCommand{command_system, globals});
+		command_system.register_command("StopAllSounds", StopAllSoundsCommand{command_system, globals});
 		command_system.register_command("ReadPosition", ReadPositionCommand<CS, ES, Position>{command_system, entity_system});
 		command_system.register_command("ReadControl", ReadControlCommand<CS, ES, Control>{command_system, entity_system});
 		command_system.register_command("ReadMovement", ReadMovementCommand<CS, ES, Movement>{command_system, entity_system});
