@@ -18,6 +18,7 @@ public:
     CharacterHealth(const double hp, const double max_hp)
 	: m_max_hit_points(max_hp)
 	, m_stun_cnt(0)
+	, m_proc_id{ProcedureID{0}}
 	{ set_hp(hp); }
 
     template<typename ExtractorF>
@@ -66,13 +67,14 @@ public:
     double hp() const { return m_hit_points; }
     double max_hp() const { return m_max_hit_points; }
     bool alive() const { return m_hit_points > 0; }
-    ProcedureID on_death_exec() const { return ProcedureID(0); }
-    void set_on_death_exec(ProcedureID) {}
+    ProcedureID on_death_exec() const { return m_proc_id; }
+    void set_on_death_exec(const ProcedureID id) { m_proc_id = id; }
     bool stunned() const { return m_stun_cnt > 0; }
 
 private:
     double m_hit_points, m_max_hit_points;
 	int m_stun_cnt;
+	ProcedureID m_proc_id;
 };
 
 #endif /* COMPONENTS_CHARACTER_HEALTH_H_ */
