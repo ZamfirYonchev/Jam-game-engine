@@ -296,9 +296,9 @@ public:
     		case RenderStates::WALK_SIDE:
     			if(health.alive() == false) set_new_state(RenderStates::DEAD);
     			else if(control.decision_attack()) set_new_state(RenderStates::USE_SIDE);
+    			else if(control.decision_walk() != 0) advance_animation(time_diff);
     			else if(control.decision_vertical() > 0) set_new_state(RenderStates::WALK_UP);
     			else if(control.decision_vertical() < 0) set_new_state(RenderStates::WALK_DOWN);
-    			else if(control.decision_walk() != 0) advance_animation(time_diff);
     			else set_new_state(RenderStates::IDLE_SIDE);
     		break;
 
