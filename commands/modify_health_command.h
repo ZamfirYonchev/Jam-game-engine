@@ -45,7 +45,7 @@ public:
 			if(is_negative_zero(hp.real()))
 				health.set_hp(0);
 			else
-				health.set_hp(health.hp() + hp.real());
+				health.mod_hp(hp.real());
 
 			if(is_negative_zero(proc_id.real()))
 				health.set_on_death_exec(0);
